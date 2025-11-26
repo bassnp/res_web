@@ -111,6 +111,10 @@ module.exports = {
                     '0%': { opacity: '0', transform: 'scale(0.9)' },
                     '100%': { opacity: '1', transform: 'scale(1)' }
                 },
+                'scale-in-no-transform': {
+                    '0%': { opacity: '0', transform: 'scale(0.9)' },
+                    '100%': { opacity: '1' }
+                },
                 'slide-up': {
                     '0%': { opacity: '0', transform: 'translateY(100px)' },
                     '100%': { opacity: '1', transform: 'translateY(0)' }
@@ -120,8 +124,15 @@ module.exports = {
                     '100%': { transform: 'rotate(360deg)' }
                 },
                 'morph': {
-                    '0%, 100%': { borderRadius: '60% 40% 30% 70% / 60% 30% 70% 40%' },
-                    '50%': { borderRadius: '30% 60% 70% 40% / 50% 60% 30% 60%' }
+                    '0%': { borderRadius: '60% 40% 30% 70% / 60% 30% 70% 40%', transform: 'rotate(0deg) scale(1)' },
+                    '5%': { borderRadius: '60% 40% 30% 70% / 60% 30% 70% 40%', transform: 'rotate(0deg) scale(1)' },
+                    '25%': { borderRadius: '40% 60% 50% 50% / 30% 70% 30% 70%', transform: 'rotate(5deg) scale(1.05)' },
+                    '30%': { borderRadius: '40% 60% 50% 50% / 30% 70% 30% 70%', transform: 'rotate(5deg) scale(1.05)' },
+                    '50%': { borderRadius: '30% 60% 70% 40% / 50% 60% 30% 60%', transform: 'rotate(0deg) scale(1.1)' },
+                    '55%': { borderRadius: '30% 60% 70% 40% / 50% 60% 30% 60%', transform: 'rotate(0deg) scale(1.1)' },
+                    '75%': { borderRadius: '50% 50% 60% 40% / 70% 30% 70% 30%', transform: 'rotate(-5deg) scale(1.05)' },
+                    '80%': { borderRadius: '50% 50% 60% 40% / 70% 30% 70% 30%', transform: 'rotate(-5deg) scale(1.05)' },
+                    '100%': { borderRadius: '60% 40% 30% 70% / 60% 30% 70% 40%', transform: 'rotate(0deg) scale(1)' }
                 },
                 'shimmer': {
                     '0%': { backgroundPosition: '-200% 0' },
@@ -145,9 +156,11 @@ module.exports = {
                 'typing': 'typing 2s steps(20) forwards',
                 'blink': 'blink 1s step-end infinite',
                 'scale-in': 'scale-in 0.5s ease-out forwards',
+                'scale-in-no-transform': 'scale-in-no-transform 0.5s ease-out forwards',
                 'slide-up': 'slide-up 0.8s ease-out forwards',
                 'rotate-slow': 'rotate-slow 20s linear infinite',
-                'morph': 'morph 8s ease-in-out infinite',
+                'morph': 'morph 10s ease-in-out infinite',
+                'morph-fast': 'morph 3.75s ease-in-out infinite',
                 'shimmer': 'shimmer 2s linear infinite',
                 'bounce-soft': 'bounce-soft 2s ease-in-out infinite'
             }

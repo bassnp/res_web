@@ -7,6 +7,8 @@ import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
+import ParticleBackground from '@/components/ParticleBackground';
+import InteractiveGridDots from '@/components/InteractiveGridDots';
 
 // ============================================
 // HEADER COMPONENT
@@ -27,14 +29,32 @@ const Header = () => {
     { name: 'Contact', href: '#contact' },
   ];
 
+  const toggleTheme = () => {
+    setTheme(theme === 'dark' ? 'light' : 'dark');
+  };
+
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 bg-eggshell/80 dark:bg-twilight/80 backdrop-blur-md border-b border-twilight/10 dark:border-eggshell/10">
-      <div className="container mx-auto px-6 py-4">
+    <header className="fixed top-0 left-0 right-0 z-50 bg-white/80 dark:bg-twilight/80 backdrop-blur-md border-b border-twilight/10 dark:border-eggshell/10 overflow-hidden">
+      <InteractiveGridDots />
+      <div className="container mx-auto px-6 py-4 relative z-10">
         <div className="flex items-center justify-between">
-          {/* Home Icon */}
-          <a href="#" className="p-2 rounded-lg hover:bg-twilight/10 dark:hover:bg-eggshell/10 transition-all duration-300 hover:scale-110">
-            <Home className="w-6 h-6 text-twilight dark:text-eggshell" />
-          </a>
+          {/* Theme Toggle (replaces Home Icon) */}
+          {mounted && (
+            <button 
+              onClick={toggleTheme}
+              className="p-2 rounded-lg hover:bg-twilight/10 dark:hover:bg-eggshell/10 transition-all duration-300 hover:scale-110 hover:rotate-12"
+              aria-label="Toggle theme"
+            >
+              {theme === 'dark' ? (
+                <Moon className="w-6 h-6 text-muted-teal" />
+              ) : (
+                <Sun className="w-6 h-6 text-burnt-peach" />
+              )}
+            </button>
+          )}
+          {!mounted && (
+            <div className="p-2 w-10 h-10" />
+          )}
 
           {/* Navigation */}
           <nav className="hidden md:flex items-center gap-1">
@@ -59,32 +79,11 @@ const Header = () => {
             <DialogContent className="bg-eggshell dark:bg-twilight border-twilight/20 dark:border-eggshell/20">
               <DialogHeader>
                 <DialogTitle className="text-twilight dark:text-eggshell flex items-center gap-2">
-                  <Sparkles className="w-5 h-5 text-burnt-peach" />
+                  <Settings className="w-5 h-5 text-burnt-peach" />
                   Settings
                 </DialogTitle>
               </DialogHeader>
               <div className="py-6 space-y-6">
-                {/* Dark Mode Toggle */}
-                <div className="flex items-center justify-between p-4 rounded-xl bg-twilight/5 dark:bg-eggshell/5">
-                  <div className="flex items-center gap-3">
-                    {mounted && theme === 'dark' ? (
-                      <Moon className="w-5 h-5 text-burnt-peach" />
-                    ) : (
-                      <Sun className="w-5 h-5 text-burnt-peach" />
-                    )}
-                    <Label htmlFor="dark-mode" className="text-twilight dark:text-eggshell font-medium">
-                      Dark Mode
-                    </Label>
-                  </div>
-                  {mounted && (
-                    <Switch
-                      id="dark-mode"
-                      checked={theme === 'dark'}
-                      onCheckedChange={(checked) => setTheme(checked ? 'dark' : 'light')}
-                      className="data-[state=checked]:bg-burnt-peach"
-                    />
-                  )}
-                </div>
                 <p className="text-sm text-twilight/60 dark:text-eggshell/60 text-center">
                   More settings coming soon...
                 </p>
@@ -115,13 +114,14 @@ const Footer = () => {
   ];
 
   return (
-    <footer className="bg-twilight text-eggshell py-12">
-      <div className="container mx-auto px-6">
+    <footer className="bg-white dark:bg-twilight text-twilight dark:text-eggshell py-12 relative z-20 overflow-hidden">
+      <InteractiveGridDots />
+      <div className="container mx-auto px-6 relative z-10">
         <div className="grid md:grid-cols-3 gap-8">
           {/* Brand */}
           <div>
             <h3 className="text-lg font-semibold mb-4">Portfolio</h3>
-            <p className="text-eggshell/70 text-sm">
+            <p className="text-twilight/70 dark:text-eggshell/70 text-sm">
               Hobbyist software engineer &amp; recent graduate passionate about building elegant solutions.
             </p>
           </div>
@@ -132,7 +132,7 @@ const Footer = () => {
             <ul className="space-y-2">
               {footerLinks.map((link) => (
                 <li key={link.name}>
-                  <a href={link.href} className="text-eggshell/70 hover:text-burnt-peach transition-colors text-sm animated-underline">
+                  <a href={link.href} className="text-twilight/70 dark:text-eggshell/70 hover:text-burnt-peach transition-colors text-sm animated-underline">
                     {link.name}
                   </a>
                 </li>
@@ -148,20 +148,20 @@ const Footer = () => {
                 <a
                   key={social.label}
                   href={social.href}
-                  className="p-2 rounded-lg bg-eggshell/10 hover:bg-burnt-peach/30 transition-all duration-300 hover:scale-110 hover:-translate-y-1"
+                  className="p-2 rounded-lg bg-twilight/10 dark:bg-eggshell/10 hover:bg-burnt-peach/30 transition-all duration-300 hover:scale-110 hover:-translate-y-1"
                   aria-label={social.label}
                 >
                   <social.icon className="w-5 h-5" />
                 </a>
               ))}
             </div>
-            <p className="mt-4 text-eggshell/70 text-sm">
+            <p className="mt-4 text-twilight/70 dark:text-eggshell/70 text-sm">
               hello@example.com
             </p>
           </div>
         </div>
 
-        <div className="mt-12 pt-6 border-t border-eggshell/20 text-center text-eggshell/50 text-sm">
+        <div className="mt-12 pt-6 border-t border-twilight/20 dark:border-eggshell/20 text-center text-twilight/50 dark:text-eggshell/50 text-sm">
           <p>&copy; {new Date().getFullYear()} Portfolio. All rights reserved.</p>
         </div>
       </div>
@@ -196,24 +196,89 @@ const AnimatedShapes = () => {
 // ============================================
 const HeroSection = () => {
   const [typedText, setTypedText] = useState('');
+  const [showCursor, setShowCursor] = useState(true);
+  const [isTypingComplete, setIsTypingComplete] = useState(false);
+  const [isPaused, setIsPaused] = useState(false);
   const fullText = 'Software Engineer';
+
+  // Cursor flashing effect during pause states
+  useEffect(() => {
+    let cursorInterval;
+    
+    if (isPaused) {
+      // Flash cursor every 500ms during pause with clean toggling
+      setShowCursor(true);
+      cursorInterval = setInterval(() => {
+        setShowCursor(prev => !prev);
+      }, 500);
+    } else {
+      // Keep cursor visible when typing or deleting
+      setShowCursor(true);
+    }
+
+    return () => {
+      if (cursorInterval) clearInterval(cursorInterval);
+    };
+  }, [isPaused]);
 
   useEffect(() => {
     let index = 0;
-    const timer = setInterval(() => {
-      if (index <= fullText.length) {
+    let isDeleting = false;
+    let isPausedLocal = false;
+    let timer;
+
+    const typewriterCycle = () => {
+      // Typing forward
+      if (!isDeleting && !isPausedLocal && index <= fullText.length) {
         setTypedText(fullText.slice(0, index));
         index++;
-      } else {
-        clearInterval(timer);
+        timer = setTimeout(typewriterCycle, 100);
+        
+        if (index > fullText.length) {
+          setIsTypingComplete(true);
+          // Pause for 3 seconds before starting to delete
+          isPausedLocal = true;
+          setIsPaused(true);
+          timer = setTimeout(() => {
+            setIsTypingComplete(false);
+            isPausedLocal = false;
+            setIsPaused(false);
+            isDeleting = true;
+            typewriterCycle();
+          }, 3000);
+        }
       }
-    }, 100);
-    return () => clearInterval(timer);
+      // Deleting backward
+      else if (isDeleting && !isPausedLocal && index >= 0) {
+        setTypedText(fullText.slice(0, index));
+        index--;
+        timer = setTimeout(typewriterCycle, 80);
+        
+        if (index < 0) {
+          isDeleting = false;
+          // Pause for 1 second before restarting (ensures at least 2 cursor flashes)
+          isPausedLocal = true;
+          setIsPaused(true);
+          timer = setTimeout(() => {
+            isPausedLocal = false;
+            setIsPaused(false);
+            index = 0;
+            typewriterCycle();
+          }, 1000);
+        }
+      }
+    };
+
+    typewriterCycle();
+
+    return () => {
+      if (timer) clearTimeout(timer);
+    };
   }, []);
 
   return (
-    <section className="min-h-screen flex items-center justify-center relative overflow-hidden pt-20 particle-bg">
-      <AnimatedShapes />
+    <section className="min-h-screen flex items-center justify-center relative overflow-hidden pt-20">
+      <ParticleBackground />
 
       <div className="container mx-auto px-6 relative z-10">
         <div className="max-w-3xl mx-auto text-center">
@@ -225,7 +290,10 @@ const HeroSection = () => {
           {/* Name with typing effect */}
           <h1 className="text-5xl md:text-7xl font-bold text-twilight dark:text-eggshell mb-6 opacity-0 animate-fade-in delay-100">
             <span className="gradient-text">{typedText}</span>
-            <span className="inline-block w-1 h-12 md:h-16 bg-burnt-peach ml-1 animate-blink" />
+            <span 
+              className="inline-block w-1 h-12 md:h-16 bg-burnt-peach ml-1 transition-opacity duration-100"
+              style={{ opacity: showCursor ? 1 : 0 }}
+            />
           </h1>
 
           {/* Tagline */}
@@ -252,9 +320,8 @@ const HeroSection = () => {
 
           {/* Scroll indicator */}
           <div className="mt-16 opacity-0 animate-fade-in delay-500">
-            <a href="#about" className="inline-flex flex-col items-center text-twilight/50 dark:text-eggshell/50 hover:text-burnt-peach transition-colors group">
-              <span className="text-sm mb-2">Scroll to explore</span>
-              <ChevronDown className="w-6 h-6 animate-bounce group-hover:animate-none group-hover:translate-y-1 transition-transform" />
+            <a href="#about" className="inline-flex flex-col items-center group">
+              <ChevronDown className="w-8 h-8 text-burnt-peach dark:text-muted-teal animate-bounce group-hover:animate-none group-hover:translate-y-1 transition-all" />
             </a>
           </div>
         </div>
@@ -273,8 +340,9 @@ const AboutSection = () => {
   ];
 
   return (
-    <section id="about" className="py-24 bg-white/50 dark:bg-twilight/50">
-      <div className="container mx-auto px-6">
+    <section id="about" className="py-24 bg-white dark:bg-twilight relative overflow-hidden">
+      <InteractiveGridDots />
+      <div className="container mx-auto px-6 relative z-10">
         <div className="max-w-4xl mx-auto">
           <h2 className="text-3xl md:text-4xl font-bold text-twilight dark:text-eggshell mb-8 text-center opacity-0 animate-fade-in">
             About <span className="text-burnt-peach">Me</span>
@@ -282,9 +350,9 @@ const AboutSection = () => {
 
           <div className="grid md:grid-cols-2 gap-12 items-center">
             {/* Profile card */}
-            <div className="bg-gradient-to-br from-burnt-peach/10 to-muted-teal/10 dark:from-burnt-peach/20 dark:to-muted-teal/20 rounded-2xl p-8 opacity-0 animate-fade-in-left delay-100 hover-lift glass">
-              <div className="w-32 h-32 mx-auto mb-6 rounded-full bg-gradient-to-br from-burnt-peach to-muted-teal flex items-center justify-center animate-morph">
-                <User className="w-16 h-16 text-eggshell" />
+            <div className="p-8 opacity-0 animate-fade-in-left delay-100">
+              <div className="w-40 h-40 mx-auto mb-6 rounded-full bg-gradient-to-br from-burnt-peach to-muted-teal flex items-center justify-center animate-morph-fast shadow-2xl">
+                <User className="w-20 h-20 text-eggshell" />
               </div>
               <h3 className="text-xl font-semibold text-twilight dark:text-eggshell text-center mb-2">Software Engineer</h3>
               <p className="text-twilight/60 dark:text-eggshell/60 text-center text-sm">Recent Graduate • Hobbyist Developer</p>
@@ -311,7 +379,7 @@ const AboutSection = () => {
               {skills.map((skill, index) => (
                 <span
                   key={skill}
-                  className="px-4 py-2 bg-twilight/5 dark:bg-eggshell/10 text-twilight dark:text-eggshell rounded-full text-sm font-medium hover:bg-burnt-peach hover:text-eggshell transition-all duration-300 cursor-default hover:scale-110 hover:-translate-y-1"
+                  className="px-4 py-2 bg-twilight/5 dark:bg-eggshell/10 text-twilight dark:text-eggshell rounded-full text-sm font-medium hover:bg-muted-teal hover:text-eggshell transition-all duration-300 cursor-default hover:scale-110 hover:-translate-y-1"
                   style={{ animationDelay: `${index * 50}ms` }}
                 >
                   {skill}
@@ -351,7 +419,7 @@ const ProjectsSection = () => {
   ];
 
   return (
-    <section id="projects" className="py-24 particle-bg">
+    <section id="projects" className="py-24">
       <div className="container mx-auto px-6">
         <h2 className="text-3xl md:text-4xl font-bold text-twilight dark:text-eggshell mb-4 text-center">
           Featured <span className="text-burnt-peach">Projects</span>
@@ -364,7 +432,7 @@ const ProjectsSection = () => {
           {projects.map((project, index) => (
             <div
               key={project.title}
-              className="group bg-white dark:bg-twilight/50 rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500 hover:-translate-y-3 opacity-0 animate-scale-in glass"
+              className="group bg-white dark:bg-twilight/50 rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500 hover:-translate-y-1 opacity-0 animate-scale-in-no-transform glass"
               style={{ animationDelay: `${index * 150}ms` }}
             >
               {/* Project image placeholder */}
@@ -425,8 +493,9 @@ const ExperienceSection = () => {
   ];
 
   return (
-    <section id="experience" className="py-24 bg-white/50 dark:bg-twilight/50">
-      <div className="container mx-auto px-6">
+    <section id="experience" className="py-24 bg-white dark:bg-twilight relative overflow-hidden">
+      <InteractiveGridDots />
+      <div className="container mx-auto px-6 relative z-10">
         <h2 className="text-3xl md:text-4xl font-bold text-twilight dark:text-eggshell mb-4 text-center">
           Work <span className="text-burnt-peach">Experience</span>
         </h2>
@@ -452,7 +521,10 @@ const ExperienceSection = () => {
               </div>
 
               {/* Content */}
-              <div className="bg-white dark:bg-twilight/50 rounded-xl p-6 shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-1 glass">
+              <div 
+                data-work-experience-card
+                className="bg-white dark:bg-twilight/50 rounded-xl p-6 shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-1 glass"
+              >
                 <div className="flex flex-wrap items-center justify-between gap-2 mb-2">
                   <h3 className="text-lg font-semibold text-twilight dark:text-eggshell">{exp.title}</h3>
                   <span className="text-sm text-burnt-peach font-medium">{exp.period}</span>
@@ -473,7 +545,7 @@ const ExperienceSection = () => {
 // ============================================
 const ContactSection = () => {
   return (
-    <section id="contact" className="py-24 particle-bg">
+    <section id="contact" className="py-24">
       <div className="container mx-auto px-6">
         <div className="max-w-2xl mx-auto text-center">
           <h2 className="text-3xl md:text-4xl font-bold text-twilight dark:text-eggshell mb-4">
