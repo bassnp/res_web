@@ -1,0 +1,518 @@
+'use client';
+
+import { useState, useEffect } from 'react';
+import { useTheme } from 'next-themes';
+import { Home, Settings, Code, Briefcase, User, Mail, Github, Linkedin, ChevronDown, ExternalLink, Sun, Moon, Sparkles } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Switch } from '@/components/ui/switch';
+import { Label } from '@/components/ui/label';
+
+// ============================================
+// HEADER COMPONENT
+// ============================================
+const Header = () => {
+  const [settingsOpen, setSettingsOpen] = useState(false);
+  const { theme, setTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  const navItems = [
+    { name: 'About', href: '#about' },
+    { name: 'Projects', href: '#projects' },
+    { name: 'Experience', href: '#experience' },
+    { name: 'Contact', href: '#contact' },
+  ];
+
+  return (
+    <header className="fixed top-0 left-0 right-0 z-50 bg-eggshell/80 dark:bg-twilight/80 backdrop-blur-md border-b border-twilight/10 dark:border-eggshell/10">
+      <div className="container mx-auto px-6 py-4">
+        <div className="flex items-center justify-between">
+          {/* Home Icon */}
+          <a href="#" className="p-2 rounded-lg hover:bg-twilight/10 dark:hover:bg-eggshell/10 transition-all duration-300 hover:scale-110">
+            <Home className="w-6 h-6 text-twilight dark:text-eggshell" />
+          </a>
+
+          {/* Navigation */}
+          <nav className="hidden md:flex items-center gap-1">
+            {navItems.map((item) => (
+              <a
+                key={item.name}
+                href={item.href}
+                className="px-4 py-2 text-sm font-medium text-twilight dark:text-eggshell hover:text-burnt-peach transition-all duration-300 rounded-lg hover:bg-twilight/5 dark:hover:bg-eggshell/5 animated-underline"
+              >
+                {item.name}
+              </a>
+            ))}
+          </nav>
+
+          {/* Settings Icon */}
+          <Dialog open={settingsOpen} onOpenChange={setSettingsOpen}>
+            <DialogTrigger asChild>
+              <button className="p-2 rounded-lg hover:bg-twilight/10 dark:hover:bg-eggshell/10 transition-all duration-300 hover:rotate-90">
+                <Settings className="w-6 h-6 text-twilight dark:text-eggshell" />
+              </button>
+            </DialogTrigger>
+            <DialogContent className="bg-eggshell dark:bg-twilight border-twilight/20 dark:border-eggshell/20">
+              <DialogHeader>
+                <DialogTitle className="text-twilight dark:text-eggshell flex items-center gap-2">
+                  <Sparkles className="w-5 h-5 text-burnt-peach" />
+                  Settings
+                </DialogTitle>
+              </DialogHeader>
+              <div className="py-6 space-y-6">
+                {/* Dark Mode Toggle */}
+                <div className="flex items-center justify-between p-4 rounded-xl bg-twilight/5 dark:bg-eggshell/5">
+                  <div className="flex items-center gap-3">
+                    {mounted && theme === 'dark' ? (
+                      <Moon className="w-5 h-5 text-burnt-peach" />
+                    ) : (
+                      <Sun className="w-5 h-5 text-burnt-peach" />
+                    )}
+                    <Label htmlFor="dark-mode" className="text-twilight dark:text-eggshell font-medium">
+                      Dark Mode
+                    </Label>
+                  </div>
+                  {mounted && (
+                    <Switch
+                      id="dark-mode"
+                      checked={theme === 'dark'}
+                      onCheckedChange={(checked) => setTheme(checked ? 'dark' : 'light')}
+                      className="data-[state=checked]:bg-burnt-peach"
+                    />
+                  )}
+                </div>
+                <p className="text-sm text-twilight/60 dark:text-eggshell/60 text-center">
+                  More settings coming soon...
+                </p>
+              </div>
+            </DialogContent>
+          </Dialog>
+        </div>
+      </div>
+    </header>
+  );
+};
+
+// ============================================
+// FOOTER COMPONENT
+// ============================================
+const Footer = () => {
+  const footerLinks = [
+    { name: 'About', href: '#about' },
+    { name: 'Projects', href: '#projects' },
+    { name: 'Experience', href: '#experience' },
+    { name: 'Contact', href: '#contact' },
+  ];
+
+  const socialLinks = [
+    { icon: Github, href: '#', label: 'GitHub' },
+    { icon: Linkedin, href: '#', label: 'LinkedIn' },
+    { icon: Mail, href: '#', label: 'Email' },
+  ];
+
+  return (
+    <footer className="bg-twilight text-eggshell py-12">
+      <div className="container mx-auto px-6">
+        <div className="grid md:grid-cols-3 gap-8">
+          {/* Brand */}
+          <div>
+            <h3 className="text-lg font-semibold mb-4">Portfolio</h3>
+            <p className="text-eggshell/70 text-sm">
+              Hobbyist software engineer &amp; recent graduate passionate about building elegant solutions.
+            </p>
+          </div>
+
+          {/* Navigation */}
+          <div>
+            <h3 className="text-lg font-semibold mb-4">Navigation</h3>
+            <ul className="space-y-2">
+              {footerLinks.map((link) => (
+                <li key={link.name}>
+                  <a href={link.href} className="text-eggshell/70 hover:text-burnt-peach transition-colors text-sm animated-underline">
+                    {link.name}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Contact */}
+          <div>
+            <h3 className="text-lg font-semibold mb-4">Connect</h3>
+            <div className="flex gap-4">
+              {socialLinks.map((social) => (
+                <a
+                  key={social.label}
+                  href={social.href}
+                  className="p-2 rounded-lg bg-eggshell/10 hover:bg-burnt-peach/30 transition-all duration-300 hover:scale-110 hover:-translate-y-1"
+                  aria-label={social.label}
+                >
+                  <social.icon className="w-5 h-5" />
+                </a>
+              ))}
+            </div>
+            <p className="mt-4 text-eggshell/70 text-sm">
+              hello@example.com
+            </p>
+          </div>
+        </div>
+
+        <div className="mt-12 pt-6 border-t border-eggshell/20 text-center text-eggshell/50 text-sm">
+          <p>&copy; {new Date().getFullYear()} Portfolio. All rights reserved.</p>
+        </div>
+      </div>
+    </footer>
+  );
+};
+
+// ============================================
+// ANIMATED BACKGROUND SHAPES
+// ============================================
+const AnimatedShapes = () => {
+  return (
+    <div className="absolute inset-0 pointer-events-none overflow-hidden">
+      {/* Morphing blob 1 */}
+      <div className="absolute top-20 left-10 w-72 h-72 bg-burnt-peach/20 dark:bg-burnt-peach/30 rounded-full blur-3xl animate-float animate-morph" />
+      {/* Morphing blob 2 */}
+      <div className="absolute bottom-20 right-10 w-96 h-96 bg-muted-teal/20 dark:bg-muted-teal/30 rounded-full blur-3xl animate-float-delayed animate-morph" style={{ animationDelay: '2s' }} />
+      {/* Center glow */}
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-apricot/10 dark:bg-apricot/20 rounded-full blur-3xl" />
+      {/* Rotating ring */}
+      <div className="absolute top-1/4 right-1/4 w-64 h-64 border-2 border-burnt-peach/10 dark:border-burnt-peach/20 rounded-full animate-rotate-slow" />
+      {/* Small floating dots */}
+      <div className="absolute top-1/3 left-1/4 w-4 h-4 bg-burnt-peach/40 rounded-full animate-bounce-soft" />
+      <div className="absolute top-2/3 right-1/3 w-3 h-3 bg-muted-teal/40 rounded-full animate-bounce-soft" style={{ animationDelay: '0.5s' }} />
+      <div className="absolute bottom-1/4 left-1/3 w-5 h-5 bg-apricot/40 rounded-full animate-bounce-soft" style={{ animationDelay: '1s' }} />
+    </div>
+  );
+};
+
+// ============================================
+// HERO SECTION
+// ============================================
+const HeroSection = () => {
+  const [typedText, setTypedText] = useState('');
+  const fullText = 'Software Engineer';
+
+  useEffect(() => {
+    let index = 0;
+    const timer = setInterval(() => {
+      if (index <= fullText.length) {
+        setTypedText(fullText.slice(0, index));
+        index++;
+      } else {
+        clearInterval(timer);
+      }
+    }, 100);
+    return () => clearInterval(timer);
+  }, []);
+
+  return (
+    <section className="min-h-screen flex items-center justify-center relative overflow-hidden pt-20 particle-bg">
+      <AnimatedShapes />
+
+      <div className="container mx-auto px-6 relative z-10">
+        <div className="max-w-3xl mx-auto text-center">
+          {/* Greeting */}
+          <p className="text-burnt-peach font-medium mb-4 opacity-0 animate-fade-in">
+            Hello, I&apos;m
+          </p>
+
+          {/* Name with typing effect */}
+          <h1 className="text-5xl md:text-7xl font-bold text-twilight dark:text-eggshell mb-6 opacity-0 animate-fade-in delay-100">
+            <span className="gradient-text">{typedText}</span>
+            <span className="inline-block w-1 h-12 md:h-16 bg-burnt-peach ml-1 animate-blink" />
+          </h1>
+
+          {/* Tagline */}
+          <p className="text-xl md:text-2xl text-twilight/70 dark:text-eggshell/70 mb-8 opacity-0 animate-fade-in delay-200">
+            Recent graduate &amp; hobbyist developer crafting elegant digital experiences
+          </p>
+
+          {/* CTA Buttons */}
+          <div className="flex flex-wrap justify-center gap-4 opacity-0 animate-fade-in delay-300">
+            <Button
+              asChild
+              className="bg-burnt-peach hover:bg-burnt-peach/90 text-eggshell px-8 py-6 text-lg rounded-xl animate-pulse-glow hover:scale-105 transition-transform"
+            >
+              <a href="#projects">View Projects</a>
+            </Button>
+            <Button
+              asChild
+              variant="outline"
+              className="border-twilight dark:border-eggshell text-twilight dark:text-eggshell hover:bg-twilight hover:text-eggshell dark:hover:bg-eggshell dark:hover:text-twilight px-8 py-6 text-lg rounded-xl hover:scale-105 transition-transform"
+            >
+              <a href="#contact">Get in Touch</a>
+            </Button>
+          </div>
+
+          {/* Scroll indicator */}
+          <div className="mt-16 opacity-0 animate-fade-in delay-500">
+            <a href="#about" className="inline-flex flex-col items-center text-twilight/50 dark:text-eggshell/50 hover:text-burnt-peach transition-colors group">
+              <span className="text-sm mb-2">Scroll to explore</span>
+              <ChevronDown className="w-6 h-6 animate-bounce group-hover:animate-none group-hover:translate-y-1 transition-transform" />
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+};
+
+// ============================================
+// ABOUT SECTION
+// ============================================
+const AboutSection = () => {
+  const skills = [
+    'JavaScript', 'React', 'Next.js', 'Python', 'Node.js', 'TypeScript',
+    'MongoDB', 'PostgreSQL', 'Git', 'AWS', 'Docker', 'TailwindCSS'
+  ];
+
+  return (
+    <section id="about" className="py-24 bg-white/50 dark:bg-twilight/50">
+      <div className="container mx-auto px-6">
+        <div className="max-w-4xl mx-auto">
+          <h2 className="text-3xl md:text-4xl font-bold text-twilight dark:text-eggshell mb-8 text-center opacity-0 animate-fade-in">
+            About <span className="text-burnt-peach">Me</span>
+          </h2>
+
+          <div className="grid md:grid-cols-2 gap-12 items-center">
+            {/* Profile card */}
+            <div className="bg-gradient-to-br from-burnt-peach/10 to-muted-teal/10 dark:from-burnt-peach/20 dark:to-muted-teal/20 rounded-2xl p-8 opacity-0 animate-fade-in-left delay-100 hover-lift glass">
+              <div className="w-32 h-32 mx-auto mb-6 rounded-full bg-gradient-to-br from-burnt-peach to-muted-teal flex items-center justify-center animate-morph">
+                <User className="w-16 h-16 text-eggshell" />
+              </div>
+              <h3 className="text-xl font-semibold text-twilight dark:text-eggshell text-center mb-2">Software Engineer</h3>
+              <p className="text-twilight/60 dark:text-eggshell/60 text-center text-sm">Recent Graduate • Hobbyist Developer</p>
+            </div>
+
+            {/* Bio */}
+            <div className="opacity-0 animate-fade-in-right delay-200">
+              <p className="text-twilight/80 dark:text-eggshell/80 leading-relaxed mb-6">
+                As a recent graduate with a passion for software development, I love building 
+                projects that solve real problems. My journey started as a hobbyist, and I&apos;ve 
+                grown into a developer who values clean code and elegant solutions.
+              </p>
+              <p className="text-twilight/80 dark:text-eggshell/80 leading-relaxed">
+                When I&apos;m not coding, you&apos;ll find me exploring new technologies, contributing 
+                to open-source projects, or learning about the latest trends in software engineering.
+              </p>
+            </div>
+          </div>
+
+          {/* Skills */}
+          <div className="mt-16 opacity-0 animate-fade-in delay-300">
+            <h3 className="text-xl font-semibold text-twilight dark:text-eggshell mb-6 text-center">Skills &amp; Technologies</h3>
+            <div className="flex flex-wrap justify-center gap-3">
+              {skills.map((skill, index) => (
+                <span
+                  key={skill}
+                  className="px-4 py-2 bg-twilight/5 dark:bg-eggshell/10 text-twilight dark:text-eggshell rounded-full text-sm font-medium hover:bg-burnt-peach hover:text-eggshell transition-all duration-300 cursor-default hover:scale-110 hover:-translate-y-1"
+                  style={{ animationDelay: `${index * 50}ms` }}
+                >
+                  {skill}
+                </span>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+};
+
+// ============================================
+// PROJECTS SECTION
+// ============================================
+const ProjectsSection = () => {
+  const projects = [
+    {
+      title: 'Project Alpha',
+      description: 'A full-stack web application built with React and Node.js, featuring real-time updates and modern UI.',
+      tags: ['React', 'Node.js', 'MongoDB'],
+      color: 'from-burnt-peach to-apricot',
+    },
+    {
+      title: 'Project Beta',
+      description: 'Mobile-first progressive web app with offline capabilities and push notifications.',
+      tags: ['Next.js', 'PWA', 'TypeScript'],
+      color: 'from-muted-teal to-twilight',
+    },
+    {
+      title: 'Project Gamma',
+      description: 'Data visualization dashboard with interactive charts and real-time analytics.',
+      tags: ['Python', 'D3.js', 'PostgreSQL'],
+      color: 'from-apricot to-muted-teal',
+    },
+  ];
+
+  return (
+    <section id="projects" className="py-24 particle-bg">
+      <div className="container mx-auto px-6">
+        <h2 className="text-3xl md:text-4xl font-bold text-twilight dark:text-eggshell mb-4 text-center">
+          Featured <span className="text-burnt-peach">Projects</span>
+        </h2>
+        <p className="text-twilight/60 dark:text-eggshell/60 text-center mb-12 max-w-2xl mx-auto">
+          A selection of projects that showcase my skills and passion for building great software.
+        </p>
+
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
+          {projects.map((project, index) => (
+            <div
+              key={project.title}
+              className="group bg-white dark:bg-twilight/50 rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500 hover:-translate-y-3 opacity-0 animate-scale-in glass"
+              style={{ animationDelay: `${index * 150}ms` }}
+            >
+              {/* Project image placeholder */}
+              <div className={`h-48 bg-gradient-to-br ${project.color} flex items-center justify-center relative overflow-hidden`}>
+                <Code className="w-16 h-16 text-eggshell/80 group-hover:scale-125 group-hover:rotate-12 transition-all duration-500" />
+                {/* Shimmer overlay on hover */}
+                <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 shimmer" />
+              </div>
+
+              {/* Content */}
+              <div className="p-6">
+                <h3 className="text-xl font-semibold text-twilight dark:text-eggshell mb-3 flex items-center justify-between">
+                  {project.title}
+                  <ExternalLink className="w-5 h-5 text-twilight/40 dark:text-eggshell/40 group-hover:text-burnt-peach group-hover:translate-x-1 group-hover:-translate-y-1 transition-all duration-300" />
+                </h3>
+                <p className="text-twilight/70 dark:text-eggshell/70 text-sm mb-4 leading-relaxed">
+                  {project.description}
+                </p>
+                <div className="flex flex-wrap gap-2">
+                  {project.tags.map((tag) => (
+                    <span key={tag} className="px-3 py-1 bg-muted-teal/10 dark:bg-muted-teal/20 text-muted-teal text-xs rounded-full transition-all duration-300 hover:bg-muted-teal hover:text-eggshell">
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+};
+
+// ============================================
+// EXPERIENCE SECTION
+// ============================================
+const ExperienceSection = () => {
+  const experiences = [
+    {
+      title: 'Software Engineer Intern',
+      company: 'Tech Company',
+      period: '2024 - Present',
+      description: 'Developed and maintained web applications using modern JavaScript frameworks. Collaborated with cross-functional teams to deliver high-quality software solutions.',
+    },
+    {
+      title: 'Freelance Developer',
+      company: 'Self-Employed',
+      period: '2023 - 2024',
+      description: 'Built custom websites and applications for various clients. Managed full project lifecycle from requirements gathering to deployment.',
+    },
+    {
+      title: 'Computer Science Graduate',
+      company: 'University',
+      period: '2020 - 2024',
+      description: 'Bachelor of Science in Computer Science. Coursework included algorithms, data structures, software engineering, and database systems.',
+    },
+  ];
+
+  return (
+    <section id="experience" className="py-24 bg-white/50 dark:bg-twilight/50">
+      <div className="container mx-auto px-6">
+        <h2 className="text-3xl md:text-4xl font-bold text-twilight dark:text-eggshell mb-4 text-center">
+          Work <span className="text-burnt-peach">Experience</span>
+        </h2>
+        <p className="text-twilight/60 dark:text-eggshell/60 text-center mb-12 max-w-2xl mx-auto">
+          My professional journey and educational background.
+        </p>
+
+        <div className="max-w-3xl mx-auto">
+          {experiences.map((exp, index) => (
+            <div
+              key={exp.title}
+              className="relative pl-8 pb-12 last:pb-0 opacity-0 animate-slide-up"
+              style={{ animationDelay: `${index * 200}ms` }}
+            >
+              {/* Timeline line */}
+              {index !== experiences.length - 1 && (
+                <div className="absolute left-[11px] top-8 bottom-0 w-0.5 bg-gradient-to-b from-burnt-peach to-muted-teal" />
+              )}
+
+              {/* Timeline dot */}
+              <div className="absolute left-0 top-1 w-6 h-6 rounded-full bg-burnt-peach flex items-center justify-center animate-pulse-glow">
+                <Briefcase className="w-3 h-3 text-eggshell" />
+              </div>
+
+              {/* Content */}
+              <div className="bg-white dark:bg-twilight/50 rounded-xl p-6 shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-1 glass">
+                <div className="flex flex-wrap items-center justify-between gap-2 mb-2">
+                  <h3 className="text-lg font-semibold text-twilight dark:text-eggshell">{exp.title}</h3>
+                  <span className="text-sm text-burnt-peach font-medium">{exp.period}</span>
+                </div>
+                <p className="text-muted-teal font-medium text-sm mb-3">{exp.company}</p>
+                <p className="text-twilight/70 dark:text-eggshell/70 text-sm leading-relaxed">{exp.description}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+};
+
+// ============================================
+// CONTACT SECTION
+// ============================================
+const ContactSection = () => {
+  return (
+    <section id="contact" className="py-24 particle-bg">
+      <div className="container mx-auto px-6">
+        <div className="max-w-2xl mx-auto text-center">
+          <h2 className="text-3xl md:text-4xl font-bold text-twilight dark:text-eggshell mb-4">
+            Get in <span className="text-burnt-peach">Touch</span>
+          </h2>
+          <p className="text-twilight/60 dark:text-eggshell/60 mb-8">
+            I&apos;m always open to discussing new projects, creative ideas, or opportunities to be part of your vision.
+          </p>
+
+          <Button
+            asChild
+            className="bg-burnt-peach hover:bg-burnt-peach/90 text-eggshell px-8 py-6 text-lg rounded-xl animate-pulse-glow hover:scale-105 transition-transform"
+          >
+            <a href="mailto:hello@example.com" className="flex items-center gap-2">
+              <Mail className="w-5 h-5" />
+              Say Hello
+            </a>
+          </Button>
+        </div>
+      </div>
+    </section>
+  );
+};
+
+// ============================================
+// MAIN PAGE COMPONENT
+// ============================================
+export default function App() {
+  return (
+    <>
+      <Header />
+      <main>
+        <HeroSection />
+        <AboutSection />
+        <ProjectsSection />
+        <ExperienceSection />
+        <ContactSection />
+      </main>
+      <Footer />
+    </>
+  );
+}
