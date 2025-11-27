@@ -260,38 +260,6 @@ export default function ParticleBackground() {
         context.translate(-(camera.offsetX ?? 0), -(camera.offsetY ?? 0));
       }
 
-      // Theme-aware fog gradient
-      const breathPhase = Math.sin(timestamp * 0.0008) * 0.5 + 0.5;
-      const fogDepth = 0.045 + breathPhase * 0.015;
-      const gradientRadius = Math.hypot(width, height) * 0.6;
-      const gradient = context.createRadialGradient(
-        cameraCenterX,
-        cameraCenterY,
-        gradientRadius * 0.15,
-        cameraCenterX,
-        cameraCenterY,
-        gradientRadius
-      );
-
-      // Fog color adapts to theme
-      if (theme === 'dark') {
-        // Dark mode: Light subtle fog (muted-teal tint)
-        gradient.addColorStop(0, `rgba(129, 178, 154, ${fogDepth * 0.25})`);
-        gradient.addColorStop(0.5, `rgba(129, 178, 154, ${fogDepth * 0.15})`);
-        gradient.addColorStop(1, 'rgba(0, 0, 0, 0)');
-      } else {
-        // Light mode: Dark subtle fog (twilight tint)
-        gradient.addColorStop(0, `rgba(61, 64, 91, ${fogDepth * 0.15})`);
-        gradient.addColorStop(0.5, `rgba(61, 64, 91, ${fogDepth * 0.08})`);
-        gradient.addColorStop(1, 'rgba(0, 0, 0, 0)');
-      }
-
-      context.save();
-      context.globalCompositeOperation = 'source-over';
-      context.fillStyle = gradient;
-      context.fillRect(0, 0, width, height);
-      context.restore();
-
       for (let i = 0; i < particles.length; i += 1) {
         const particle = particles[i];
         context.beginPath();
@@ -311,8 +279,21 @@ export default function ParticleBackground() {
         const a = particles[i];
         for (let j = i + 1; j < particles.length; j += 1) {
           const b = particles[j];
-          const dx = a.x - b.x;
-          const dy = a.y - b.y;
+          
+          // Calculate wrapped distance (accounts for particles wrapping around screen edges)
+          let dx = a.x - b.x;
+          let dy = a.y - b.y;
+          
+          // Check if wrapping around horizontal edges results in shorter distance
+          if (Math.abs(dx) > width / 2) {
+            dx = dx > 0 ? dx - width : dx + width;
+          }
+          
+          // Check if wrapping around vertical edges results in shorter distance
+          if (Math.abs(dy) > height / 2) {
+            dy = dy > 0 ? dy - height : dy + height;
+          }
+          
           const distanceSq = dx * dx + dy * dy;
           if (distanceSq > PARTICLE_CONNECTION_DISTANCE * PARTICLE_CONNECTION_DISTANCE) {
             continue;
@@ -381,8 +362,20 @@ export default function ParticleBackground() {
           return;
         }
 
-        const dx = a.x - b.x;
-        const dy = a.y - b.y;
+        // Calculate wrapped distance to prevent flash trails when particles wrap around edges
+        let dx = a.x - b.x;
+        let dy = a.y - b.y;
+        
+        // Check if wrapping around horizontal edges results in shorter distance
+        if (Math.abs(dx) > width / 2) {
+          dx = dx > 0 ? dx - width : dx + width;
+        }
+        
+        // Check if wrapping around vertical edges results in shorter distance
+        if (Math.abs(dy) > height / 2) {
+          dy = dy > 0 ? dy - height : dy + height;
+        }
+        
         const distanceSq = dx * dx + dy * dy;
         const distance = Math.sqrt(distanceSq);
 
@@ -455,6 +448,26 @@ export default function ParticleBackground() {
             state.lastActiveStrength = null;
           }
 
+          // Calculate wrapped deltas for proper rendering
+          let dx = b.x - a.x;
+          let dy = b.y - a.y;
+          
+          // Wrap around horizontal edges if needed
+          if (Math.abs(dx) > width / 2) {
+            dx = dx > 0 ? dx - width : dx + width;
+          }
+          
+          // Wrap around vertical edges if needed
+          if (Math.abs(dy) > height / 2) {
+            dy = dy > 0 ? dy - height : dy + height;
+          }
+          
+          // Skip rendering if wrapped distance is still too large (safety check)
+          const wrappedDistanceSq = dx * dx + dy * dy;
+          if (wrappedDistanceSq > PARTICLE_CONNECTION_DISTANCE * PARTICLE_CONNECTION_DISTANCE) {
+            continue;
+          }
+
           const segments = Math.max(2, Math.ceil(state.distance / BEAM_SEGMENT_SPACING));
           const beamRadius = ((a.radius + b.radius) / 2) * (0.5 + strength * 0.7) * (0.55 + fade * 0.45);
           
@@ -464,8 +477,9 @@ export default function ParticleBackground() {
 
           for (let s = 1; s < segments; s += 1) {
             const t = s / segments;
-            const x = a.x + (b.x - a.x) * t;
-            const y = a.y + (b.y - a.y) * t;
+            // Use wrapped delta for interpolation to prevent trails across screen
+            const x = a.x + dx * t;
+            const y = a.y + dy * t;
             const blended = interpolateColor(a.color, b.color, t);
             blended.a = Math.min(1, ((a.color.a + b.color.a) / 2) * alphaBoost);
 
