@@ -15,11 +15,16 @@ import InteractiveGridDots from '@/components/InteractiveGridDots';
 // ============================================
 const Header = () => {
   const [settingsOpen, setSettingsOpen] = useState(false);
-  const { theme, setTheme } = useTheme();
+  const { theme, setTheme, resolvedTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
     setMounted(true);
+    // On mount, if theme is 'system', resolve it to the actual system preference
+    if (theme === 'system') {
+      const systemPreference = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+      setTheme(systemPreference);
+    }
   }, []);
 
   const navItems = [
@@ -34,7 +39,7 @@ const Header = () => {
   };
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 bg-white/80 dark:bg-twilight/80 backdrop-blur-md border-b border-twilight/10 dark:border-eggshell/10 overflow-hidden">
+    <header className="fixed top-0 left-0 right-0 z-50 bg-white/5 dark:bg-twilight/5 backdrop-blur-md border-b border-twilight/10 dark:border-eggshell/10 overflow-hidden">
       <InteractiveGridDots />
       <div className="container mx-auto px-6 py-4 relative z-10">
         <div className="flex items-center justify-between">
@@ -114,7 +119,7 @@ const Footer = () => {
   ];
 
   return (
-    <footer className="bg-white dark:bg-twilight text-twilight dark:text-eggshell py-12 relative z-20 overflow-hidden">
+    <footer className="bg-white/5 dark:bg-twilight/5 backdrop-blur-md text-twilight dark:text-eggshell py-12 relative z-20 overflow-hidden">
       <InteractiveGridDots />
       <div className="container mx-auto px-6 relative z-10">
         <div className="grid md:grid-cols-3 gap-8">
@@ -340,7 +345,7 @@ const AboutSection = () => {
   ];
 
   return (
-    <section id="about" className="py-24 bg-white dark:bg-twilight relative overflow-hidden">
+    <section id="about" className="py-24 bg-white/5 dark:bg-twilight/5 backdrop-blur-sm relative overflow-hidden">
       <InteractiveGridDots />
       <div className="container mx-auto px-6 relative z-10">
         <div className="max-w-4xl mx-auto">
@@ -493,7 +498,7 @@ const ExperienceSection = () => {
   ];
 
   return (
-    <section id="experience" className="py-24 bg-white dark:bg-twilight relative overflow-hidden">
+    <section id="experience" className="py-24 bg-white/5 dark:bg-twilight/5 backdrop-blur-sm relative overflow-hidden">
       <InteractiveGridDots />
       <div className="container mx-auto px-6 relative z-10">
         <h2 className="text-3xl md:text-4xl font-bold text-twilight dark:text-eggshell mb-4 text-center">
