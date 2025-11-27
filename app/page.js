@@ -39,10 +39,12 @@ const Header = () => {
   };
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 bg-white/5 dark:bg-twilight/5 backdrop-blur-md border-b border-twilight/10 dark:border-eggshell/10 overflow-hidden">
-      <InteractiveGridDots />
-      <div className="container mx-auto px-6 py-4 relative z-10">
-        <div className="flex items-center justify-between">
+    <header className="fixed top-0 left-0 right-0 z-50 overflow-visible">
+      <div className="container mx-auto px-6 py-4">
+        <div className="relative bg-background/95 backdrop-blur-sm rounded-[10px] shadow-[0_2px_8px_rgba(61,64,91,0.08)] dark:shadow-[0_2px_12px_rgba(0,0,0,0.3)] border border-twilight/8 dark:border-eggshell/8 overflow-hidden">
+          <InteractiveGridDots />
+          <div className="relative z-10">
+            <div className="flex items-center justify-between">
           {/* Theme Toggle (replaces Home Icon) */}
           {mounted && (
             <button 
@@ -61,40 +63,42 @@ const Header = () => {
             <div className="p-2 w-10 h-10" />
           )}
 
-          {/* Navigation */}
-          <nav className="hidden md:flex items-center gap-1">
-            {navItems.map((item) => (
-              <a
-                key={item.name}
-                href={item.href}
-                className="px-4 py-2 text-sm font-medium text-twilight dark:text-eggshell hover:text-burnt-peach transition-all duration-300 rounded-lg hover:bg-twilight/5 dark:hover:bg-eggshell/5 animated-underline"
-              >
-                {item.name}
-              </a>
-            ))}
-          </nav>
+              {/* Navigation */}
+              <nav className="hidden md:flex items-center gap-1">
+                {navItems.map((item) => (
+                  <a
+                    key={item.name}
+                    href={item.href}
+                    className="px-4 py-2 text-sm font-medium text-twilight dark:text-eggshell hover:text-burnt-peach transition-all duration-300 rounded-lg hover:bg-twilight/5 dark:hover:bg-eggshell/5 animated-underline"
+                  >
+                    {item.name}
+                  </a>
+                ))}
+              </nav>
 
-          {/* Settings Icon */}
-          <Dialog open={settingsOpen} onOpenChange={setSettingsOpen}>
-            <DialogTrigger asChild>
-              <button className="p-2 rounded-lg hover:bg-twilight/10 dark:hover:bg-eggshell/10 transition-all duration-300 hover:rotate-90">
-                <Settings className="w-6 h-6 text-twilight dark:text-eggshell" />
-              </button>
-            </DialogTrigger>
-            <DialogContent className="bg-eggshell dark:bg-twilight border-twilight/20 dark:border-eggshell/20">
-              <DialogHeader>
-                <DialogTitle className="text-twilight dark:text-eggshell flex items-center gap-2">
-                  <Settings className="w-5 h-5 text-burnt-peach" />
-                  Settings
-                </DialogTitle>
-              </DialogHeader>
-              <div className="py-6 space-y-6">
-                <p className="text-sm text-twilight/60 dark:text-eggshell/60 text-center">
-                  More settings coming soon...
-                </p>
-              </div>
-            </DialogContent>
-          </Dialog>
+              {/* Settings Icon */}
+              <Dialog open={settingsOpen} onOpenChange={setSettingsOpen}>
+                <DialogTrigger asChild>
+                  <button className="p-2 rounded-lg hover:bg-twilight/10 dark:hover:bg-eggshell/10 transition-all duration-300 hover:rotate-90">
+                    <Settings className="w-6 h-6 text-twilight dark:text-eggshell" />
+                  </button>
+                </DialogTrigger>
+                <DialogContent className="bg-eggshell dark:bg-twilight border-twilight/20 dark:border-eggshell/20">
+                  <DialogHeader>
+                    <DialogTitle className="text-twilight dark:text-eggshell flex items-center gap-2">
+                      <Settings className="w-5 h-5 text-burnt-peach" />
+                      Settings
+                    </DialogTitle>
+                  </DialogHeader>
+                  <div className="py-6 space-y-6">
+                    <p className="text-sm text-twilight/60 dark:text-eggshell/60 text-center">
+                      More settings coming soon...
+                    </p>
+                  </div>
+                </DialogContent>
+              </Dialog>
+            </div>
+          </div>
         </div>
       </div>
     </header>
@@ -119,55 +123,63 @@ const Footer = () => {
   ];
 
   return (
-    <footer className="bg-white/5 dark:bg-twilight/5 backdrop-blur-md text-twilight dark:text-eggshell py-12 relative z-20 overflow-hidden">
-      <InteractiveGridDots />
-      <div className="container mx-auto px-6 relative z-10">
-        <div className="grid md:grid-cols-3 gap-8">
-          {/* Brand */}
-          <div>
-            <h3 className="text-lg font-semibold mb-4">Portfolio</h3>
-            <p className="text-twilight/70 dark:text-eggshell/70 text-sm">
-              Hobbyist software engineer &amp; recent graduate passionate about building elegant solutions.
-            </p>
-          </div>
+    <footer className="text-twilight dark:text-eggshell py-8 relative z-20">
+      <div className="container mx-auto px-6">
+        <div className="relative bg-background/95 backdrop-blur-sm rounded-[10px] shadow-[0_2px_8px_rgba(61,64,91,0.08)] dark:shadow-[0_2px_12px_rgba(0,0,0,0.3)] border border-twilight/8 dark:border-eggshell/8 overflow-hidden py-8">
+          <InteractiveGridDots />
+          <div className="relative z-10 px-8">
+            {/* Main footer content */}
+            <div className="grid md:grid-cols-3 gap-12">
+              {/* Brand */}
+              <div>
+                <h3 className="text-lg font-semibold mb-4">Portfolio</h3>
+                <p className="text-twilight/70 dark:text-eggshell/70 text-sm leading-relaxed">
+                  Hobbyist software engineer &amp; recent graduate passionate about building elegant solutions.
+                </p>
+              </div>
 
-          {/* Navigation */}
-          <div>
-            <h3 className="text-lg font-semibold mb-4">Navigation</h3>
-            <ul className="space-y-2">
-              {footerLinks.map((link) => (
-                <li key={link.name}>
-                  <a href={link.href} className="text-twilight/70 dark:text-eggshell/70 hover:text-burnt-peach transition-colors text-sm animated-underline">
-                    {link.name}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </div>
+              {/* Navigation */}
+              <div>
+                <h3 className="text-lg font-semibold mb-4">Navigation</h3>
+                <ul className="space-y-3">
+                  {footerLinks.map((link) => (
+                    <li key={link.name}>
+                      <a href={link.href} className="text-twilight/70 dark:text-eggshell/70 hover:text-burnt-peach transition-colors text-sm animated-underline">
+                        {link.name}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </div>
 
-          {/* Contact */}
-          <div>
-            <h3 className="text-lg font-semibold mb-4">Connect</h3>
-            <div className="flex gap-4">
-              {socialLinks.map((social) => (
-                <a
-                  key={social.label}
-                  href={social.href}
-                  className="p-2 rounded-lg bg-twilight/10 dark:bg-eggshell/10 hover:bg-burnt-peach/30 transition-all duration-300 hover:scale-110 hover:-translate-y-1"
-                  aria-label={social.label}
-                >
-                  <social.icon className="w-5 h-5" />
-                </a>
-              ))}
+              {/* Contact */}
+              <div>
+                <h3 className="text-lg font-semibold mb-4">Connect</h3>
+                <div className="flex gap-4 mb-4">
+                  {socialLinks.map((social) => (
+                    <a
+                      key={social.label}
+                      href={social.href}
+                      className="p-2 rounded-lg bg-twilight/10 dark:bg-eggshell/10 hover:bg-burnt-peach/30 transition-all duration-300 hover:scale-110 hover:-translate-y-1"
+                      aria-label={social.label}
+                    >
+                      <social.icon className="w-5 h-5" />
+                    </a>
+                  ))}
+                </div>
+                <p className="text-twilight/70 dark:text-eggshell/70 text-sm">
+                  hello@example.com
+                </p>
+              </div>
             </div>
-            <p className="mt-4 text-twilight/70 dark:text-eggshell/70 text-sm">
-              hello@example.com
-            </p>
-          </div>
-        </div>
 
-        <div className="mt-12 pt-6 border-t border-twilight/20 dark:border-eggshell/20 text-center text-twilight/50 dark:text-eggshell/50 text-sm">
-          <p>&copy; {new Date().getFullYear()} Portfolio. All rights reserved.</p>
+            {/* Copyright */}
+            <div className="mt-12 pt-8 border-t border-twilight/20 dark:border-eggshell/20 text-center">
+              <p className="text-twilight/50 dark:text-eggshell/50 text-sm">
+                &copy; {new Date().getFullYear()} Portfolio. All rights reserved.
+              </p>
+            </div>
+          </div>
         </div>
       </div>
     </footer>
@@ -341,14 +353,16 @@ const HeroSection = () => {
 const AboutSection = () => {
   const skills = [
     'JavaScript', 'React', 'Next.js', 'Python', 'Node.js', 'TypeScript',
-    'MongoDB', 'PostgreSQL', 'Git', 'AWS', 'Docker', 'TailwindCSS'
+    'PostgreSQL', 'Git', 'AWS', 'Docker', 'TailwindCSS'
   ];
 
   return (
-    <section id="about" className="py-24 bg-white/5 dark:bg-twilight/5 backdrop-blur-sm relative overflow-hidden">
-      <InteractiveGridDots />
-      <div className="container mx-auto px-6 relative z-10">
-        <div className="max-w-4xl mx-auto">
+    <section id="about" className="py-24 relative">
+      <div className="container mx-auto px-6">
+        <div className="relative bg-background/95 backdrop-blur-sm rounded-[10px] shadow-[0_2px_8px_rgba(61,64,91,0.08)] dark:shadow-[0_2px_12px_rgba(0,0,0,0.3)] border border-twilight/8 dark:border-eggshell/8 overflow-hidden py-16">
+          <InteractiveGridDots />
+          <div className="relative z-10">
+            <div className="max-w-4xl mx-auto">
           <h2 className="text-3xl md:text-4xl font-bold text-twilight dark:text-eggshell mb-8 text-center opacity-0 animate-fade-in">
             About <span className="text-burnt-peach">Me</span>
           </h2>
@@ -387,9 +401,11 @@ const AboutSection = () => {
                   className="px-4 py-2 bg-twilight/5 dark:bg-eggshell/10 text-twilight dark:text-eggshell rounded-full text-sm font-medium hover:bg-muted-teal hover:text-eggshell transition-all duration-300 cursor-default hover:scale-110 hover:-translate-y-1"
                   style={{ animationDelay: `${index * 50}ms` }}
                 >
-                  {skill}
-                </span>
-              ))}
+                    {skill}
+                  </span>
+                ))}
+              </div>
+            </div>
             </div>
           </div>
         </div>
@@ -406,7 +422,7 @@ const ProjectsSection = () => {
     {
       title: 'Project Alpha',
       description: 'A full-stack web application built with React and Node.js, featuring real-time updates and modern UI.',
-      tags: ['React', 'Node.js', 'MongoDB'],
+      tags: ['React', 'Node.js', 'PostgreSQL'],
       color: 'from-burnt-peach to-apricot',
     },
     {
@@ -498,17 +514,19 @@ const ExperienceSection = () => {
   ];
 
   return (
-    <section id="experience" className="py-24 bg-white/5 dark:bg-twilight/5 backdrop-blur-sm relative overflow-hidden">
-      <InteractiveGridDots />
-      <div className="container mx-auto px-6 relative z-10">
-        <h2 className="text-3xl md:text-4xl font-bold text-twilight dark:text-eggshell mb-4 text-center">
-          Work <span className="text-burnt-peach">Experience</span>
-        </h2>
-        <p className="text-twilight/60 dark:text-eggshell/60 text-center mb-12 max-w-2xl mx-auto">
-          My professional journey and educational background.
-        </p>
+    <section id="experience" className="py-24 relative">
+      <div className="container mx-auto px-6">
+        <div className="relative bg-background/95 backdrop-blur-sm rounded-[10px] shadow-[0_2px_8px_rgba(61,64,91,0.08)] dark:shadow-[0_2px_12px_rgba(0,0,0,0.3)] border border-twilight/8 dark:border-eggshell/8 overflow-hidden py-16">
+          <InteractiveGridDots />
+          <div className="relative z-10">
+            <h2 className="text-3xl md:text-4xl font-bold text-twilight dark:text-eggshell mb-4 text-center">
+              Work <span className="text-burnt-peach">Experience</span>
+            </h2>
+            <p className="text-twilight/60 dark:text-eggshell/60 text-center mb-12 max-w-2xl mx-auto">
+              My professional journey and educational background.
+            </p>
 
-        <div className="max-w-3xl mx-auto">
+            <div className="max-w-3xl mx-auto">
           {experiences.map((exp, index) => (
             <div
               key={exp.title}
@@ -535,10 +553,12 @@ const ExperienceSection = () => {
                   <span className="text-sm text-burnt-peach font-medium">{exp.period}</span>
                 </div>
                 <p className="text-muted-teal font-medium text-sm mb-3">{exp.company}</p>
-                <p className="text-twilight/70 dark:text-eggshell/70 text-sm leading-relaxed">{exp.description}</p>
+                  <p className="text-twilight/70 dark:text-eggshell/70 text-sm leading-relaxed">{exp.description}</p>
+                </div>
               </div>
+            ))}
             </div>
-          ))}
+          </div>
         </div>
       </div>
     </section>
@@ -550,7 +570,7 @@ const ExperienceSection = () => {
 // ============================================
 const ContactSection = () => {
   return (
-    <section id="contact" className="py-24">
+    <section id="contact" className="py-24 relative z-30">
       <div className="container mx-auto px-6">
         <div className="max-w-2xl mx-auto text-center">
           <h2 className="text-3xl md:text-4xl font-bold text-twilight dark:text-eggshell mb-4">
@@ -562,7 +582,7 @@ const ContactSection = () => {
 
           <Button
             asChild
-            className="bg-burnt-peach hover:bg-burnt-peach/90 text-eggshell px-8 py-6 text-lg rounded-xl animate-pulse-glow hover:scale-105 transition-transform"
+            className="bg-burnt-peach hover:bg-burnt-peach/90 text-eggshell px-8 py-6 text-lg rounded-xl animate-pulse-glow hover:scale-105 transition-transform relative z-10"
           >
             <a href="mailto:hello@example.com" className="flex items-center gap-2">
               <Mail className="w-5 h-5" />
