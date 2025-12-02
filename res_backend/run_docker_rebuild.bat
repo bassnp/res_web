@@ -5,14 +5,22 @@ echo res_web Backend - Clean Rebuild
 echo ========================================
 echo.
 
-echo [1/4] Stopping and removing existing containers...
+echo [1/5] Stopping and removing existing containers...
+docker compose down --remove-orphans 2>nul
 docker stop res_web-backend 2>nul
-docker rm res_web-backend 2>nul
-docker compose down -v 2>nul
+docker rm -f res_web-backend 2>nul
 echo Done.
 
 echo.
-echo [2/4] Building Docker image...
+echo [2/5] Killing any process using port 8000...
+for /f "tokens=5" %%a in ('netstat -ano ^| findstr :8000 ^| findstr LISTENING') do (
+    echo Killing PID %%a
+    taskkill /F /PID %%a 2>nul
+)
+echo Done.
+
+echo.
+echo [3/5] Building Docker image...
 docker compose build --no-cache
 
 if errorlevel 1 (
@@ -23,7 +31,7 @@ if errorlevel 1 (
 )
 
 echo.
-echo [3/4] Starting container...
+echo [4/5] Starting container...
 docker compose up -d
 
 if errorlevel 1 (
@@ -34,7 +42,7 @@ if errorlevel 1 (
 )
 
 echo.
-echo [4/4] Waiting for health check...
+echo [5/5] Waiting for health check...
 timeout /t 5 /nobreak >nul
 
 echo.

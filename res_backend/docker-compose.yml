@@ -12,8 +12,6 @@
 #   Push image:  docker-compose push
 # =============================================================================
 
-version: '3.8'
-
 services:
   # ---------------------------------------------------------------------------
   # Backend API Service
@@ -29,9 +27,9 @@ services:
     ports:
       - "${PORT:-8000}:8000"
     
-    # Environment variables from .env file
+    # Environment variables from .env.local file (local development)
     env_file:
-      - .env
+      - .env.local
     
     # Override environment variables if needed
     environment:
