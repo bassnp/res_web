@@ -1,0 +1,245 @@
+================================================================================
+                    FIT CHECK FEATURE - WORKING CHECKLIST
+================================================================================
+
+  SERVICES STATUS
+  ---------------
+  [ ] Backend API:    http://localhost:8000
+  [ ] Frontend:       http://localhost:3000
+  [ ] API Docs:       http://localhost:8000/docs
+
+================================================================================
+  PHASE 1: HEALTH CHECK TESTS
+================================================================================
+
+  1.1 Backend Health Endpoints
+  ----------------------------
+  [ ] Visit http://localhost:8000/health
+      Expected: {"status":"healthy","service":"portfolio-backend-api","version":"1.0.0"}
+  
+  [ ] Visit http://localhost:8000/
+      Expected: API info with name, version, docs link
+  
+  [ ] Visit http://localhost:8000/api/fit-check/health
+      Expected: {"status":"healthy","service":"fit-check","agent_ready":true}
+
+  1.2 Frontend Health
+  -------------------
+  [ ] Visit http://localhost:3000
+      Expected: Portfolio website loads with all sections
+
+================================================================================
+  PHASE 2: UI COMPONENT TESTS
+================================================================================
+
+  2.1 FitCheckSection Location
+  ----------------------------
+  [ ] Scroll down the page
+      Expected: "See if I'm fit for you!" section appears between Hero and Projects
+
+  2.2 UI Elements Present
+  -----------------------
+  [ ] Header displays: ✨ See if I'm fit for you!
+  [ ] Subtitle displays: "Tell me about your company or the position..."
+  [ ] Textarea with placeholder: "Enter a company name..."
+  [ ] Character counter shows: 0/2000
+  [ ] "Analyze Fit" button is visible (should be disabled initially)
+
+  2.3 Input Validation
+  --------------------
+  [ ] Type 1-2 characters → Button stays disabled
+  [ ] Type 3+ characters → Button becomes enabled with glow animation
+  [ ] Type near 2000 chars → Counter updates correctly
+
+================================================================================
+  PHASE 3: AI ANALYSIS FLOW TESTS
+================================================================================
+
+  3.1 Basic Company Query
+  -----------------------
+  [ ] Enter: "Google"
+  [ ] Click "Analyze Fit" button
+  
+  Expected Flow:
+  [ ] Button changes to loading spinner with "Initializing AI agent..."
+  [ ] Status updates to "Researching..." / "Analyzing..."
+  [ ] Thinking Timeline appears and expands
+  [ ] Thought nodes appear with animations:
+      - Tool call: 🔍 web_search
+      - Observation: 📊 results
+      - Reasoning: 🧠 analysis
+  [ ] Response section appears with AI Analysis header
+  [ ] Response streams in with typewriter effect
+  [ ] Duration shows (e.g., "5.2s")
+  [ ] "Try Another Query" button appears
+
+  3.2 Job Description Query
+  -------------------------
+  [ ] Click "Try Another Query"
+  [ ] Enter: "Senior Software Engineer at a startup, need Python, React, AWS experience"
+  [ ] Click "Analyze Fit"
+  
+  Expected:
+  [ ] Similar flow as above
+  [ ] Response mentions specific skills (Python, React, AWS)
+
+  3.3 Known Company Test
+  ----------------------
+  [ ] Try: "Microsoft"
+  [ ] Try: "Amazon"
+  [ ] Try: "Stripe"
+  [ ] Try: "OpenAI"
+  
+  Each should:
+  [ ] Complete without errors
+  [ ] Provide relevant company-specific analysis
+
+================================================================================
+  PHASE 4: ANIMATION TESTS
+================================================================================
+
+  4.1 Section Animations
+  ----------------------
+  [ ] Refresh page and scroll to FitCheck section
+      Expected: Section fades in with slide-up animation
+
+  4.2 Input Focus Animation
+  -------------------------
+  [ ] Click on textarea
+      Expected: Burnt-peach glow border appears
+
+  4.3 Button Animation
+  --------------------
+  [ ] With valid input, hover over "Analyze Fit"
+      Expected: Button scales up slightly with glow
+
+  4.4 Thought Timeline Animations
+  -------------------------------
+  [ ] During analysis, watch the timeline
+      Expected: 
+      - Thoughts slide in from left
+      - Active thought has pulsing glow
+      - Timeline connectors grow vertically
+
+  4.5 Response Streaming
+  ----------------------
+  [ ] Watch response appear
+      Expected: Blinking cursor at end during streaming
+
+================================================================================
+  PHASE 5: ERROR HANDLING TESTS
+================================================================================
+
+  5.1 Empty/Short Query
+  ---------------------
+  [ ] Clear input and try to submit
+      Expected: Button disabled, cannot submit
+
+  5.2 Network Error (simulate)
+  ----------------------------
+  [ ] Stop the backend container: docker stop portfolio-backend
+  [ ] Try to submit a query
+      Expected: Error message with "Connection Failed" and retry option
+  [ ] Restart backend: docker start portfolio-backend
+
+  5.3 Long Query
+  --------------
+  [ ] Paste 2000+ characters
+      Expected: Input truncated or rejected at 2000
+
+================================================================================
+  PHASE 6: RESPONSIVE DESIGN TESTS
+================================================================================
+
+  6.1 Desktop (>1024px)
+  ---------------------
+  [ ] Full-width layout with good padding
+  [ ] Comfortable reading experience
+
+  6.2 Tablet (640-1024px)
+  -----------------------
+  [ ] Resize browser to tablet width
+  [ ] Layout adjusts appropriately
+  [ ] All elements still accessible
+
+  6.3 Mobile (<640px)
+  -------------------
+  [ ] Resize to mobile width
+  [ ] Full-width card
+  [ ] Button stacks nicely
+  [ ] Timeline readable on small screen
+
+================================================================================
+  PHASE 7: DARK/LIGHT MODE TESTS
+================================================================================
+
+  7.1 Theme Toggle
+  ----------------
+  [ ] Click theme toggle in header
+  [ ] FitCheck section updates colors:
+      - Light: twilight text, light backgrounds
+      - Dark: eggshell text, dark backgrounds
+  
+  7.2 All Elements Themed
+  -----------------------
+  [ ] Input textarea adapts
+  [ ] Buttons adapt
+  [ ] Timeline adapts
+  [ ] Response card adapts
+  [ ] Error messages adapt
+
+================================================================================
+  PHASE 8: ACCESSIBILITY TESTS
+================================================================================
+
+  8.1 Keyboard Navigation
+  -----------------------
+  [ ] Tab through: Input → Button → Timeline → Response
+  [ ] Enter submits when button focused
+
+  8.2 Screen Reader (if available)
+  --------------------------------
+  [ ] Section has aria-label
+  [ ] Button states announced
+  [ ] Status changes announced
+
+================================================================================
+  QUICK COMMANDS
+================================================================================
+
+  Backend Docker:
+    Start:   docker start portfolio-backend
+    Stop:    docker stop portfolio-backend
+    Logs:    docker logs portfolio-backend -f
+    Rebuild: docker-compose up --build -d
+
+  Frontend:
+    Running in terminal (npm run dev)
+    Stop: Ctrl+C in terminal
+    
+  API Docs: http://localhost:8000/docs
+
+================================================================================
+  ISSUE LOG
+================================================================================
+
+  Issue #   | Description                          | Status
+  ----------|--------------------------------------|--------
+  1.        |                                      |
+  2.        |                                      |
+  3.        |                                      |
+  4.        |                                      |
+  5.        |                                      |
+
+================================================================================
+  NOTES
+================================================================================
+
+
+
+
+
+
+================================================================================
+                              END OF CHECKLIST
+================================================================================

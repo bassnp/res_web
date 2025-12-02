@@ -12,6 +12,7 @@ import ParticleBackground from '@/components/ParticleBackground';
 import InteractiveGridDots from '@/components/InteractiveGridDots';
 import CardGridDots from '@/components/CardGridDots';
 import HeroGridDots from '@/components/HeroGridDots';
+import FitCheckSection from '@/components/FitCheckSection';
 
 // ============================================
 // HEADER COMPONENT
@@ -617,6 +618,7 @@ export default function App() {
       <Header />
       <main>
         <HeroAboutSection />
+        <FitCheckSection />
         <ProjectsSection />
         <ExperienceSection />
         <ContactSection />
