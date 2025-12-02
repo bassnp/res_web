@@ -1,11 +1,28 @@
 # =============================================================================
-# Docker Ignore - Portfolio Backend
+# Docker Ignore - res_web Backend
 # =============================================================================
 # Files and directories to exclude from Docker build context.
-# This reduces build time and image size.
+# This reduces build time, image size, and prevents sensitive data leakage.
 # =============================================================================
 
-# Python
+# =============================================================================
+# Security: Sensitive files (CRITICAL - never include in image)
+# =============================================================================
+.env
+.env.*
+*.env
+.env.local
+.env.*.local
+*.pem
+*.key
+*.crt
+*.p12
+secrets/
+credentials/
+
+# =============================================================================
+# Python artifacts
+# =============================================================================
 __pycache__/
 *.py[cod]
 *$py.class
@@ -32,8 +49,25 @@ wheels/
 venv/
 ENV/
 env/
+.conda/
 
+# =============================================================================
+# Testing (not needed in production)
+# =============================================================================
+tests/
+test_*.py
+*_test.py
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+.nox/
+pytest.ini
+conftest.py
+
+# =============================================================================
 # IDE/Editor
+# =============================================================================
 .idea/
 .vscode/
 *.swp
@@ -43,40 +77,34 @@ env/
 .pydevproject
 .settings/
 
-# Environment files (will be mounted at runtime)
-.env
-.env.local
-.env.*.local
-
-# Testing
-.pytest_cache/
-.coverage
-htmlcov/
-.tox/
-.nox/
-
-# Documentation
+# =============================================================================
+# Documentation (not needed in runtime)
+# =============================================================================
 docs/
 *.md
-!README.md
+LICENSE
 
+# =============================================================================
 # Git
+# =============================================================================
 .git/
 .gitignore
 .gitattributes
 
-# Docker files (don't need to copy these into the image)
+# =============================================================================
+# Docker files (don't include in context)
+# =============================================================================
 Dockerfile*
 docker-compose*.yml
 .dockerignore
 
-# Test files
-tests/
-test_*.py
-*_test.py
-
-# Misc
+# =============================================================================
+# Development files
+# =============================================================================
 *.log
 *.tmp
 .DS_Store
 Thumbs.db
+*.bak
+diagnostic_test.py
+run_server.bat

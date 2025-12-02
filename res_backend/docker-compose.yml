@@ -1,14 +1,15 @@
 # =============================================================================
-# Portfolio Backend API - Docker Compose Configuration
+# res_web Backend API - Docker Compose Configuration
 # =============================================================================
-# Orchestrates the portfolio backend service with optional services.
+# Orchestrates the res_web backend service.
 #
 # Usage:
-#   Development: docker-compose up
-#   Production:  docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d
-#   Rebuild:     docker-compose up --build
+#   Build:       docker-compose build
+#   Start:       docker-compose up -d
+#   Rebuild:     docker-compose up --build -d
 #   Stop:        docker-compose down
 #   Logs:        docker-compose logs -f backend
+#   Push image:  docker-compose push
 # =============================================================================
 
 version: '3.8'
@@ -21,7 +22,8 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: portfolio-backend
+    image: res_web:latest
+    container_name: res_web-backend
     
     # Port mapping: host:container
     ports:

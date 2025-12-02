@@ -1,65 +1,105 @@
 # =============================================================================
-# Portfolio Backend API - Dockerfile
+# res_web Backend API - Production Dockerfile
 # =============================================================================
 # Multi-stage Docker build for the FastAPI backend serving the "See if I'm fit 
-# for you!" AI chatbot feature. Optimized for production with minimal image size.
+# for you!" AI chatbot feature. Optimized for production with security hardening.
 #
-# Build: docker build -t portfolio-backend .
-# Run:   docker run -p 8000:8000 --env-file .env portfolio-backend
+# Build:  docker build -t res_web:latest .
+# Run:    docker run -p 8000:8000 --env-file .env res_web:latest
+# Push:   docker tag res_web:latest <registry>/res_web:latest
+#         docker push <registry>/res_web:latest
+# Pull:   docker pull <registry>/res_web:latest
 # =============================================================================
 
 # -----------------------------------------------------------------------------
-# Stage 1: Build dependencies
+# Stage 1: Build dependencies in isolated environment
 # -----------------------------------------------------------------------------
-FROM python:3.11-slim AS builder
+FROM python:3.11-slim-bookworm AS builder
 
-WORKDIR /app
+# Security: Don't run as root during build where possible
+WORKDIR /build
 
-# Install build dependencies
+# Install only essential build dependencies, then clean up
 RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential \
-    && rm -rf /var/lib/apt/lists/*
+    && rm -rf /var/lib/apt/lists/* \
+    && apt-get clean
 
 # Copy requirements first for better layer caching
 COPY requirements.txt .
 
 # Create virtual environment and install dependencies
+# Using --no-cache-dir to reduce image size
+# Using --require-hashes would be more secure but requires hash-locked requirements
 RUN python -m venv /opt/venv
 ENV PATH="/opt/venv/bin:$PATH"
-RUN pip install --no-cache-dir --upgrade pip && \
+RUN pip install --no-cache-dir --upgrade pip setuptools wheel && \
     pip install --no-cache-dir -r requirements.txt
 
 # -----------------------------------------------------------------------------
-# Stage 2: Production image
+# Stage 2: Production image (minimal attack surface)
 # -----------------------------------------------------------------------------
-FROM python:3.11-slim AS production
+FROM python:3.11-slim-bookworm AS production
 
-# Set environment variables
+# Image metadata
+LABEL maintainer="res_web" \
+      version="1.0.0" \
+      description="res_web Backend API - FastAPI with AI fit-check agent" \
+      org.opencontainers.image.source="https://github.com/bassnp/res_web"
+
+# Security: Set environment variables
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
+    PYTHONFAULTHANDLER=1 \
+    PYTHONHASHSEED=random \
+    PIP_NO_CACHE_DIR=1 \
+    PIP_DISABLE_PIP_VERSION_CHECK=1 \
     PATH="/opt/venv/bin:$PATH" \
+    # Application defaults (can be overridden at runtime)
     HOST=0.0.0.0 \
     PORT=8000
 
 WORKDIR /app
 
+# Security: Update system packages and install only runtime dependencies
+# Remove unnecessary packages and clean up in same layer
+RUN apt-get update && apt-get upgrade -y && \
+    apt-get install -y --no-install-recommends \
+    # Add any runtime dependencies here (none needed for this app)
+    && rm -rf /var/lib/apt/lists/* \
+    && apt-get clean \
+    && apt-get autoremove -y
+
 # Copy virtual environment from builder stage
 COPY --from=builder /opt/venv /opt/venv
 
-# Create non-root user for security
-RUN useradd --create-home --shell /bin/bash appuser && \
-    chown -R appuser:appuser /app
+# Security: Create non-root user with specific UID/GID for consistency
+RUN groupadd --gid 1000 appgroup && \
+    useradd --uid 1000 --gid 1000 --create-home --shell /bin/bash appuser && \
+    chown -R appuser:appgroup /app
+
+# Copy application code (exclude sensitive files via .dockerignore)
+COPY --chown=appuser:appgroup server.py .
+COPY --chown=appuser:appgroup config/ ./config/
+COPY --chown=appuser:appgroup middleware/ ./middleware/
+COPY --chown=appuser:appgroup models/ ./models/
+COPY --chown=appuser:appgroup prompts/ ./prompts/
+COPY --chown=appuser:appgroup routers/ ./routers/
+COPY --chown=appuser:appgroup services/ ./services/
+
+# Security: Remove write permissions from application code
+RUN chmod -R a-w /app && chmod -R u+w /app
+
+# Security: Switch to non-root user
 USER appuser
 
-# Copy application code
-COPY --chown=appuser:appuser . .
-
-# Expose port
+# Expose port (documentation only, doesn't actually publish)
 EXPOSE 8000
 
-# Health check
-HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
-    CMD python -c "import urllib.request; urllib.request.urlopen('http://localhost:8000/health')" || exit 1
+# Health check with timeout and retries
+HEALTHCHECK --interval=30s --timeout=10s --start-period=10s --retries=3 \
+    CMD python -c "import urllib.request; urllib.request.urlopen('http://localhost:8000/health', timeout=5)" || exit 1
 
-# Run the application
-CMD ["uvicorn", "server:app", "--host", "0.0.0.0", "--port", "8000"]
+# Security: Use exec form to avoid shell injection, run with limited workers
+# Using --no-access-log in production to reduce disk I/O (logs go to stdout)
+CMD ["uvicorn", "server:app", "--host", "0.0.0.0", "--port", "8000", "--workers", "1", "--no-access-log"]
