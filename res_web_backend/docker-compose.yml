@@ -1,0 +1,87 @@
+# =============================================================================
+# Portfolio Backend API - Docker Compose Configuration
+# =============================================================================
+# Orchestrates the portfolio backend service with optional services.
+#
+# Usage:
+#   Development: docker-compose up
+#   Production:  docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d
+#   Rebuild:     docker-compose up --build
+#   Stop:        docker-compose down
+#   Logs:        docker-compose logs -f backend
+# =============================================================================
+
+version: '3.8'
+
+services:
+  # ---------------------------------------------------------------------------
+  # Backend API Service
+  # ---------------------------------------------------------------------------
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: portfolio-backend
+    
+    # Port mapping: host:container
+    ports:
+      - "${PORT:-8000}:8000"
+    
+    # Environment variables from .env file
+    env_file:
+      - .env
+    
+    # Override environment variables if needed
+    environment:
+      - HOST=0.0.0.0
+      - PORT=8000
+      - LOG_LEVEL=${LOG_LEVEL:-INFO}
+      - ALLOWED_ORIGINS=${ALLOWED_ORIGINS:-http://localhost:3000}
+    
+    # Health check (using Python since curl is not in slim image)
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health')"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+    
+    # Restart policy
+    restart: unless-stopped
+    
+    # Resource limits (optional, uncomment for production)
+    # deploy:
+    #   resources:
+    #     limits:
+    #       cpus: '1.0'
+    #       memory: 1G
+    #     reservations:
+    #       cpus: '0.25'
+    #       memory: 256M
+    
+    # Logging configuration
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+    
+    # Labels for identification
+    labels:
+      - "app=portfolio-backend"
+      - "environment=development"
+
+# =============================================================================
+# Networks (optional, for multi-service setups)
+# =============================================================================
+networks:
+  default:
+    name: portfolio-network
+    driver: bridge
+
+# =============================================================================
+# Volumes (optional, for persistent data)
+# =============================================================================
+# volumes:
+#   cache_data:
+#     driver: local
