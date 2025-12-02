@@ -2,7 +2,8 @@
 
 import { useState, useEffect } from 'react';
 import { useTheme } from 'next-themes';
-import { Home, Settings, Code, Briefcase, User, Mail, Github, Linkedin, ChevronDown, ExternalLink, Sun, Moon, Sparkles } from 'lucide-react';
+import { Home, Settings, Code, Briefcase, User, Mail, Github, ChevronDown, ExternalLink, Sun, Moon, Sparkles } from 'lucide-react';
+import { useHeaderVisibility } from '@/hooks/use-header-visibility';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Switch } from '@/components/ui/switch';
@@ -19,6 +20,12 @@ const Header = () => {
   const [settingsOpen, setSettingsOpen] = useState(false);
   const { theme, setTheme, resolvedTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
+  
+  // Responsive visibility controller with scroll detection
+  const { isVisible, isAtTop } = useHeaderVisibility({ 
+    hideThreshold: 100,  // Hide after 100px scroll down
+    showDelay: 0         // Immediate show on scroll up
+  });
 
   useEffect(() => {
     setMounted(true);
@@ -41,9 +48,27 @@ const Header = () => {
   };
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 overflow-visible">
+    <header 
+      className={`fixed top-0 left-0 right-0 z-50 overflow-visible transition-all duration-300 ease-out
+        ${isVisible 
+          ? 'translate-y-0 opacity-100' 
+          : '-translate-y-full opacity-0 pointer-events-none'
+        }
+      `}
+      style={{
+        transform: isVisible ? 'translateY(0)' : 'translateY(-100%)',
+        transition: isVisible 
+          ? 'transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.2s ease-out' 
+          : 'transform 0.35s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.25s ease-in',
+      }}
+    >
       <div className="mx-auto px-[10%] py-4">
-        <div className="relative bg-background/95 backdrop-blur-sm rounded-[10px] shadow-[0_2px_8px_rgba(61,64,91,0.08)] dark:shadow-[0_2px_12px_rgba(0,0,0,0.3)] border border-twilight/8 dark:border-eggshell/8 overflow-hidden">
+        <div className={`relative rounded-[10px] shadow-[0_2px_8px_rgba(61,64,91,0.08)] dark:shadow-[0_2px_12px_rgba(0,0,0,0.3)] border border-twilight/8 dark:border-eggshell/8 overflow-hidden transition-all duration-300
+          ${!isAtTop && isVisible 
+            ? 'bg-background/80 backdrop-blur-md' 
+            : 'bg-background/95 backdrop-blur-sm'
+          }
+        `}>
           <InteractiveGridDots />
           <div className="relative z-10 p-1">
             <div className="flex items-center justify-between">
@@ -120,7 +145,6 @@ const Footer = () => {
 
   const socialLinks = [
     { icon: Github, href: '#', label: 'GitHub' },
-    { icon: Linkedin, href: '#', label: 'LinkedIn' },
     { icon: Mail, href: '#', label: 'Email' },
   ];
 
