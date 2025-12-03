@@ -120,12 +120,6 @@ function FloatingThoughtCard({ thought, isVisible, position, delay }) {
         <p className="text-[10px] text-twilight/70 dark:text-eggshell/70 leading-relaxed line-clamp-2">
           {thought.content}
         </p>
-
-        {/* Status */}
-        <div className="flex items-center gap-1 mt-1.5">
-          <CheckCircle2 className="w-2.5 h-2.5 text-muted-teal" />
-          <span className="text-[8px] text-muted-teal">Complete</span>
-        </div>
       </div>
     </div>
   );
@@ -162,9 +156,9 @@ export function ChainOfThoughtShowcase() {
 
   // Card positions - properly distributed across the full container height
   const positions = [
-    { top: '0%', left: '5%', transform: 'rotate(-2deg)' },
-    { top: '38%', right: '0%', transform: 'rotate(1deg)' },
-    { top: '72%', left: '8%', transform: 'rotate(-1deg)' },
+    { top: '10%', left: '5%', transform: 'rotate(-2deg)' },
+    { top: '48%', right: '0%', transform: 'rotate(1deg)' },
+    { top: '86%', left: '8%', transform: 'rotate(-1deg)' },
   ];
 
   return (
@@ -214,13 +208,6 @@ export function ChainOfThoughtShowcase() {
             className="showcase-line-animate"
           />
         </svg>
-      </div>
-
-      {/* Footer Label */}
-      <div className="text-center mt-2">
-        <p className="text-[10px] text-twilight/40 dark:text-eggshell/40 italic">
-          Real-time thinking visualization
-        </p>
       </div>
     </div>
   );

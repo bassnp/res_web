@@ -251,28 +251,28 @@ export function ComparisonChain({
   });
 
   return (
-    <div className="flex flex-col items-center justify-center h-full px-6 py-6">
+    <div className="flex flex-col items-center px-4 py-4 h-full">
       {/* Header */}
-      <div className="flex items-center gap-3 mb-6">
+      <div className="flex items-center gap-3 mb-4 flex-shrink-0">
         <div className={cn(
-          "w-10 h-10 rounded-full flex items-center justify-center",
+          "w-8 h-8 rounded-full flex items-center justify-center",
           "bg-gradient-to-br from-burnt-peach to-burnt-peach/60",
           "shadow-lg shadow-burnt-peach/20"
         )}>
-          <Link2 className="w-5 h-5 text-eggshell" />
+          <Link2 className="w-4 h-4 text-eggshell" />
         </div>
         <div>
-          <h3 className="text-lg font-bold text-twilight dark:text-eggshell">
+          <h3 className="text-base font-bold text-twilight dark:text-eggshell">
             Analysis Pipeline
           </h3>
-          <p className="text-xs text-twilight/60 dark:text-eggshell/60">
+          <p className="text-xs text-twilight/60 dark:text-eggshell/60 truncate max-w-[180px]">
             {statusMessage || 'Processing your request...'}
           </p>
         </div>
       </div>
 
       {/* Steps Chain */}
-      <div className="w-full max-w-xs">
+      <div className="w-full max-w-xs flex-1 overflow-y-auto custom-scrollbar">
         {steps.map((step, index) => (
           <div 
             key={step.id}
@@ -281,7 +281,7 @@ export function ComparisonChain({
           >
             {/* Step Row */}
             <div className={cn(
-              "flex items-center gap-3 px-4 py-3 rounded-xl",
+              "flex items-center gap-2 px-3 py-2 rounded-lg",
               "border transition-all duration-300",
               step.isComplete 
                 ? "bg-muted-teal/10 border-muted-teal/30" 
@@ -293,7 +293,7 @@ export function ComparisonChain({
             )}>
               {/* Icon Container */}
               <div className={cn(
-                "w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0",
+                "w-6 h-6 rounded-md flex items-center justify-center flex-shrink-0",
                 "transition-all duration-300",
                 step.isComplete 
                   ? "bg-muted-teal text-eggshell" 
@@ -304,11 +304,11 @@ export function ComparisonChain({
                       : "bg-twilight/15 text-twilight/40 dark:bg-eggshell/15 dark:text-eggshell/40"
               )}>
                 {step.isComplete ? (
-                  <CheckCircle2 className="w-4 h-4" />
+                  <CheckCircle2 className="w-3.5 h-3.5" />
                 ) : step.isError ? (
-                  <AlertCircle className="w-4 h-4" />
+                  <AlertCircle className="w-3.5 h-3.5" />
                 ) : (
-                  <step.icon className={cn("w-4 h-4", step.isActive && "animate-pulse")} />
+                  <step.icon className={cn("w-3.5 h-3.5", step.isActive && "animate-pulse")} />
                 )}
               </div>
 
@@ -350,7 +350,7 @@ export function ComparisonChain({
             {index < steps.length - 1 && (
               <div className="flex justify-center">
                 <div className={cn(
-                  "w-0.5 h-4 transition-all duration-300",
+                  "w-0.5 h-2 transition-all duration-300",
                   step.isComplete
                     ? "bg-muted-teal/50"
                     : "bg-twilight/10 dark:bg-eggshell/10"

@@ -1,6 +1,5 @@
 <!-- 
 Phase 1: CONNECTING Node Prompt
-Location: res_backend/prompts/phase_1_connecting.xml
 
 Gemini Optimization Applied:
 - XML containerization for input segregation

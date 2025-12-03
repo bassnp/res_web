@@ -62,8 +62,8 @@ const PHASE_CONFIG = {
     label: 'Skills Matching',
     icon: Briefcase,
     description: 'Maps skills to requirements',
-    bgColor: 'bg-green-400',
-    textColor: 'text-green-400',
+    bgColor: 'bg-muted-teal',
+    textColor: 'text-muted-teal',
   },
   confidence_reranker: {
     label: 'Confidence Calibration',
@@ -213,9 +213,6 @@ export function SystemPromptDialog({
                 )}>
                   {promptData?.display_name || config?.label || 'System Prompt'}
                 </DialogTitle>
-                <DialogDescription className="text-sm text-twilight/60 dark:text-eggshell/60 mt-0.5">
-                  {promptData?.description || config?.description || 'View the system prompt'}
-                </DialogDescription>
               </div>
             </div>
 
@@ -298,33 +295,8 @@ export function SystemPromptDialog({
  * PromptContent Component - Renders XML prompt with syntax highlighting
  */
 function PromptContent({ content }) {
-  // Basic XML syntax highlighting
-  const highlightedContent = content
-    // Highlight XML comments
-    .replace(
-      /(&lt;!--[\s\S]*?--&gt;|<!--[\s\S]*?-->)/g,
-      '<span class="text-twilight/40 dark:text-eggshell/40 italic">$1</span>'
-    )
-    // Highlight XML tags
-    .replace(
-      /(&lt;\/?[\w_-]+|<\/?[\w_-]+)/g,
-      '<span class="text-burnt-peach">$1</span>'
-    )
-    // Highlight tag closings and self-closing
-    .replace(
-      /(\/?&gt;|\/>|>)/g,
-      '<span class="text-burnt-peach">$1</span>'
-    )
-    // Highlight attributes
-    .replace(
-      /\s([\w_-]+)=/g,
-      ' <span class="text-muted-teal">$1</span>='
-    )
-    // Highlight attribute values
-    .replace(
-      /="([^"]*)"/g,
-      '="<span class="text-amber-500 dark:text-amber-400">$1</span>"'
-    );
+  // Simply escape HTML entities - no syntax highlighting
+  const escapedContent = escapeHtml(content);
 
   return (
     <div className={cn(
@@ -352,10 +324,10 @@ function PromptContent({ content }) {
       <div className="p-4 overflow-x-auto">
         <pre className={cn(
           "text-sm font-mono leading-relaxed",
-          "text-twilight/80 dark:text-eggshell/80",
+          "text-burnt-peach/90 dark:text-muted-teal/90",
           "whitespace-pre-wrap break-words"
         )}>
-          <code dangerouslySetInnerHTML={{ __html: escapeHtml(content) }} />
+          {escapedContent}
         </pre>
       </div>
     </div>
@@ -363,36 +335,15 @@ function PromptContent({ content }) {
 }
 
 /**
- * Escape HTML for safe rendering while preserving structure
+ * Escape HTML entities for safe text rendering
  */
 function escapeHtml(text) {
   return text
     .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&#039;')
-    // Add basic syntax highlighting after escaping
-    .replace(
-      /(&lt;!--[\s\S]*?--&gt;)/g,
-      '<span class="text-twilight/40 dark:text-eggshell/40 italic">$1</span>'
-    )
-    .replace(
-      /(&lt;\/?[\w_-]+)/g,
-      '<span class="text-burnt-peach font-medium">$1</span>'
-    )
-    .replace(
-      /(\/?&gt;)/g,
-      '<span class="text-burnt-peach">$1</span>'
-    )
-    .replace(
-      /\s([\w_-]+)=/g,
-      ' <span class="text-muted-teal">$1</span>='
-    )
-    .replace(
-      /=&quot;([^&]*)&quot;/g,
-      '=&quot;<span class="text-amber-500 dark:text-amber-400">$1</span>&quot;'
-    );
+    .replace(/</g, '<')
+    .replace(/>/g, '>')
+    .replace(/"/g, '"')
+    .replace(/'/g, "'");
 }
 
 export default SystemPromptDialog;

@@ -58,7 +58,7 @@ export function ThinkingTimeline({
           
           {/* Active thinking placeholder */}
           {isThinking && (
-            <div className="relative pl-8 animate-pulse">
+            <div className="relative pl-8">
               {/* Timeline connector */}
               <div className="absolute left-[11px] top-0 bottom-0 w-0.5 bg-gradient-to-b from-burnt-peach/30 to-transparent" />
               
@@ -69,8 +69,8 @@ export function ThinkingTimeline({
               
               {/* Placeholder card */}
               <div className="bg-white/50 dark:bg-twilight/30 rounded-lg p-4 border border-dashed border-twilight/20 dark:border-eggshell/20">
-                <div className="h-2 w-24 bg-twilight/10 dark:bg-eggshell/10 rounded animate-pulse" />
-                <div className="h-3 w-full bg-twilight/5 dark:bg-eggshell/5 rounded mt-2 animate-pulse" />
+                <div className="h-2 w-24 bg-twilight/10 dark:bg-eggshell/10 rounded" />
+                <div className="h-3 w-full bg-twilight/5 dark:bg-eggshell/5 rounded mt-2" />
               </div>
             </div>
           )}
@@ -146,7 +146,7 @@ export function ThinkingTimeline({
           
           {/* Active thinking placeholder */}
           {isThinking && (
-            <div className="relative pl-8 animate-pulse">
+            <div className="relative pl-8">
               {/* Timeline connector */}
               <div className="absolute left-[11px] top-0 bottom-0 w-0.5 bg-gradient-to-b from-burnt-peach/30 to-transparent" />
               
@@ -157,8 +157,8 @@ export function ThinkingTimeline({
               
               {/* Placeholder card */}
               <div className="bg-white/50 dark:bg-twilight/30 rounded-lg p-4 border border-dashed border-twilight/20 dark:border-eggshell/20">
-                <div className="h-2 w-24 bg-twilight/10 dark:bg-eggshell/10 rounded animate-pulse" />
-                <div className="h-3 w-full bg-twilight/5 dark:bg-eggshell/5 rounded mt-2 animate-pulse" />
+                <div className="h-2 w-24 bg-twilight/10 dark:bg-eggshell/10 rounded" />
+                <div className="h-3 w-full bg-twilight/5 dark:bg-eggshell/5 rounded mt-2" />
               </div>
             </div>
           )}

@@ -102,9 +102,9 @@ export function FitCheckSection() {
               {/* Phase-based layout */}
               {uiPhase === 'expanded' ? (
                 // EXPANDED PHASE: Two-column layout
-                <div className="flex flex-col lg:flex-row min-h-[400px]">
+                <div className="flex flex-col lg:flex-row min-h-[400px] h-[500px]">
                   {/* Left column: Comparison Chain summary */}
-                  <div className="lg:w-1/2 flex flex-col items-center justify-center">
+                  <div className="lg:w-1/2 h-full flex flex-col min-h-0 overflow-y-auto custom-scrollbar">
                     <ComparisonChain
                       currentPhase={currentPhase}
                       phaseProgress={phaseProgress}
@@ -118,7 +118,7 @@ export function FitCheckSection() {
                   <div className="hidden lg:block w-px bg-twilight/10 dark:bg-eggshell/10 animate-divider-grow" />
                   
                   {/* Right column: Thinking panel */}
-                  <div className="lg:w-1/2 border-t lg:border-t-0 border-twilight/10 dark:border-eggshell/10">
+                  <div className="lg:w-1/2 h-full flex flex-col min-h-0 border-t lg:border-t-0 border-twilight/10 dark:border-eggshell/10">
                     <ThinkingPanel
                       thoughts={thoughts}
                       isThinking={status === 'thinking'}
@@ -181,7 +181,7 @@ export function FitCheckSection() {
                 </div>
               ) : (
                 // INPUT PHASE: Three-column layout with previews
-                <div className="flex flex-col lg:flex-row min-h-[320px]">
+                <div className="flex flex-col lg:flex-row min-h-[400px]">
                   {/* Left Column: Workflow Pipeline Preview */}
                   <div className="hidden lg:flex lg:w-[200px] flex-shrink-0 border-r border-twilight/8 dark:border-eggshell/8 showcase-panel-left">
                     <WorkflowPipelinePreview />

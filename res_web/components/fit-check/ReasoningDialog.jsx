@@ -92,12 +92,12 @@ const PHASE_CONFIG = {
     label: 'Skills Matching',
     icon: Briefcase,
     description: 'Mapping skills to job requirements',
-    color: 'green',
-    borderColor: 'border-l-green-400',
-    bgColor: 'bg-green-400',
-    bgColorMuted: 'bg-green-400/10',
-    textColor: 'text-green-400',
-    ringColor: 'ring-green-400/30',
+    color: 'muted-teal',
+    borderColor: 'border-l-muted-teal',
+    bgColor: 'bg-muted-teal',
+    bgColorMuted: 'bg-muted-teal/10',
+    textColor: 'text-muted-teal',
+    ringColor: 'ring-muted-teal/30',
   },
   confidence_reranker: {
     label: 'Confidence Calibration',
@@ -210,12 +210,12 @@ export function ReasoningDialog({
     setSelectedPhase(null);
   }, []);
 
-  // Expand all phases by default when dialog opens
+  // Collapse all phases by default when dialog opens
   useEffect(() => {
     if (open) {
       const initialExpanded = {};
       for (const phase of activePhasesOrdered) {
-        initialExpanded[phase] = true;
+        initialExpanded[phase] = false;
       }
       setExpandedPhases(initialExpanded);
     }
@@ -272,41 +272,6 @@ export function ReasoningDialog({
                 </div>
               )}
             </div>
-            
-            {/* Phase pills */}
-            <div className="flex flex-wrap gap-2 mt-4">
-              {PHASE_ORDER.map((phase) => {
-                const config = PHASE_CONFIG[phase];
-                const isActive = activePhasesOrdered.includes(phase);
-                const Icon = config.icon;
-                
-                return (
-                  <button
-                    key={phase}
-                    onClick={() => isActive && togglePhase(phase)}
-                    disabled={!isActive}
-                    className={cn(
-                      "flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium",
-                      "transition-all duration-200",
-                      isActive ? [
-                        config.bgColorMuted,
-                        config.textColor,
-                        "hover:ring-2",
-                        config.ringColor,
-                        "cursor-pointer"
-                      ] : [
-                        "bg-twilight/5 dark:bg-eggshell/5",
-                        "text-twilight/30 dark:text-eggshell/30",
-                        "cursor-not-allowed"
-                      ]
-                    )}
-                  >
-                    <Icon className="w-3 h-3" />
-                    <span className="hidden sm:inline">{config.label}</span>
-                  </button>
-                );
-              })}
-            </div>
           </DialogHeader>
 
           {/* Scrollable content */}
@@ -343,19 +308,6 @@ export function ReasoningDialog({
                 </p>
               </div>
             )}
-          </div>
-
-          {/* Footer hint */}
-          <div className={cn(
-            "p-4 border-t border-twilight/10 dark:border-eggshell/10",
-            "bg-gradient-to-r from-transparent via-burnt-peach/5 to-transparent"
-          )}>
-            <p className="text-xs text-center text-twilight/50 dark:text-eggshell/50">
-              <span className="inline-flex items-center gap-1">
-                <FileText className="w-3 h-3" />
-                Click on any phase header to view the system prompt used
-              </span>
-            </p>
           </div>
         </DialogContent>
       </Dialog>
@@ -399,7 +351,10 @@ function PhaseSection({
       "rounded-xl overflow-hidden",
       "border border-twilight/10 dark:border-eggshell/10",
       "bg-white/50 dark:bg-twilight/20",
-      "shadow-sm hover:shadow-md transition-shadow duration-300"
+      "transition-all duration-300 ease-out",
+      isExpanded 
+        ? "shadow-lg shadow-twilight/5 dark:shadow-eggshell/5 scale-[1.01]" 
+        : "shadow-sm hover:shadow-md"
     )}>
       {/* Phase Header */}
       <button
@@ -407,9 +362,10 @@ function PhaseSection({
         className={cn(
           "w-full flex items-center gap-3 p-4",
           "hover:bg-twilight/5 dark:hover:bg-eggshell/5",
-          "transition-colors duration-200",
+          "transition-all duration-200",
           "border-l-4",
-          config.borderColor
+          config.borderColor,
+          isExpanded && "bg-twilight/[0.02] dark:bg-eggshell/[0.02]"
         )}
       >
         {/* Phase Icon */}
@@ -442,67 +398,90 @@ function PhaseSection({
           <button
             onClick={onViewPrompt}
             className={cn(
-              "p-2 rounded-lg",
+              "flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg",
               "hover:bg-twilight/10 dark:hover:bg-eggshell/10",
               "text-twilight/50 dark:text-eggshell/50",
-              "hover:text-burnt-peach transition-colors",
-              "group"
+              "hover:text-burnt-peach transition-all duration-200",
+              "group text-xs font-medium"
             )}
             title="View system prompt"
           >
-            <FileText className="w-4 h-4 group-hover:scale-110 transition-transform" />
+            <FileText className="w-3.5 h-3.5 group-hover:scale-110 transition-transform" />
+            <span className="hidden sm:inline">Read Node System Prompt</span>
           </button>
           
           {/* Expand/Collapse */}
           <div className={cn(
             "p-1 rounded",
-            "text-twilight/40 dark:text-eggshell/40"
+            "text-twilight/40 dark:text-eggshell/40",
+            "transition-transform duration-300 ease-out",
+            isExpanded && "rotate-90"
           )}>
-            {isExpanded ? (
-              <ChevronDown className="w-5 h-5" />
-            ) : (
-              <ChevronRight className="w-5 h-5" />
-            )}
+            <ChevronRight className="w-5 h-5" />
           </div>
         </div>
       </button>
       
-      {/* Expanded Content */}
-      {isExpanded && (
-        <div className={cn(
-          "border-t border-twilight/10 dark:border-eggshell/10",
-          "bg-twilight/[0.02] dark:bg-eggshell/[0.02]"
-        )}>
-          {/* Phase Summary with structured insights */}
-          {phaseEntry?.summary && (
-            <PhaseInsightsSummary 
-              phase={phase}
-              summary={phaseEntry.summary}
-              insights={insights}
-              displayMeta={displayMeta}
-              config={config}
-            />
-          )}
-          
-          {/* Thoughts List */}
-          <div className="p-4 space-y-3">
-            {thoughts.length > 0 ? (
-              thoughts.map((thought, index) => (
-                <ThoughtItem
-                  key={`${thought.step}-${index}`}
-                  thought={thought}
-                  config={config}
+      {/* Expanded Content - Smooth accordion animation */}
+      <div 
+        className={cn(
+          "grid transition-all duration-300 ease-out",
+          isExpanded ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"
+        )}
+      >
+        <div className="overflow-hidden">
+          <div className={cn(
+            "border-t border-twilight/10 dark:border-eggshell/10",
+            "bg-twilight/[0.02] dark:bg-eggshell/[0.02]"
+          )}>
+            {/* Phase Summary with structured insights */}
+            {phaseEntry?.summary && (
+              <div className={cn(
+                "transition-all duration-300 delay-75",
+                isExpanded ? "translate-y-0 opacity-100" : "-translate-y-2 opacity-0"
+              )}>
+                <PhaseInsightsSummary 
                   phase={phase}
+                  summary={phaseEntry.summary}
+                  insights={insights}
+                  displayMeta={displayMeta}
+                  config={config}
                 />
-              ))
-            ) : (
-              <div className="text-center py-4 text-sm text-twilight/40 dark:text-eggshell/40">
-                No detailed thoughts recorded for this phase
               </div>
             )}
+            
+            {/* Thoughts List */}
+            <div className="p-4 space-y-3">
+              {thoughts.length > 0 ? (
+                thoughts.map((thought, index) => (
+                  <div 
+                    key={`${thought.step}-${index}`}
+                    className={cn(
+                      "transition-all duration-300",
+                      isExpanded ? "translate-y-0 opacity-100" : "-translate-y-2 opacity-0"
+                    )}
+                    style={{ transitionDelay: isExpanded ? `${100 + index * 50}ms` : '0ms' }}
+                  >
+                    <ThoughtItem
+                      thought={thought}
+                      config={config}
+                      phase={phase}
+                    />
+                  </div>
+                ))
+              ) : (
+                <div className={cn(
+                  "text-center py-4 text-sm text-twilight/40 dark:text-eggshell/40",
+                  "transition-all duration-300 delay-100",
+                  isExpanded ? "translate-y-0 opacity-100" : "-translate-y-2 opacity-0"
+                )}>
+                  No detailed thoughts recorded for this phase
+                </div>
+              )}
+            </div>
           </div>
         </div>
-      )}
+      </div>
     </div>
   );
 }

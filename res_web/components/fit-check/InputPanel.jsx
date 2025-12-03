@@ -17,28 +17,39 @@ const ModelSelector = () => {
   const models = Object.values(AI_MODELS);
 
   return (
-    <div className="flex gap-2 justify-center">
-      {models.map((model) => {
+    <div className="flex items-center gap-2 justify-center">
+      {models.map((model, index) => {
+        const isLast = index === models.length - 1;
         const isSelected = selectedModel === model.id;
         const Icon = model.configType === 'reasoning' ? Brain : Zap;
+        const isReasoning = model.configType === 'reasoning';
         
         return (
-          <button
-            key={model.id}
-            type="button"
-            onClick={() => updateModel(model.id)}
-            className={cn(
-              "flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all duration-200",
-              isSelected
-                ? "bg-burnt-peach/15 border border-burnt-peach text-burnt-peach"
-                : "bg-twilight/5 dark:bg-eggshell/5 border border-twilight/15 dark:border-eggshell/15 text-twilight/70 dark:text-eggshell/70 hover:border-burnt-peach/50 hover:text-burnt-peach"
+          <>
+            <button
+              key={model.id}
+              type="button"
+              onClick={() => updateModel(model.id)}
+              className={cn(
+                "flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all duration-200",
+                isSelected
+                  ? isReasoning
+                    ? "bg-muted-teal/15 border border-muted-teal text-muted-teal"
+                    : "bg-burnt-peach/15 border border-burnt-peach text-burnt-peach"
+                  : isReasoning
+                    ? "bg-twilight/5 dark:bg-eggshell/5 border border-twilight/15 dark:border-eggshell/15 text-twilight/70 dark:text-eggshell/70 hover:border-muted-teal/50 hover:text-muted-teal"
+                    : "bg-twilight/5 dark:bg-eggshell/5 border border-twilight/15 dark:border-eggshell/15 text-twilight/70 dark:text-eggshell/70 hover:border-burnt-peach/50 hover:text-burnt-peach"
+              )}
+              aria-pressed={isSelected}
+              aria-label={`Select ${model.label}`}
+            >
+              <Icon className="w-3 h-3" />
+              <span>{model.configType === 'reasoning' ? 'Use Deep Reasoning' : 'Perform Quick Assessment'}</span>
+            </button>
+            {!isLast && (
+              <span className="text-xs text-twilight/40 dark:text-eggshell/40 font-medium">or</span>
             )}
-            aria-pressed={isSelected}
-            aria-label={`Select ${model.label}`}
-          >
-            <Icon className="w-3 h-3" />
-            <span>{model.configType === 'reasoning' ? 'Deep Reasoning' : 'Quick Assessment'}</span>
-          </button>
+          </>
         );
       })}
     </div>
@@ -93,7 +104,7 @@ export const InputPanel = forwardRef(function InputPanel({
     <form onSubmit={handleSubmit} className="space-y-4">
       {/* Subtitle - styled with Brutal Honesty theme */}
       <p className="text-twilight dark:text-eggshell text-sm text-center font-medium">
-        Use a transparent and <span className="text-burnt-peach font-semibold">non-biased Deep Researcher</span> to see if I&apos;m fit for your needs
+        Use a transparent and <span className="text-burnt-peach font-semibold">Non-Biased Deep Researcher</span> to see analyze if I fit your needs
       </p>
       
       <div className="relative">
@@ -102,7 +113,7 @@ export const InputPanel = forwardRef(function InputPanel({
           value={value}
           onChange={(e) => onChange(e.target.value)}
           onKeyDown={handleKeyDown}
-          placeholder="Try me in a job position, description, or Company to have A.I. brutally assess me!"
+          placeholder="Enter the job position, description, or company name"
           className={cn(
             "min-h-[80px] resize-none transition-all duration-200",
             "text-center flex items-center justify-center",

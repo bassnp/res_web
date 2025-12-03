@@ -12,7 +12,7 @@ const PHASE_COLORS = {
   deep_research: 'border-l-purple-400',
   research_reranker: 'border-l-violet-400',
   skeptical_comparison: 'border-l-amber-400',
-  skills_matching: 'border-l-green-400',
+  skills_matching: 'border-l-muted-teal',
   confidence_reranker: 'border-l-emerald-400',
   generate_results: 'border-l-burnt-peach',
 };

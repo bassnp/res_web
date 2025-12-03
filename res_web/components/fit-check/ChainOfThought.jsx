@@ -71,10 +71,10 @@ const PHASE_CONFIG = {
     label: 'Skills Matching',
     icon: Briefcase,
     description: 'Mapping skills to job requirements',
-    color: 'green',
-    borderColor: 'border-l-green-400',
-    bgColor: 'bg-green-400',
-    textColor: 'text-green-400',
+    color: 'muted-teal',
+    borderColor: 'border-l-muted-teal',
+    bgColor: 'bg-muted-teal',
+    textColor: 'text-muted-teal',
   },
   confidence_reranker: {
     label: 'Confidence Calibration',
@@ -197,7 +197,7 @@ export function ChainOfThought({
   }, [streamEntries.length]);
 
   return (
-    <div className="flex flex-col h-full">
+    <div className="flex flex-col h-full min-h-0">
       {/* Active Node Header */}
       <ActiveNodeHeader 
         currentPhase={currentPhase}
@@ -208,7 +208,7 @@ export function ChainOfThought({
       {/* Scrollable Stream Container */}
       <div 
         ref={scrollContainerRef}
-        className="flex-1 overflow-y-auto overflow-x-hidden p-4 custom-scrollbar max-h-[400px]"
+        className="flex-1 min-h-0 overflow-y-auto overflow-x-hidden p-4 custom-scrollbar"
       >
         {streamEntries.length === 0 && !isThinking ? (
           <EmptyState />
@@ -257,7 +257,6 @@ function ActiveNodeHeader({ currentPhase, isThinking, statusMessage }) {
         <div className={cn(
           "w-10 h-10 rounded-full flex items-center justify-center",
           "transition-all duration-300",
-          isThinking ? "animate-pulse" : "",
           config?.bgColor || "bg-burnt-peach"
         )}>
           {isThinking ? (
@@ -351,8 +350,7 @@ function ActiveThinkingEntry({ phase, statusMessage }) {
         {/* Animated Icon */}
         <div className={cn(
           "w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0",
-          config?.bgColor || "bg-burnt-peach",
-          "animate-pulse"
+          config?.bgColor || "bg-burnt-peach"
         )}>
           <Loader2 className="w-4 h-4 text-white animate-spin" />
         </div>
@@ -690,7 +688,7 @@ function PhaseInsightReveal({ data, phase, summary, compact = false }) {
           phase === 'deep_research' ? "from-purple-500/5 to-transparent" :
           phase === 'research_reranker' ? "from-violet-500/5 to-transparent" :
           phase === 'skeptical_comparison' ? "from-amber-500/5 to-transparent" :
-          phase === 'skills_matching' ? "from-green-500/5 to-transparent" :
+          phase === 'skills_matching' ? "from-muted-teal/5 to-transparent" :
           phase === 'confidence_reranker' ? "from-emerald-500/5 to-transparent" :
           "from-burnt-peach/5 to-transparent"
         )}>

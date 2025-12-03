@@ -1,6 +1,5 @@
 <!-- 
 Phase 2: DEEP_RESEARCH Node Prompt
-Location: res_backend/prompts/phase_2_deep_research.xml
 
 Gemini Optimization Applied:
 - XML containerization for input segregation and search result isolation

@@ -1,6 +1,5 @@
 <!-- 
 Phase 5B: CONFIDENCE_RERANKER Node Prompt
-Location: res_backend/prompts/phase_5b_confidence_reranker.xml
 
 LLM-as-a-Judge Re-Ranking Phase
 

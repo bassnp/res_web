@@ -49,8 +49,8 @@ const PIPELINE_PHASES = [
     id: 'skills_matching',
     label: 'Skills Match',
     icon: Briefcase,
-    color: 'from-green-400 to-green-500',
-    borderColor: 'border-green-400/50',
+    color: 'from-muted-teal to-muted-teal/80',
+    borderColor: 'border-muted-teal/50',
   },
   {
     id: 'generate_results',
@@ -60,11 +60,6 @@ const PIPELINE_PHASES = [
     borderColor: 'border-burnt-peach/50',
   },
 ];
-
-// Height of each phase row (py-1.5 = 6px*2 + content ~20px = ~32px) + connector (h-1 = 4px)
-const PHASE_ROW_HEIGHT = 36;
-// Vertical offset to center spinner with the phase node
-const SPINNER_VERTICAL_OFFSET = 10;
 
 /**
  * WorkflowPipelinePreview Component
@@ -76,12 +71,29 @@ export function WorkflowPipelinePreview() {
   const [activePhaseIndex, setActivePhaseIndex] = useState(-1);
   const [completedPhases, setCompletedPhases] = useState([]);
   const [isAnimating, setIsAnimating] = useState(false);
+  const [spinnerTop, setSpinnerTop] = useState(0);
   const animationRef = useRef(null);
   const phaseRef = useRef(activePhaseIndex);
+  const containerRef = useRef(null);
+  const phaseRefs = useRef([]);
 
   // Keep ref in sync with state
   useEffect(() => {
     phaseRef.current = activePhaseIndex;
+  }, [activePhaseIndex]);
+
+  // Update spinner position when active phase changes
+  useEffect(() => {
+    if (activePhaseIndex >= 0 && phaseRefs.current[activePhaseIndex] && containerRef.current) {
+      const phaseEl = phaseRefs.current[activePhaseIndex];
+      const containerRect = containerRef.current.getBoundingClientRect();
+      const phaseRect = phaseEl.getBoundingClientRect();
+      
+      // Calculate center of the phase node relative to container
+      const phaseCenterY = phaseRect.top - containerRect.top + (phaseRect.height / 2);
+      // Offset by half the spinner height (w-4 h-4 = 16px, so 8px)
+      setSpinnerTop(phaseCenterY - 8);
+    }
   }, [activePhaseIndex]);
 
   // Single, reliable animation loop using recursive setTimeout
@@ -126,12 +138,6 @@ export function WorkflowPipelinePreview() {
     };
   }, []); // Only run once on mount
 
-  // Calculate spinner position - centered with the active phase row
-  const getSpinnerTop = () => {
-    if (activePhaseIndex < 0) return 0;
-    return activePhaseIndex * PHASE_ROW_HEIGHT + SPINNER_VERTICAL_OFFSET;
-  };
-
   return (
     <div className="flex flex-col items-center justify-center h-full py-4 px-3">
       {/* Header */}
@@ -145,14 +151,14 @@ export function WorkflowPipelinePreview() {
       </div>
 
       {/* Pipeline Steps */}
-      <div className="relative w-full max-w-[160px]">
+      <div className="relative w-full max-w-[160px]" ref={containerRef}>
         {/* Fixed position spinner - outside the list to prevent layout shift */}
         <div className="absolute -right-6 top-0 bottom-0 w-5 pointer-events-none">
           {activePhaseIndex >= 0 && isAnimating && (
             <div 
               className="absolute w-4 h-4 transition-all duration-300 ease-out flex items-center justify-center"
               style={{ 
-                top: `${getSpinnerTop()}px`,
+                top: `${spinnerTop}px`,
               }}
             >
               <Loader2 className="w-4 h-4 text-burnt-peach animate-spin" />
@@ -171,6 +177,7 @@ export function WorkflowPipelinePreview() {
               <div key={phase.id} className="relative">
                 {/* Phase Node */}
                 <div
+                  ref={(el) => (phaseRefs.current[index] = el)}
                   className={cn(
                     "flex items-center gap-2 px-2.5 py-1.5 rounded-lg transition-all duration-300",
                     "border",
