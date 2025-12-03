@@ -181,8 +181,8 @@ export const InputPanel = forwardRef(function InputPanel({
             )}
           </Button>
           
-          {/* AI Model Selection Buttons */}
-          <ModelSelector />
+          {/* AI Model Selection Buttons - temporarily hidden */}
+          {/* <ModelSelector /> */}
         </div>
       )}
     </form>
