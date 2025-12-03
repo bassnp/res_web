@@ -35,6 +35,7 @@ from config.llm import get_llm
 from services.pipeline_state import FitCheckPipelineState
 from services.callbacks import ThoughtCallback
 from services.utils import extract_text_from_content
+from services.prompt_loader import load_prompt, PHASE_GENERATE_RESULTS
 
 logger = logging.getLogger(__name__)
 
@@ -45,7 +46,6 @@ logger = logging.getLogger(__name__)
 
 PHASE_NAME = "generate_results"
 PHASE_DISPLAY = "Generate Results"
-PROMPT_FILE = Path(__file__).parent.parent.parent / "prompts" / "phase_5_generate_results.xml"
 
 # Creative temperature for compelling narrative generation
 GENERATION_TEMPERATURE = 0.7
@@ -211,20 +211,21 @@ def get_company_or_role(phase_1: Dict[str, Any], original_query: str) -> str:
 # Prompt Loading
 # =============================================================================
 
-def load_phase_prompt() -> str:
+def load_phase_prompt(config_type: str = None) -> str:
     """
-    Load the Phase 5 XML prompt template.
+    Load the Phase 5 XML prompt template based on model configuration.
+    
+    Args:
+        config_type: Model config type ("reasoning" or "standard").
+                     Reasoning models get concise prompts.
     
     Returns:
         str: XML-structured prompt template.
-    
-    Falls back to embedded minimal prompt if file not found.
     """
     try:
-        with open(PROMPT_FILE, "r", encoding="utf-8") as f:
-            return f.read()
+        return load_prompt(PHASE_GENERATE_RESULTS, config_type=config_type, prefer_concise=True)
     except FileNotFoundError:
-        logger.warning(f"Phase 5 prompt not found at {PROMPT_FILE}, using embedded fallback")
+        logger.warning(f"Phase 5 prompt not found, using embedded fallback")
         return _get_fallback_prompt()
 
 
@@ -504,8 +505,9 @@ async def generate_results_node(
                 phase=PHASE_NAME,
             )
         
-        # Load and format prompt
-        prompt_template = load_phase_prompt()
+        # Load prompt based on model config type (concise for reasoning models)
+        config_type = state.get("config_type")
+        prompt_template = load_phase_prompt(config_type=config_type)
         prompt = prompt_template.format(
             query_type=phase_1.get("query_type", "unknown"),
             company_or_role=company_or_role,

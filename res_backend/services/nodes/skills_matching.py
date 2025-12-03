@@ -35,6 +35,7 @@ from services.callbacks import ThoughtCallback
 from services.tools.skill_matcher import analyze_skill_match
 from services.tools.experience_matcher import analyze_experience_relevance
 from services.utils import get_response_text
+from services.prompt_loader import load_prompt, PHASE_SKILLS_MATCHING
 
 logger = logging.getLogger(__name__)
 
@@ -45,7 +46,6 @@ logger = logging.getLogger(__name__)
 
 PHASE_NAME = "skills_matching"
 PHASE_DISPLAY = "Skills Matching"
-PROMPT_FILE = Path(__file__).parent.parent.parent / "prompts" / "phase_4_skills_matching.xml"
 
 # Precision temperature - low for accurate quantified output
 SYNTHESIS_TEMPERATURE = 0.2
@@ -142,20 +142,21 @@ def calculate_overall_score(
 # Prompt Loading
 # =============================================================================
 
-def load_phase_prompt() -> str:
+def load_phase_prompt(config_type: str = None) -> str:
     """
-    Load the Phase 4 XML prompt template.
+    Load the Phase 4 XML prompt template based on model configuration.
+    
+    Args:
+        config_type: Model config type ("reasoning" or "standard").
+                     Reasoning models get concise prompts.
     
     Returns:
         str: XML-structured prompt template.
-    
-    Falls back to embedded minimal prompt if file not found.
     """
     try:
-        with open(PROMPT_FILE, "r", encoding="utf-8") as f:
-            return f.read()
+        return load_prompt(PHASE_SKILLS_MATCHING, config_type=config_type, prefer_concise=True)
     except FileNotFoundError:
-        logger.warning(f"Phase 4 prompt not found at {PROMPT_FILE}, using embedded fallback")
+        logger.warning(f"Phase 4 prompt not found, using embedded fallback")
         return _get_fallback_prompt()
 
 
@@ -507,7 +508,9 @@ async def skills_matching_node(
                 phase=PHASE_NAME,
             )
         
-        prompt_template = load_phase_prompt()
+        # Load prompt based on model config type (concise for reasoning models)
+        config_type = state.get("config_type")
+        prompt_template = load_phase_prompt(config_type=config_type)
         prompt = prompt_template.format(
             identified_requirements=format_list_for_prompt(requirements),
             tech_stack=format_list_for_prompt(tech_stack),

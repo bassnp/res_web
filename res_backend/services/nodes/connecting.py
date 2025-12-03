@@ -31,6 +31,7 @@ from config.llm import get_llm
 from services.pipeline_state import FitCheckPipelineState, Phase1Output
 from services.callbacks import ThoughtCallback
 from services.utils import get_response_text
+from services.prompt_loader import load_prompt, PHASE_CONNECTING
 
 logger = logging.getLogger(__name__)
 
@@ -41,7 +42,6 @@ logger = logging.getLogger(__name__)
 
 PHASE_NAME = "connecting"
 PHASE_DISPLAY = "Connecting"
-PROMPT_FILE = Path(__file__).parent.parent.parent / "prompts" / "phase_1_connecting.xml"
 
 # Classification temperature - low for deterministic output
 CLASSIFICATION_TEMPERATURE = 0.1
@@ -144,21 +144,21 @@ def validate_input_security(query: str) -> Tuple[bool, Optional[str]]:
 # Prompt Loading
 # =============================================================================
 
-def load_phase_prompt() -> str:
+def load_phase_prompt(config_type: str = None) -> str:
     """
-    Load the Phase 1 XML prompt template.
+    Load the Phase 1 XML prompt template based on model configuration.
+    
+    Args:
+        config_type: Model config type ("reasoning" or "standard").
+                     Reasoning models get concise prompts.
     
     Returns:
         str: XML-structured prompt template.
-    
-    Raises:
-        FileNotFoundError: If prompt file doesn't exist (uses fallback).
     """
     try:
-        with open(PROMPT_FILE, "r", encoding="utf-8") as f:
-            return f.read()
+        return load_prompt(PHASE_CONNECTING, config_type=config_type, prefer_concise=True)
     except FileNotFoundError:
-        logger.warning(f"Phase 1 prompt not found at {PROMPT_FILE}, using embedded fallback")
+        logger.warning(f"Phase 1 prompt not found, using embedded fallback")
         return _get_fallback_prompt()
 
 
@@ -431,8 +431,9 @@ async def connecting_node(
         }
     
     try:
-        # Load and format prompt
-        prompt_template = load_phase_prompt()
+        # Load prompt based on model config type (concise for reasoning models)
+        config_type = state.get("config_type")
+        prompt_template = load_phase_prompt(config_type=config_type)
         prompt = prompt_template.format(query=state["query"])
         
         # Get LLM (non-streaming for structured output)

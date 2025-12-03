@@ -47,6 +47,7 @@ from config.llm import get_llm
 from services.pipeline_state import FitCheckPipelineState, Phase2Output
 from services.callbacks import ThoughtCallback
 from services.utils import get_response_text
+from services.prompt_loader import load_prompt, PHASE_RESEARCH_RERANKER
 
 logger = logging.getLogger(__name__)
 
@@ -57,7 +58,6 @@ logger = logging.getLogger(__name__)
 
 PHASE_NAME = "research_reranker"
 PHASE_DISPLAY = "Research Validation"
-PROMPT_FILE = Path(__file__).parent.parent.parent / "prompts" / "phase_2b_research_reranker.xml"
 
 # Low temperature for consistent, calibrated judgments
 RERANKER_TEMPERATURE = 0.1
@@ -466,20 +466,21 @@ def assess_quality_heuristically(phase_2_output: Phase2Output) -> Dict[str, Any]
 # Prompt Loading
 # =============================================================================
 
-def load_phase_prompt() -> str:
+def load_phase_prompt(config_type: str = None) -> str:
     """
-    Load the Phase 2B XML prompt template.
+    Load the Phase 2B XML prompt template based on model configuration.
+    
+    Args:
+        config_type: Model config type ("reasoning" or "standard").
+                     Reasoning models get concise prompts.
     
     Returns:
         str: XML-structured prompt template.
-    
-    Falls back to embedded minimal prompt if file not found.
     """
     try:
-        with open(PROMPT_FILE, "r", encoding="utf-8") as f:
-            return f.read()
+        return load_prompt(PHASE_RESEARCH_RERANKER, config_type=config_type, prefer_concise=True)
     except FileNotFoundError:
-        logger.warning(f"Phase 2B prompt not found at {PROMPT_FILE}, using embedded fallback")
+        logger.warning(f"Phase 2B prompt not found, using embedded fallback")
         return _get_fallback_prompt()
 
 
@@ -838,8 +839,9 @@ async def research_reranker_node(
                 phase=PHASE_NAME,
             )
         
-        # Load and format prompt
-        prompt_template = load_phase_prompt()
+        # Load prompt based on model config type (concise for reasoning models)
+        config_type = state.get("config_type")
+        prompt_template = load_phase_prompt(config_type=config_type)
         
         # Get culture items for prompt
         culture_items = phase_2.get("culture_signals", [])

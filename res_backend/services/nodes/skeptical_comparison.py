@@ -34,6 +34,7 @@ from config.engineer_profile import get_formatted_profile
 from services.pipeline_state import FitCheckPipelineState, Phase3Output
 from services.callbacks import ThoughtCallback
 from services.utils import get_response_text
+from services.prompt_loader import load_prompt, PHASE_SKEPTICAL_COMPARISON
 
 logger = logging.getLogger(__name__)
 
@@ -44,7 +45,6 @@ logger = logging.getLogger(__name__)
 
 PHASE_NAME = "skeptical_comparison"
 PHASE_DISPLAY = "Skeptical Comparison"
-PROMPT_FILE = Path(__file__).parent.parent.parent / "prompts" / "phase_3_skeptical_comparison.xml"
 
 # Critical thinking temperature - slightly higher for creative skepticism
 CRITICAL_THINKING_TEMPERATURE = 0.4
@@ -74,20 +74,21 @@ SYCOPHANTIC_PHRASES = [
 # Prompt Loading
 # =============================================================================
 
-def load_phase_prompt() -> str:
+def load_phase_prompt(config_type: str = None) -> str:
     """
-    Load the Phase 3 XML prompt template.
+    Load the Phase 3 XML prompt template based on model configuration.
+    
+    Args:
+        config_type: Model config type ("reasoning" or "standard").
+                     Reasoning models get concise prompts.
     
     Returns:
         str: XML-structured prompt template.
-    
-    Falls back to embedded minimal prompt if file not found.
     """
     try:
-        with open(PROMPT_FILE, "r", encoding="utf-8") as f:
-            return f.read()
+        return load_prompt(PHASE_SKEPTICAL_COMPARISON, config_type=config_type, prefer_concise=True)
     except FileNotFoundError:
-        logger.warning(f"Phase 3 prompt not found at {PROMPT_FILE}, using embedded fallback")
+        logger.warning(f"Phase 3 prompt not found, using embedded fallback")
         return _get_fallback_prompt()
 
 
@@ -408,8 +409,9 @@ async def skeptical_comparison_node(
         employer_intel = format_employer_intel(phase_2)
         engineer_profile = get_formatted_profile()
         
-        # Load and format prompt template
-        prompt_template = load_phase_prompt()
+        # Load prompt based on model config type (concise for reasoning models)
+        config_type = state.get("config_type")
+        prompt_template = load_phase_prompt(config_type=config_type)
         prompt = prompt_template.format(
             employer_summary=employer_intel["employer_summary"],
             identified_requirements=employer_intel["identified_requirements"],

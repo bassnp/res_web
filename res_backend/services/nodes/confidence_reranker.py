@@ -35,6 +35,7 @@ from config.llm import get_llm
 from services.pipeline_state import FitCheckPipelineState
 from services.callbacks import ThoughtCallback
 from services.utils import get_response_text
+from services.prompt_loader import load_prompt, PHASE_CONFIDENCE_RERANKER
 
 logger = logging.getLogger(__name__)
 
@@ -45,7 +46,6 @@ logger = logging.getLogger(__name__)
 
 PHASE_NAME = "confidence_reranker"
 PHASE_DISPLAY = "Confidence Re-Ranking"
-PROMPT_FILE = Path(__file__).parent.parent.parent / "prompts" / "phase_5b_confidence_reranker.xml"
 
 # Low temperature for consistent, calibrated judgments
 RERANKER_TEMPERATURE = 0.1
@@ -107,20 +107,21 @@ class RerankerOutput:
 # Prompt Loading
 # =============================================================================
 
-def load_phase_prompt() -> str:
+def load_phase_prompt(config_type: str = None) -> str:
     """
-    Load the Phase 5B XML prompt template.
+    Load the Phase 5B XML prompt template based on model configuration.
+    
+    Args:
+        config_type: Model config type ("reasoning" or "standard").
+                     Reasoning models get concise prompts.
     
     Returns:
         str: XML-structured prompt template.
-    
-    Falls back to embedded minimal prompt if file not found.
     """
     try:
-        with open(PROMPT_FILE, "r", encoding="utf-8") as f:
-            return f.read()
+        return load_prompt(PHASE_CONFIDENCE_RERANKER, config_type=config_type, prefer_concise=True)
     except FileNotFoundError:
-        logger.warning(f"Phase 5B prompt not found at {PROMPT_FILE}, using embedded fallback")
+        logger.warning(f"Phase 5B prompt not found, using embedded fallback")
         return _get_fallback_prompt()
 
 
@@ -477,8 +478,9 @@ async def confidence_reranker_node(
                 phase=PHASE_NAME,
             )
         
-        # Load and format prompt
-        prompt_template = load_phase_prompt()
+        # Load prompt based on model config type (concise for reasoning models)
+        config_type = state.get("config_type")
+        prompt_template = load_phase_prompt(config_type=config_type)
         formatted_prompt = prompt_template.format(**context)
         
         # Call LLM with low temperature for consistent judgment

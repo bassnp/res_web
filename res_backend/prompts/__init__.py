@@ -1,13 +1,25 @@
-# Prompts module for the Portfolio Backend API
-# Contains system prompts for AI agents
+"""
+Prompts module for the Portfolio Backend API.
+
+Contains XML-based system prompts for each phase of the AI pipeline.
+The prompts are loaded by the prompt_loader service and formatted
+with engineer profile data before being passed to the LLM.
+
+Prompt Files:
+    - phase_1_connecting.xml          - Query classification
+    - phase_2_deep_research.xml       - Web research
+    - phase_2b_research_reranker.xml  - Research quality validation
+    - phase_3_skeptical_comparison.xml - Critical gap analysis
+    - phase_4_skills_matching.xml     - Skill-to-requirement mapping
+    - phase_5b_confidence_reranker.xml - LLM-as-Judge calibration
+    - phase_5_generate_results.xml    - Response synthesis
+    
+Concise Variants (for reduced token usage):
+    - *_concise.xml versions of each phase prompt
+"""
 
 from pathlib import Path
 
 PROMPTS_DIR = Path(__file__).parent
 
-
-def load_fit_check_prompt() -> str:
-    """Load the fit check system prompt."""
-    prompt_path = PROMPTS_DIR / "fit_check_system.txt"
-    with open(prompt_path, "r", encoding="utf-8") as f:
-        return f.read()
+__all__ = ["PROMPTS_DIR"]
