@@ -72,11 +72,11 @@ echo   API URL:  %LOCAL_API_URL%
 echo.
 
 echo ================================================================================
-echo [5/5] Starting local server on port 3000...
+echo [5/5] Starting Next.js dev server on port 3000 (hot reload enabled)...
 echo ================================================================================
 echo.
 echo Make sure backend is running: cd ..\res_backend ^&^& run_docker_sync.bat
 echo.
 echo Press Ctrl+C to stop the server
 echo.
-npx serve out -l 3000
+npm run dev

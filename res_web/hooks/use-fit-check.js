@@ -1,6 +1,7 @@
 'use client';
 
-import { useState, useCallback, useRef } from 'react';
+import { useState, useCallback, useRef, useMemo } from 'react';
+import { parseAIResponse } from '@/lib/parseAIResponse';
 
 /**
  * State machine states for the fit check flow:
@@ -11,6 +12,11 @@ import { useState, useCallback, useRef } from 'react';
  * - responding: AI is streaming final answer
  * - complete: Full response displayed
  * - error: Error occurred
+ * 
+ * UI Phases (derived from status):
+ * - input: Idle state, single input container visible
+ * - expanded: Thinking/responding, horizontal two-column layout
+ * - results: Complete, show pros/cons cards below
  */
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
@@ -30,6 +36,32 @@ export function useFitCheck() {
     error: null,              // Error object if any
     durationMs: null,         // Total duration in milliseconds
   });
+  
+  // Derive UI phase from status
+  const uiPhase = useMemo(() => {
+    switch (state.status) {
+      case 'idle':
+        return 'input';
+      case 'connecting':
+      case 'thinking':
+      case 'responding':
+        return 'expanded';
+      case 'complete':
+        return 'results';
+      case 'error':
+        return state.thoughts.length > 0 ? 'expanded' : 'input';
+      default:
+        return 'input';
+    }
+  }, [state.status, state.thoughts.length]);
+
+  // Parse response into structured data for pros/cons cards
+  const parsedResponse = useMemo(() => {
+    if (!state.response || state.status !== 'complete') {
+      return null;
+    }
+    return parseAIResponse(state.response);
+  }, [state.response, state.status]);
   
   const abortControllerRef = useRef(null);
   const startTimeRef = useRef(null);
@@ -139,6 +171,8 @@ export function useFitCheck() {
 
   return {
     ...state,
+    uiPhase,
+    parsedResponse,
     submitQuery,
     reset,
     isLoading: ['connecting', 'thinking', 'responding'].includes(state.status),

@@ -15,26 +15,68 @@ import { ThoughtNode } from './ThoughtNode';
  * @param {Array} props.thoughts - Array of thought events
  * @param {boolean} props.isThinking - Whether the AI is currently thinking
  * @param {boolean} props.defaultExpanded - Default expanded state
+ * @param {boolean} props.hideHeader - Hide the collapsible header (for embedded use)
  */
 export function ThinkingTimeline({ 
   thoughts = [], 
   isThinking = false, 
-  defaultExpanded = true 
+  defaultExpanded = true,
+  hideHeader = false
 }) {
   const [isExpanded, setIsExpanded] = useState(defaultExpanded);
   const containerRef = useRef(null);
 
   // Auto-scroll to latest thought
   useEffect(() => {
-    if (isExpanded && containerRef.current && thoughts.length > 0) {
+    if ((isExpanded || hideHeader) && containerRef.current && thoughts.length > 0) {
       const container = containerRef.current;
       container.scrollTop = container.scrollHeight;
     }
-  }, [thoughts, isExpanded]);
+  }, [thoughts, isExpanded, hideHeader]);
 
   // Don't render if no thoughts and not thinking
   if (thoughts.length === 0 && !isThinking) {
     return null;
+  }
+
+  // If hideHeader, render just the timeline content directly
+  if (hideHeader) {
+    return (
+      <div className="animate-fade-in">
+        <div 
+          ref={containerRef}
+          className="overflow-y-auto overflow-x-hidden pr-2 custom-scrollbar max-h-[350px]"
+        >
+          {thoughts.map((thought, index) => (
+            <ThoughtNode
+              key={`thought-${thought.step}-${index}`}
+              thought={thought}
+              isLast={index === thoughts.length - 1 && !isThinking}
+              isActive={false}
+            />
+          ))}
+          
+          {/* Active thinking placeholder */}
+          {isThinking && (
+            <div className="relative pl-8 animate-pulse">
+              {/* Timeline connector */}
+              <div className="absolute left-[11px] top-0 bottom-0 w-0.5 bg-gradient-to-b from-burnt-peach/30 to-transparent" />
+              
+              {/* Pulsing dot */}
+              <div className="absolute left-0 top-1 w-6 h-6 rounded-full bg-burnt-peach/50 flex items-center justify-center thinking-dot-active">
+                <Loader2 className="w-3 h-3 text-eggshell animate-spin" />
+              </div>
+              
+              {/* Placeholder card */}
+              <div className="bg-white/50 dark:bg-twilight/30 rounded-lg p-4 border border-dashed border-twilight/20 dark:border-eggshell/20">
+                <div className="h-2 w-24 bg-twilight/10 dark:bg-eggshell/10 rounded animate-pulse" />
+                <div className="h-3 w-full bg-twilight/5 dark:bg-eggshell/5 rounded mt-2 animate-pulse" />
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+    );
   }
 
   return (
