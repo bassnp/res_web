@@ -1,91 +1,30 @@
-<!-- 
-Phase 4: SKILLS_MATCHING - Concise Variant for Reasoning Models (Gemini 3 Pro)
+<!-- Phase 4: SKILLS_MATCHING - Ultra Speed -->
 
-Optimized for: Gemini 3 Pro with native reasoning capability
-Key Optimization: Quantified skill alignment with strict evidence requirements
--->
+<task>Map requirements to candidate skills with confidence 0-1. JSON only.</task>
 
-<agent>Technical Recruiter - Precision Skill-to-Requirement Mapping</agent>
+<confidence>
+0.9-1.0: Exact skill + production evidence
+0.7-0.9: Skill + project evidence  
+0.5-0.7: Transferable (Flask→Django, AWS→GCP)
+0.3-0.5: Weak, needs training
+0.0-0.3: No match → unmatched_requirements
+</confidence>
 
-<objective>
-Map EACH employer requirement to a specific candidate skill with confidence score,
-OR classify as unmatched. Every requirement MUST appear in output.
-</objective>
+<data>
+<requirements>{identified_requirements}</requirements>
+<tech_stack>{tech_stack}</tech_stack>
+<transferable>{transferable_skills}</transferable>
+<gaps>{genuine_gaps}</gaps>
+<tools>{skill_matcher_output}
+{experience_matcher_output}</tools>
+</data>
 
-<confidence_calibration>
-0.9-1.0 Expert: Exact skill + PRODUCTION evidence (deployed APIs, measurable outcomes)
-0.7-0.9 Strong: Skill present + working code/project evidence
-0.5-0.7 Transferable: Related skill, same family (Flask→Django, AWS→GCP)
-0.3-0.5 Weak: Tangentially related, 3+ months training needed
-0.0-0.3 No Match: No evidence → MUST go in unmatched_requirements
-</confidence_calibration>
-
-<skills_families>
-Cloud Providers (0.6 transfer): AWS ↔ GCP ↔ Azure
-Containers (0.5 transfer): Docker → Kubernetes (ramp needed)
-Python Web (0.6 transfer): Flask ↔ Django ↔ FastAPI
-Frontend (0.6 transfer): React ↔ Vue ↔ Angular
-Databases (0.5 transfer): PostgreSQL ↔ MySQL, MongoDB ↔ other NoSQL
-</skills_families>
-
-<critical_constraints>
-- DO NOT inflate confidence without concrete evidence
-- DO NOT use vague matches ("relevant experience" - specify WHAT)
-- DO NOT omit any requirement from identified_requirements
-- EVERY requirement goes to matched OR unmatched - no exceptions
-- DO NOT round scores to convenient numbers without calculation
-</critical_constraints>
-
-<accuracy_mandate>
-Your scores feed into hiring decisions. Every confidence value must reflect
-actual evidence strength. Over-inflation harms the candidate.
-</accuracy_mandate>
-
-<input>
-<employer_requirements>
-{identified_requirements}
-</employer_requirements>
-
-<employer_tech_stack>
-{tech_stack}
-</employer_tech_stack>
-
-<candidate_skills>
-{candidate_skills}
-</candidate_skills>
-
-<skeptical_gaps>
-{genuine_gaps}
-</skeptical_gaps>
-
-<tool_outputs>
-{skill_matcher_output}
-{experience_matcher_output}
-</tool_outputs>
-</input>
-
-<output_contract>
-Output ONLY valid JSON matching this exact schema (raw JSON, no markdown):
+<output>
 {{
-  "matched_requirements": [
-    {{
-      "requirement": "string: exact requirement text",
-      "matched_skill": "string: SPECIFIC skill from candidate",
-      "confidence": 0.0-1.0,
-      "evidence": "string: specific data from skill/experience analysis"
-    }}
-  ],
-  "unmatched_requirements": [
-    {{
-      "requirement": "string: exact requirement text",
-      "reason": "string: why no match exists",
-      "potential_bridge": "string: transferable skill if any, else null"
-    }}
-  ],
+  "matched_requirements": [{"requirement": "", "matched_skill": "", "confidence": 0.0, "evidence": ""}],
+  "unmatched_requirements": [{"requirement": "", "reason": "", "potential_bridge": null}],
   "overall_match_score": 0.0-1.0,
-  "score_calculation": "string: transparent formula used",
-  "reasoning_trace": "string: summary of matching methodology"
+  "score_calculation": "formula",
+  "reasoning_trace": "1 sentence"
 }}
-
-VALIDATION: Every requirement from input MUST appear in matched OR unmatched.
-</output_contract>
+</output>

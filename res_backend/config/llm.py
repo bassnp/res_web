@@ -105,27 +105,36 @@ def get_llm(
         f"config_type={config_type}, streaming={streaming}"
     )
     
-    # Build model kwargs based on config type
-    model_kwargs = {}
+    # Build configuration based on config type
+    thinking_budget = None
+    top_k = None
     
     if config_type == "reasoning":
-        # Gemini 3 Pro uses thinking_config for high reasoning
-        # Native reasoning model - optimal for complex analysis
-        model_kwargs["thinking_config"] = {"thinking_budget": 10000}
+        # Gemini 3 Pro uses thinking_budget for extended reasoning
+        # Minimal thinking_budget (1024) for fastest responses
+        # Tasks are simple enough that deep reasoning isn't needed
+        thinking_budget = 1024
         temp = 1.0  # Gemini 3 reasoning works best with temperature 1.0
-        logger.debug("Using reasoning config with thinking_budget=10000")
+        logger.debug("Using reasoning config with thinking_budget=1024")
     else:
         # Standard models use temperature and topK for accuracy
         temp = temperature if temperature is not None else DEFAULT_TEMPERATURE
-        model_kwargs["top_k"] = DEFAULT_TOP_K
-        logger.debug(f"Using standard config with temperature={temp}, top_k={DEFAULT_TOP_K}")
+        top_k = DEFAULT_TOP_K
+        logger.debug(f"Using standard config with temperature={temp}, top_k={top_k}")
     
-    return ChatGoogleGenerativeAI(
-        model=selected_model,
-        google_api_key=api_key,
-        temperature=temp,
-        max_output_tokens=max_tokens,
-        streaming=streaming,
-        convert_system_message_to_human=True,
-        **model_kwargs,
-    )
+    # Build kwargs dict, only including non-None values
+    kwargs = {
+        "model": selected_model,
+        "google_api_key": api_key,
+        "temperature": temp,
+        "max_output_tokens": max_tokens,
+        "streaming": streaming,
+        "convert_system_message_to_human": True,
+    }
+    
+    if thinking_budget is not None:
+        kwargs["thinking_budget"] = thinking_budget
+    if top_k is not None:
+        kwargs["top_k"] = top_k
+    
+    return ChatGoogleGenerativeAI(**kwargs)

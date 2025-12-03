@@ -1,64 +1,28 @@
-<!-- 
-Phase 2: DEEP_RESEARCH - Concise Variant for Reasoning Models (Gemini 3 Pro)
+<!-- Phase 2: DEEP_RESEARCH - Speed Optimized -->
 
-Optimized for: Gemini 3 Pro with native reasoning capability
-Key Optimization: Objective-based prompting with strict output enforcement
--->
+<task>Extract employer info from search results. Output JSON only.</task>
 
-<agent>Intelligence Gathering Specialist - Employer Research</agent>
-
-<objective>
-Synthesize web search results into a structured employer intelligence profile.
-Your output enables downstream fit assessment for a software engineer candidate.
-</objective>
-
-<success_criteria>
-1. Extract SPECIFIC technologies (e.g., "Python 3.11", "React 18") - reject vague terms like "modern stack"
-2. Identify CONCRETE job requirements with actionable detail
-3. Capture culture signals WITH supporting evidence from sources
-4. Assess data quality honestly based on source coverage
-5. Output ONLY valid JSON - no markdown, no code blocks, no prose
-</success_criteria>
-
-<critical_constraints>
-- ONLY use information explicitly present in search results
-- DO NOT fabricate, speculate, or infer beyond evidence
-- Use empty arrays [] for missing categories - never invent data
-- Distinguish verified facts from speculation
-- Prioritize recent information (2024-2025) over dated content
-</critical_constraints>
-
-<accuracy_mandate>
-This is critical: Your synthesis directly impacts career decisions.
-Be precise. Be accurate. Be honest about data limitations.
-Take a deep breath and ensure every output field is evidence-based.
-</accuracy_mandate>
+<rules>
+- Use ONLY info from search results below
+- Empty [] for missing data
+- No markdown, no prose
+</rules>
 
 <input>
-<query_context>
-  <company>{company_name}</company>
-  <role>{job_title}</role>
-  <skills_context>{extracted_skills}</skills_context>
-</query_context>
-
+<company>{company_name}</company>
+<role>{job_title}</role>
 <search_results>
 {search_results}
 </search_results>
 </input>
 
-<output_contract>
-Output ONLY valid JSON matching this exact schema (raw JSON, no markdown):
+<output>
 {{
-  "employer_summary": "string: 2-4 sentences describing company/role from search findings",
-  "identified_requirements": ["string: specific requirements found - empty [] if none"],
-  "tech_stack": ["string: specific technologies mentioned - empty [] if none"],
-  "culture_signals": ["string: observable culture indicators with evidence - empty [] if none"],
-  "data_quality": "high | medium | low",
-  "reasoning_trace": "string: 1-2 sentences on synthesis approach and source reliability"
+  "employer_summary": "2-3 sentences about company/role",
+  "identified_requirements": ["specific requirements"],
+  "tech_stack": ["specific technologies"],
+  "culture_signals": ["culture indicators"],
+  "data_quality": "high|medium|low",
+  "reasoning_trace": "1 sentence on data quality"
 }}
-
-Quality Definitions:
-- high: Multiple corroborating sources, specific details, recent data
-- medium: Some reliable sources but gaps in coverage
-- low: Sparse results, outdated info, mostly speculation
-</output_contract>
+</output>

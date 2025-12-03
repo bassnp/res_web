@@ -1,101 +1,39 @@
-<!-- 
-Phase 5B: CONFIDENCE_RERANKER - Concise Variant for Reasoning Models (Gemini 3 Pro)
+<!-- Phase 5B: CONFIDENCE_RERANKER - Ultra Speed -->
 
-Optimized for: Gemini 3 Pro with native reasoning capability
-Key Optimization: Meta-reasoning calibration with strict evidence requirements
--->
+<task>Calibrate final confidence score 0-100. Penalize sparse data. JSON only.</task>
 
-<agent>Senior Hiring Committee Reviewer - Final Calibration Gate</agent>
+<tiers>
+HIGH (75-100): 3+ tech, 3+ requirements, gaps addressable
+MEDIUM (40-74): 1-2 tech, mixed confidence, some gaps
+LOW (15-39): sparse data, significant gaps
+INSUFFICIENT (0-14): cannot assess fit
+</tiers>
 
-<objective>
-Evaluate the fit analysis and produce a CALIBRATED confidence score.
-This score REPLACES the raw match score with evidence-based assessment.
-Penalize sparse data. Flag quality issues. Be skeptical.
-</objective>
+<flags>sparse_tech_stack, no_requirements, default_score_suspected, high_risk_unaddressed</flags>
 
-<confidence_rubric>
-HIGH (75-100):
-  - Tech stack ≥3 items, ≥3 requirements matched at ≥70% confidence
-  - Gaps are addressable, culture context present, no critical misses
+<data>
+<tech_count>{tech_stack_count}</tech_count>
+<tech>{tech_stack_items}</tech>
+<req_count>{requirements_count}</req_count>
+<requirements>{requirements_items}</requirements>
+<gaps_count>{gaps_count}</gaps_count>
+<gaps>{gaps_items}</gaps>
+<risk>{risk_assessment}</risk>
+<raw_score>{raw_match_score}</raw_score>
+<matched>{matched_count}</matched>
+<unmatched>{unmatched_count}</unmatched>
+<company>{company_name}</company>
+<summary>{employer_summary}</summary>
+<unverified_count>{unverified_claims_count}</unverified_count>
+</data>
 
-MEDIUM (40-74):
-  - Tech stack 1-2 items, mixed confidence matches
-  - Gaps exist but not disqualifying, partial context
-
-LOW (15-39):
-  - Limited tech data (0-1 items), few high-confidence matches
-  - Significant gaps, unclear employer context
-
-INSUFFICIENT_DATA (0-14):
-  - Tech extraction failed, no reliable matches
-  - Cannot assess fit - more research needed
-</confidence_rubric>
-
-<quality_flags_to_check>
-- sparse_tech_stack: <2 technologies extracted
-- no_requirements: No explicit requirements found
-- default_score_suspected: Match score = 50% without justification
-- insufficient_gaps: <2 gaps identified (suspicious)
-- unverified_claims_present: Unverified claims exist
-- high_risk_unaddressed: HIGH risk not reflected in score
-</quality_flags_to_check>
-
-<critical_constraints>
-- DO NOT rubber-stamp the prior match score
-- DO NOT give HIGH confidence with sparse data
-- PENALIZE when tech_stack has <2 items
-- PENALIZE when genuine_gaps has <2 items
-- Lower score if gaps outweigh strengths
-- Acknowledge when data is insufficient
-</critical_constraints>
-
-<accuracy_mandate>
-You are the final quality gate. Your calibration determines what the
-candidate sees. Trust data over optimism. Penalize gaps in evidence.
-</accuracy_mandate>
-
-<input>
-<phase_2_data>
-  <tech_stack_count>{tech_stack_count}</tech_stack_count>
-  <tech_stack>{tech_stack_items}</tech_stack>
-  <requirements_count>{requirements_count}</requirements_count>
-  <requirements>{requirements_items}</requirements>
-</phase_2_data>
-
-<phase_3_data>
-  <gaps_count>{gaps_count}</gaps_count>
-  <gaps>{gaps_items}</gaps>
-  <risk_assessment>{risk_assessment}</risk_assessment>
-  <unverified_claims_count>{unverified_claims_count}</unverified_claims_count>
-</phase_3_data>
-
-<phase_4_data>
-  <raw_match_score>{raw_match_score}</raw_match_score>
-  <matched_count>{matched_count}</matched_count>
-  <unmatched_count>{unmatched_count}</unmatched_count>
-</phase_4_data>
-
-<company_context>
-  <company>{company_name}</company>
-  <summary>{employer_summary}</summary>
-</company_context>
-</input>
-
-<output_contract>
-Output ONLY valid JSON matching this exact schema (raw JSON, no markdown):
+<output>
 {{
-  "calibrated_confidence": {{
-    "score": 0-100,
-    "tier": "HIGH | MEDIUM | LOW | INSUFFICIENT_DATA",
-    "justification": "2-3 sentences explaining calibration decision"
-  }},
-  "quality_flags": ["flag IDs that apply - empty [] if none"],
-  "data_quality_assessment": {{
-    "tech_stack_quality": "strong | moderate | weak | missing",
-    "requirements_quality": "strong | moderate | weak | missing",
-    "skeptical_analysis_quality": "thorough | adequate | superficial"
-  }},
-  "adjustment_rationale": "how this differs from raw score and why",
-  "reasoning_trace": "post-hoc summary of evaluation"
+  "calibrated_confidence": {{"score": 0-100, "tier": "HIGH|MEDIUM|LOW|INSUFFICIENT_DATA", "justification": "1 sentence"}},
+  "quality_flags": [],
+  "data_quality_assessment": {{"tech_stack_quality": "strong|moderate|weak", "requirements_quality": "strong|moderate|weak", "skeptical_analysis_quality": "thorough|adequate|superficial"}},
+  "adjustment_rationale": "1 sentence",
+  "reasoning_trace": "1 sentence"
 }}
+</output>
 </output_contract>

@@ -103,7 +103,7 @@ export const InputPanel = forwardRef(function InputPanel({
     <form onSubmit={handleSubmit} className="space-y-4">
       {/* Subtitle - styled with Brutal Honesty theme */}
       <p className="text-twilight dark:text-eggshell text-sm text-center font-medium">
-        Use a transparent and <span className="text-burnt-peach font-semibold">Non-Biased Deep Researcher</span> to see analyze if I fit your needs
+        Use a transparent and <span className="text-burnt-peach font-semibold">Non-Biased Deep Researcher</span> to see analyze if I fit the scenario
       </p>
       
       <div className="relative">

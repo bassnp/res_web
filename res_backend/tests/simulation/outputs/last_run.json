@@ -42,7 +42,7 @@
       "type": "phase",
       "data": {
         "phase": "deep_research",
-        "message": "Researching employer intelligence..."
+        "message": "Researching for info..."
       },
       "timestamp": 1764737291.3343658
     },
@@ -380,7 +380,7 @@
     "deep_research": {
       "status": "complete",
       "duration_ms": 6166,
-      "message": "Researching employer intelligence...",
+      "message": "Researching for info...",
       "summary": "Identified 1 technologies, 2 requirements, 5 culture signals",
       "thought_count": 5
     },

@@ -6,24 +6,25 @@ import { createContext, useContext, useState, useCallback } from 'react';
  * AI Model Configuration
  * 
  * Model options with their specific configuration requirements:
- * - gemini-3-pro-preview: Uses high reasoning syntax (thinking_config)
+ * - gemini-3-pro-preview: Uses high reasoning syntax (thinking_config) - TEMPORARILY DISABLED
  * - gemini-flash-latest: Uses temperature and topK for accuracy
  */
 
 export const AI_MODELS = {
-  'gemini-3-pro-preview': {
-    id: 'gemini-3-pro-preview',
-    label: 'Gemini 3 Pro (Preview)',
-    description: 'Advanced reasoning with deep analysis',
-    configType: 'reasoning', // Uses thinking_config for high reasoning
-    badge: 'Recommended',
-  },
+  // Gemini 3 Pro temporarily disabled due to API issues
+  // 'gemini-3-pro-preview': {
+  //   id: 'gemini-3-pro-preview',
+  //   label: 'Gemini 3 Pro (Preview)',
+  //   description: 'Advanced reasoning with deep analysis',
+  //   configType: 'reasoning', // Uses thinking_config for high reasoning
+  //   badge: 'Recommended',
+  // },
   'gemini-flash-latest': {
     id: 'gemini-flash-latest',
-    label: 'Gemini Flash (Latest)',
+    label: 'Gemini Flash',
     description: 'Fast responses with balanced accuracy',
     configType: 'standard', // Uses temperature and topK
-    badge: 'Fast',
+    badge: 'Active',
   },
 };
 

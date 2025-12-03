@@ -363,12 +363,12 @@ async def deep_research_node(
     if callback and hasattr(callback, 'on_phase'):
         await callback.on_phase(
             PHASE_NAME,
-            "Researching employer intelligence..."
+            "Researching for info..."
         )
     elif callback:
         await callback.on_status(
             "researching",
-            "Researching employer intelligence..."
+            "Researching for info..."
         )
     
     try:
@@ -429,13 +429,16 @@ async def deep_research_node(
         # Load prompt based on model config type (concise for reasoning models)
         config_type = state.get("config_type")
         prompt_template = load_phase_prompt(config_type=config_type)
-        prompt = prompt_template.format(
-            query_type=phase_1.get("query_type", "unknown"),
-            company_name=phase_1.get("company_name") or "Not specified",
-            job_title=phase_1.get("job_title") or "Not specified",
-            extracted_skills=", ".join(phase_1.get("extracted_skills", [])) or "None identified",
-            search_results=formatted_results,
-        )
+        
+        # Build format kwargs - include all possible placeholders for compatibility
+        format_kwargs = {
+            "query_type": phase_1.get("query_type", "unknown"),
+            "company_name": phase_1.get("company_name") or "Not specified",
+            "job_title": phase_1.get("job_title") or "Software Engineer",
+            "extracted_skills": ", ".join(phase_1.get("extracted_skills", [])) or "None",
+            "search_results": formatted_results,
+        }
+        prompt = prompt_template.format(**format_kwargs)
         
         step += 1
         # Emit reasoning thought for synthesis
