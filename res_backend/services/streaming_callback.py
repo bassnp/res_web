@@ -13,7 +13,7 @@ import json
 import logging
 from typing import Optional, AsyncGenerator, Any
 
-from services.fit_check_agent import ThoughtCallback
+from services.callbacks import ThoughtCallback
 
 logger = logging.getLogger(__name__)
 
@@ -92,6 +92,33 @@ class StreamingCallbackHandler(ThoughtCallback):
             "message": message,
         })
     
+    async def on_phase(self, phase: str, message: str) -> None:
+        """
+        Emit a phase transition event.
+        
+        Args:
+            phase: Phase name (connecting, deep_research, skeptical_comparison, 
+                   skills_matching, generate_results).
+            message: Human-readable phase start message.
+        """
+        await self._emit("phase", {
+            "phase": phase,
+            "message": message,
+        })
+    
+    async def on_phase_complete(self, phase: str, summary: str) -> None:
+        """
+        Emit a phase completion event.
+        
+        Args:
+            phase: Phase name that completed.
+            summary: Brief summary of phase output.
+        """
+        await self._emit("phase_complete", {
+            "phase": phase,
+            "summary": summary,
+        })
+    
     async def on_thought(
         self,
         step: int,
@@ -99,6 +126,7 @@ class StreamingCallbackHandler(ThoughtCallback):
         content: str,
         tool: Optional[str] = None,
         tool_input: Optional[str] = None,
+        phase: Optional[str] = None,
     ) -> None:
         """
         Emit a thought event (tool_call, observation, or reasoning).
@@ -109,6 +137,7 @@ class StreamingCallbackHandler(ThoughtCallback):
             content: Thought content or description.
             tool: Tool name (for tool_call type).
             tool_input: Tool input/query (for tool_call type).
+            phase: Current pipeline phase (for grouping in frontend).
         """
         if not self._include_thoughts:
             return
@@ -117,6 +146,10 @@ class StreamingCallbackHandler(ThoughtCallback):
             "step": step,
             "type": thought_type,
         }
+        
+        # Add phase for frontend grouping
+        if phase:
+            data["phase"] = phase
         
         # Add type-specific fields
         if thought_type == "tool_call":

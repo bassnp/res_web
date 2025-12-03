@@ -38,29 +38,123 @@ An interactive portfolio website featuring an **AI-powered "See if I'm fit for y
 ┌─────────────────────────────────────────────────────────────────┐
 │                         FRONTEND (res_web)                       │
 │                    Next.js 14 Static Export                      │
-│  ┌─────────────┐  ┌─────────────┐  ┌─────────────────────────┐  │
+│  ┌─────────────┐  ┌───────────────┐  ┌───────────────────────┐  │
 │  │   page.js   │  │FitCheckSection│  │  useFitCheck Hook     │  │
-│  │  (Sections) │  │  (Chatbot)  │  │  (SSE Client)          │  │
-│  └─────────────┘  └──────┬──────┘  └───────────┬─────────────┘  │
-└──────────────────────────┼─────────────────────┼────────────────┘
-                           │ POST /api/fit-check/stream
-                           ▼                     │
+│  │  (Sections) │  │ ComparisonChain│  │  (SSE Client)        │  │
+│  └─────────────┘  └───────┬───────┘  └───────────┬───────────┘  │
+└───────────────────────────┼──────────────────────┼──────────────┘
+                            │ POST /api/fit-check/stream
+                            ▼                      │
 ┌─────────────────────────────────────────────────────────────────┐
-│                         BACKEND (res_backend)                    │
-│                     FastAPI + LangGraph Agent                    │
-│  ┌─────────────┐  ┌─────────────┐  ┌─────────────────────────┐  │
-│  │  server.py  │  │  Router     │  │   FitCheckAgent         │  │
-│  │  (FastAPI)  │──│ fit_check.py│──│   (LangGraph ReAct)     │  │
-│  └─────────────┘  └─────────────┘  └───────────┬─────────────┘  │
-│                                                │                 │
+│                    BACKEND (res_backend)                         │
+│                FastAPI + LangGraph State Machine                 │
+│  ┌──────────┐  ┌─────────────┐  ┌────────────────────────────┐  │
+│  │ server.py│  │  Router     │  │   FitCheckAgent            │  │
+│  │ (FastAPI)│──│fit_check.py │──│   (7-Phase Pipeline)       │  │
+│  └──────────┘  └─────────────┘  └─────────────┬──────────────┘  │
+│                                               │                  │
 │  ┌────────────────────────────────────────────┼────────────────┐│
-│  │                    TOOLS                    ▼                ││
-│  │ ┌────────────┐ ┌──────────────┐ ┌────────────────────────┐ ││
-│  │ │ web_search │ │skill_matcher │ │ experience_matcher     │ ││
-│  │ │(Google CSE)│ │              │ │                        │ ││
-│  │ └────────────┘ └──────────────┘ └────────────────────────┘ ││
+│  │              PIPELINE PHASES               ▼                ││
+│  │ ┌─────────────┐ ┌─────────────┐ ┌─────────────────────────┐││
+│  │ │ 1.connecting│→│2.deep_research│→│2B.research_reranker  │││
+│  │ │(classification)│ │(web search) │ │ (quality gate)       │││
+│  │ └─────────────┘ └─────────────┘ └─────────────────────────┘││
+│  │                                         │                   ││
+│  │                      ┌──────────────────┘                   ││
+│  │                      ▼                                      ││
+│  │ ┌─────────────────────────────────────────────────────────┐││
+│  │ │ 3.skeptical_comparison → 4.skills_matching             │││
+│  │ │  (critical gap analysis)   (skill-to-req mapping)      │││
+│  │ └─────────────────────────────────────────────────────────┘││
+│  │                      │                                      ││
+│  │                      ▼                                      ││
+│  │ ┌─────────────────────────────────────────────────────────┐││
+│  │ │ 5B.confidence_reranker → 6.generate_results            │││
+│  │ │  (LLM-as-Judge calibration) (final response synthesis) │││
+│  │ └─────────────────────────────────────────────────────────┘││
+│  │                                                             ││
+│  │ ┌─────────────────────────────────────────────────────────┐││
+│  │ │                    TOOLS                                │││
+│  │ │  web_search (Google CSE)  │  skills_db (engineer data)  │││
+│  │ └─────────────────────────────────────────────────────────┘││
 │  └─────────────────────────────────────────────────────────────┘│
 └─────────────────────────────────────────────────────────────────┘
+```
+
+### Pipeline Flow Diagram
+
+```
+START
+  │
+  ▼
+┌─────────────────────────────────────────────────────────────────┐
+│ PHASE 1: CONNECTING (Query Classification)                      │
+│ • Classify query type (company/job_position)                    │
+│ • Extract entities (company_name, job_title)                    │
+│ • Early rejection: prompt injection, irrelevant queries         │
+│ • Route: EARLY_EXIT or → deep_research                          │
+└─────────────────────────────────────────────────────────────────┘
+  │
+  ▼
+┌─────────────────────────────────────────────────────────────────┐
+│ PHASE 2: DEEP RESEARCH (Web Intelligence Gathering)             │
+│ • Execute strategic web searches via Google CSE                 │
+│ • Extract: tech stack, culture, requirements, values            │
+│ • Build company profile from search results                     │
+│ • Route: → research_reranker                                    │
+└─────────────────────────────────────────────────────────────────┘
+  │
+  ▼
+┌─────────────────────────────────────────────────────────────────┐
+│ PHASE 2B: RESEARCH RERANKER (Quality Gate)                      │
+│ • Validate research completeness (0-100 data score)             │
+│ • Assess data quality tier (HIGH/ACCEPTABLE/LOW)                │
+│ • Prune unreliable sources, flag missing data                   │
+│ • Route: ENHANCE_SEARCH (retry) or → skeptical_comparison       │
+└─────────────────────────────────────────────────────────────────┘
+  │
+  ▼
+┌─────────────────────────────────────────────────────────────────┐
+│ PHASE 3: SKEPTICAL COMPARISON (Critical Analysis)               │
+│ • Compare engineer profile against employer requirements        │
+│ • Identify genuine gaps (not just missing info)                 │
+│ • Classify risk level (low/medium/high/critical)                │
+│ • Generate calibrated initial confidence score                  │
+│ • Route: INSUFFICIENT_DATA (exit) or → skills_matching          │
+└─────────────────────────────────────────────────────────────────┘
+  │
+  ▼
+┌─────────────────────────────────────────────────────────────────┐
+│ PHASE 4: SKILLS MATCHING (Skill-to-Requirement Mapping)         │
+│ • Match engineer skills to job requirements                     │
+│ • Calculate match percentages per category                      │
+│ • Identify transferable skills and learning gaps                │
+│ • Generate detailed skill alignment analysis                    │
+│ • Route: → confidence_reranker                                  │
+└─────────────────────────────────────────────────────────────────┘
+  │
+  ▼
+┌─────────────────────────────────────────────────────────────────┐
+│ PHASE 5B: CONFIDENCE RERANKER (LLM-as-Judge Calibration)        │
+│ • Meta-cognitive review of all prior phase outputs              │
+│ • Detect reasoning flaws, score inflation, contradictions       │
+│ • Adjust confidence with explicit audit trail                   │
+│ • Flag quality issues for response generation                   │
+│ • Route: → generate_results                                     │
+└─────────────────────────────────────────────────────────────────┘
+  │
+  ▼
+┌─────────────────────────────────────────────────────────────────┐
+│ PHASE 6: GENERATE RESULTS (Final Response Synthesis)            │
+│ • Synthesize all phase outputs into coherent narrative          │
+│ • Apply confidence-appropriate framing (hedging for low conf)   │
+│ • Structure: summary → alignments → gaps → CTA                  │
+│ • Maintain honest, calibrated tone based on reranker output     │
+│ • Route: END                                                    │
+└─────────────────────────────────────────────────────────────────┘
+  │
+  ▼
+ END
 ```
 
 ---
@@ -97,9 +191,15 @@ res_backend/
 │   ├── __init__.py
 │   └── fit_check.py          # Pydantic request/response models
 │
-├── prompts/
+├── prompts/                  # XML prompt templates for each phase
 │   ├── __init__.py
-│   └── fit_check_system.txt  # System prompt template
+│   ├── phase_1_connecting.xml         # Query classification prompt
+│   ├── phase_2_deep_research.xml      # Web research prompt
+│   ├── phase_2b_research_reranker.xml # Research quality gate prompt
+│   ├── phase_3_skeptical_comparison.xml # Gap analysis prompt
+│   ├── phase_4_skills_matching.xml    # Skill matching prompt
+│   ├── phase_5_generate_results.xml   # Response generation prompt
+│   └── phase_5b_confidence_reranker.xml # LLM-as-Judge prompt
 │
 ├── routers/
 │   ├── __init__.py
@@ -107,19 +207,36 @@ res_backend/
 │
 ├── services/
 │   ├── __init__.py
-│   ├── fit_check_agent.py    # LangGraph ReAct agent implementation
+│   ├── fit_check_agent.py    # LangGraph 7-phase pipeline orchestrator
+│   ├── pipeline_state.py     # TypedDict state definitions
 │   ├── streaming_callback.py # SSE event formatter and queue handler
+│   ├── callbacks.py          # Callback handlers for streaming
+│   ├── utils.py              # Utility functions
+│   ├── nodes/                # LangGraph node implementations
+│   │   ├── __init__.py
+│   │   ├── connecting.py            # Phase 1: Query classification
+│   │   ├── deep_research.py         # Phase 2: Web research
+│   │   ├── research_reranker.py     # Phase 2B: Quality gate
+│   │   ├── skeptical_comparison.py  # Phase 3: Gap analysis
+│   │   ├── skills_matching.py       # Phase 4: Skill matching
+│   │   ├── confidence_reranker.py   # Phase 5B: LLM-as-Judge
+│   │   └── generate_results.py      # Phase 6: Response synthesis
 │   └── tools/
 │       ├── __init__.py
-│       ├── web_search.py         # Google CSE web search tool
-│       ├── skill_matcher.py      # Skill alignment analysis tool
-│       └── experience_matcher.py # Experience relevance analysis tool
+│       ├── web_search.py     # Google CSE web search tool
+│       └── skills_db.py      # Engineer profile database
 │
 └── tests/
     ├── __init__.py
     ├── conftest.py
     ├── test_fit_check_agent.py
-    └── test_integration.py
+    ├── test_integration.py
+    ├── unit/                 # Unit tests
+    │   └── ...
+    └── simulation/           # Frontend simulation tests
+        ├── simulate_full_pipeline.py  # Full SSE simulation
+        ├── analyze_ai_outputs.py      # Quality metrics analyzer
+        └── outputs/                   # Test output JSON files
 ```
 
 ---
@@ -208,11 +325,23 @@ class FitCheckRequest(BaseModel):
 
 | Event Type | Model | Key Fields |
 |------------|-------|------------|
-| `status` | `StatusEvent` | `status` (connecting/researching/analyzing/generating), `message` |
-| `thought` | `ThoughtEvent` | `step`, `type` (tool_call/observation/reasoning), `tool`, `input`, `content` |
+| `phase` | `PhaseEvent` | `phase` (phase name), `message` (status text) |
+| `phase_complete` | `PhaseCompleteEvent` | `phase`, `summary` (phase result summary), `duration_ms` |
+| `thought` | `ThoughtEvent` | `step`, `type` (tool_call/observation/reasoning), `tool`, `input`, `content`, `phase` |
 | `response` | `ResponseEvent` | `chunk` (streaming text) |
-| `complete` | `CompleteEvent` | `duration_ms` |
+| `complete` | `CompleteEvent` | `duration_ms`, `confidence_score` |
 | `error` | `ErrorEvent` | `code`, `message` |
+
+**Phase Names**:
+| Phase | Display Name | Description |
+|-------|--------------|-------------|
+| `connecting` | Query Classification | Entity extraction and query routing |
+| `deep_research` | Deep Research | Web intelligence gathering |
+| `research_reranker` | Research Quality Gate | Data validation and pruning |
+| `skeptical_comparison` | Critical Analysis | Gap identification and risk assessment |
+| `skills_matching` | Skill Mapping | Skill-to-requirement alignment |
+| `confidence_reranker` | Confidence Calibration | LLM-as-Judge meta-review |
+| `generate_results` | Response Generation | Final response synthesis |
 
 **Error Codes**:
 - `INVALID_QUERY` (400) - Query too short or too long
@@ -224,37 +353,90 @@ class FitCheckRequest(BaseModel):
 
 ---
 
-#### `services/fit_check_agent.py` - LangGraph ReAct Agent
+#### `services/fit_check_agent.py` - LangGraph Pipeline Orchestrator
 
-**Purpose**: Implements the AI agent using LangGraph's state machine pattern.
+**Purpose**: Implements the 7-phase AI pipeline using LangGraph's state machine pattern.
 
-**State Definition** (`FitCheckState`):
+**State Definition** (`FitCheckState` in `pipeline_state.py`):
 ```python
 class FitCheckState(TypedDict):
-    messages: List[BaseMessage]      # Conversation history
+    # Query info
     query: str                        # Original user query
-    query_type: Optional[str]        # 'company' or 'job_position'
-    research_results: Optional[str]
-    skill_analysis: Optional[str]
-    experience_analysis: Optional[str]
-    step_count: int                  # For thought tracking
-    final_response: Optional[str]
+    query_type: str                   # 'company' or 'job_position'
+    company_name: Optional[str]
+    job_title: Optional[str]
+    
+    # Research data
+    search_results: List[Dict]        # Raw web search results
+    research_summary: Optional[str]   # Structured research output
+    
+    # Analysis outputs
+    comparison_result: Optional[str]  # Skeptical comparison output
+    skills_match: Optional[str]       # Skills matching output
+    
+    # Reranker outputs
+    research_reranker_output: Optional[Dict]     # Quality gate decision
+    confidence_reranker_output: Optional[Dict]   # Calibrated confidence
+    
+    # Control flow
+    search_attempt: int               # For retry logic in reranker
+    current_phase: str                # Current pipeline phase
+    
+    # Final output
+    final_response: Optional[str]     # Generated response
+    confidence_score: int             # 0-100 calibrated score
     error: Optional[str]
 ```
 
 **Graph Architecture**:
 ```
-[START] → [agent] ─┬─ tool_calls? → [tools] → [agent]
-                   └─ no tool_calls → [END]
+[START] 
+   │
+   ▼
+[connecting] → route_after_connecting() → [EARLY_EXIT] or ↓
+   │
+   ▼
+[deep_research] → [research_reranker] → route_after_reranker()
+                                               │
+                    ┌──────────────────────────┤
+                    ▼                          ▼
+            [deep_research]              [skeptical_comparison]
+              (retry)                          │
+                                               ▼
+                                    route_after_skeptical()
+                                               │
+                    ┌──────────────────────────┤
+                    ▼                          ▼
+             [INSUFFICIENT_DATA]        [skills_matching]
+                                               │
+                                               ▼
+                                    [confidence_reranker]
+                                               │
+                                               ▼
+                                    [generate_results]
+                                               │
+                                               ▼
+                                            [END]
 ```
 
 **Nodes**:
-- `agent_node`: Invokes LLM with tools bound, emits thoughts via callback
-- `tool_node`: Executes tool calls, emits observations via callback
+| Node | Phase | Purpose |
+|------|-------|---------|
+| `connecting_node` | 1 | Query classification, entity extraction, early rejection |
+| `deep_research_node` | 2 | Web search execution, company profile building |
+| `research_reranker_node` | 2B | Research quality validation, retry/proceed decision |
+| `skeptical_comparison_node` | 3 | Critical gap analysis, risk assessment |
+| `skills_matching_node` | 4 | Skill-to-requirement mapping, match scoring |
+| `confidence_reranker_node` | 5B | LLM-as-Judge meta-cognitive review |
+| `generate_results_node` | 6 | Final response synthesis |
+
+**Routing Functions**:
+- `route_after_connecting()` - EARLY_EXIT vs continue to research
+- `route_after_research_reranker()` - ENHANCE_SEARCH (retry) vs proceed
+- `route_after_skeptical()` - INSUFFICIENT_DATA vs continue to matching
 
 **Class**: `FitCheckAgent`
-- `analyze(query)` - Non-streaming analysis
-- `stream_analysis(query, callback)` - Streaming with ThoughtCallback
+- `stream_analysis(query, callback)` - Streaming analysis with phase events
 
 **Singleton**: `get_agent()` returns cached instance
 
@@ -410,7 +592,7 @@ res_web/
 ├── components/
 │   ├── FitCheckSection.jsx   # AI chatbot interface (phase orchestrator)
 │   ├── ThinkingTimeline.jsx  # AI thoughts display
-│   ├── ThoughtNode.jsx       # Individual thought step
+│   ├── ThoughtNode.jsx       # Individual thought step (phase-colored)
 │   ├── ParticleBackground.jsx # Animated particle canvas
 │   ├── InteractiveGridDots.jsx # Interactive dot grid
 │   ├── CardGridDots.jsx      # Card background dots
@@ -419,6 +601,7 @@ res_web/
 │   │   ├── index.js          # Component exports
 │   │   ├── InputPanel.jsx    # Text input with loading overlay
 │   │   ├── ThinkingPanel.jsx # Expandable thinking panel
+│   │   ├── ComparisonChain.jsx # Pipeline phase progress display
 │   │   ├── ResultsSection.jsx # Two-column results container
 │   │   ├── StrengthsCard.jsx # Pros/strengths card (teal)
 │   │   └── GrowthAreasCard.jsx # Growth areas card (apricot)
@@ -530,7 +713,7 @@ const nextConfig = {
 
 #### `components/fit-check/ThinkingPanel.jsx` - Thinking Panel
 
-**Purpose**: Expandable right panel showing AI thinking process.
+**Purpose**: Expandable right panel showing AI thinking process, grouped by phase.
 
 **Props**:
 | Prop | Type | Description |
@@ -540,9 +723,22 @@ const nextConfig = {
 | `isVisible` | boolean | Controls panel visibility |
 | `status` | string | Current status (connecting/thinking/responding) |
 | `statusMessage` | string | Current status message |
+| `currentPhase` | string | Currently active phase from backend |
+
+**Phase Display Names** (`PHASE_DISPLAY_NAMES`):
+| Phase | Display Name |
+|-------|--------------|
+| `connecting` | Query Classification |
+| `deep_research` | Deep Research |
+| `research_reranker` | Research Quality Gate |
+| `skeptical_comparison` | Critical Analysis |
+| `skills_matching` | Skill Mapping |
+| `confidence_reranker` | Confidence Calibration |
+| `generate_results` | Response Generation |
 
 **Features**:
 - Animated panel expansion from left
+- Groups thoughts by phase with headers
 - Embedded `ThinkingTimeline` with `hideHeader` mode
 - Status indicator dots
 
@@ -628,7 +824,18 @@ const nextConfig = {
 
 #### `components/ThoughtNode.jsx` - Individual Thought
 
-**Purpose**: Render a single AI thought step.
+**Purpose**: Render a single AI thought step with phase-specific styling.
+
+**Phase Colors** (left border):
+| Phase | Color |
+|-------|-------|
+| `connecting` | blue-400 |
+| `deep_research` | purple-400 |
+| `research_reranker` | violet-400 |
+| `skeptical_comparison` | amber-400 |
+| `skills_matching` | green-400 |
+| `confidence_reranker` | emerald-400 |
+| `generate_results` | burnt-peach |
 
 **Thought Types**:
 | Type | Icon | Label | Color |
@@ -641,6 +848,34 @@ const nextConfig = {
 - `web_search` → Search
 - `analyze_skill_match` → Briefcase
 - `analyze_experience_relevance` → Briefcase
+
+---
+
+#### `components/fit-check/ComparisonChain.jsx` - Pipeline Progress
+
+**Purpose**: Displays pipeline phase progress with visual status indicators.
+
+**Props**:
+| Prop | Type | Description |
+|------|------|-------------|
+| `currentPhase` | string | Currently active phase name |
+| `phaseProgress` | Object | Map of phase name → status (active/complete/error) |
+| `phaseHistory` | Array | Completed phase entries with summaries |
+| `status` | string | Overall status (connecting/thinking/responding) |
+| `statusMessage` | string | Current status message |
+
+**Phase Configuration** (`PHASE_CONFIG`):
+| Phase | Label | Icon | Description |
+|-------|-------|------|-------------|
+| `connecting` | Connecting | Wifi | Classifying query and extracting entities |
+| `deep_research` | Deep Research | Search | Gathering employer intelligence |
+| `research_reranker` | Research Quality Gate | CheckCircle2 | Validating research completeness |
+| `skeptical_comparison` | Skeptical Comparison | Scale | Critical gap analysis |
+| `skills_matching` | Skills Matching | Briefcase | Mapping skills to requirements |
+| `confidence_reranker` | Confidence Calibration | CheckCircle2 | LLM-as-Judge quality assessment |
+| `generate_results` | Generating Results | Sparkles | Synthesizing final response |
+
+**Phase Order**: `PHASE_ORDER` array maintains pipeline sequence for rendering.
 
 ---
 
@@ -663,6 +898,17 @@ idle → connecting → thinking → responding → complete
 | error (with thoughts) | expanded |
 | error (no thoughts) | input |
 
+**Pipeline Phases** (from backend):
+| Phase | Description |
+|-------|-------------|
+| `connecting` | Query classification and entity extraction |
+| `deep_research` | Web search and intelligence gathering |
+| `research_reranker` | Research quality gate and data validation |
+| `skeptical_comparison` | Critical gap analysis |
+| `skills_matching` | Skill-to-requirement mapping |
+| `confidence_reranker` | LLM-as-Judge confidence calibration |
+| `generate_results` | Final response synthesis |
+
 **State Shape**:
 ```javascript
 {
@@ -672,6 +918,11 @@ idle → connecting → thinking → responding → complete
   response: '',           // Accumulated response text
   error: null,            // { code, message }
   durationMs: null,       // Total duration
+  
+  // Phase tracking
+  currentPhase: null,     // Currently active phase
+  phaseProgress: {},      // Map: phase name → status (active/complete)
+  phaseHistory: [],       // Completed phases with summaries
 }
 ```
 
@@ -683,17 +934,23 @@ idle → connecting → thinking → responding → complete
 - `submitQuery(query)` - Start SSE stream
 - `reset()` - Clear state for new query
 
-**SSE Parsing**:
-- `parseSSEBuffer(buffer)` - Parse events from raw buffer
-- `processEvent(event, setState)` - Update state per event type
+**SSE Event Handling**:
+| Event Type | Handler Action |
+|------------|----------------|
+| `phase` | Update `currentPhase`, set phase to 'active' in `phaseProgress` |
+| `phase_complete` | Mark phase 'complete', add to `phaseHistory` with summary |
+| `thought` | Append to `thoughts` array with phase context |
+| `response` | Append chunk to `response` string |
+| `complete` | Set status to 'complete', record `durationMs` |
+| `error` | Set `error` object, transition to error state |
 
 **Status Mapping**:
-| Backend Status | Frontend State |
-|----------------|----------------|
+| Backend Phase | Frontend Status |
+|---------------|-----------------|
 | connecting | connecting |
-| researching | thinking |
-| analyzing | thinking |
-| generating | responding |
+| deep_research, research_reranker | thinking |
+| skeptical_comparison, skills_matching, confidence_reranker | thinking |
+| generate_results | responding |
 
 ---
 
@@ -840,23 +1097,53 @@ Accept: text/event-stream
 
 **Response** (SSE Stream):
 ```
-event: status
-data: {"status": "connecting", "message": "Initializing AI agent..."}
-
-event: status
-data: {"status": "researching", "message": "Analyzing your query..."}
+event: phase
+data: {"phase": "connecting", "message": "Classifying query and extracting entities..."}
 
 event: thought
-data: {"step": 1, "type": "tool_call", "tool": "web_search", "input": "Google engineering culture"}
+data: {"step": 1, "type": "reasoning", "content": "Analyzing query: Google", "phase": "connecting"}
+
+event: phase_complete
+data: {"phase": "connecting", "summary": "Query classified as 'company', company: Google", "duration_ms": 1021}
+
+event: phase
+data: {"phase": "deep_research", "message": "Gathering employer intelligence..."}
 
 event: thought
-data: {"step": 2, "type": "observation", "content": "Google is a leading technology company..."}
+data: {"step": 2, "type": "tool_call", "tool": "web_search", "input": "Google engineering culture tech stack", "phase": "deep_research"}
 
 event: thought
-data: {"step": 3, "type": "tool_call", "tool": "analyze_skill_match", "input": "Python, Go, ML..."}
+data: {"step": 3, "type": "observation", "content": "Found 5 relevant results about Google engineering...", "phase": "deep_research"}
 
-event: status
-data: {"status": "generating", "message": "Generating response..."}
+event: phase_complete
+data: {"phase": "deep_research", "summary": "Identified 5 technologies, 3 requirements, 4 culture values", "duration_ms": 6500}
+
+event: phase
+data: {"phase": "research_reranker", "message": "Validating research quality..."}
+
+event: phase_complete
+data: {"phase": "research_reranker", "summary": "Data: CLEAN | Quality: HIGH", "duration_ms": 2100}
+
+event: phase
+data: {"phase": "skeptical_comparison", "message": "Performing critical gap analysis..."}
+
+event: phase_complete
+data: {"phase": "skeptical_comparison", "summary": "Found 3 gaps, 4 strengths. Risk level: medium", "duration_ms": 5200}
+
+event: phase
+data: {"phase": "skills_matching", "message": "Mapping skills to requirements..."}
+
+event: phase_complete
+data: {"phase": "skills_matching", "summary": "85% skill alignment, 2 learning gaps identified", "duration_ms": 4100}
+
+event: phase
+data: {"phase": "confidence_reranker", "message": "Calibrating confidence score..."}
+
+event: phase_complete
+data: {"phase": "confidence_reranker", "summary": "Calibrated confidence: 72% (MEDIUM), 1 quality flag", "duration_ms": 3800}
+
+event: phase
+data: {"phase": "generate_results", "message": "Synthesizing final response..."}
 
 event: response
 data: {"chunk": "### Why I'm a Great Fit"}
@@ -864,8 +1151,21 @@ data: {"chunk": "### Why I'm a Great Fit"}
 event: response
 data: {"chunk": " for Google\n\n**Key Alignments:**"}
 
+event: phase_complete
+data: {"phase": "generate_results", "summary": "Generated 350 word response", "duration_ms": 4200}
+
 event: complete
-data: {"duration_ms": 8523}
+data: {"duration_ms": 27523, "confidence_score": 72}
+```
+
+### Error Responses
+
+```
+event: error
+data: {"code": "EARLY_EXIT", "message": "Query appears to be prompt injection attempt"}
+
+event: error
+data: {"code": "INSUFFICIENT_DATA", "message": "Could not find enough information about XyzFakeCompany"}
 ```
 
 ---
@@ -974,12 +1274,42 @@ ENGINEER_PROFILE["skills"]["category"].append("New Skill")
 ```
 
 ### Modifying AI Behavior
-Edit `res_backend/prompts/fit_check_system.txt`
+Edit the relevant phase prompt in `res_backend/prompts/`:
+- `phase_1_connecting.xml` - Query classification logic
+- `phase_2_deep_research.xml` - Web search strategy
+- `phase_2b_research_reranker.xml` - Quality gate thresholds
+- `phase_3_skeptical_comparison.xml` - Gap analysis criteria
+- `phase_4_skills_matching.xml` - Skill matching rules
+- `phase_5b_confidence_reranker.xml` - Confidence calibration
+- `phase_5_generate_results.xml` - Response format/tone
+
+### Adding a New Pipeline Phase
+1. Create prompt template in `res_backend/prompts/phase_X_name.xml`
+2. Create node in `res_backend/services/nodes/name.py`
+3. Export node from `res_backend/services/nodes/__init__.py`
+4. Add node to graph in `res_backend/services/fit_check_agent.py`
+5. Add routing function if phase has conditional exits
+6. Update `FitCheckState` in `res_backend/services/pipeline_state.py`
+7. Add phase to frontend `PHASE_CONFIG` and `PHASE_ORDER` in:
+   - `res_web/components/fit-check/ComparisonChain.jsx`
+   - `res_web/components/fit-check/ThinkingPanel.jsx`
+   - `res_web/components/ThoughtNode.jsx`
+
+### Modifying Reranker Logic
+Rerankers use LLM-as-Judge pattern with structured JSON output:
+- Research Reranker: `res_backend/services/nodes/research_reranker.py`
+- Confidence Reranker: `res_backend/services/nodes/confidence_reranker.py`
+
+Key configuration in each reranker:
+```python
+MAX_SEARCH_ATTEMPTS = 2  # Retry limit before proceeding
+LLM_TEMPERATURE = 0.1    # Low temp for consistent judging
+```
 
 ### Adding New SSE Event Types
 1. Add model in `res_backend/models/fit_check.py`
 2. Add callback in `res_backend/services/streaming_callback.py`
-3. Add handler in `res_web/hooks/use-fit-check.js`
+3. Add handler in `res_web/hooks/use-fit-check.js` `processEvent()` function
 
 ### Modifying Fit Check UI Phases
 1. Update `uiPhase` logic in `res_web/hooks/use-fit-check.js`
@@ -993,6 +1323,39 @@ Edit `res_backend/prompts/fit_check_system.txt`
 
 ### Theming
 Edit `res_web/tailwind.config.js` colors and `res_web/app/globals.css` CSS variables
+
+### Running Backend Tests
+```bash
+cd res_backend
+.\.venv\Scripts\Activate.ps1
+pytest                                    # All tests
+python tests/simulation/simulate_full_pipeline.py --query "Google"  # Simulation
+```
+
+### Docker Development
+```bash
+cd res_backend
+.\run_docker_rebuild.bat   # Full rebuild
+.\run_docker_sync.bat      # Sync code changes
+docker logs res_web-backend --follow  # View logs
+```
+
+---
+
+## 🔧 Known Issues & Workarounds
+
+### Prompt Template Escaping
+XML prompt templates use Python `.format()` for variable substitution. Literal curly braces in JSON examples must be doubled:
+```xml
+<!-- WRONG -->
+{"key": "value"}
+
+<!-- CORRECT -->
+{{"key": "value"}}
+```
+
+### Reranker Search Retry
+The research_reranker can trigger up to 2 retry searches if data quality is insufficient. The `search_attempt` counter must be incremented in both success and fallback return paths.
 
 ---
 

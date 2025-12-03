@@ -5,10 +5,42 @@ import { cn } from '@/lib/utils';
 import ThinkingTimeline from '@/components/ThinkingTimeline';
 
 /**
+ * Phase display names for grouping headers.
+ */
+const PHASE_DISPLAY_NAMES = {
+  connecting: 'Query Classification',
+  deep_research: 'Deep Research',
+  research_reranker: 'Research Quality Gate',
+  skeptical_comparison: 'Critical Analysis',
+  skills_matching: 'Skill Mapping',
+  confidence_reranker: 'Confidence Calibration',
+  generate_results: 'Response Generation',
+};
+
+/**
+ * Group thoughts by their phase for organized display.
+ * @param {Array} thoughts - All thoughts
+ * @returns {Object} Thoughts grouped by phase name
+ */
+function groupThoughtsByPhase(thoughts) {
+  const groups = {};
+  
+  for (const thought of thoughts) {
+    const phase = thought.phase || 'unknown';
+    if (!groups[phase]) {
+      groups[phase] = [];
+    }
+    groups[phase].push(thought);
+  }
+  
+  return groups;
+}
+
+/**
  * ThinkingPanel Component
  * 
  * Expandable right panel that shows AI thinking process.
- * Appears with animation when thinking begins.
+ * Groups thoughts by pipeline phase with visual headers.
  * 
  * @param {Object} props
  * @param {Array} props.thoughts - Array of thought events
@@ -16,13 +48,15 @@ import ThinkingTimeline from '@/components/ThinkingTimeline';
  * @param {boolean} props.isVisible - Whether panel should be visible
  * @param {string} props.status - Current status (connecting, thinking, responding)
  * @param {string} props.statusMessage - Current status message
+ * @param {string} props.currentPhase - Currently active phase from backend
  */
 export function ThinkingPanel({ 
   thoughts = [], 
   isThinking = false, 
   isVisible = false,
   status = 'thinking',
-  statusMessage = ''
+  statusMessage = '',
+  currentPhase = null
 }) {
   if (!isVisible) return null;
 
@@ -40,6 +74,10 @@ export function ThinkingPanel({
   };
 
   const statusDisplay = getStatusDisplay();
+  
+  // Group thoughts by phase for organized display
+  const groupedThoughts = groupThoughtsByPhase(thoughts);
+  const hasGroupedThoughts = Object.keys(groupedThoughts).length > 0;
 
   return (
     <div className={cn(
@@ -90,7 +128,26 @@ export function ThinkingPanel({
               Initializing AI agent...
             </p>
           </div>
+        ) : hasGroupedThoughts ? (
+          // Render thoughts grouped by phase with headers
+          <div className="space-y-4">
+            {Object.entries(groupedThoughts).map(([phase, phaseThoughts]) => (
+              <div key={phase} className="phase-group phase-enter">
+                {/* Phase group header */}
+                <h4 className="phase-group-header">
+                  {PHASE_DISPLAY_NAMES[phase] || phase}
+                </h4>
+                <ThinkingTimeline
+                  thoughts={phaseThoughts}
+                  isThinking={isThinking && currentPhase === phase}
+                  defaultExpanded={true}
+                  hideHeader={true}
+                />
+              </div>
+            ))}
+          </div>
         ) : (
+          // Fallback to ungrouped timeline (backward compatibility)
           <ThinkingTimeline
             thoughts={thoughts}
             isThinking={isThinking}

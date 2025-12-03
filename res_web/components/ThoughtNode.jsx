@@ -4,10 +4,25 @@ import { Search, Eye, Brain, Briefcase, CheckCircle2, Loader2 } from 'lucide-rea
 import { cn } from '@/lib/utils';
 
 /**
+ * Phase-specific color classes for left border.
+ * Visual distinction for thoughts from different pipeline phases.
+ */
+const PHASE_COLORS = {
+  connecting: 'border-l-blue-400',
+  deep_research: 'border-l-purple-400',
+  research_reranker: 'border-l-violet-400',
+  skeptical_comparison: 'border-l-amber-400',
+  skills_matching: 'border-l-green-400',
+  confidence_reranker: 'border-l-emerald-400',
+  generate_results: 'border-l-burnt-peach',
+};
+
+/**
  * ThoughtNode Component
  * 
  * Displays an individual AI thought step in the thinking timeline.
  * Supports three types: tool_call, observation, and reasoning.
+ * Includes phase-specific color coding via left border.
  * 
  * @param {Object} props
  * @param {Object} props.thought - Thought event data
@@ -16,14 +31,18 @@ import { cn } from '@/lib/utils';
  * @param {string} props.thought.tool - Tool name (for tool_call type)
  * @param {string} props.thought.input - Tool input (for tool_call type)
  * @param {string} props.thought.content - Content (for observation/reasoning types)
+ * @param {string} props.thought.phase - Pipeline phase this thought belongs to
  * @param {boolean} props.isLast - Whether this is the last thought in the list
  * @param {boolean} props.isActive - Whether this thought is currently active/processing
  */
 export function ThoughtNode({ thought, isLast = false, isActive = false }) {
-  const { step, type, tool, input, content } = thought;
+  const { step, type, tool, input, content, phase } = thought;
 
   // Icon and colors based on thought type
   const config = getThoughtConfig(type, tool);
+  
+  // Get phase-specific border color
+  const phaseColorClass = PHASE_COLORS[phase] || 'border-l-gray-400';
 
   return (
     <div 
@@ -54,10 +73,12 @@ export function ThoughtNode({ thought, isLast = false, isActive = false }) {
         )}
       </div>
 
-      {/* Content card */}
+      {/* Content card with phase-specific left border */}
       <div 
         className={cn(
           "bg-white/80 dark:bg-twilight/40 rounded-lg p-4 border transition-all duration-300",
+          "border-l-2",
+          phaseColorClass,
           config.borderColor,
           isActive && "thought-node-active shadow-md"
         )}

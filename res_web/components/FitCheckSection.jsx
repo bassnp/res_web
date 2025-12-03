@@ -36,6 +36,10 @@ export function FitCheckSection() {
     submitQuery,
     reset,
     isLoading,
+    // New phase tracking props
+    currentPhase,
+    phaseProgress,
+    phaseHistory,
   } = useFitCheck();
 
   // Handle form submission
@@ -98,7 +102,9 @@ export function FitCheckSection() {
                   {/* Left column: Comparison Chain summary */}
                   <div className="lg:w-1/2 flex flex-col items-center justify-center">
                     <ComparisonChain
-                      thoughts={thoughts}
+                      currentPhase={currentPhase}
+                      phaseProgress={phaseProgress}
+                      phaseHistory={phaseHistory}
                       status={status}
                       statusMessage={statusMessage}
                     />
@@ -115,6 +121,7 @@ export function FitCheckSection() {
                       isVisible={true}
                       status={status}
                       statusMessage={statusMessage}
+                      currentPhase={currentPhase}
                     />
                   </div>
                 </div>

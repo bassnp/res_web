@@ -17,9 +17,29 @@ import { parseAIResponse } from '@/lib/parseAIResponse';
  * - input: Idle state, single input container visible
  * - expanded: Thinking/responding, horizontal two-column layout
  * - results: Complete, show pros/cons cards below
+ * 
+ * Pipeline Phases (from backend):
+ * - connecting: Query classification and entity extraction
+ * - deep_research: Web search and intelligence gathering
+ * - research_reranker: Research quality gate and data validation
+ * - skeptical_comparison: Critical gap analysis
+ * - skills_matching: Skill-to-requirement mapping
+ * - confidence_reranker: LLM-as-Judge confidence calibration
+ * - generate_results: Final response synthesis
  */
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+
+/**
+ * Phase entry structure for tracking pipeline progress.
+ * @typedef {Object} PhaseEntry
+ * @property {string} phase - Phase name (connecting, deep_research, etc.)
+ * @property {string} message - Phase start message
+ * @property {string|null} summary - Phase completion summary
+ * @property {number} startTime - Timestamp when phase started
+ * @property {number|null} endTime - Timestamp when phase completed
+ * @property {'active'|'complete'|'error'} status - Phase status
+ */
 
 /**
  * Custom hook for managing the Fit Check AI interaction.
@@ -35,6 +55,11 @@ export function useFitCheck() {
     response: '',             // Accumulated response text
     error: null,              // Error object if any
     durationMs: null,         // Total duration in milliseconds
+    
+    // Phase tracking for new pipeline
+    currentPhase: null,       // Currently active phase name
+    phaseHistory: [],         // Array of completed phase objects
+    phaseProgress: {},        // Map of phase -> status (pending/active/complete)
   });
   
   // Derive UI phase from status
@@ -83,6 +108,9 @@ export function useFitCheck() {
       response: '',
       error: null,
       durationMs: null,
+      currentPhase: null,
+      phaseHistory: [],
+      phaseProgress: {},
     });
   }, []);
 
@@ -108,6 +136,9 @@ export function useFitCheck() {
       response: '',
       error: null,
       durationMs: null,
+      currentPhase: null,
+      phaseHistory: [],
+      phaseProgress: {},
     });
 
     try {
@@ -180,6 +211,25 @@ export function useFitCheck() {
 }
 
 /**
+ * Get thoughts filtered by a specific phase.
+ * @param {Array} thoughts - All thoughts
+ * @param {string} phase - Phase to filter by
+ * @returns {Array} Filtered thoughts
+ */
+export function getThoughtsByPhase(thoughts, phase) {
+  return thoughts.filter(t => t.phase === phase);
+}
+
+/**
+ * Get all unique phases from thoughts.
+ * @param {Array} thoughts - All thoughts
+ * @returns {Array} Unique phase names
+ */
+export function getUniquePhasesFromThoughts(thoughts) {
+  return [...new Set(thoughts.map(t => t.phase).filter(Boolean))];
+}
+
+/**
  * Parse SSE events from buffer, handling partial messages.
  * @param {string} buffer - Raw SSE data buffer
  * @returns {Object} Object with parsed events array and remaining buffer
@@ -243,6 +293,51 @@ function parseSSEBuffer(buffer) {
  */
 function processEvent(event, setState, startTime) {
   switch (event.type) {
+    // NEW: Phase transition event
+    case 'phase':
+      setState(prev => ({
+        ...prev,
+        currentPhase: event.data.phase,
+        statusMessage: event.data.message,
+        phaseProgress: {
+          ...prev.phaseProgress,
+          [event.data.phase]: 'active',
+        },
+        phaseHistory: [
+          ...prev.phaseHistory,
+          {
+            phase: event.data.phase,
+            message: event.data.message,
+            summary: null,
+            startTime: Date.now(),
+            endTime: null,
+            status: 'active',
+          },
+        ],
+      }));
+      break;
+
+    // NEW: Phase completion event
+    case 'phase_complete':
+      setState(prev => ({
+        ...prev,
+        phaseProgress: {
+          ...prev.phaseProgress,
+          [event.data.phase]: 'complete',
+        },
+        phaseHistory: prev.phaseHistory.map(entry =>
+          entry.phase === event.data.phase && entry.status === 'active'
+            ? {
+                ...entry,
+                summary: event.data.summary,
+                endTime: Date.now(),
+                status: 'complete',
+              }
+            : entry
+        ),
+      }));
+      break;
+      
     case 'status':
       // Update status and message
       setState(prev => ({
@@ -253,12 +348,13 @@ function processEvent(event, setState, startTime) {
       break;
       
     case 'thought':
-      // Add thought to timeline
+      // Add thought to timeline with phase info
       setState(prev => ({
         ...prev,
         status: 'thinking',
         thoughts: [...prev.thoughts, {
           ...event.data,
+          phase: event.data.phase || prev.currentPhase, // Include phase
           timestamp: Date.now(),
           status: 'complete', // Mark as complete when received
         }],
@@ -285,7 +381,7 @@ function processEvent(event, setState, startTime) {
       break;
       
     case 'error':
-      // Handle error
+      // Handle error with phase tracking
       setState(prev => ({
         ...prev,
         status: 'error',
@@ -293,6 +389,12 @@ function processEvent(event, setState, startTime) {
           code: event.data.code,
           message: event.data.message,
         },
+        phaseProgress: prev.currentPhase
+          ? {
+              ...prev.phaseProgress,
+              [prev.currentPhase]: 'error',
+            }
+          : prev.phaseProgress,
       }));
       break;
       

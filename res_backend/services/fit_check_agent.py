@@ -1,340 +1,220 @@
 """
 Fit Check Agent - LangGraph-based AI Agent for Employer Fit Analysis.
 
-This module implements a ReAct (Reasoning + Acting) agent that:
-1. Classifies employer queries (company name vs. job description)
-2. Researches using web search and analysis tools
-3. Generates personalized fit analysis responses
-4. Streams thinking process and responses via callbacks
+This module implements a multi-phase pipeline agent that:
+1.  CONNECTING: Classifies employer queries (company name vs. job description)
+2.  DEEP_RESEARCH: Researches using web search and analysis tools
+2B. RESEARCH_RERANKER: Validates research quality, prunes bad data, routes pipeline
+3.  SKEPTICAL_COMPARISON: Critical gap analysis (anti-sycophancy)
+4.  SKILLS_MATCHING: Maps skills to requirements with confidence scores
+5B. CONFIDENCE_RERANKER: LLM-as-a-Judge confidence calibration
+5.  GENERATE_RESULTS: Synthesizes personalized fit analysis response
+
+Key Features:
+- Conditional routing based on data quality (early exit for garbage data)
+- Data pruning to prevent bad data from polluting downstream analysis
+- Enhanced search retry for obscure companies
+- Quality flags for transparency in final output
+
+Events are streamed via callbacks for real-time frontend updates.
 """
 
 import logging
-import os
-from pathlib import Path
-from typing import TypedDict, Annotated, Optional, List, Any, AsyncGenerator, Callable
+import time
+from typing import TypedDict, Optional, List, Dict, Any, AsyncGenerator
 
-from langchain_core.messages import HumanMessage, SystemMessage, AIMessage, BaseMessage
 from langgraph.graph import StateGraph, END
-from langgraph.graph.message import add_messages
-from langgraph.prebuilt import ToolNode
 
-from config.llm import get_llm
-from config.engineer_profile import get_formatted_profile
-from services.tools.web_search import web_search
-from services.tools.skill_matcher import analyze_skill_match
-from services.tools.experience_matcher import analyze_experience_relevance
+from services.pipeline_state import (
+    FitCheckPipelineState,
+    create_initial_state,
+    PHASE_ORDER,
+    get_next_phase,
+    is_terminal_phase,
+)
+from services.nodes import (
+    connecting_node,
+    deep_research_node,
+    research_reranker_node,
+    skeptical_comparison_node,
+    skills_matching_node,
+    confidence_reranker_node,
+    generate_results_node,
+)
+from services.callbacks import ThoughtCallback
 
 logger = logging.getLogger(__name__)
 
 
 # =============================================================================
-# State Definition
+# Pipeline Node Wrappers (for LangGraph compatibility)
 # =============================================================================
 
-class FitCheckState(TypedDict):
+def create_node_wrapper(node_func, callback_holder):
     """
-    State definition for the Fit Check Agent.
+    Create a LangGraph-compatible node wrapper.
     
-    Attributes:
-        messages: Conversation history with tool calls and responses
-        query: Original user query (company name or job description)
-        query_type: Classified type ('company' or 'job_position')
-        research_results: Accumulated research findings
-        skill_analysis: Results from skill matching
-        experience_analysis: Results from experience matching
-        step_count: Current step number for thought tracking
-        final_response: Generated final response
-        error: Error message if failed
-    """
-    messages: Annotated[List[BaseMessage], add_messages]
-    query: str
-    query_type: Optional[str]
-    research_results: Optional[str]
-    skill_analysis: Optional[str]
-    experience_analysis: Optional[str]
-    step_count: int
-    final_response: Optional[str]
-    error: Optional[str]
-
-
-# =============================================================================
-# System Prompt Loading
-# =============================================================================
-
-def load_system_prompt() -> str:
-    """
-    Load and format the system prompt with engineer profile.
-    
-    Returns:
-        str: Formatted system prompt.
-    """
-    # Load prompt template
-    prompt_path = Path(__file__).parent.parent / "prompts" / "fit_check_system.txt"
-    
-    try:
-        with open(prompt_path, "r", encoding="utf-8") as f:
-            prompt_template = f.read()
-    except FileNotFoundError:
-        logger.warning(f"System prompt not found at {prompt_path}, using default")
-        prompt_template = """You are a helpful career advisor analyzing fit between a software engineer and potential employers.
-        
-## ENGINEER PROFILE
-{engineer_profile}
-
-Analyze the employer's query and provide a personalized fit analysis. Use the available tools to research and analyze.
-Keep your response under 400 words."""
-    
-    # Inject engineer profile
-    engineer_profile = get_formatted_profile()
-    return prompt_template.format(engineer_profile=engineer_profile)
-
-
-# =============================================================================
-# Agent Tools
-# =============================================================================
-
-# Tools available to the agent
-AGENT_TOOLS = [web_search, analyze_skill_match, analyze_experience_relevance]
-
-
-# =============================================================================
-# Callback Types for Streaming
-# =============================================================================
-
-class ThoughtCallback:
-    """
-    Callback interface for streaming agent thoughts.
-    
-    Implement this to receive real-time updates about agent progress.
-    """
-    
-    async def on_status(self, status: str, message: str) -> None:
-        """Called when agent status changes."""
-        pass
-    
-    async def on_thought(
-        self,
-        step: int,
-        thought_type: str,
-        content: str,
-        tool: Optional[str] = None,
-        tool_input: Optional[str] = None,
-    ) -> None:
-        """Called when agent has a thought (tool_call, observation, or reasoning)."""
-        pass
-    
-    async def on_response_chunk(self, chunk: str) -> None:
-        """Called when streaming response text."""
-        pass
-    
-    async def on_complete(self, duration_ms: int) -> None:
-        """Called when agent completes."""
-        pass
-    
-    async def on_error(self, code: str, message: str) -> None:
-        """Called when an error occurs."""
-        pass
-
-
-# =============================================================================
-# Agent Node Functions
-# =============================================================================
-
-def should_continue(state: FitCheckState) -> str:
-    """
-    Determine if the agent should continue processing or end.
+    LangGraph nodes are sync functions by default. This wrapper
+    enables async node functions with callbacks.
     
     Args:
-        state: Current agent state.
+        node_func: Async node function.
+        callback_holder: Dict holding the callback reference.
     
     Returns:
-        str: Next node to execute ('tools', 'respond', or END).
+        Sync wrapper function for LangGraph.
     """
-    messages = state.get("messages", [])
-    
-    if not messages:
-        return END
-    
-    last_message = messages[-1]
-    
-    # If there's an error, end
-    if state.get("error"):
-        return END
-    
-    # If the LLM made tool calls, execute them
-    if hasattr(last_message, "tool_calls") and last_message.tool_calls:
-        return "tools"
-    
-    # Otherwise, the agent is done
-    return END
-
-
-async def agent_node(
-    state: FitCheckState,
-    callback: Optional[ThoughtCallback] = None,
-) -> FitCheckState:
-    """
-    Main agent reasoning node.
-    
-    Invokes the LLM to reason about the query and potentially call tools.
-    
-    Args:
-        state: Current agent state.
-        callback: Optional callback for streaming thoughts.
-    
-    Returns:
-        Updated state with new messages.
-    """
-    logger.info("Agent node executing")
-    
-    # Get LLM with tools bound
-    llm = get_llm(streaming=False)
-    llm_with_tools = llm.bind_tools(AGENT_TOOLS)
-    
-    # Load system prompt
-    system_prompt = load_system_prompt()
-    
-    # Build messages
-    messages = [SystemMessage(content=system_prompt)]
-    messages.extend(state.get("messages", []))
-    
-    # Emit status
-    if callback:
-        step = state.get("step_count", 0)
-        if step == 0:
-            await callback.on_status("researching", "Analyzing your query...")
-        else:
-            await callback.on_status("analyzing", "Processing research results...")
-    
-    try:
-        # Invoke LLM
-        response = await llm_with_tools.ainvoke(messages)
-        
-        # Emit reasoning thought if there's content before tool calls
-        if callback and response.content and not response.tool_calls:
-            step = state.get("step_count", 0) + 1
-            await callback.on_thought(
-                step=step,
-                thought_type="reasoning",
-                content=response.content[:500],  # Truncate for display
-            )
-        
-        # Track tool calls for thought emission
-        if callback and response.tool_calls:
-            step = state.get("step_count", 0) + 1
-            for tool_call in response.tool_calls:
-                await callback.on_thought(
-                    step=step,
-                    thought_type="tool_call",
-                    content=f"Calling {tool_call['name']}",
-                    tool=tool_call["name"],
-                    tool_input=str(tool_call.get("args", {})),
-                )
-                step += 1
-        
-        return {
-            "messages": [response],
-            "step_count": state.get("step_count", 0) + len(response.tool_calls or [1]),
-        }
-        
-    except Exception as e:
-        logger.error(f"Agent node error: {e}")
-        if callback:
-            await callback.on_error("AGENT_ERROR", str(e))
-        return {"error": str(e)}
-
-
-async def tool_node(
-    state: FitCheckState,
-    callback: Optional[ThoughtCallback] = None,
-) -> FitCheckState:
-    """
-    Execute tool calls from the agent.
-    
-    Args:
-        state: Current agent state.
-        callback: Optional callback for streaming observations.
-    
-    Returns:
-        Updated state with tool results.
-    """
-    logger.info("Tool node executing")
-    
-    messages = state.get("messages", [])
-    if not messages:
-        return state
-    
-    last_message = messages[-1]
-    
-    if not hasattr(last_message, "tool_calls") or not last_message.tool_calls:
-        return state
-    
-    # Execute tools
-    tool_node_executor = ToolNode(tools=AGENT_TOOLS)
-    
-    try:
-        result = await tool_node_executor.ainvoke(state)
-        new_messages = result.get("messages", [])
-        
-        # Emit observations
-        if callback and new_messages:
-            step = state.get("step_count", 0) + 1
-            for msg in new_messages:
-                content = msg.content if hasattr(msg, "content") else str(msg)
-                # Truncate long observations
-                display_content = content[:500] + "..." if len(content) > 500 else content
-                await callback.on_thought(
-                    step=step,
-                    thought_type="observation",
-                    content=display_content,
-                )
-                step += 1
-        
-        return {
-            "messages": new_messages,
-            "step_count": state.get("step_count", 0) + len(new_messages),
-        }
-        
-    except Exception as e:
-        logger.error(f"Tool execution error: {e}")
-        if callback:
-            await callback.on_error("SEARCH_ERROR", f"Tool execution failed: {str(e)}")
-        return {"error": str(e)}
+    async def async_wrapper(state: FitCheckPipelineState) -> Dict[str, Any]:
+        callback = callback_holder.get("callback")
+        return await node_func(state, callback)
+    return async_wrapper
 
 
 # =============================================================================
-# Agent Builder
+# Pipeline Builder
 # =============================================================================
 
-def build_fit_check_graph():
+def build_fit_check_pipeline(callback_holder: Dict = None):
     """
-    Build the LangGraph state machine for the Fit Check Agent.
+    Build the multi-phase LangGraph pipeline for the Fit Check Agent.
+    
+    The pipeline follows this sequence with conditional routing:
+        START → connecting → (route) → deep_research → research_reranker → (route)
+              → skeptical_comparison → skills_matching → confidence_reranker 
+              → generate_results → END
+    
+    Conditional routing points:
+        1. After connecting:
+           - Valid query → deep_research
+           - Irrelevant/malicious → END
+        
+        2. After research_reranker:
+           - CLEAN/PARTIAL data → skeptical_comparison (continue)
+           - SPARSE data (attempt 1) → deep_research (enhanced retry)
+           - GARBAGE/UNRELIABLE data → generate_results (early exit)
+           - SPARSE data (attempt 2) → skeptical_comparison (proceed with flags)
+    
+    Args:
+        callback_holder: Dict containing 'callback' key for async callback reference.
     
     Returns:
         Compiled LangGraph ready for execution.
     """
-    # Create the graph
-    workflow = StateGraph(FitCheckState)
+    if callback_holder is None:
+        callback_holder = {}
     
-    # Add nodes
-    workflow.add_node("agent", agent_node)
-    workflow.add_node("tools", tool_node)
+    # Create the graph
+    workflow = StateGraph(FitCheckPipelineState)
+    
+    # Add phase nodes
+    workflow.add_node("connecting", create_node_wrapper(connecting_node, callback_holder))
+    workflow.add_node("deep_research", create_node_wrapper(deep_research_node, callback_holder))
+    workflow.add_node("research_reranker", create_node_wrapper(research_reranker_node, callback_holder))
+    workflow.add_node("skeptical_comparison", create_node_wrapper(skeptical_comparison_node, callback_holder))
+    workflow.add_node("skills_matching", create_node_wrapper(skills_matching_node, callback_holder))
+    workflow.add_node("confidence_reranker", create_node_wrapper(confidence_reranker_node, callback_holder))
+    workflow.add_node("generate_results", create_node_wrapper(generate_results_node, callback_holder))
     
     # Set entry point
-    workflow.set_entry_point("agent")
+    workflow.set_entry_point("connecting")
     
-    # Add conditional edges
+    # -------------------------------------------------------------------------
+    # Routing Function: After Connecting
+    # -------------------------------------------------------------------------
+    def route_after_connecting(state: FitCheckPipelineState) -> str:
+        """
+        Route based on query classification result.
+        
+        Returns:
+            Next node name or END.
+        """
+        current_phase = state.get("current_phase", "deep_research")
+        
+        # Check if query was rejected (irrelevant or malicious)
+        if current_phase == "__end__":
+            return END
+        
+        # Check phase 1 output for irrelevant classification
+        phase1_output = state.get("phase_1_output")
+        if phase1_output and phase1_output.get("query_type") == "irrelevant":
+            return END
+        
+        # Continue to deep research
+        return "deep_research"
+    
+    # -------------------------------------------------------------------------
+    # Routing Function: After Research Reranker (CRITICAL QUALITY GATE)
+    # -------------------------------------------------------------------------
+    def route_after_research_reranker(state: FitCheckPipelineState) -> str:
+        """
+        Route based on research quality assessment.
+        
+        This is the critical quality gate that:
+        - Allows good data to continue
+        - Triggers enhanced search for sparse data
+        - Forces early exit for garbage/unreliable data
+        
+        Returns:
+            Next node name based on data quality.
+        """
+        reranker_output = state.get("research_reranker_output") or {}
+        search_attempt = state.get("search_attempt", 1)
+        early_exit = state.get("early_exit", False)
+        
+        # Get quality assessment
+        data_tier = reranker_output.get("data_quality_tier", "PARTIAL")
+        action = reranker_output.get("recommended_action", "CONTINUE")
+        
+        # CRITICAL: Early exit for garbage/suspicious data
+        if early_exit or action == "EARLY_EXIT" or data_tier == "GARBAGE":
+            logger.info(f"[ROUTER] Early exit triggered: data_tier={data_tier}, action={action}")
+            return "generate_results"
+        
+        # ENHANCE: Retry search for sparse data (first attempt only)
+        if action == "ENHANCE_SEARCH" and search_attempt < 2:
+            logger.info(f"[ROUTER] Enhanced search triggered: attempt={search_attempt}")
+            return "deep_research"
+        
+        # CONTINUE: Good or acceptable data proceeds to skeptical analysis
+        if action in ["CONTINUE", "CONTINUE_WITH_FLAGS"]:
+            return "skeptical_comparison"
+        
+        # Default: proceed with caution
+        return "skeptical_comparison"
+    
+    # -------------------------------------------------------------------------
+    # Add Conditional Edges
+    # -------------------------------------------------------------------------
+    
+    # After connecting: route to deep_research or END
     workflow.add_conditional_edges(
-        "agent",
-        should_continue,
+        "connecting",
+        route_after_connecting,
         {
-            "tools": "tools",
+            "deep_research": "deep_research",
             END: END,
-        },
+        }
     )
     
-    # Tools always go back to agent
-    workflow.add_edge("tools", "agent")
+    # After deep_research: always go to research_reranker for quality check
+    workflow.add_edge("deep_research", "research_reranker")
+    
+    # After research_reranker: conditional routing based on data quality
+    workflow.add_conditional_edges(
+        "research_reranker",
+        route_after_research_reranker,
+        {
+            "skeptical_comparison": "skeptical_comparison",
+            "deep_research": "deep_research",  # Enhanced search retry
+            "generate_results": "generate_results",  # Early exit
+        }
+    )
+    
+    # Remaining sequential edges (normal flow)
+    workflow.add_edge("skeptical_comparison", "skills_matching")
+    workflow.add_edge("skills_matching", "confidence_reranker")
+    workflow.add_edge("confidence_reranker", "generate_results")
+    workflow.add_edge("generate_results", END)
     
     # Compile the graph
     return workflow.compile()
@@ -348,41 +228,12 @@ class FitCheckAgent:
     """
     High-level interface for the Fit Check Agent.
     
-    Provides methods to run analysis with or without streaming.
+    Provides methods to run the 5-phase pipeline with or without streaming.
     """
     
     def __init__(self):
-        """Initialize the agent with compiled graph."""
-        self._graph = None
-    
-    @property
-    def graph(self):
-        """Lazily build and cache the graph."""
-        if self._graph is None:
-            self._graph = build_fit_check_graph()
-        return self._graph
-    
-    def _create_initial_state(self, query: str) -> FitCheckState:
-        """
-        Create initial state for a new query.
-        
-        Args:
-            query: User's query (company name or job description).
-        
-        Returns:
-            Initial agent state.
-        """
-        return FitCheckState(
-            messages=[HumanMessage(content=query)],
-            query=query,
-            query_type=None,
-            research_results=None,
-            skill_analysis=None,
-            experience_analysis=None,
-            step_count=0,
-            final_response=None,
-            error=None,
-        )
+        """Initialize the agent."""
+        self._callback_holder = {}
     
     async def analyze(self, query: str) -> str:
         """
@@ -399,23 +250,19 @@ class FitCheckAgent:
         """
         logger.info(f"Starting analysis for query: {query[:50]}...")
         
-        initial_state = self._create_initial_state(query)
+        # Build pipeline without callback
+        pipeline = build_fit_check_pipeline(self._callback_holder)
+        initial_state = create_initial_state(query)
         
-        # Run the graph
-        final_state = await self.graph.ainvoke(initial_state)
+        # Run the pipeline
+        final_state = await pipeline.ainvoke(initial_state)
         
         # Check for errors
         if final_state.get("error"):
             raise Exception(final_state["error"])
         
-        # Extract final response
-        messages = final_state.get("messages", [])
-        if messages:
-            last_message = messages[-1]
-            if hasattr(last_message, "content"):
-                return last_message.content
-        
-        return "Unable to generate analysis. Please try again."
+        # Return final response
+        return final_state.get("final_response", "Unable to generate analysis. Please try again.")
     
     async def stream_analysis(
         self,
@@ -438,7 +285,6 @@ class FitCheckAgent:
         Raises:
             Exception: If analysis fails.
         """
-        import time
         start_time = time.time()
         
         logger.info(f"Starting streaming analysis for query: {query[:50]}...")
@@ -446,67 +292,50 @@ class FitCheckAgent:
         # Emit initial status
         await callback.on_status("connecting", "Initializing AI agent...")
         
-        initial_state = self._create_initial_state(query)
+        # Set callback for pipeline nodes
+        self._callback_holder["callback"] = callback
         
         try:
-            # Stream through the graph
-            current_state = initial_state
+            # Build pipeline with callback
+            pipeline = build_fit_check_pipeline(self._callback_holder)
+            initial_state = create_initial_state(query)
             
-            async for event in self.graph.astream(current_state):
-                # Process events
+            # Stream through the pipeline
+            final_response = ""
+            rejection_reason = None
+            
+            async for event in pipeline.astream(initial_state):
+                # Process events from each node
                 for node_name, node_output in event.items():
-                    if node_name == "agent":
-                        messages = node_output.get("messages", [])
-                        if messages:
-                            last_msg = messages[-1]
-                            # Check if this is tool calls
-                            if hasattr(last_msg, "tool_calls") and last_msg.tool_calls:
-                                step = node_output.get("step_count", 1)
-                                for tool_call in last_msg.tool_calls:
-                                    await callback.on_thought(
-                                        step=step,
-                                        thought_type="tool_call",
-                                        content=f"Calling {tool_call['name']}",
-                                        tool=tool_call["name"],
-                                        tool_input=str(tool_call.get("args", {})),
-                                    )
-                                    step += 1
-                            # Final response
-                            elif hasattr(last_msg, "content") and last_msg.content:
-                                await callback.on_status("generating", "Generating response...")
-                                # Stream response in chunks
-                                content = last_msg.content
-                                # Handle Gemini's structured content format
-                                # Content can be a list of dicts like [{"type": "text", "text": "..."}]
-                                if isinstance(content, list):
-                                    text_parts = []
-                                    for part in content:
-                                        if isinstance(part, dict) and part.get("type") == "text":
-                                            text_parts.append(part.get("text", ""))
-                                        elif isinstance(part, str):
-                                            text_parts.append(part)
-                                    content = "".join(text_parts)
-                                elif not isinstance(content, str):
-                                    content = str(content)
-                                
-                                chunk_size = 50
-                                for i in range(0, len(content), chunk_size):
-                                    chunk = content[i:i + chunk_size]
-                                    await callback.on_response_chunk(chunk)
-                                    yield chunk
+                    logger.debug(f"Pipeline event from {node_name}: {list(node_output.keys())}")
                     
-                    elif node_name == "tools":
-                        messages = node_output.get("messages", [])
-                        step = node_output.get("step_count", 1)
-                        for msg in messages:
-                            content = msg.content if hasattr(msg, "content") else str(msg)
-                            display_content = content[:500] + "..." if len(content) > 500 else content
-                            await callback.on_thought(
-                                step=step,
-                                thought_type="observation",
-                                content=display_content,
-                            )
-                            step += 1
+                    # Check for errors
+                    if node_output.get("error"):
+                        await callback.on_error("PIPELINE_ERROR", node_output["error"])
+                        return
+                    
+                    # Check for query rejection (from connecting node)
+                    if node_output.get("rejection_reason"):
+                        rejection_reason = node_output["rejection_reason"]
+                        logger.info(f"Query rejected: {rejection_reason}")
+                    
+                    # Check for final response (from generate_results node)
+                    # Note: Response streaming is handled by the node itself via callback.
+                    # We only capture the final response here for the yield/return.
+                    if node_name == "generate_results":
+                        response = node_output.get("final_response")
+                        if response:
+                            final_response = response
+                            # Yield the complete response for the generator interface
+                            yield response
+            
+            # Handle rejection case - emit rejection response
+            if rejection_reason and not final_response:
+                rejection_response = f"I cannot process this request.\n\n{rejection_reason}\n\nPlease provide a valid company name or job description for career fit analysis."
+                
+                # Emit the rejection as a response
+                await callback.on_response_chunk(rejection_response)
+                yield rejection_response
             
             # Calculate duration
             duration_ms = int((time.time() - start_time) * 1000)
@@ -516,6 +345,9 @@ class FitCheckAgent:
             logger.error(f"Streaming analysis error: {e}")
             await callback.on_error("AGENT_ERROR", str(e))
             raise
+        finally:
+            # Clear callback reference
+            self._callback_holder.pop("callback", None)
 
 
 # =============================================================================

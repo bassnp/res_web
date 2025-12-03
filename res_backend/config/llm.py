@@ -18,8 +18,10 @@ logger = logging.getLogger(__name__)
 # Model Configuration
 # =============================================================================
 
-# Default model - Using Gemini Flash for fast, capable responses
-DEFAULT_MODEL = "gemini-flash-latest"
+# Default model - Using Gemini 3 Pro for enhanced reasoning capabilities
+# Native reasoning model - no need for "think step-by-step" instructions
+# Supports criteria-based prompting and higher accuracy for complex analysis
+DEFAULT_MODEL = "gemini-3-pro-preview"
 
 # Get model from environment or use default
 MODEL_NAME = os.getenv("GEMINI_MODEL", DEFAULT_MODEL)

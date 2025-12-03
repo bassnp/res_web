@@ -745,3 +745,59 @@ html {
   50% { transform: scale(1.02); }
   100% { transform: scale(1); }
 }
+
+/* ===========================================
+   PHASE-SPECIFIC STYLES
+   =========================================== */
+
+/* Phase-specific thought left border colors */
+.thought-connecting { border-left-color: theme('colors.blue.400') !important; }
+.thought-deep_research { border-left-color: theme('colors.purple.400') !important; }
+.thought-skeptical_comparison { border-left-color: theme('colors.amber.400') !important; }
+.thought-skills_matching { border-left-color: theme('colors.green.400') !important; }
+.thought-generate_results { border-left-color: #e07a5f !important; }
+
+/* Phase group headers */
+.phase-group-header {
+  @apply text-xs font-semibold uppercase tracking-wide;
+  @apply text-twilight/60 dark:text-eggshell/60;
+  @apply mb-2 pb-1;
+  @apply border-b border-twilight/10 dark:border-eggshell/10;
+}
+
+/* Phase group container */
+.phase-group {
+  @apply mb-4;
+}
+
+/* Phase transition animation */
+@keyframes phaseEnter {
+  from {
+    opacity: 0;
+    transform: translateX(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.phase-enter {
+  animation: phaseEnter 0.3s ease-out forwards;
+}
+
+/* Phase indicator colors for pipeline */
+.phase-indicator-connecting { background-color: theme('colors.blue.400'); }
+.phase-indicator-deep_research { background-color: theme('colors.purple.400'); }
+.phase-indicator-skeptical_comparison { background-color: theme('colors.amber.400'); }
+.phase-indicator-skills_matching { background-color: theme('colors.green.400'); }
+.phase-indicator-generate_results { background-color: #e07a5f; }
+
+/* Phase error state */
+.phase-error {
+  @apply bg-red-500/10 border-red-500/30;
+}
+
+.phase-error-icon {
+  @apply bg-red-500 text-eggshell;
+}
