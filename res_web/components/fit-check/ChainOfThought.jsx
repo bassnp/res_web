@@ -6,7 +6,7 @@ import {
   Search, 
   Scale, 
   Briefcase, 
-  Sparkles, 
+  FileCheck2, 
   CheckCircle2, 
   AlertCircle, 
   Loader2,
@@ -87,7 +87,7 @@ const PHASE_CONFIG = {
   },
   generate_results: {
     label: 'Generating Results',
-    icon: Sparkles,
+    icon: FileCheck2,
     description: 'Synthesizing final response with insights',
     color: 'burnt-peach',
     borderColor: 'border-l-burnt-peach',

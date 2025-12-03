@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useRef } from 'react';
-import { Sparkles, RefreshCw, AlertCircle, Clock, Brain } from 'lucide-react';
+import { RefreshCw, AlertCircle, Clock, Brain, CheckCircle2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import InteractiveGridDots from '@/components/InteractiveGridDots';
 import { InputPanel } from '@/components/fit-check/InputPanel';
@@ -136,7 +136,7 @@ export function FitCheckSection() {
                 <div className="p-4 md:p-6">
                   <div className="flex items-center justify-between gap-4">
                     <div className="flex items-center gap-2">
-                      <Sparkles className="w-5 h-5 text-burnt-peach" />
+                      <CheckCircle2 className="w-5 h-5 text-muted-teal" />
                       <h2 className="text-lg md:text-xl font-bold text-twilight dark:text-eggshell">
                         Analysis Complete
                       </h2>

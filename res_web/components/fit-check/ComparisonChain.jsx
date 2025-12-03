@@ -1,6 +1,6 @@
 'use client';
 
-import { Link2, Wifi, Search, Scale, Briefcase, Sparkles, CheckCircle2, AlertCircle, Gauge, Target, Code2 } from 'lucide-react';
+import { Link2, Wifi, Search, Scale, Briefcase, FileCheck2, CheckCircle2, AlertCircle, Gauge, Target, Code2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { extractPhaseInsights } from '@/lib/phaseInsights';
 import { useMemo } from 'react';
@@ -42,7 +42,7 @@ const PHASE_CONFIG = {
   },
   generate_results: {
     label: 'Generating Results',
-    icon: Sparkles,
+    icon: FileCheck2,
     description: 'Synthesizing final response',
   },
 };
@@ -128,7 +128,8 @@ function StepInsightSummary({ phase, summary }) {
               "bg-red-500/10 text-red-500"
             )}>
               <Target className="w-2.5 h-2.5" />
-              {insights.qualityTier}
+              {insights.qualityTier === 'HIGH' ? 'CONFIDENT' :
+               insights.qualityTier === 'MEDIUM' ? 'UNCERTAIN' : 'MISUNDERSTANDING'}
             </span>
           )}
           {insights.confidence && (

@@ -385,15 +385,11 @@ html {
 }
 
 .gradient-border-strengths {
-  background: linear-gradient(135deg, rgba(129, 178, 154, 0.3), rgba(224, 122, 95, 0.2), rgba(129, 178, 154, 0.3));
-  background-size: 200% 200%;
-  animation: gradientBorderShift 4s ease infinite;
+  background: linear-gradient(135deg, rgba(129, 178, 154, 0.3), transparent 40%, transparent 60%, rgba(129, 178, 154, 0.3));
 }
 
 .gradient-border-growth {
-  background: linear-gradient(135deg, rgba(242, 204, 143, 0.3), rgba(224, 122, 95, 0.2), rgba(242, 204, 143, 0.3));
-  background-size: 200% 200%;
-  animation: gradientBorderShift 4s ease infinite;
+  background: linear-gradient(135deg, rgba(242, 204, 143, 0.3), transparent 40%, transparent 60%, rgba(242, 204, 143, 0.3));
 }
 
 /* Success checkmark animation */

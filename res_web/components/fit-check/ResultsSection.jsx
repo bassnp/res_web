@@ -1,6 +1,6 @@
 'use client';
 
-import { Clock, Sparkles } from 'lucide-react';
+import { Clock, CheckCircle2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import StrengthsCard from './StrengthsCard';
 import GrowthAreasCard from './GrowthAreasCard';
@@ -21,6 +21,7 @@ export function ResultsSection({
   durationMs = null,
   isVisible = false 
 }) {
+  // Don't render if not visible or no response
   if (!isVisible || !parsedResponse) return null;
 
   const {
@@ -28,15 +29,19 @@ export function ResultsSection({
     strengths = [],
     valueProposition = '',
     growthAreas = [],
-    callToAction = ''
+    rawContent = ''
   } = parsedResponse;
+
+  // Show if we have any content at all (parsed or raw)
+  const hasContent = strengths.length > 0 || valueProposition || growthAreas.length > 0 || rawContent;
+  if (!hasContent) return null;
 
   return (
     <div className="mt-6 space-y-4 animate-results-entry">
       {/* Results header with title and duration */}
       <div className="flex items-center justify-between px-2">
         <div className="flex items-center gap-2">
-          <Sparkles className="w-4 h-4 text-burnt-peach animate-icon-bounce" />
+          <CheckCircle2 className="w-4 h-4 text-muted-teal" />
           {title ? (
             <h3 className="text-lg font-semibold text-twilight dark:text-eggshell text-glow">
               {title}
@@ -72,7 +77,6 @@ export function ResultsSection({
         <GrowthAreasCard
           title="Growth Opportunities"
           growthAreas={growthAreas}
-          callToAction={callToAction}
           isVisible={true}
         />
       </div>

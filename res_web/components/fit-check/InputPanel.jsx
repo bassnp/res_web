@@ -25,9 +25,8 @@ const ModelSelector = () => {
         const isReasoning = model.configType === 'reasoning';
         
         return (
-          <>
+          <div key={model.id} className="flex items-center gap-2">
             <button
-              key={model.id}
               type="button"
               onClick={() => updateModel(model.id)}
               className={cn(
@@ -49,7 +48,7 @@ const ModelSelector = () => {
             {!isLast && (
               <span className="text-xs text-twilight/40 dark:text-eggshell/40 font-medium">or</span>
             )}
-          </>
+          </div>
         );
       })}
     </div>

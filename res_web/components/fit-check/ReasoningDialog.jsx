@@ -8,7 +8,7 @@ import {
   Search, 
   Scale, 
   Briefcase, 
-  Sparkles, 
+  FileCheck2, 
   CheckCircle2, 
   Eye, 
   ChevronDown,
@@ -112,7 +112,7 @@ const PHASE_CONFIG = {
   },
   generate_results: {
     label: 'Response Generation',
-    icon: Sparkles,
+    icon: FileCheck2,
     description: 'Synthesizing final response with insights',
     color: 'burnt-peach',
     borderColor: 'border-l-burnt-peach',
@@ -570,7 +570,8 @@ function PhaseInsightsSummary({ phase, summary, insights, displayMeta, config })
             "bg-red-500/10 text-red-500"
           )}>
             <Shield className="w-3.5 h-3.5" />
-            Quality: {insights.qualityTier}
+            {insights.qualityTier === 'HIGH' ? 'CONFIDENT' :
+             insights.qualityTier === 'MEDIUM' ? 'UNCERTAIN' : 'MISUNDERSTANDING'}
           </div>
           {insights.action && insights.action !== 'CONTINUE' && (
             <div className="inline-flex items-center gap-1 text-xs text-twilight/60 dark:text-eggshell/60">

@@ -1,0 +1,13 @@
+Key Strengths
+Why we're a great match
+
+A 30% match (LOW confidence) based on a default score, reflecting significant gaps in core systems programming and proprietary internal infrastructure experience.
+
+AI/ML Integration: Direct experience building RAG systems using LangChain and integrating the Google Gemini API.
+Microservices Architecture: Designed and deployed containerized microservices via Docker and CI/CD, demonstrating distributed systems knowledge.
+Python Proficiency: Strong, current proficiency in Python, which is directly applicable across many AI/ML and higher-level application teams.
+Growth Opportunities
+Room to grow together
+
+C/C++ Systems: Significant lack of verifiable experience with core Google infrastructure languages (C/C++), critical for deep systems engineering placement.
+Proprietary Infrastructure: Lacks exposure to Google's internal systems, though distributed systems concepts via microservices mitigate the learning curve.

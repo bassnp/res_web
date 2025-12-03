@@ -1,6 +1,6 @@
 'use client';
 
-import { CheckCircle2, Sparkles } from 'lucide-react';
+import { CheckCircle2, Award } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import InteractiveGridDots from '@/components/InteractiveGridDots';
 
@@ -47,7 +47,7 @@ export function StrengthsCard({
             "bg-gradient-to-br from-muted-teal to-muted-teal/60",
             "animate-checkmark"
           )}>
-            <Sparkles className="w-5 h-5 text-eggshell" />
+            <Award className="w-5 h-5 text-eggshell" />
           </div>
           <div>
             <h3 className="text-lg font-bold text-twilight dark:text-eggshell">

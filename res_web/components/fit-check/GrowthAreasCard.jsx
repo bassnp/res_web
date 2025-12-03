@@ -13,13 +13,11 @@ import InteractiveGridDots from '@/components/InteractiveGridDots';
  * @param {Object} props
  * @param {string} props.title - Card title
  * @param {Array} props.growthAreas - Array of growth area items
- * @param {string} props.callToAction - Optional CTA text
  * @param {boolean} props.isVisible - Controls animation
  */
 export function GrowthAreasCard({ 
   title = "Growth Opportunities",
   growthAreas = [],
-  callToAction = '',
   isVisible = false 
 }) {
   if (!isVisible) return null;
@@ -84,22 +82,8 @@ export function GrowthAreasCard({
           </ul>
         )}
 
-        {/* Call to action */}
-        {callToAction && (
-          <div className={cn(
-            "mt-4 pt-4 border-t border-apricot/20",
-            "animate-fade-in"
-          )}
-          style={{ animationDelay: '0.5s' }}
-          >
-            <p className="text-sm text-twilight/80 dark:text-eggshell/80 leading-relaxed italic">
-              &ldquo;{callToAction}&rdquo;
-            </p>
-          </div>
-        )}
-
         {/* Empty state */}
-        {growthAreas.length === 0 && !callToAction && (
+        {growthAreas.length === 0 && (
           <div className="text-center py-4">
             <p className="text-sm text-twilight/70 dark:text-eggshell/70">
               Every role is a chance to learn and grow!

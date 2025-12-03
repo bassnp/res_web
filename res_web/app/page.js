@@ -6,7 +6,7 @@ import { Settings, Briefcase, User, Mail, Github, ChevronDown, ExternalLink, Sun
 import { useHeaderVisibility } from '@/hooks/use-header-visibility';
 import { useAISettings, AI_MODELS } from '@/hooks/use-ai-settings';
 import { Button } from '@/components/ui/button';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogDescription } from '@/components/ui/dialog';
 import ParticleBackground from '@/components/ParticleBackground';
 import InteractiveGridDots from '@/components/InteractiveGridDots';
 import CardGridDots from '@/components/CardGridDots';
@@ -120,6 +120,9 @@ const Header = () => {
                       <Settings className="w-5 h-5 text-burnt-peach" />
                       Settings
                     </DialogTitle>
+                    <DialogDescription className="text-twilight/60 dark:text-eggshell/60">
+                      Configure your AI model preferences
+                    </DialogDescription>
                   </DialogHeader>
                   <div className="py-4 space-y-4">
                     {/* AI Model Selection */}

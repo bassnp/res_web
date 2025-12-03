@@ -7,7 +7,7 @@ import {
   CheckCircle2, 
   Scale, 
   Briefcase, 
-  Sparkles,
+  FileCheck2,
   Loader2,
   Zap
 } from 'lucide-react';
@@ -55,7 +55,7 @@ const PIPELINE_PHASES = [
   {
     id: 'generate_results',
     label: 'Generate Results',
-    icon: Sparkles,
+    icon: FileCheck2,
     color: 'from-burnt-peach to-burnt-peach/80',
     borderColor: 'border-burnt-peach/50',
   },

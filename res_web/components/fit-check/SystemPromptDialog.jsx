@@ -13,7 +13,7 @@ import {
   Search,
   Scale,
   Briefcase,
-  Sparkles,
+  FileCheck2,
   CheckCircle2
 } from 'lucide-react';
 import {
@@ -74,7 +74,7 @@ const PHASE_CONFIG = {
   },
   generate_results: {
     label: 'Response Generation',
-    icon: Sparkles,
+    icon: FileCheck2,
     description: 'Synthesizes final response',
     bgColor: 'bg-burnt-peach',
     textColor: 'text-burnt-peach',
@@ -213,6 +213,9 @@ export function SystemPromptDialog({
                 )}>
                   {promptData?.display_name || config?.label || 'System Prompt'}
                 </DialogTitle>
+                <DialogDescription className="text-sm text-twilight/60 dark:text-eggshell/60 mt-0.5">
+                  {config?.description || 'View the system prompt for this pipeline phase'}
+                </DialogDescription>
               </div>
             </div>
 
