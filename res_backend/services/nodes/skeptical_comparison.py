@@ -428,7 +428,13 @@ async def skeptical_comparison_node(
             )
         
         # Get LLM with critical thinking temperature
-        llm = get_llm(streaming=False, temperature=CRITICAL_THINKING_TEMPERATURE)
+        # Uses model config from state if provided
+        llm = get_llm(
+            streaming=False,
+            temperature=CRITICAL_THINKING_TEMPERATURE,
+            model_id=state.get("model_id"),
+            config_type=state.get("config_type"),
+        )
         
         # Invoke LLM with formatted prompt
         messages = [HumanMessage(content=prompt)]

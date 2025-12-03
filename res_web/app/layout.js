@@ -1,5 +1,6 @@
 import './globals.css';
 import { ThemeProvider } from 'next-themes';
+import { AISettingsProvider } from '@/hooks/use-ai-settings';
 
 export const metadata = {
   title: 'Portfolio | Software Engineer',
@@ -11,9 +12,12 @@ export default function RootLayout({ children }) {
     <html lang="en" suppressHydrationWarning>
       <body className="min-h-screen flex flex-col">
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem={true}>
-          {children}
+          <AISettingsProvider>
+            {children}
+          </AISettingsProvider>
         </ThemeProvider>
       </body>
     </html>
   );
 }
+

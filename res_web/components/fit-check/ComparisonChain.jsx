@@ -1,7 +1,9 @@
 'use client';
 
-import { Link2, Wifi, Search, Scale, Briefcase, Sparkles, CheckCircle2, AlertCircle } from 'lucide-react';
+import { Link2, Wifi, Search, Scale, Briefcase, Sparkles, CheckCircle2, AlertCircle, Gauge, Target, Code2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { extractPhaseInsights } from '@/lib/phaseInsights';
+import { useMemo } from 'react';
 
 /**
  * Phase configuration with display metadata.
@@ -55,6 +57,140 @@ const PHASE_ORDER = [
   'confidence_reranker',
   'generate_results',
 ];
+
+/**
+ * StepInsightSummary Component
+ * 
+ * Displays a compact enhanced summary for completed steps.
+ * Extracts key metrics and displays them inline.
+ */
+function StepInsightSummary({ phase, summary }) {
+  const insights = useMemo(() => {
+    return extractPhaseInsights(phase, summary);
+  }, [phase, summary]);
+  
+  if (!insights) {
+    return (
+      <span className="text-xs text-twilight/50 dark:text-eggshell/50 truncate block">
+        {summary}
+      </span>
+    );
+  }
+  
+  // Render different compact summaries based on phase
+  switch (phase) {
+    case 'connecting':
+      return (
+        <div className="flex items-center gap-1.5 flex-wrap">
+          {insights.company && (
+            <span className="text-xs text-twilight/60 dark:text-eggshell/60 truncate">
+              {insights.company}
+            </span>
+          )}
+          {insights.queryType && (
+            <span className={cn(
+              "text-[10px] px-1.5 py-0.5 rounded",
+              "bg-muted-teal/10 text-muted-teal"
+            )}>
+              {insights.queryType}
+            </span>
+          )}
+        </div>
+      );
+      
+    case 'deep_research':
+      return (
+        <div className="flex items-center gap-1.5 flex-wrap">
+          {insights.sourceCount && (
+            <span className="text-[10px] text-twilight/50 dark:text-eggshell/50 flex items-center gap-0.5">
+              <Search className="w-2.5 h-2.5" />
+              {insights.sourceCount} sources
+            </span>
+          )}
+          {insights.technologies?.length > 0 && (
+            <span className="text-[10px] text-twilight/50 dark:text-eggshell/50 flex items-center gap-0.5">
+              <Code2 className="w-2.5 h-2.5" />
+              {insights.technologies.length} tech
+            </span>
+          )}
+        </div>
+      );
+      
+    case 'research_reranker':
+    case 'confidence_reranker':
+      return (
+        <div className="flex items-center gap-1.5 flex-wrap">
+          {insights.qualityTier && (
+            <span className={cn(
+              "text-[10px] px-1.5 py-0.5 rounded flex items-center gap-0.5",
+              insights.qualityTier === 'HIGH' ? "bg-muted-teal/10 text-muted-teal" :
+              insights.qualityTier === 'MEDIUM' ? "bg-amber-500/10 text-amber-500" :
+              "bg-red-500/10 text-red-500"
+            )}>
+              <Target className="w-2.5 h-2.5" />
+              {insights.qualityTier}
+            </span>
+          )}
+          {insights.confidence && (
+            <span className="text-[10px] text-twilight/50 dark:text-eggshell/50 flex items-center gap-0.5">
+              <Gauge className="w-2.5 h-2.5" />
+              {insights.confidence}%
+            </span>
+          )}
+        </div>
+      );
+      
+    case 'skeptical_comparison':
+      return (
+        <div className="flex items-center gap-1.5 flex-wrap">
+          {insights.gapsIdentified && (
+            <span className="text-[10px] text-twilight/50 dark:text-eggshell/50">
+              {insights.gapsIdentified} gaps found
+            </span>
+          )}
+          {insights.matchStrength && (
+            <span className={cn(
+              "text-[10px] px-1.5 py-0.5 rounded",
+              insights.matchStrength === 'strong' ? "bg-muted-teal/10 text-muted-teal" :
+              insights.matchStrength === 'moderate' ? "bg-amber-500/10 text-amber-500" :
+              "bg-red-500/10 text-red-500"
+            )}>
+              {insights.matchStrength}
+            </span>
+          )}
+        </div>
+      );
+      
+    case 'skills_matching':
+      return (
+        <div className="flex items-center gap-1.5 flex-wrap">
+          {insights.matchedCount && (
+            <span className="text-[10px] text-twilight/50 dark:text-eggshell/50">
+              {insights.matchedCount} matched
+            </span>
+          )}
+          {insights.matchPercentage && (
+            <span className={cn(
+              "text-[10px] px-1.5 py-0.5 rounded flex items-center gap-0.5",
+              insights.matchPercentage >= 70 ? "bg-muted-teal/10 text-muted-teal" :
+              insights.matchPercentage >= 40 ? "bg-amber-500/10 text-amber-500" :
+              "bg-red-500/10 text-red-500"
+            )}>
+              <Gauge className="w-2.5 h-2.5" />
+              {insights.matchPercentage}%
+            </span>
+          )}
+        </div>
+      );
+      
+    default:
+      return (
+        <span className="text-xs text-twilight/50 dark:text-eggshell/50 truncate block">
+          {summary}
+        </span>
+      );
+  }
+}
 
 /**
  * ComparisonChain Component
@@ -191,11 +327,9 @@ export function ComparisonChain({
                   {step.label}
                 </span>
                 
-                {/* Summary on complete */}
+                {/* Enhanced Summary on complete */}
                 {step.isComplete && step.summary && (
-                  <span className="text-xs text-twilight/50 dark:text-eggshell/50 truncate block">
-                    {step.summary}
-                  </span>
+                  <StepInsightSummary phase={step.id} summary={step.summary} />
                 )}
               </div>
 

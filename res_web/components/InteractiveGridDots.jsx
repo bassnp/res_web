@@ -44,7 +44,7 @@ export default function InteractiveGridDots() {
     const INFLUENCE_RADIUS = 80;
 
     // Colors
-    const DEFAULT_COLOR = 'rgba(224, 122, 95, 0.4)'; // Orangish
+    const DEFAULT_COLOR = 'rgba(129, 178, 154, 0.4)'; // Greenish
     const CARD_HOVER_COLOR = 'rgba(129, 178, 154, 0.6)'; // Greenish
 
     // Get dot color - check if behind a hovered card

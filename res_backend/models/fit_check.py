@@ -20,6 +20,8 @@ class FitCheckRequest(BaseModel):
     Attributes:
         query: Company name or job description (3-2000 characters).
         include_thoughts: Whether to include thinking process in stream.
+        model_id: AI model to use for analysis.
+        config_type: Configuration type for the model (reasoning or standard).
     """
     query: str = Field(
         ...,
@@ -31,6 +33,15 @@ class FitCheckRequest(BaseModel):
     include_thoughts: bool = Field(
         default=True,
         description="Whether to include detailed thinking process in the stream",
+    )
+    model_id: Optional[str] = Field(
+        default="gemini-3-pro-preview",
+        description="AI model ID to use for analysis",
+        examples=["gemini-3-pro-preview", "gemini-flash-latest"],
+    )
+    config_type: Optional[Literal["reasoning", "standard"]] = Field(
+        default="reasoning",
+        description="Configuration type: 'reasoning' for high reasoning models, 'standard' for temperature/topK models",
     )
 
 

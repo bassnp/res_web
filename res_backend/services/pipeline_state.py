@@ -199,6 +199,9 @@ class FitCheckPipelineState(TypedDict):
         processing_errors: Non-fatal errors encountered during processing.
         error: Fatal error that stopped the pipeline.
         rejection_reason: Reason if query was rejected as irrelevant/malicious.
+        
+        model_id: AI model ID to use for analysis.
+        config_type: Configuration type for the model (reasoning or standard).
     """
     # Input
     query: str
@@ -232,18 +235,28 @@ class FitCheckPipelineState(TypedDict):
     
     # Query rejection
     rejection_reason: Optional[str]
+    
+    # Model configuration
+    model_id: Optional[str]
+    config_type: Optional[str]
 
 
 # =============================================================================
 # State Factory Functions
 # =============================================================================
 
-def create_initial_state(query: str) -> FitCheckPipelineState:
+def create_initial_state(
+    query: str,
+    model_id: Optional[str] = None,
+    config_type: Optional[str] = None,
+) -> FitCheckPipelineState:
     """
     Create the initial pipeline state from a user query.
     
     Args:
         query: The user's input (company name or job description).
+        model_id: AI model ID to use (e.g., 'gemini-3-pro-preview').
+        config_type: Configuration type ('reasoning' or 'standard').
     
     Returns:
         FitCheckPipelineState: Initialized state ready for phase 1.
@@ -266,6 +279,8 @@ def create_initial_state(query: str) -> FitCheckPipelineState:
         processing_errors=[],
         error=None,
         rejection_reason=None,
+        model_id=model_id,
+        config_type=config_type,
     )
 
 

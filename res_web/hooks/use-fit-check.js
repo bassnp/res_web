@@ -2,6 +2,7 @@
 
 import { useState, useCallback, useRef, useMemo } from 'react';
 import { parseAIResponse } from '@/lib/parseAIResponse';
+import { useAISettings } from './use-ai-settings';
 
 /**
  * State machine states for the fit check flow:
@@ -44,10 +45,13 @@ const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
 /**
  * Custom hook for managing the Fit Check AI interaction.
  * Handles SSE streaming, state management, and event processing.
+ * Integrates with AI settings for model selection.
  * 
  * @returns {Object} State and control functions
  */
 export function useFitCheck() {
+  // Get AI model settings from context
+  const { getModelConfig } = useAISettings();
   const [state, setState] = useState({
     status: 'idle',           // Current state machine status
     statusMessage: '',        // Human-readable status message
@@ -128,6 +132,9 @@ export function useFitCheck() {
     abortControllerRef.current = new AbortController();
     startTimeRef.current = Date.now();
     
+    // Get current model configuration
+    const modelConfig = getModelConfig();
+    
     // Reset state and set to connecting
     setState({
       status: 'connecting',
@@ -151,6 +158,8 @@ export function useFitCheck() {
         body: JSON.stringify({
           query: query,
           include_thoughts: true,
+          model_id: modelConfig.model_id,
+          config_type: modelConfig.config_type,
         }),
         signal: abortControllerRef.current.signal,
       });
@@ -198,7 +207,7 @@ export function useFitCheck() {
         },
       }));
     }
-  }, []);
+  }, [getModelConfig]);
 
   return {
     ...state,

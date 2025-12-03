@@ -2,8 +2,9 @@
 
 import { useState, useEffect } from 'react';
 import { useTheme } from 'next-themes';
-import { Settings, Briefcase, User, Mail, Github, ChevronDown, ExternalLink, Sun, Moon, Code } from 'lucide-react';
+import { Settings, Briefcase, User, Mail, Github, ChevronDown, ExternalLink, Sun, Moon, Code, Cpu } from 'lucide-react';
 import { useHeaderVisibility } from '@/hooks/use-header-visibility';
+import { useAISettings, AI_MODELS } from '@/hooks/use-ai-settings';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import ParticleBackground from '@/components/ParticleBackground';
@@ -19,6 +20,10 @@ const Header = () => {
   const [settingsOpen, setSettingsOpen] = useState(false);
   const { theme, setTheme, resolvedTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
+  const { selectedModel, updateModel, modelInfo } = useAISettings();
+  
+  // Convert AI_MODELS object to array for Select component
+  const modelOptions = Object.values(AI_MODELS);
   
   // Responsive visibility controller with scroll detection
   const { isVisible, isAtTop } = useHeaderVisibility({ 
@@ -116,10 +121,62 @@ const Header = () => {
                       Settings
                     </DialogTitle>
                   </DialogHeader>
-                  <div className="py-6 space-y-6">
-                    <p className="text-sm text-twilight/60 dark:text-eggshell/60 text-center">
-                      More settings coming soon...
-                    </p>
+                  <div className="py-4 space-y-4">
+                    {/* AI Model Selection */}
+                    <div className="space-y-3">
+                      <div className="flex items-center gap-2">
+                        <Cpu className="w-4 h-4 text-burnt-peach" />
+                        <label className="text-sm font-medium text-twilight dark:text-eggshell">
+                          AI Model
+                        </label>
+                      </div>
+                      
+                      {/* Model Selection Buttons */}
+                      <div className="grid gap-2">
+                        {modelOptions.map((model) => (
+                          <button
+                            key={model.id}
+                            onClick={() => updateModel(model.id)}
+                            className={`relative w-full p-3 rounded-lg border text-left transition-all duration-200 
+                              ${selectedModel === model.id 
+                                ? 'border-burnt-peach bg-burnt-peach/10 dark:bg-burnt-peach/15' 
+                                : 'border-twilight/15 dark:border-eggshell/15 hover:border-burnt-peach/50 hover:bg-twilight/5 dark:hover:bg-eggshell/5'
+                              }`}
+                          >
+                            <div className="flex items-center justify-between">
+                              <div className="flex items-center gap-2">
+                                <div className={`w-3 h-3 rounded-full border-2 flex items-center justify-center transition-colors
+                                  ${selectedModel === model.id 
+                                    ? 'border-burnt-peach' 
+                                    : 'border-twilight/30 dark:border-eggshell/30'
+                                  }`}
+                                >
+                                  {selectedModel === model.id && (
+                                    <div className="w-1.5 h-1.5 rounded-full bg-burnt-peach" />
+                                  )}
+                                </div>
+                                <span className="text-sm font-medium text-twilight dark:text-eggshell">
+                                  {model.label}
+                                </span>
+                              </div>
+                              {model.badge && (
+                                <span className={`text-[10px] font-medium px-1.5 py-0.5 rounded-full
+                                  ${model.badge === 'Recommended' 
+                                    ? 'bg-burnt-peach/20 text-burnt-peach' 
+                                    : 'bg-muted-teal/20 text-muted-teal'
+                                  }`}
+                                >
+                                  {model.badge}
+                                </span>
+                              )}
+                            </div>
+                            <p className="mt-1 ml-5 text-xs text-twilight/60 dark:text-eggshell/60">
+                              {model.description}
+                            </p>
+                          </button>
+                        ))}
+                      </div>
+                    </div>
                   </div>
                 </DialogContent>
               </Dialog>

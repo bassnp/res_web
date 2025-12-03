@@ -437,7 +437,13 @@ async def connecting_node(
         
         # Get LLM (non-streaming for structured output)
         # Low temperature for deterministic classification
-        llm = get_llm(streaming=False, temperature=CLASSIFICATION_TEMPERATURE)
+        # Uses model config from state if provided
+        llm = get_llm(
+            streaming=False,
+            temperature=CLASSIFICATION_TEMPERATURE,
+            model_id=state.get("model_id"),
+            config_type=state.get("config_type"),
+        )
         
         # Emit reasoning thought
         if callback:

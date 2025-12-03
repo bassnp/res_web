@@ -235,12 +235,19 @@ class FitCheckAgent:
         """Initialize the agent."""
         self._callback_holder = {}
     
-    async def analyze(self, query: str) -> str:
+    async def analyze(
+        self,
+        query: str,
+        model_id: str = None,
+        config_type: str = None,
+    ) -> str:
         """
         Run fit analysis without streaming.
         
         Args:
             query: Company name or job description.
+            model_id: AI model ID to use (e.g., 'gemini-3-pro-preview').
+            config_type: Configuration type ('reasoning' or 'standard').
         
         Returns:
             str: Final analysis response.
@@ -248,11 +255,11 @@ class FitCheckAgent:
         Raises:
             Exception: If analysis fails.
         """
-        logger.info(f"Starting analysis for query: {query[:50]}...")
+        logger.info(f"Starting analysis for query: {query[:50]}... model={model_id}")
         
         # Build pipeline without callback
         pipeline = build_fit_check_pipeline(self._callback_holder)
-        initial_state = create_initial_state(query)
+        initial_state = create_initial_state(query, model_id, config_type)
         
         # Run the pipeline
         final_state = await pipeline.ainvoke(initial_state)
@@ -268,6 +275,8 @@ class FitCheckAgent:
         self,
         query: str,
         callback: ThoughtCallback,
+        model_id: str = None,
+        config_type: str = None,
     ) -> AsyncGenerator[str, None]:
         """
         Run fit analysis with streaming thoughts and response.
@@ -278,6 +287,8 @@ class FitCheckAgent:
         Args:
             query: Company name or job description.
             callback: Callback for receiving thoughts and status updates.
+            model_id: AI model ID to use (e.g., 'gemini-3-pro-preview').
+            config_type: Configuration type ('reasoning' or 'standard').
         
         Yields:
             str: Response text chunks.
@@ -287,7 +298,7 @@ class FitCheckAgent:
         """
         start_time = time.time()
         
-        logger.info(f"Starting streaming analysis for query: {query[:50]}...")
+        logger.info(f"Starting streaming analysis for query: {query[:50]}... model={model_id}")
         
         # Emit initial status
         await callback.on_status("connecting", "Initializing AI agent...")
@@ -298,7 +309,7 @@ class FitCheckAgent:
         try:
             # Build pipeline with callback
             pipeline = build_fit_check_pipeline(self._callback_holder)
-            initial_state = create_initial_state(query)
+            initial_state = create_initial_state(query, model_id, config_type)
             
             # Stream through the pipeline
             final_response = ""

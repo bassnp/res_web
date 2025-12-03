@@ -801,3 +801,233 @@ html {
 .phase-error-icon {
   @apply bg-red-500 text-eggshell;
 }
+
+/* ===========================================
+   CHAIN OF THOUGHT COMPONENT STYLES
+   =========================================== */
+
+/* Entry appearance animation - slides down from top */
+@keyframes cotEntryAppear {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.cot-entry {
+  animation: cotEntryAppear 0.3s ease-out forwards;
+}
+
+/* New entry highlight animation */
+@keyframes cotEntryHighlight {
+  0% {
+    background-color: rgba(224, 122, 95, 0.1);
+    box-shadow: 0 0 0 2px rgba(224, 122, 95, 0.2);
+  }
+  100% {
+    background-color: transparent;
+    box-shadow: none;
+  }
+}
+
+.cot-entry-new {
+  animation: cotEntryAppear 0.3s ease-out forwards, cotEntryHighlight 1.5s ease-out 0.3s forwards;
+}
+
+/* Active node header gradient backgrounds */
+.cot-header-connecting {
+  background: linear-gradient(to right, rgba(96, 165, 250, 0.1), transparent);
+}
+
+.cot-header-deep_research {
+  background: linear-gradient(to right, rgba(192, 132, 252, 0.1), transparent);
+}
+
+.cot-header-research_reranker {
+  background: linear-gradient(to right, rgba(167, 139, 250, 0.1), transparent);
+}
+
+.cot-header-skeptical_comparison {
+  background: linear-gradient(to right, rgba(251, 191, 36, 0.1), transparent);
+}
+
+.cot-header-skills_matching {
+  background: linear-gradient(to right, rgba(74, 222, 128, 0.1), transparent);
+}
+
+.cot-header-confidence_reranker {
+  background: linear-gradient(to right, rgba(52, 211, 153, 0.1), transparent);
+}
+
+.cot-header-generate_results {
+  background: linear-gradient(to right, rgba(224, 122, 95, 0.1), transparent);
+}
+
+/* Data reveal expansion animation */
+@keyframes dataRevealExpand {
+  from {
+    opacity: 0;
+    max-height: 0;
+  }
+  to {
+    opacity: 1;
+    max-height: 200px;
+  }
+}
+
+details[open] > div {
+  animation: dataRevealExpand 0.2s ease-out forwards;
+}
+
+/* Progress pills hover effect */
+.cot-progress-pill {
+  transition: transform 0.2s ease;
+}
+
+.cot-progress-pill:hover {
+  transform: scale(1.2);
+}
+
+/* ===========================================
+   REASONING DIALOG COMPONENT STYLES
+   =========================================== */
+
+/* Dialog appear animation */
+.reasoning-dialog {
+  animation: reasoningDialogAppear 0.3s ease-out;
+}
+
+@keyframes reasoningDialogAppear {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -48%) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+
+/* Phase section hover effect */
+.reasoning-phase-section {
+  transition: all 0.2s ease;
+}
+
+.reasoning-phase-section:hover {
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+.dark .reasoning-phase-section:hover {
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+/* Icon bounce animation for brain icon */
+@keyframes iconBounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-2px);
+  }
+}
+
+.animate-icon-bounce {
+  animation: iconBounce 2s ease-in-out infinite;
+}
+
+/* System prompt dialog styles */
+.system-prompt-dialog {
+  animation: systemPromptAppear 0.25s ease-out;
+}
+
+@keyframes systemPromptAppear {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -48%) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+
+/* Code block styling for XML prompts */
+.prompt-code-block {
+  font-family: 'Fira Code', 'Monaco', 'Consolas', monospace;
+  font-size: 0.875rem;
+  line-height: 1.6;
+}
+
+/* Read the Reasoning button glow effect */
+.reasoning-button-glow {
+  position: relative;
+  overflow: hidden;
+}
+
+.reasoning-button-glow::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(224, 122, 95, 0.2),
+    transparent
+  );
+  animation: reasoningButtonShimmer 3s infinite;
+}
+
+@keyframes reasoningButtonShimmer {
+  0% { left: -100%; }
+  50%, 100% { left: 100%; }
+}
+
+/* Phase pill animations */
+.phase-pill-active {
+  animation: phasePillPulse 2s ease-in-out infinite;
+}
+
+@keyframes phasePillPulse {
+  0%, 100% {
+    box-shadow: 0 0 0 0 currentColor;
+    opacity: 1;
+  }
+  50% {
+    box-shadow: 0 0 0 4px currentColor;
+    opacity: 0.7;
+  }
+}
+
+/* Thought item expand animation */
+.thought-item-expand {
+  animation: thoughtItemExpand 0.2s ease-out forwards;
+}
+
+@keyframes thoughtItemExpand {
+  from {
+    opacity: 0;
+    max-height: 0;
+    padding: 0;
+  }
+  to {
+    opacity: 1;
+    max-height: 300px;
+    padding: 0.5rem;
+  }
+}
+
+/* Text glow effect for titles */
+.text-glow {
+  text-shadow: 0 0 10px rgba(224, 122, 95, 0.3);
+}
+
+.dark .text-glow {
+  text-shadow: 0 0 15px rgba(224, 122, 95, 0.4);
+}

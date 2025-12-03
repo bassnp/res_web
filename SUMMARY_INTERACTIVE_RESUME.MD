@@ -203,7 +203,8 @@ res_backend/
 │
 ├── routers/
 │   ├── __init__.py
-│   └── fit_check.py          # SSE streaming endpoint router
+│   ├── fit_check.py          # SSE streaming endpoint router
+│   └── prompts.py            # Prompt transparency API router (NEW)
 │
 ├── services/
 │   ├── __init__.py
@@ -319,6 +320,8 @@ res_backend/
 class FitCheckRequest(BaseModel):
     query: str       # 3-2000 chars, company name or job description
     include_thoughts: bool = True
+    model_id: Optional[str] = "gemini-3-pro-preview"  # AI model to use
+    config_type: Optional[Literal["reasoning", "standard"]] = "reasoning"  # Model config type
 ```
 
 **SSE Event Models (Canonical Format)**:
@@ -527,6 +530,38 @@ X-Accel-Buffering: no  # Disable nginx buffering
 
 ---
 
+#### `routers/prompts.py` - Prompt Transparency Router (NEW)
+
+**Purpose**: API router for retrieving system prompts used in the AI pipeline.
+
+**Endpoints**:
+| Method | Path | Description |
+|--------|------|-------------|
+| GET | `/api/prompts` | List all pipeline phases with metadata |
+| GET | `/api/prompts/{phase}` | Get full prompt content for a specific phase |
+
+**Response Models**:
+- `PromptListResponse`: List of `PhaseInfo` objects with phase name, display name, description, order
+- `PromptContentResponse`: Full prompt XML content with metadata
+
+**Available Phases**:
+| Phase | Display Name | Order |
+|-------|--------------|-------|
+| `connecting` | Query Classification | 1 |
+| `deep_research` | Deep Research | 2 |
+| `research_reranker` | Research Quality Gate | 3 |
+| `skeptical_comparison` | Skeptical Comparison | 4 |
+| `skills_matching` | Skills Matching | 5 |
+| `confidence_reranker` | Confidence Calibration | 6 |
+| `generate_results` | Response Generation | 7 |
+
+**Features**:
+- Reads XML prompt files from `prompts/` directory
+- Provides transparency for users to understand AI reasoning
+- Used by frontend `SystemPromptDialog` component
+
+---
+
 #### `prompts/fit_check_system.txt` - System Prompt Template
 
 **Purpose**: Defines agent behavior and response format.
@@ -585,8 +620,8 @@ res_web/
 ├── components.json           # shadcn/ui configuration
 │
 ├── app/
-│   ├── layout.js             # Root layout with ThemeProvider
-│   ├── page.js               # Main page with all sections
+│   ├── layout.js             # Root layout with ThemeProvider + AISettingsProvider
+│   ├── page.js               # Main page with all sections + Settings dialog
 │   └── globals.css           # Global styles and CSS variables
 │
 ├── components/
@@ -601,23 +636,30 @@ res_web/
 │   │   ├── index.js          # Component exports
 │   │   ├── InputPanel.jsx    # Text input with loading overlay
 │   │   ├── ThinkingPanel.jsx # Expandable thinking panel
+│   │   ├── ChainOfThought.jsx # Continuous pipeline trace stream
 │   │   ├── ComparisonChain.jsx # Pipeline phase progress display
 │   │   ├── ResultsSection.jsx # Two-column results container
 │   │   ├── StrengthsCard.jsx # Pros/strengths card (teal)
-│   │   └── GrowthAreasCard.jsx # Growth areas card (apricot)
+│   │   ├── GrowthAreasCard.jsx # Growth areas card (apricot)
+│   │   ├── InsightCard.jsx   # Phase insight display components (NEW)
+│   │   ├── ReasoningDialog.jsx # Chain of thought popup dialog
+│   │   └── SystemPromptDialog.jsx # System prompt viewer
 │   └── ui/                   # shadcn/ui components
 │       ├── button.jsx
 │       ├── dialog.jsx
+│       ├── select.jsx        # Custom styled dropdown (NEW)
 │       └── textarea.jsx
 │
 ├── hooks/
-│   ├── use-fit-check.js      # SSE client state machine
+│   ├── use-fit-check.js      # SSE client state machine + AI settings integration
+│   ├── use-ai-settings.js    # AI model configuration context (NEW)
 │   └── use-header-visibility.js # Scroll-based header visibility
 │
 └── lib/
     ├── utils.js              # Utility functions (cn)
     ├── particleConfig.js     # Particle animation constants
-    └── parseAIResponse.js    # AI response parser for structured display
+    ├── parseAIResponse.js    # AI response parser for structured display
+    └── phaseInsights.js      # Phase insight extraction utilities (NEW)
 ```
 
 ---
@@ -640,10 +682,11 @@ const nextConfig = {
 
 #### `app/layout.js` - Root Layout
 
-**Purpose**: HTML structure and theme provider.
+**Purpose**: HTML structure, theme provider, and AI settings context.
 
 **Features**:
 - `ThemeProvider` with class-based dark mode
+- `AISettingsProvider` for global AI model configuration
 - System theme detection
 - HTML lang attribute
 
@@ -654,7 +697,7 @@ const nextConfig = {
 **Purpose**: Single-page portfolio with all sections.
 
 **Sections** (in order):
-1. `Header` - Fixed navigation with theme toggle
+1. `Header` - Fixed navigation with theme toggle + Settings button
 2. `HeroAboutSection` - Hero intro + About me
 3. `FitCheckSection` - AI chatbot
 4. `ProjectsSection` - Featured projects grid
@@ -664,6 +707,7 @@ const nextConfig = {
 
 **Page-Level Components**:
 - `AnimatedShapes` - Background morphing blobs
+- `Settings Dialog` - AI model selection dropdown with Gemini 3 Pro and Gemini Flash options
 
 ---
 
@@ -739,8 +783,50 @@ const nextConfig = {
 **Features**:
 - Animated panel expansion from left
 - Groups thoughts by phase with headers
-- Embedded `ThinkingTimeline` with `hideHeader` mode
+- Embedded `ChainOfThought` component for continuous pipeline trace
 - Status indicator dots
+
+---
+
+#### `components/fit-check/ChainOfThought.jsx` - Pipeline Trace Stream
+
+**Purpose**: Displays a continuous traced stream of all pipeline steps, ordered newest at top with active node header and expandable data sections.
+
+**Props**:
+| Prop | Type | Description |
+|------|------|-------------|
+| `thoughts` | Array | Array of thought events from SSE stream |
+| `currentPhase` | string | Currently active phase name |
+| `phaseProgress` | Object | Map of phase name → status (active/complete/error) |
+| `phaseHistory` | Array | Completed phase entries with summaries |
+| `isThinking` | boolean | Whether AI is currently processing |
+
+**Sub-Components**:
+- `ActiveNodeHeader` - Displays currently active phase with animated indicator
+- `PhaseProgressPills` - Visual status pills for all 7 phases
+- `ThoughtStep` - Individual thought with expandable data revelation
+
+**Phase Configuration** (`PHASE_CONFIG`):
+| Phase | Label | Icon | Color |
+|-------|-------|------|-------|
+| `connecting` | Connecting | Wifi | blue-400 |
+| `deep_research` | Deep Research | Search | purple-400 |
+| `research_reranker` | Research Quality Gate | CheckCircle2 | violet-400 |
+| `skeptical_comparison` | Skeptical Comparison | Scale | amber-400 |
+| `skills_matching` | Skills Matching | Briefcase | green-400 |
+| `confidence_reranker` | Confidence Calibration | CheckCircle2 | emerald-400 |
+| `generate_results` | Generating Results | Sparkles | burnt-peach |
+
+**Features**:
+- Reversed timeline order (newest at top, oldest at bottom)
+- Active node header with phase-specific styling and pulsing indicator
+- Expandable data sections showing tool inputs and outputs
+- Phase progress pills showing completion status
+- Auto-scroll to newest thought
+- Phase-colored left borders for visual grouping
+- **Enhanced insights display** via `parseThoughtContent()` integration
+- **Inline badges** showing confidence %, quality tiers, and technologies
+- **PhaseInsightReveal** component for structured phase summaries
 
 ---
 
@@ -802,6 +888,64 @@ const nextConfig = {
 
 ---
 
+#### `components/fit-check/ReasoningDialog.jsx` - Chain of Thought Dialog
+
+**Purpose**: Full-screen modal displaying the complete AI reasoning chain with phase-grouped thoughts and enhanced insight display.
+
+**Props**:
+| Prop | Type | Description |
+|------|------|-------------|
+| `open` | boolean | Whether dialog is open |
+| `onOpenChange` | function | Callback when open state changes |
+| `thoughts` | Array | Array of thought events from pipeline |
+| `phaseHistory` | Array | Completed phase entries with summaries |
+| `durationMs` | number | Total analysis duration in milliseconds |
+
+**Sub-Components**:
+- `PhaseSection` - Phase header with expandable thought list
+- `PhaseInsightCard` - Structured insight display with metrics (NEW)
+- `ThoughtItem` - Individual thought with parsed content display (ENHANCED)
+
+**Features**:
+- Modern glassmorphism design with gradient accents
+- Phase-grouped thoughts with visual timeline
+- **PhaseInsightCard** with structured metrics display
+- **Confidence bars** showing calibrated percentages
+- **Quality gate indicators** with tier badges (HIGH/MEDIUM/LOW)
+- **Technology tags** extracted from research phases
+- Expandable raw data sections (de-emphasized)
+- Click on any phase header to view system prompt
+- Phase progress pills for quick navigation
+- Smooth animations and transitions
+- Nested SystemPromptDialog for transparency
+
+**Accessed via**: "Read the Reasoning" button (Brain icon) in results phase
+
+---
+
+#### `components/fit-check/SystemPromptDialog.jsx` - System Prompt Viewer (NEW)
+
+**Purpose**: Nested dialog showing the actual system prompt used for each pipeline phase.
+
+**Props**:
+| Prop | Type | Description |
+|------|------|-------------|
+| `open` | boolean | Whether dialog is open |
+| `onOpenChange` | function | Callback when open state changes |
+| `phase` | string | Phase name to fetch prompt for |
+
+**Features**:
+- Fetches prompt content from backend `/api/prompts/{phase}` endpoint
+- Syntax-highlighted XML display with color coding
+- Copy to clipboard functionality
+- Loading and error states with graceful handling
+- Phase-specific icon and color theming
+- Terminal-style code block presentation
+
+**API Integration**: Uses `/api/prompts/{phase}` endpoint for transparency
+
+---
+
 #### `components/ThinkingTimeline.jsx` - Thoughts Timeline
 
 **Purpose**: Collapsible timeline showing AI thinking steps.
@@ -853,7 +997,7 @@ const nextConfig = {
 
 #### `components/fit-check/ComparisonChain.jsx` - Pipeline Progress
 
-**Purpose**: Displays pipeline phase progress with visual status indicators.
+**Purpose**: Displays pipeline phase progress with visual status indicators and enhanced insight summaries.
 
 **Props**:
 | Prop | Type | Description |
@@ -863,6 +1007,9 @@ const nextConfig = {
 | `phaseHistory` | Array | Completed phase entries with summaries |
 | `status` | string | Overall status (connecting/thinking/responding) |
 | `statusMessage` | string | Current status message |
+
+**Sub-Components**:
+- `StepInsightSummary` - Compact insight display for completed phases (NEW)
 
 **Phase Configuration** (`PHASE_CONFIG`):
 | Phase | Label | Icon | Description |
@@ -876,6 +1023,16 @@ const nextConfig = {
 | `generate_results` | Generating Results | Sparkles | Synthesizing final response |
 
 **Phase Order**: `PHASE_ORDER` array maintains pipeline sequence for rendering.
+
+**StepInsightSummary Display** (per phase):
+| Phase | Displayed Metrics |
+|-------|-------------------|
+| `connecting` | Company name, query type badge |
+| `deep_research` | Source count, technology count |
+| `research_reranker` | Quality tier badge (HIGH/MEDIUM/LOW), confidence % |
+| `skeptical_comparison` | Gap count, match strength badge |
+| `skills_matching` | Matched count, match percentage |
+| `confidence_reranker` | Quality tier badge, confidence % |
 
 ---
 
@@ -931,8 +1088,13 @@ idle → connecting → thinking → responding → complete
 - `parsedResponse` - Parsed response object for result cards
 
 **Functions**:
-- `submitQuery(query)` - Start SSE stream
+- `submitQuery(query)` - Start SSE stream with model configuration from AI settings
 - `reset()` - Clear state for new query
+
+**AI Settings Integration**:
+- Uses `useAISettings` hook to get model configuration
+- Passes `model_id` and `config_type` in API request body
+- Supports switching between Gemini 3 Pro (reasoning) and Gemini Flash (standard)
 
 **SSE Event Handling**:
 | Event Type | Handler Action |
@@ -977,6 +1139,125 @@ idle → connecting → thinking → responding → complete
 - Detects `**Header:**` patterns for sections
 - Extracts bullet points (`-`, `•`, `*`)
 - Categorizes sections by keywords (strengths, growth, connect)
+
+---
+
+#### `lib/phaseInsights.js` - Phase Insight Extraction Utilities (NEW)
+
+**Purpose**: Extract meaningful metadata from phase outputs to display rich context instead of raw JSON data.
+
+**Exported Functions**:
+
+| Function | Purpose |
+|----------|---------|
+| `extractPhaseInsights(phase, summary)` | Parse phase completion summaries into structured data |
+| `parseThoughtContent(thought)` | Enhance thought objects with displayable summaries and extracted data |
+| `getPhaseDisplayMeta(phase)` | Get display metadata (icon, color, label) for a phase |
+
+**Phase-Specific Extraction**:
+
+| Phase | Extracted Data |
+|-------|----------------|
+| `connecting` | `queryType`, `company`, `jobTitle`, `isValid` |
+| `deep_research` | `sourceCount`, `technologies[]`, `requirementsFound`, `cultureValues[]` |
+| `research_reranker` | `qualityTier` (HIGH/MEDIUM/LOW), `dataScore`, `isClean`, `missingData[]` |
+| `skeptical_comparison` | `gapsIdentified`, `strengthsFound`, `riskLevel`, `matchStrength` |
+| `skills_matching` | `matchedCount`, `matchPercentage`, `learningGaps[]`, `transferableSkills[]` |
+| `confidence_reranker` | `confidence` (0-100), `qualityTier`, `qualityFlags[]`, `adjustmentReason` |
+| `generate_results` | `wordCount` |
+
+**Thought Content Parsing**:
+```javascript
+parseThoughtContent(thought) → {
+  ...thought,
+  displaySummary: string,    // Human-readable summary
+  extractedData: {           // Structured metadata
+    confidence?: number,
+    tier?: string,
+    technologies?: string[],
+    // ... phase-specific fields
+  }
+}
+```
+
+**Usage in Components**:
+- `ChainOfThought.jsx` - Enhanced ThoughtEntry with inline badges
+- `ReasoningDialog.jsx` - PhaseInsightCard with metrics and confidence bars
+- `ComparisonChain.jsx` - StepInsightSummary with compact phase metrics
+
+---
+
+#### `components/fit-check/InsightCard.jsx` - Phase Insight Display Components (NEW)
+
+**Purpose**: Visual components for displaying rich phase insights with consistent styling.
+
+**Exported Components**:
+
+| Component | Purpose |
+|-----------|---------|
+| `InsightCard` | Variant-based card for phase insights (success/warning/info/error) |
+| `ConfidenceBar` | Animated progress bar with color-coded confidence display |
+| `MetricBadge` | Compact metric display with icon and value |
+| `TechTag` | Technology pill badge with code icon |
+
+**InsightCard Props**:
+| Prop | Type | Description |
+|------|------|-------------|
+| `variant` | string | Visual style: `success`, `warning`, `info`, `error` |
+| `icon` | Component | Lucide icon component |
+| `title` | string | Card title |
+| `children` | ReactNode | Card content |
+
+**ConfidenceBar Props**:
+| Prop | Type | Description |
+|------|------|-------------|
+| `value` | number | Confidence percentage (0-100) |
+| `label` | string | Optional label text |
+| `size` | string | Size variant: `sm`, `md`, `lg` |
+
+**Color Coding**:
+| Confidence Range | Color |
+|------------------|-------|
+| ≥70% | muted-teal (green) |
+| 40-69% | amber-500 (yellow) |
+| <40% | red-500 (red) |
+
+**MetricBadge Props**:
+| Prop | Type | Description |
+|------|------|-------------|
+| `icon` | Component | Lucide icon component |
+| `value` | string/number | Metric value |
+| `label` | string | Metric label |
+| `color` | string | Tailwind color class |
+
+---
+
+#### `hooks/use-ai-settings.js` - AI Model Settings Hook
+
+**Purpose**: React context and hook for global AI model configuration.
+
+**Exported Constants**:
+- `AI_MODELS` - Object defining available models with metadata
+- `DEFAULT_MODEL` - Default model ID (`gemini-3-pro-preview`)
+
+**AI Models Configuration**:
+| Model ID | Label | Config Type | Badge |
+|----------|-------|-------------|-------|
+| `gemini-3-pro-preview` | Gemini 3 Pro (Preview) | reasoning | Recommended |
+| `gemini-flash-latest` | Gemini Flash (Latest) | standard | Fast |
+
+**Provider**: `AISettingsProvider`
+- Wraps application to provide AI settings context
+- Manages selected model state
+- Used in `layout.js` at app root
+
+**Hook**: `useAISettings()`
+- Returns:
+  - `selectedModel` - Current model ID
+  - `modelInfo` - Full model metadata object
+  - `models` - All available models
+  - `updateModel(modelId)` - Switch to different model
+  - `getModelConfig()` - Returns `{ model_id, config_type }` for API calls
 
 ---
 
@@ -1031,6 +1312,39 @@ idle → connecting → thinking → responding → complete
 
 ---
 
+#### `components/ui/select.jsx` - Styled Dropdown Select
+
+**Purpose**: Custom styled dropdown component for AI model selection.
+
+**Props**:
+| Prop | Type | Description |
+|------|------|-------------|
+| `value` | string | Currently selected value |
+| `onValueChange` | function | Callback when selection changes |
+| `options` | Array | Array of option objects with id, label, description, badge |
+| `placeholder` | string | Placeholder text when no selection |
+| `className` | string | Additional CSS classes |
+
+**Option Object Shape**:
+```javascript
+{
+  id: 'model-id',
+  label: 'Display Label',
+  description: 'Option description',
+  badge: 'Badge text (optional)'
+}
+```
+
+**Features**:
+- Glassmorphism dropdown styling
+- Badge support for option labels (e.g., "Recommended", "Fast")
+- Description text for each option
+- Keyboard navigation support
+- Dark/light theme aware
+- Animated dropdown with smooth transitions
+
+---
+
 #### Design System (Tailwind Config)
 
 **Custom Colors**:
@@ -1065,6 +1379,10 @@ idle → connecting → thinking → responding → complete
 | `cardShimmer` | Subtle shimmer overlay effect |
 | `resultsContainerEntry` | Results section fade-in |
 | `connectionPulse` | Panel connection indicator pulse |
+| `cot-slide-in` | Chain of Thought item slide-in entrance |
+| `cot-fade-in` | Chain of Thought fade-in animation |
+| `cot-pulse` | Active node pulsing indicator |
+| `cot-expand` | Data section expand/collapse animation |
 
 **CSS Utility Classes**:
 | Class | Effect |
@@ -1091,9 +1409,19 @@ Accept: text/event-stream
 
 {
   "query": "Google",
-  "include_thoughts": true
+  "include_thoughts": true,
+  "model_id": "gemini-3-pro-preview",
+  "config_type": "reasoning"
 }
 ```
+
+**Request Parameters**:
+| Field | Type | Default | Description |
+|-------|------|---------|-------------|
+| `query` | string | required | Company name or job description (3-2000 chars) |
+| `include_thoughts` | boolean | `true` | Include thinking process in stream |
+| `model_id` | string | `gemini-3-pro-preview` | AI model to use |
+| `config_type` | string | `reasoning` | Config type: `reasoning` or `standard` |
 
 **Response** (SSE Stream):
 ```
@@ -1283,6 +1611,25 @@ Edit the relevant phase prompt in `res_backend/prompts/`:
 - `phase_5b_confidence_reranker.xml` - Confidence calibration
 - `phase_5_generate_results.xml` - Response format/tone
 
+### Switching AI Models
+The application supports multiple Gemini models with different configurations:
+
+**Frontend (Settings Dialog)**:
+1. Open Settings dialog via gear icon in header
+2. Select model from "AI Model" dropdown
+3. Model configuration is automatically applied to next analysis
+
+**Backend Model Configuration** (`res_backend/config/llm.py`):
+| Model | Config Type | Settings |
+|-------|-------------|----------|
+| `gemini-3-pro-preview` | reasoning | `thinking_config: { thinking_budget: 10000 }` |
+| `gemini-flash-latest` | standard | `temperature: 0.3, top_k: 40` |
+
+**Adding a New Model**:
+1. Add model entry to `SUPPORTED_MODELS` in `res_backend/config/llm.py`
+2. Add model entry to `AI_MODELS` in `res_web/hooks/use-ai-settings.js`
+3. Rebuild frontend for changes to take effect
+
 ### Adding a New Pipeline Phase
 1. Create prompt template in `res_backend/prompts/phase_X_name.xml`
 2. Create node in `res_backend/services/nodes/name.py`
@@ -1291,6 +1638,7 @@ Edit the relevant phase prompt in `res_backend/prompts/`:
 5. Add routing function if phase has conditional exits
 6. Update `FitCheckState` in `res_backend/services/pipeline_state.py`
 7. Add phase to frontend `PHASE_CONFIG` and `PHASE_ORDER` in:
+   - `res_web/components/fit-check/ChainOfThought.jsx`
    - `res_web/components/fit-check/ComparisonChain.jsx`
    - `res_web/components/fit-check/ThinkingPanel.jsx`
    - `res_web/components/ThoughtNode.jsx`
@@ -1359,4 +1707,4 @@ The research_reranker can trigger up to 2 retry searches if data quality is insu
 
 ---
 
-*Last Updated: December 2025*
+*Last Updated: January 2025*

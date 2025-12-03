@@ -521,7 +521,13 @@ async def skills_matching_node(
         # =====================================================================
         # Step 5: LLM synthesis
         # =====================================================================
-        llm = get_llm(streaming=False, temperature=SYNTHESIS_TEMPERATURE)
+        # Uses model config from state if provided
+        llm = get_llm(
+            streaming=False,
+            temperature=SYNTHESIS_TEMPERATURE,
+            model_id=state.get("model_id"),
+            config_type=state.get("config_type"),
+        )
         
         messages = [HumanMessage(content=prompt)]
         response = await llm.ainvoke(messages)

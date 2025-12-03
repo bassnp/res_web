@@ -867,7 +867,13 @@ async def research_reranker_node(
         )
         
         # Get LLM for evaluation
-        llm = get_llm(streaming=False, temperature=RERANKER_TEMPERATURE)
+        # Uses model config from state if provided
+        llm = get_llm(
+            streaming=False,
+            temperature=RERANKER_TEMPERATURE,
+            model_id=state.get("model_id"),
+            config_type=state.get("config_type"),
+        )
         
         # Invoke LLM
         messages = [HumanMessage(content=prompt)]

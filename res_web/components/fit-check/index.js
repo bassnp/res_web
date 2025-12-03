@@ -1,6 +1,9 @@
 export { InputPanel } from './InputPanel';
 export { ThinkingPanel } from './ThinkingPanel';
+export { ChainOfThought } from './ChainOfThought';
 export { StrengthsCard } from './StrengthsCard';
 export { GrowthAreasCard } from './GrowthAreasCard';
 export { ResultsSection } from './ResultsSection';
 export { ComparisonChain } from './ComparisonChain';
+export { ReasoningDialog } from './ReasoningDialog';
+export { SystemPromptDialog } from './SystemPromptDialog';

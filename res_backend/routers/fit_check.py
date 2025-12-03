@@ -91,7 +91,10 @@ async def stream_fit_check(request: FitCheckRequest):
     Returns:
         StreamingResponse with SSE events.
     """
-    logger.info(f"Received fit check request: query={request.query[:50]}...")
+    logger.info(
+        f"Received fit check request: query={request.query[:50]}..., "
+        f"model={request.model_id}, config_type={request.config_type}"
+    )
     
     # Create callback handler
     callback = StreamingCallbackHandler(include_thoughts=request.include_thoughts)
@@ -113,6 +116,8 @@ async def stream_fit_check(request: FitCheckRequest):
                     async for chunk in agent.stream_analysis(
                         query=request.query,
                         callback=callback,
+                        model_id=request.model_id,
+                        config_type=request.config_type,
                     ):
                         pass  # Response chunks are handled by callback
                 except asyncio.CancelledError:

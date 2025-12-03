@@ -446,7 +446,13 @@ async def deep_research_node(
             )
         
         # Get LLM for synthesis (lower temperature for accuracy)
-        llm = get_llm(streaming=False, temperature=SYNTHESIS_TEMPERATURE)
+        # Uses model config from state if provided
+        llm = get_llm(
+            streaming=False,
+            temperature=SYNTHESIS_TEMPERATURE,
+            model_id=state.get("model_id"),
+            config_type=state.get("config_type"),
+        )
         
         # Invoke LLM with XML-structured prompt
         messages = [HumanMessage(content=prompt)]

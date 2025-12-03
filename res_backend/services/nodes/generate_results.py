@@ -528,7 +528,13 @@ async def generate_results_node(
         # =====================================================================
         # Stream response from LLM
         # =====================================================================
-        llm = get_llm(streaming=True, temperature=GENERATION_TEMPERATURE)
+        # Uses model config from state if provided
+        llm = get_llm(
+            streaming=True,
+            temperature=GENERATION_TEMPERATURE,
+            model_id=state.get("model_id"),
+            config_type=state.get("config_type"),
+        )
         messages = [HumanMessage(content=prompt)]
         
         full_response = ""

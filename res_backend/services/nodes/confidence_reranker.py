@@ -482,7 +482,12 @@ async def confidence_reranker_node(
         formatted_prompt = prompt_template.format(**context)
         
         # Call LLM with low temperature for consistent judgment
-        llm = get_llm(temperature=RERANKER_TEMPERATURE)
+        # Uses model config from state if provided
+        llm = get_llm(
+            temperature=RERANKER_TEMPERATURE,
+            model_id=state.get("model_id"),
+            config_type=state.get("config_type"),
+        )
         
         response = await llm.ainvoke([HumanMessage(content=formatted_prompt)])
         response_text = get_response_text(response)

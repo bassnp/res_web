@@ -1,13 +1,14 @@
 'use client';
 
 import { useState, useRef } from 'react';
-import { Sparkles, RefreshCw, AlertCircle, Clock } from 'lucide-react';
+import { Sparkles, RefreshCw, AlertCircle, Clock, Brain } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import InteractiveGridDots from '@/components/InteractiveGridDots';
 import { InputPanel } from '@/components/fit-check/InputPanel';
 import { ThinkingPanel } from '@/components/fit-check/ThinkingPanel';
 import { ResultsSection } from '@/components/fit-check/ResultsSection';
 import { ComparisonChain } from '@/components/fit-check/ComparisonChain';
+import { ReasoningDialog } from '@/components/fit-check/ReasoningDialog';
 import { useFitCheck } from '@/hooks/use-fit-check';
 import { cn } from '@/lib/utils';
 
@@ -22,6 +23,7 @@ import { cn } from '@/lib/utils';
  */
 export function FitCheckSection() {
   const [input, setInput] = useState('');
+  const [isReasoningOpen, setIsReasoningOpen] = useState(false);
   const textareaRef = useRef(null);
   
   const {
@@ -60,13 +62,13 @@ export function FitCheckSection() {
   const getContainerClass = () => {
     switch (uiPhase) {
       case 'input':
-        return 'max-w-2xl';
+        return 'max-w-4xl';
       case 'expanded':
         return 'max-w-5xl fit-check-container-expanded';
       case 'results':
         return 'max-w-5xl';
       default:
-        return 'max-w-2xl';
+        return 'max-w-4xl';
     }
   };
 
@@ -122,11 +124,13 @@ export function FitCheckSection() {
                       status={status}
                       statusMessage={statusMessage}
                       currentPhase={currentPhase}
+                      phaseProgress={phaseProgress}
+                      phaseHistory={phaseHistory}
                     />
                   </div>
                 </div>
               ) : uiPhase === 'results' ? (
-                // RESULTS PHASE: Compact header with new query button
+                // RESULTS PHASE: Compact header with reasoning and new query buttons
                 <div className="p-4 md:p-6">
                   <div className="flex items-center justify-between gap-4">
                     <div className="flex items-center gap-2">
@@ -141,19 +145,41 @@ export function FitCheckSection() {
                         </span>
                       )}
                     </div>
-                    <Button
-                      type="button"
-                      onClick={handleNewQuery}
-                      className="bg-muted-teal hover:bg-muted-teal/90 text-eggshell px-4 py-2 rounded-lg hover:scale-[1.02] transition-all duration-200"
-                    >
-                      <RefreshCw className="w-4 h-4 mr-2" />
-                      Try Another
-                    </Button>
+                    
+                    {/* Action buttons */}
+                    <div className="flex items-center gap-2">
+                      {/* Read the Reasoning button */}
+                      <Button
+                        type="button"
+                        variant="outline"
+                        onClick={() => setIsReasoningOpen(true)}
+                        className={cn(
+                          "group gap-2 px-3 py-2 rounded-lg",
+                          "border-burnt-peach/30 hover:border-burnt-peach",
+                          "text-burnt-peach hover:bg-burnt-peach/10",
+                          "transition-all duration-200 hover:scale-[1.02]"
+                        )}
+                        title="View the AI's complete chain of thought"
+                      >
+                        <Brain className="w-4 h-4 group-hover:animate-pulse" />
+                        <span className="hidden sm:inline">Read the Reasoning</span>
+                      </Button>
+                      
+                      {/* Try Another button */}
+                      <Button
+                        type="button"
+                        onClick={handleNewQuery}
+                        className="bg-muted-teal hover:bg-muted-teal/90 text-eggshell px-4 py-2 rounded-lg hover:scale-[1.02] transition-all duration-200"
+                      >
+                        <RefreshCw className="w-4 h-4 mr-2" />
+                        Try Another
+                      </Button>
+                    </div>
                   </div>
                 </div>
               ) : (
                 // INPUT PHASE: Standard centered layout
-                <div className="p-6 md:p-8">
+                <div className="px-6 md:px-8 pt-4 md:pt-5 pb-6 md:pb-8">
                   <InputPanel
                     ref={textareaRef}
                     value={input}
@@ -205,6 +231,15 @@ export function FitCheckSection() {
           />
         </div>
       </div>
+
+      {/* Reasoning Dialog - shows complete chain of thought */}
+      <ReasoningDialog
+        open={isReasoningOpen}
+        onOpenChange={setIsReasoningOpen}
+        thoughts={thoughts}
+        phaseHistory={phaseHistory}
+        durationMs={durationMs}
+      />
     </section>
   );
 }
@@ -218,23 +253,12 @@ function Header({ compact = false }) {
       "text-center",
       compact ? "mb-3" : "mb-6"
     )}>
-      <div className="flex items-center justify-center gap-2 mb-2">
-        <Sparkles className={cn(
-          "text-burnt-peach animate-pulse",
-          compact ? "w-4 h-4" : "w-5 h-5"
-        )} />
-        <h2 className={cn(
-          "font-bold text-twilight dark:text-eggshell",
-          compact ? "text-xl" : "text-2xl md:text-3xl"
-        )}>
-          See if I&apos;m <span className="text-burnt-peach">fit</span> for you!
-        </h2>
-      </div>
-      {!compact && (
-        <p className="text-twilight/60 dark:text-eggshell/60 text-sm">
-          Tell me about your company or the position, and I&apos;ll explain why we&apos;re a great match.
-        </p>
-      )}
+      <h2 className={cn(
+        "font-bold text-twilight dark:text-eggshell",
+        compact ? "text-xl" : "text-2xl md:text-3xl"
+      )}>
+        Assess my resume with <span className="text-burnt-peach">Brutal Honesty</span>
+      </h2>
     </div>
   );
 }

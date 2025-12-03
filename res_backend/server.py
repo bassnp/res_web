@@ -21,6 +21,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from routers import fit_check
+from routers import prompts
 
 # Load environment variables from .env file
 load_dotenv()
@@ -137,8 +138,11 @@ async def root():
 
 # Register the fit_check router for SSE streaming endpoints
 app.include_router(fit_check.router)
-
 logger.info("Registered fit_check router at /api/fit-check")
+
+# Register the prompts router for transparency endpoints
+app.include_router(prompts.router)
+logger.info("Registered prompts router at /api/prompts")
 
 
 # =============================================================================

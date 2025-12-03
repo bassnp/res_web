@@ -1,10 +1,49 @@
 'use client';
 
 import { forwardRef } from 'react';
-import { Send, Loader2 } from 'lucide-react';
+import { Send, Loader2, Zap, Brain } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { cn } from '@/lib/utils';
+import { useAISettings, AI_MODELS } from '@/hooks/use-ai-settings';
+
+/**
+ * ModelSelector Component
+ * 
+ * Compact button-based AI model selector displayed below the Analyze button.
+ */
+const ModelSelector = () => {
+  const { selectedModel, updateModel } = useAISettings();
+  const models = Object.values(AI_MODELS);
+
+  return (
+    <div className="flex gap-2 justify-center">
+      {models.map((model) => {
+        const isSelected = selectedModel === model.id;
+        const Icon = model.configType === 'reasoning' ? Brain : Zap;
+        
+        return (
+          <button
+            key={model.id}
+            type="button"
+            onClick={() => updateModel(model.id)}
+            className={cn(
+              "flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all duration-200",
+              isSelected
+                ? "bg-burnt-peach/15 border border-burnt-peach text-burnt-peach"
+                : "bg-twilight/5 dark:bg-eggshell/5 border border-twilight/15 dark:border-eggshell/15 text-twilight/70 dark:text-eggshell/70 hover:border-burnt-peach/50 hover:text-burnt-peach"
+            )}
+            aria-pressed={isSelected}
+            aria-label={`Select ${model.label}`}
+          >
+            <Icon className="w-3 h-3" />
+            <span>{model.configType === 'reasoning' ? 'Deep Reasoning' : 'Quick Assessment'}</span>
+          </button>
+        );
+      })}
+    </div>
+  );
+};
 
 /**
  * InputPanel Component
@@ -52,25 +91,32 @@ export const InputPanel = forwardRef(function InputPanel({
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
+      {/* Subtitle - styled with Brutal Honesty theme */}
+      <p className="text-twilight dark:text-eggshell text-sm text-center font-medium">
+        Use a transparent and <span className="text-burnt-peach font-semibold">non-biased Deep Researcher</span> to see if I&apos;m fit for your needs
+      </p>
+      
       <div className="relative">
         <Textarea
           ref={ref}
           value={value}
           onChange={(e) => onChange(e.target.value)}
           onKeyDown={handleKeyDown}
-          placeholder="Enter a company name (e.g., 'Google') or job description..."
+          placeholder="Enter a job position, description, or Company name to have A.I. brutally assess me!"
           className={cn(
-            "min-h-[80px] resize-none transition-all duration-200 text-center",
+            "min-h-[80px] resize-none transition-all duration-200",
+            "text-center flex items-center justify-center",
+            "pt-7",
             "bg-white dark:bg-twilight/30",
             "border-twilight/20 dark:border-eggshell/20",
             "focus:border-burnt-peach focus:ring-burnt-peach/30",
-            "placeholder:text-twilight/40 dark:placeholder:text-eggshell/40",
+            "placeholder:text-twilight/40 dark:placeholder:text-eggshell/40 placeholder:text-center",
             "fit-check-input",
             isDisabled && "opacity-60"
           )}
           disabled={isDisabled}
           maxLength={2000}
-          aria-label="Company name or job description"
+          aria-label="Job position, description, or company name"
         />
         
         {/* Character count */}
@@ -100,29 +146,34 @@ export const InputPanel = forwardRef(function InputPanel({
 
       {/* Submit button - only show in input phase */}
       {uiPhase === 'input' && (
-        <Button
-          type="submit"
-          disabled={isSubmitDisabled}
-          className={cn(
-            "w-full py-5 rounded-xl transition-all duration-200",
-            "bg-burnt-peach hover:bg-burnt-peach/90 text-eggshell",
-            isValidInput && !isLoading && "animate-pulse-glow hover:scale-[1.02]",
-            isSubmitDisabled && "opacity-60 cursor-not-allowed"
-          )}
-          aria-label={isLoading ? 'Analyzing...' : 'Analyze fit'}
-        >
-          {isLoading ? (
-            <>
-              <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-              {statusMessage || 'Analyzing...'}
-            </>
-          ) : (
-            <>
-              <Send className="w-4 h-4 mr-2" />
-              Analyze Fit
-            </>
-          )}
-        </Button>
+        <div className="flex flex-col items-center gap-4">
+          <Button
+            type="submit"
+            disabled={isSubmitDisabled}
+            className={cn(
+              "w-full max-w-md py-5 rounded-xl transition-all duration-200",
+              "bg-burnt-peach hover:bg-burnt-peach/90 text-eggshell",
+              isValidInput && !isLoading && "animate-pulse-glow hover:scale-[1.02]",
+              isSubmitDisabled && "opacity-60 cursor-not-allowed"
+            )}
+            aria-label={isLoading ? 'Analyzing...' : 'Analyze fit'}
+          >
+            {isLoading ? (
+              <>
+                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                {statusMessage || 'Analyzing...'}
+              </>
+            ) : (
+              <>
+                <Send className="w-4 h-4 mr-2" />
+                Analyze Fit
+              </>
+            )}
+          </Button>
+          
+          {/* AI Model Selection Buttons */}
+          <ModelSelector />
+        </div>
       )}
     </form>
   );
