@@ -139,7 +139,7 @@ export function WorkflowPipelinePreview() {
   }, []); // Only run once on mount
 
   return (
-    <div className="flex flex-col items-center justify-center h-full py-4 px-3">
+    <div className="flex flex-col items-center justify-center h-full py-4 px-3 w-full">
       {/* Header */}
       <div className="flex items-center gap-2 mb-4">
         <div className="w-6 h-6 rounded-full bg-gradient-to-br from-burnt-peach to-burnt-peach/60 flex items-center justify-center">
@@ -150,10 +150,10 @@ export function WorkflowPipelinePreview() {
         </span>
       </div>
 
-      {/* Pipeline Steps */}
-      <div className="relative w-full max-w-[160px]" ref={containerRef}>
-        {/* Fixed position spinner - outside the list to prevent layout shift */}
-        <div className="absolute -right-6 top-0 bottom-0 w-5 pointer-events-none">
+      {/* Pipeline Steps - wrapper includes space for spinner to keep content centered */}
+      <div className="relative w-full max-w-[184px] pl-3" ref={containerRef}>
+        {/* Fixed position spinner - positioned within the padded area */}
+        <div className="absolute right-0 top-0 bottom-0 w-5 pointer-events-none">
           {activePhaseIndex >= 0 && isAnimating && (
             <div 
               className="absolute w-4 h-4 transition-all duration-300 ease-out flex items-center justify-center"
