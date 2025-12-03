@@ -9,6 +9,8 @@ import { ThinkingPanel } from '@/components/fit-check/ThinkingPanel';
 import { ResultsSection } from '@/components/fit-check/ResultsSection';
 import { ComparisonChain } from '@/components/fit-check/ComparisonChain';
 import { ReasoningDialog } from '@/components/fit-check/ReasoningDialog';
+import { WorkflowPipelinePreview } from '@/components/fit-check/WorkflowPipelinePreview';
+import { ChainOfThoughtShowcase } from '@/components/fit-check/ChainOfThoughtShowcase';
 import { useFitCheck } from '@/hooks/use-fit-check';
 import { cn } from '@/lib/utils';
 
@@ -62,13 +64,13 @@ export function FitCheckSection() {
   const getContainerClass = () => {
     switch (uiPhase) {
       case 'input':
-        return 'max-w-4xl';
+        return 'max-w-6xl'; // Expanded for 3-column layout
       case 'expanded':
         return 'max-w-5xl fit-check-container-expanded';
       case 'results':
         return 'max-w-5xl';
       default:
-        return 'max-w-4xl';
+        return 'max-w-6xl';
     }
   };
 
@@ -178,18 +180,31 @@ export function FitCheckSection() {
                   </div>
                 </div>
               ) : (
-                // INPUT PHASE: Standard centered layout
-                <div className="px-6 md:px-8 pt-4 md:pt-5 pb-6 md:pb-8">
-                  <InputPanel
-                    ref={textareaRef}
-                    value={input}
-                    onChange={setInput}
-                    onSubmit={handleSubmit}
-                    isDisabled={isLoading || status === 'complete'}
-                    isLoading={isLoading}
-                    statusMessage={statusMessage}
-                    uiPhase={uiPhase}
-                  />
+                // INPUT PHASE: Three-column layout with previews
+                <div className="flex flex-col lg:flex-row min-h-[320px]">
+                  {/* Left Column: Workflow Pipeline Preview */}
+                  <div className="hidden lg:flex lg:w-[200px] flex-shrink-0 border-r border-twilight/8 dark:border-eggshell/8 showcase-panel-left">
+                    <WorkflowPipelinePreview />
+                  </div>
+
+                  {/* Center Column: Input Panel */}
+                  <div className="flex-1 px-6 md:px-8 pt-4 md:pt-5 pb-6 md:pb-8 flex flex-col justify-center">
+                    <InputPanel
+                      ref={textareaRef}
+                      value={input}
+                      onChange={setInput}
+                      onSubmit={handleSubmit}
+                      isDisabled={isLoading || status === 'complete'}
+                      isLoading={isLoading}
+                      statusMessage={statusMessage}
+                      uiPhase={uiPhase}
+                    />
+                  </div>
+
+                  {/* Right Column: Chain of Thought Showcase */}
+                  <div className="hidden lg:flex lg:w-[200px] flex-shrink-0 border-l border-twilight/8 dark:border-eggshell/8 showcase-panel-right">
+                    <ChainOfThoughtShowcase />
+                  </div>
                 </div>
               )}
             </div>

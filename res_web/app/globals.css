@@ -1031,3 +1031,166 @@ details[open] > div {
 .dark .text-glow {
   text-shadow: 0 0 15px rgba(224, 122, 95, 0.4);
 }
+
+/* ===========================================
+   WORKFLOW PIPELINE PREVIEW STYLES
+   =========================================== */
+
+/* Showcase panel entrance animations */
+.showcase-panel-left {
+  animation: showcasePanelLeft 0.6s ease-out forwards;
+  opacity: 0;
+}
+
+.showcase-panel-right {
+  animation: showcasePanelRight 0.6s ease-out forwards;
+  animation-delay: 0.1s;
+  opacity: 0;
+}
+
+@keyframes showcasePanelLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes showcasePanelRight {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Pipeline node active glow effect */
+.pipeline-node-active {
+  animation: pipelineNodeGlow 1.5s ease-in-out infinite;
+}
+
+@keyframes pipelineNodeGlow {
+  0%, 100% {
+    box-shadow: 0 0 8px 0 currentColor;
+  }
+  50% {
+    box-shadow: 0 0 16px 4px currentColor;
+  }
+}
+
+/* Pipeline icon pulse */
+.pipeline-icon-pulse {
+  animation: pipelineIconPulse 1.2s ease-in-out infinite;
+}
+
+@keyframes pipelineIconPulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+}
+
+/* ===========================================
+   CHAIN OF THOUGHT SHOWCASE STYLES
+   =========================================== */
+
+/* Floating thought card base */
+.showcase-thought-card {
+  transition: all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* Card visible state */
+.showcase-card-visible {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  animation: showcaseCardFloat 3s ease-in-out infinite;
+}
+
+/* Card hidden state */
+.showcase-card-hidden {
+  opacity: 0;
+  transform: translateY(10px) scale(0.95);
+  pointer-events: none;
+}
+
+/* Floating animation for visible cards */
+@keyframes showcaseCardFloat {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+}
+
+/* Staggered float timing for each card position */
+.showcase-thought-card:nth-child(1) {
+  animation-delay: 0ms;
+}
+
+.showcase-thought-card:nth-child(2) {
+  animation-delay: 500ms;
+}
+
+.showcase-thought-card:nth-child(3) {
+  animation-delay: 1000ms;
+}
+
+/* Background glow pulse */
+.showcase-glow-pulse {
+  animation: showcaseGlowPulse 3s ease-in-out infinite;
+}
+
+@keyframes showcaseGlowPulse {
+  0%, 100% {
+    opacity: 0.3;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.6;
+    transform: scale(1.1);
+  }
+}
+
+/* Connection line animation */
+.showcase-line-animate {
+  stroke-dashoffset: 20;
+  animation: showcaseLineMove 2s linear infinite;
+}
+
+@keyframes showcaseLineMove {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+/* Card fade transition */
+@keyframes showcaseCardFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(15px) scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes showcaseCardFadeOut {
+  from {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-10px) scale(0.95);
+  }
+}

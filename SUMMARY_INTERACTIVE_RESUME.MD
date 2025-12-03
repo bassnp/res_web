@@ -643,7 +643,9 @@ res_web/
 │   │   ├── GrowthAreasCard.jsx # Growth areas card (apricot)
 │   │   ├── InsightCard.jsx   # Phase insight display components (NEW)
 │   │   ├── ReasoningDialog.jsx # Chain of thought popup dialog
-│   │   └── SystemPromptDialog.jsx # System prompt viewer
+│   │   ├── SystemPromptDialog.jsx # System prompt viewer
+│   │   ├── WorkflowPipelinePreview.jsx # Animated pipeline showcase (NEW)
+│   │   └── ChainOfThoughtShowcase.jsx # Floating thought cards preview (NEW)
 │   └── ui/                   # shadcn/ui components
 │       ├── button.jsx
 │       ├── dialog.jsx
@@ -718,14 +720,16 @@ const nextConfig = {
 **UI Phases**:
 | Phase | Status | Layout |
 |-------|--------|--------|
-| `input` | idle | Single centered container with input form |
-| `expanded` | connecting/thinking/responding | Two-column: Input (left) + Thinking Panel (right) |
+| `input` | idle | Three-column: Pipeline Preview (left) + Input (center) + Chain of Thought Showcase (right) |
+| `expanded` | connecting/thinking/responding | Two-column: Comparison Chain (left) + Thinking Panel (right) |
 | `results` | complete | Compact header + Two result cards below |
 
 **Features**:
 - Phase-based layout switching with smooth transitions
-- Container width animation (max-w-2xl → max-w-5xl)
-- Imports sub-components: `InputPanel`, `ThinkingPanel`, `ResultsSection`
+- Container width animation (max-w-6xl for input, max-w-5xl for expanded/results)
+- Three-column input phase with animated showcase panels
+- Imports sub-components: `InputPanel`, `ThinkingPanel`, `ResultsSection`, `WorkflowPipelinePreview`, `ChainOfThoughtShowcase`
+- Responsive design: showcase panels hidden on smaller screens (`hidden lg:flex`)
 - Error display with retry option
 - Duration display on completion
 
@@ -943,6 +947,65 @@ const nextConfig = {
 - Terminal-style code block presentation
 
 **API Integration**: Uses `/api/prompts/{phase}` endpoint for transparency
+
+---
+
+#### `components/fit-check/WorkflowPipelinePreview.jsx` - Pipeline Showcase (NEW)
+
+**Purpose**: Animated preview of the 7-phase AI pipeline displayed on the left side of the input panel.
+
+**Features**:
+- Looping animation through all pipeline phases
+- Phase-specific colors and glow effects
+- Checkmark completion indicators for completed phases
+- Pulsing active phase indicator
+- Compact vertical layout with connector lines
+
+**Phase Colors**:
+| Phase | Gradient |
+|-------|----------|
+| `connecting` | blue-400 → blue-500 |
+| `deep_research` | purple-400 → purple-500 |
+| `research_reranker` | violet-400 → violet-500 |
+| `skeptical_comparison` | amber-400 → amber-500 |
+| `skills_matching` | green-400 → green-500 |
+| `generate_results` | burnt-peach → burnt-peach/80 |
+
+**Animation Timing**:
+- Phase transition: 1200ms interval
+- Reset delay: 1500ms after completion
+- Restart delay: 800ms after reset
+
+---
+
+#### `components/fit-check/ChainOfThoughtShowcase.jsx` - Floating Cards Preview (NEW)
+
+**Purpose**: Animated showcase of floating thought cards on the right side of the input panel, demonstrating the chain of thought visualization.
+
+**Features**:
+- 6 mock thought cards cycling through visibility
+- 3 cards visible simultaneously at staggered positions
+- Fade-in/fade-out transitions between card sets
+- Floating animation for visible cards
+- Decorative SVG connection lines
+- Background glow pulse effect
+
+**Mock Thought Types**:
+| Type | Icon | Color |
+|------|------|-------|
+| `tool_call` (Research) | Search | burnt-peach |
+| `observation` | Eye | muted-teal |
+| `reasoning` | Brain | twilight |
+
+**Card Positions**:
+- Top-left: rotated -2°
+- Middle-right: rotated 1°
+- Bottom-left: rotated -1°
+
+**Animation Timing**:
+- Card cycle interval: 2500ms
+- Float animation: 3s ease-in-out infinite
+- Glow pulse: 3s ease-in-out infinite
 
 ---
 
@@ -1383,6 +1446,13 @@ parseThoughtContent(thought) → {
 | `cot-fade-in` | Chain of Thought fade-in animation |
 | `cot-pulse` | Active node pulsing indicator |
 | `cot-expand` | Data section expand/collapse animation |
+| `showcasePanelLeft` | Left showcase panel slide-in (NEW) |
+| `showcasePanelRight` | Right showcase panel slide-in (NEW) |
+| `pipelineNodeGlow` | Pipeline node glow effect (NEW) |
+| `pipelineIconPulse` | Pipeline icon scale pulse (NEW) |
+| `showcaseCardFloat` | Floating thought card animation (NEW) |
+| `showcaseGlowPulse` | Background glow pulse (NEW) |
+| `showcaseLineMove` | Connection line dash animation (NEW) |
 
 **CSS Utility Classes**:
 | Class | Effect |
@@ -1394,6 +1464,12 @@ parseThoughtContent(thought) → {
 | `.gradient-border-growth` | Animated gradient border (apricot) |
 | `.card-shimmer` | Shimmer sweep effect |
 | `.text-glow` | Subtle text shadow glow |
+| `.showcase-panel-left` | Left panel entrance animation (NEW) |
+| `.showcase-panel-right` | Right panel entrance animation (NEW) |
+| `.pipeline-node-active` | Active pipeline node glow (NEW) |
+| `.showcase-thought-card` | Floating card base styling (NEW) |
+| `.showcase-card-visible` | Visible floating card state (NEW) |
+| `.showcase-card-hidden` | Hidden floating card state (NEW) |
 
 ---
 

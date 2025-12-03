@@ -102,7 +102,7 @@ export const InputPanel = forwardRef(function InputPanel({
           value={value}
           onChange={(e) => onChange(e.target.value)}
           onKeyDown={handleKeyDown}
-          placeholder="Enter a job position, description, or Company name to have A.I. brutally assess me!"
+          placeholder="Try me in a job position, description, or Company to have A.I. brutally assess me!"
           className={cn(
             "min-h-[80px] resize-none transition-all duration-200",
             "text-center flex items-center justify-center",
