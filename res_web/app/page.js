@@ -5,6 +5,7 @@ import { useTheme } from 'next-themes';
 import { Settings, Briefcase, User, Mail, Github, ChevronDown, ExternalLink, Sun, Moon, Code, Cpu } from 'lucide-react';
 import { useHeaderVisibility } from '@/hooks/use-header-visibility';
 import { useAISettings, AI_MODELS } from '@/hooks/use-ai-settings';
+import { InfoDialog, InfoButton } from '@/components/fit-check/InfoDialog';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogDescription } from '@/components/ui/dialog';
 import ParticleBackground from '@/components/ParticleBackground';
@@ -18,6 +19,7 @@ import FitCheckSection from '@/components/FitCheckSection';
 // ============================================
 const Header = () => {
   const [settingsOpen, setSettingsOpen] = useState(false);
+  const [infoOpen, setInfoOpen] = useState(false);
   const { theme, setTheme, resolvedTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
   const { selectedModel, updateModel, modelInfo } = useAISettings();
@@ -107,7 +109,16 @@ const Header = () => {
                 ))}
               </nav>
 
-              {/* Settings Icon */}
+              {/* Info & Settings */}
+              <div className="flex items-center gap-1">
+                {/* Info Button */}
+                <InfoDialog 
+                  open={infoOpen} 
+                  onOpenChange={setInfoOpen}
+                  trigger={<InfoButton onClick={() => {}} />}
+                />
+
+                {/* Settings Icon */}
               <Dialog open={settingsOpen} onOpenChange={setSettingsOpen}>
                 <DialogTrigger asChild>
                   <button className="group p-2 rounded-lg hover:bg-twilight/10 dark:hover:bg-eggshell/10 transition-all duration-300">
@@ -183,6 +194,7 @@ const Header = () => {
                   </div>
                 </DialogContent>
               </Dialog>
+              </div>
             </div>
           </div>
         </div>
@@ -208,16 +220,16 @@ const Footer = () => {
   ];
 
   return (
-    <footer className="text-twilight dark:text-eggshell py-8 relative z-20">
+    <footer className="text-twilight dark:text-eggshell py-6 relative z-20">
       <div className="container mx-auto px-6">
-        <div className="relative bg-background/95 backdrop-blur-sm rounded-[10px] shadow-[0_2px_8px_rgba(61,64,91,0.08)] dark:shadow-[0_2px_12px_rgba(0,0,0,0.3)] border border-twilight/8 dark:border-eggshell/8 overflow-hidden py-8">
+        <div className="relative bg-background/95 backdrop-blur-sm rounded-[10px] shadow-[0_2px_8px_rgba(61,64,91,0.08)] dark:shadow-[0_2px_12px_rgba(0,0,0,0.3)] border border-twilight/8 dark:border-eggshell/8 overflow-hidden py-6">
           <InteractiveGridDots />
           <div className="relative z-10 px-8">
             {/* Main footer content */}
-            <div className="grid md:grid-cols-3 gap-12">
+            <div className="grid md:grid-cols-3 gap-8">
               {/* Brand */}
               <div>
-                <h3 className="text-lg font-semibold mb-4">Portfolio</h3>
+                <h3 className="text-lg font-semibold mb-3">Portfolio</h3>
                 <p className="text-twilight/70 dark:text-eggshell/70 text-sm leading-relaxed">
                   Hobbyist software engineer &amp; recent graduate passionate about building elegant solutions.
                 </p>
@@ -225,8 +237,8 @@ const Footer = () => {
 
               {/* Navigation */}
               <div>
-                <h3 className="text-lg font-semibold mb-4">Navigation</h3>
-                <ul className="space-y-3">
+                <h3 className="text-lg font-semibold mb-3">Navigation</h3>
+                <ul className="space-y-2">
                   {footerLinks.map((link) => (
                     <li key={link.name}>
                       <a href={link.href} className="text-twilight/70 dark:text-eggshell/70 hover:text-burnt-peach transition-colors text-sm animated-underline">
@@ -239,8 +251,8 @@ const Footer = () => {
 
               {/* Contact */}
               <div>
-                <h3 className="text-lg font-semibold mb-4">Connect</h3>
-                <div className="flex gap-4 mb-4">
+                <h3 className="text-lg font-semibold mb-3">Connect</h3>
+                <div className="flex gap-4 mb-3">
                   {socialLinks.map((social) => (
                     <a
                       key={social.label}
@@ -259,7 +271,7 @@ const Footer = () => {
             </div>
 
             {/* Copyright */}
-            <div className="mt-12 pt-8 border-t border-twilight/20 dark:border-eggshell/20 text-center">
+            <div className="mt-8 pt-6 border-t border-twilight/20 dark:border-eggshell/20 text-center">
               <p className="text-twilight/50 dark:text-eggshell/50 text-sm">
                 &copy; {new Date().getFullYear()} Portfolio. All rights reserved.
               </p>
@@ -375,51 +387,51 @@ const HeroAboutSection = () => {
   }, []);
 
   return (
-    <section id="about" className="flex items-center pt-48 pb-16">
+    <section id="about" className="flex items-center pt-20 pb-4">
       <div className="container mx-auto px-6">
         <div className="grid lg:grid-cols-2 gap-4 items-stretch">
           {/* Left: Hero Content with Grid Dots */}
-          <div className="relative bg-background/95 backdrop-blur-sm rounded-[10px] shadow-[0_2px_8px_rgba(61,64,91,0.08)] dark:shadow-[0_2px_12px_rgba(0,0,0,0.3)] border border-twilight/8 dark:border-eggshell/8 overflow-hidden min-h-[380px] flex flex-col justify-center">
+          <div className="relative bg-background/95 backdrop-blur-sm rounded-[10px] shadow-[0_2px_8px_rgba(61,64,91,0.08)] dark:shadow-[0_2px_12px_rgba(0,0,0,0.3)] border border-twilight/8 dark:border-eggshell/8 overflow-hidden min-h-0 md:min-h-[300px] flex flex-col justify-center">
             <HeroGridDots />
-            <div className="relative z-10 p-6 md:p-8 text-center">
+            <div className="relative z-10 px-3 py-2 md:px-8 md:py-5 text-center">
               {/* Greeting */}
-              <p className="text-burnt-peach font-medium mb-2 opacity-0 animate-fade-in text-sm">
+              <p className="text-burnt-peach font-medium mb-1 md:mb-2 opacity-0 animate-fade-in text-sm">
                 Hello, I&apos;m
               </p>
 
               {/* Name with typing effect */}
-              <h1 className="text-3xl md:text-5xl font-bold text-twilight dark:text-eggshell mb-3 opacity-0 animate-fade-in delay-100">
+              <h1 className="text-2xl md:text-5xl font-bold text-twilight dark:text-eggshell mb-2 md:mb-3 opacity-0 animate-fade-in delay-100">
                 <span className="gradient-text">{typedText}</span>
                 <span 
-                  className="inline-block w-0.5 h-8 md:h-12 bg-burnt-peach ml-1 transition-opacity duration-100"
+                  className="inline-block w-0.5 h-6 md:h-12 bg-burnt-peach ml-1 transition-opacity duration-100"
                   style={{ opacity: showCursor ? 1 : 0 }}
                 />
               </h1>
 
               {/* Tagline */}
-              <p className="text-base md:text-lg text-twilight/70 dark:text-eggshell/70 mb-4 opacity-0 animate-fade-in delay-200">
+              <p className="text-sm md:text-lg text-twilight/70 dark:text-eggshell/70 mb-3 md:mb-4 opacity-0 animate-fade-in delay-200">
                 Recent graduate &amp; hobbyist developer crafting elegant digital experiences
               </p>
 
               {/* CTA Buttons */}
-              <div className="flex flex-wrap justify-center gap-3 opacity-0 animate-fade-in delay-300">
+              <div className="flex flex-wrap justify-center gap-2 md:gap-3 opacity-0 animate-fade-in delay-300">
                 <Button
                   asChild
-                  className="bg-burnt-peach hover:bg-burnt-peach/90 text-eggshell px-6 py-5 text-sm rounded-xl animate-pulse-glow hover:scale-105 transition-transform"
+                  className="bg-burnt-peach hover:bg-burnt-peach/90 text-eggshell px-4 py-3 md:px-6 md:py-5 text-xs md:text-sm rounded-xl animate-pulse-glow hover:scale-105 transition-transform"
                 >
                   <a href="#experience">View Work Experience</a>
                 </Button>
                 <Button
                   asChild
                   variant="outline"
-                  className="border-twilight dark:border-eggshell text-twilight dark:text-eggshell hover:bg-twilight hover:text-eggshell dark:hover:bg-eggshell dark:hover:text-twilight px-6 py-5 text-sm rounded-xl hover:scale-105 transition-transform"
+                  className="border-twilight dark:border-eggshell text-twilight dark:text-eggshell hover:bg-twilight hover:text-eggshell dark:hover:bg-eggshell dark:hover:text-twilight px-4 py-3 md:px-6 md:py-5 text-xs md:text-sm rounded-xl hover:scale-105 transition-transform"
                 >
                   <a href="#contact">Get in Touch</a>
                 </Button>
               </div>
 
               {/* Scroll indicator */}
-              <div className="mt-5 opacity-0 animate-fade-in delay-500">
+              <div className="mt-3 md:mt-5 opacity-0 animate-fade-in delay-500">
                 <a href="#projects" className="inline-flex flex-col items-center group">
                   <ChevronDown className="w-6 h-6 text-burnt-peach dark:text-muted-teal animate-bounce group-hover:animate-none group-hover:translate-y-1 transition-all" />
                 </a>
@@ -508,16 +520,16 @@ const ProjectsSection = () => {
   ];
 
   return (
-    <section id="projects" className="py-16">
+    <section id="projects" className="py-6">
       <div className="container mx-auto px-6">
-        <h2 className="text-3xl md:text-4xl font-bold text-twilight dark:text-eggshell mb-4 text-center">
+        <h2 className="text-3xl md:text-4xl font-bold text-twilight dark:text-eggshell mb-3 text-center">
           Featured <span className="text-burnt-peach">Projects</span>
         </h2>
-        <p className="text-twilight/60 dark:text-eggshell/60 text-center mb-12 max-w-2xl mx-auto">
+        <p className="text-twilight/60 dark:text-eggshell/60 text-center mb-8 max-w-2xl mx-auto">
           A selection of projects that showcase my skills and passion for building great software.
         </p>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
           {projects.map((project, index) => (
             <div
               key={project.title}
@@ -585,15 +597,15 @@ const ExperienceSection = () => {
   ];
 
   return (
-    <section id="experience" className="py-16 relative">
+    <section id="experience" className="py-6 relative">
       <div className="container mx-auto px-6">
-        <div className="relative bg-background/95 backdrop-blur-sm rounded-[10px] shadow-[0_2px_8px_rgba(61,64,91,0.08)] dark:shadow-[0_2px_12px_rgba(0,0,0,0.3)] border border-twilight/8 dark:border-eggshell/8 overflow-hidden py-16">
+        <div className="relative bg-background/95 backdrop-blur-sm rounded-[10px] shadow-[0_2px_8px_rgba(61,64,91,0.08)] dark:shadow-[0_2px_12px_rgba(0,0,0,0.3)] border border-twilight/8 dark:border-eggshell/8 overflow-hidden py-6">
           <InteractiveGridDots />
           <div className="relative z-10">
-            <h2 className="text-3xl md:text-4xl font-bold text-twilight dark:text-eggshell mb-4 text-center">
+            <h2 className="text-3xl md:text-4xl font-bold text-twilight dark:text-eggshell mb-3 text-center">
               Work <span className="text-burnt-peach">Experience</span>
             </h2>
-            <p className="text-twilight/60 dark:text-eggshell/60 text-center mb-12 max-w-2xl mx-auto">
+            <p className="text-twilight/60 dark:text-eggshell/60 text-center mb-8 max-w-2xl mx-auto">
               My professional journey and educational background.
             </p>
 
@@ -641,19 +653,16 @@ const ExperienceSection = () => {
 // ============================================
 const ContactSection = () => {
   return (
-    <section id="contact" className="py-16 relative z-30">
+    <section id="contact" className="py-6 relative z-30">
       <div className="container mx-auto px-6">
         <div className="max-w-2xl mx-auto text-center">
-          <h2 className="text-3xl md:text-4xl font-bold text-twilight dark:text-eggshell mb-4">
+          <h2 className="text-3xl md:text-4xl font-bold text-twilight dark:text-eggshell mb-3">
             Get in <span className="text-burnt-peach">Touch</span>
           </h2>
-          <p className="text-twilight/60 dark:text-eggshell/60 mb-8">
-            I&apos;m always open to discussing new projects, creative ideas, or opportunities to be part of your vision.
-          </p>
 
           <Button
             asChild
-            className="bg-burnt-peach hover:bg-burnt-peach/90 text-eggshell px-8 py-6 text-lg rounded-xl animate-pulse-glow hover:scale-105 transition-transform relative z-10"
+            className="bg-burnt-peach hover:bg-burnt-peach/90 text-eggshell px-7 py-5 text-base rounded-xl animate-pulse-glow hover:scale-105 transition-transform relative z-10"
           >
             <a href="mailto:hello@example.com" className="flex items-center gap-2">
               <Mail className="w-5 h-5" />

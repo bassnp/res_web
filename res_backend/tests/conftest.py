@@ -17,7 +17,7 @@ os.environ.setdefault("GOOGLE_API_KEY", "test_api_key")
 os.environ.setdefault("GOOGLE_CSE_API_KEY", "test_cse_key")
 os.environ.setdefault("GOOGLE_CSE_ID", "test_cse_id")
 os.environ.setdefault("LOG_LEVEL", "DEBUG")
-os.environ.setdefault("ALLOWED_ORIGINS", "http://localhost:3000")
+os.environ.setdefault("ALLOWED_ORIGINS", "http://localhost:3003")
 
 
 # =============================================================================
@@ -38,7 +38,7 @@ def mock_env(monkeypatch):
     monkeypatch.setenv("GOOGLE_API_KEY", "test_key")
     monkeypatch.setenv("GOOGLE_CSE_API_KEY", "test_cse_key")
     monkeypatch.setenv("GOOGLE_CSE_ID", "test_cse_id")
-    monkeypatch.setenv("ALLOWED_ORIGINS", "http://localhost:3000")
+    monkeypatch.setenv("ALLOWED_ORIGINS", "http://localhost:3003")
 
 
 @pytest.fixture

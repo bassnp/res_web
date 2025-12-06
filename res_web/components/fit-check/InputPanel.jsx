@@ -1,11 +1,12 @@
 'use client';
 
-import { forwardRef } from 'react';
+import { forwardRef, useState } from 'react';
 import { Send, Loader2, Zap, Brain } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { cn } from '@/lib/utils';
 import { useAISettings, AI_MODELS } from '@/hooks/use-ai-settings';
+import { InfoDialog, InfoTriggerLink } from './InfoDialog';
 
 /**
  * ModelSelector Component
@@ -79,6 +80,7 @@ export const InputPanel = forwardRef(function InputPanel({
   statusMessage,
   uiPhase,
 }, ref) {
+  const [infoOpen, setInfoOpen] = useState(false);
   const isValidInput = value.trim().length >= 3;
   const isSubmitDisabled = !isValidInput || isLoading;
 
@@ -101,9 +103,12 @@ export const InputPanel = forwardRef(function InputPanel({
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
+      {/* InfoDialog for open-source link */}
+      <InfoDialog open={infoOpen} onOpenChange={setInfoOpen} />
+      
       {/* Subtitle - styled with Brutal Honesty theme */}
       <p className="text-twilight dark:text-eggshell text-sm text-center font-medium">
-        Use a transparent and <span className="text-burnt-peach font-semibold">Non-Biased Deep Researcher</span> to see analyze if I fit the scenario
+        Use my <InfoTriggerLink onClick={() => setInfoOpen(true)} /> <span className="text-burnt-peach font-semibold">Non-Biased Deep Researcher</span> to analyze <span className="text-emerald-600 dark:text-emerald-400 font-semibold">my experience for your needs</span>
       </p>
       
       <div className="relative">

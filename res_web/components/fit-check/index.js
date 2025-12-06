@@ -23,6 +23,7 @@ export { InsightCard, ConfidenceBar, MetricBadge, TechTag } from './InsightCard'
 // Dialogs
 export { ReasoningDialog } from './ReasoningDialog';
 export { SystemPromptDialog } from './SystemPromptDialog';
+export { InfoDialog, InfoTriggerLink, InfoButton } from './InfoDialog';
 
 // Showcase components (for input phase)
 export { WorkflowPipelinePreview } from './WorkflowPipelinePreview';

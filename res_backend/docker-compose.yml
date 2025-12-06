@@ -36,7 +36,7 @@ services:
       - HOST=0.0.0.0
       - PORT=8000
       - LOG_LEVEL=${LOG_LEVEL:-INFO}
-      - ALLOWED_ORIGINS=${ALLOWED_ORIGINS:-http://localhost:3000}
+      - ALLOWED_ORIGINS=${ALLOWED_ORIGINS:-http://localhost:3003}
     
     # Health check (using Python since curl is not in slim image)
     healthcheck:

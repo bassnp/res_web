@@ -77,7 +77,7 @@ export function FitCheckSection() {
   return (
     <section 
       id="fit-check" 
-      className="py-16 fit-check-section"
+      className="py-6 fit-check-section"
       aria-label="AI Fit Check Analysis"
     >
       <div className="container mx-auto px-6">
@@ -180,30 +180,43 @@ export function FitCheckSection() {
                   </div>
                 </div>
               ) : (
-                // INPUT PHASE: Three-column layout with previews
-                <div className="flex flex-col lg:flex-row min-h-[400px]">
-                  {/* Left Column: Workflow Pipeline Preview */}
-                  <div className="hidden lg:flex lg:w-[200px] flex-shrink-0 border-r border-twilight/8 dark:border-eggshell/8 showcase-panel-left">
-                    <WorkflowPipelinePreview />
+                // INPUT PHASE: Three-column layout with previews (responsive)
+                <div className="flex flex-col">
+                  {/* Mobile/Tablet: Horizontal compact panels at top */}
+                  <div className="flex lg:hidden border-b border-twilight/8 dark:border-eggshell/8 showcase-panels-mobile">
+                    <div className="flex-1 border-r border-twilight/8 dark:border-eggshell/8 showcase-panel-mobile-left">
+                      <WorkflowPipelinePreview compact={true} />
+                    </div>
+                    <div className="flex-1 showcase-panel-mobile-right">
+                      <ChainOfThoughtShowcase compact={true} />
+                    </div>
                   </div>
 
-                  {/* Center Column: Input Panel */}
-                  <div className="flex-1 px-6 md:px-8 pt-4 md:pt-5 pb-6 md:pb-8 flex flex-col justify-center">
-                    <InputPanel
-                      ref={textareaRef}
-                      value={input}
-                      onChange={setInput}
-                      onSubmit={handleSubmit}
-                      isDisabled={isLoading || status === 'complete'}
-                      isLoading={isLoading}
-                      statusMessage={statusMessage}
-                      uiPhase={uiPhase}
-                    />
-                  </div>
+                  {/* Desktop: Three-column horizontal layout */}
+                  <div className="flex flex-row min-h-[400px]">
+                    {/* Left Column: Workflow Pipeline Preview (Desktop only) */}
+                    <div className="hidden lg:flex lg:w-[200px] flex-shrink-0 border-r border-twilight/8 dark:border-eggshell/8 showcase-panel-left">
+                      <WorkflowPipelinePreview />
+                    </div>
 
-                  {/* Right Column: Chain of Thought Showcase */}
-                  <div className="hidden lg:flex lg:w-[200px] flex-shrink-0 border-l border-twilight/8 dark:border-eggshell/8 showcase-panel-right">
-                    <ChainOfThoughtShowcase />
+                    {/* Center Column: Input Panel */}
+                    <div className="flex-1 px-6 md:px-8 pt-4 md:pt-5 pb-6 md:pb-8 flex flex-col justify-center">
+                      <InputPanel
+                        ref={textareaRef}
+                        value={input}
+                        onChange={setInput}
+                        onSubmit={handleSubmit}
+                        isDisabled={isLoading || status === 'complete'}
+                        isLoading={isLoading}
+                        statusMessage={statusMessage}
+                        uiPhase={uiPhase}
+                      />
+                    </div>
+
+                    {/* Right Column: Chain of Thought Showcase (Desktop only) */}
+                    <div className="hidden lg:flex lg:w-[200px] flex-shrink-0 border-l border-twilight/8 dark:border-eggshell/8 showcase-panel-right">
+                      <ChainOfThoughtShowcase />
+                    </div>
                   </div>
                 </div>
               )}

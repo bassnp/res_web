@@ -82,9 +82,9 @@ function FloatingThoughtCard({ thought, isVisible, position, delay }) {
       border: 'border-muted-teal/30',
     },
     'twilight': {
-      bg: 'bg-twilight dark:bg-apricot',
-      text: 'text-twilight dark:text-apricot',
-      border: 'border-twilight/30 dark:border-apricot/30',
+      bg: 'bg-twilight',
+      text: 'text-twilight dark:text-eggshell',
+      border: 'border-twilight/30',
     },
   };
 
@@ -130,8 +130,11 @@ function FloatingThoughtCard({ thought, isVisible, position, delay }) {
  * 
  * Displays floating mock thought cards that fade in and out
  * to showcase the AI's chain of thought visualization.
+ * 
+ * @param {Object} props
+ * @param {boolean} props.compact - Whether to render in compact horizontal mode for mobile
  */
-export function ChainOfThoughtShowcase() {
+export function ChainOfThoughtShowcase({ compact = false }) {
   const [visibleCards, setVisibleCards] = useState([0, 1]);
   const [cycleIndex, setCycleIndex] = useState(0);
 
@@ -161,11 +164,73 @@ export function ChainOfThoughtShowcase() {
     { top: '86%', left: '8%', transform: 'rotate(-1deg)' },
   ];
 
+  // Compact horizontal positions
+  const compactPositions = [
+    { left: '2%', top: '50%', transform: 'translateY(-50%) rotate(-1deg)' },
+    { left: '38%', top: '50%', transform: 'translateY(-50%) rotate(0.5deg)' },
+    { right: '2%', top: '50%', transform: 'translateY(-50%) rotate(1deg)' },
+  ];
+
+  // Compact mode: Horizontal layout
+  if (compact) {
+    return (
+      <div className="flex items-center justify-center w-full py-3 px-4 gap-3">
+        {/* Header */}
+        <div className="flex items-center gap-2 flex-shrink-0">
+          <div className="w-6 h-6 rounded-full bg-gradient-to-br from-muted-teal to-muted-teal/60 flex items-center justify-center cot-icon-glow">
+            <Brain className="w-3 h-3 text-eggshell" />
+          </div>
+          <span className="text-[10px] font-semibold text-twilight/80 dark:text-eggshell/80 uppercase tracking-wide">
+            Thoughts
+          </span>
+        </div>
+
+        {/* Compact Floating Cards */}
+        <div className="flex items-center gap-2 overflow-hidden flex-1 min-w-0">
+          {MOCK_THOUGHTS.slice(0, 3).map((thought, index) => {
+            const currentThought = MOCK_THOUGHTS[(cycleIndex + index) % MOCK_THOUGHTS.length];
+            const isVisible = visibleCards.includes((cycleIndex + index) % MOCK_THOUGHTS.length);
+            const Icon = currentThought.icon;
+            
+            const colorClasses = {
+              'burnt-peach': 'bg-burnt-peach text-burnt-peach border-burnt-peach/30',
+              'muted-teal': 'bg-muted-teal text-muted-teal border-muted-teal/30',
+              'twilight': 'bg-twilight text-twilight dark:text-eggshell border-twilight/30',
+            };
+            const colors = colorClasses[currentThought.color] || colorClasses['burnt-peach'];
+            const [bgColor, textColor, borderColor] = colors.split(' ');
+
+            return (
+              <div
+                key={`compact-${index}`}
+                className={cn(
+                  "flex items-center gap-1.5 px-2 py-1 rounded-lg border transition-all duration-500",
+                  "bg-white/80 dark:bg-twilight/60 backdrop-blur-sm",
+                  borderColor,
+                  isVisible ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-2"
+                )}
+                style={{ transitionDelay: `${index * 100}ms` }}
+              >
+                <div className={cn("w-4 h-4 rounded flex items-center justify-center flex-shrink-0", bgColor)}>
+                  <Icon className="w-2.5 h-2.5 text-eggshell" />
+                </div>
+                <span className={cn("text-[9px] font-medium truncate max-w-[60px]", textColor)}>
+                  {currentThought.label}
+                </span>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    );
+  }
+
+  // Full mode: Vertical layout with floating cards
   return (
     <div className="relative h-full w-full py-4 px-3 overflow-hidden">
       {/* Header */}
       <div className="flex items-center justify-center gap-2 mb-2">
-        <div className="w-6 h-6 rounded-full bg-gradient-to-br from-muted-teal to-muted-teal/60 flex items-center justify-center">
+        <div className="w-6 h-6 rounded-full bg-gradient-to-br from-muted-teal to-muted-teal/60 flex items-center justify-center cot-icon-glow">
           <Brain className="w-3 h-3 text-eggshell" />
         </div>
         <span className="text-xs font-semibold text-twilight/80 dark:text-eggshell/80 uppercase tracking-wide">
@@ -190,24 +255,6 @@ export function ChainOfThoughtShowcase() {
             delay={index * 200}
           />
         ))}
-
-        {/* Decorative connection lines */}
-        <svg className="absolute inset-0 w-full h-full pointer-events-none opacity-20">
-          <defs>
-            <linearGradient id="lineGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stopColor="rgba(224, 122, 95, 0.6)" />
-              <stop offset="100%" stopColor="rgba(129, 178, 154, 0.6)" />
-            </linearGradient>
-          </defs>
-          <path
-            d="M 30 50 Q 80 80 70 120 T 120 160"
-            stroke="url(#lineGradient)"
-            strokeWidth="1"
-            fill="none"
-            strokeDasharray="4 4"
-            className="showcase-line-animate"
-          />
-        </svg>
       </div>
     </div>
   );

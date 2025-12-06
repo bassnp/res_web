@@ -12,7 +12,7 @@ echo ===========================================================================
 echo.
 
 REM Define local environment values
-set "LOCAL_BASE_URL=http://localhost:3000"
+set "LOCAL_BASE_URL=http://localhost:3003"
 set "LOCAL_API_URL=http://localhost:8000"
 
 echo [1/4] Creating .env.local with LOCAL Docker values...
@@ -72,7 +72,7 @@ echo   API URL:  %LOCAL_API_URL%
 echo.
 
 echo ================================================================================
-echo [5/5] Starting Next.js dev server on port 3000 (hot reload enabled)...
+echo [5/5] Starting Next.js dev server on port 3003 (hot reload enabled)...
 echo ================================================================================
 echo.
 echo Make sure backend is running: cd ..\res_backend ^&^& run_docker_sync.bat
