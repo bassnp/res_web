@@ -305,35 +305,48 @@ const HeroAboutSection = () => {
   return (
     <section id="about" className="flex items-center pt-20 pb-4">
       <div className="container mx-auto px-6">
-        <div className="grid lg:grid-cols-2 gap-4 items-stretch">
-          {/* Left: Hero Content with Grid Dots */}
-          <div className="relative bg-background/95 backdrop-blur-sm rounded-[5px] shadow-[0_2px_8px_rgba(61,64,91,0.08)] dark:shadow-[0_2px_12px_rgba(0,0,0,0.3)] border border-twilight/8 dark:border-eggshell/8 overflow-hidden min-h-0 md:min-h-[300px] flex flex-col justify-center">
+        {/* Typing animation - centered above left container, constrained to 1/3 width */}
+        <div className="lg:w-1/3 mb-4">
+          <h1 className="text-xl md:text-3xl font-bold text-twilight dark:text-eggshell opacity-0 animate-fade-in delay-100 text-center">
+            <span className="gradient-text">{typedText}</span>
+            <span 
+              className="inline-block w-0.5 h-5 md:h-8 bg-burnt-peach ml-1 transition-opacity duration-100"
+              style={{ opacity: showCursor ? 1 : 0 }}
+            />
+          </h1>
+        </div>
+
+        {/* Grid: 1/3 left container, 2/3 right container */}
+        <div className="grid lg:grid-cols-3 gap-4 items-stretch">
+          {/* Left: Hero Content with Grid Dots (1/3 width) */}
+          <div className="relative bg-background/95 backdrop-blur-sm rounded-[5px] shadow-[0_2px_8px_rgba(61,64,91,0.08)] dark:shadow-[0_2px_12px_rgba(0,0,0,0.3)] border border-twilight/8 dark:border-eggshell/8 overflow-hidden min-h-0 md:min-h-[300px] flex flex-col justify-center lg:col-span-1">
             <HeroGridDots />
             <div className="relative z-10 px-3 py-2 md:px-8 md:py-5 text-center">
-              {/* Name with typing effect */}
-              <h1 className="text-2xl md:text-5xl font-bold text-twilight dark:text-eggshell mb-2 md:mb-3 opacity-0 animate-fade-in delay-100">
-                <span className="gradient-text">{typedText}</span>
-                <span 
-                  className="inline-block w-0.5 h-6 md:h-12 bg-burnt-peach ml-1 transition-opacity duration-100"
-                  style={{ opacity: showCursor ? 1 : 0 }}
-                />
-              </h1>
+              {/* Profile Picture Placeholder (3:4 aspect ratio) */}
+              <div className="flex justify-center mb-4 opacity-0 animate-fade-in delay-200">
+                <div 
+                  className="w-36 md:w-48 bg-twilight/10 dark:bg-eggshell/10 rounded-[5px] border-2 border-dashed border-twilight/30 dark:border-eggshell/30 flex items-center justify-center"
+                  style={{ aspectRatio: '3/4' }}
+                >
+                  {/* Placeholder icon for future profile picture */}
+                  <User className="w-12 h-12 md:w-16 md:h-16 text-twilight/40 dark:text-eggshell/40" />
+                </div>
+              </div>
 
-              {/* CTA Buttons */}
-              <div className="flex flex-wrap justify-center gap-2 md:gap-3 opacity-0 animate-fade-in delay-300">
-                <Button
-                  asChild
-                  className="bg-burnt-peach hover:bg-burnt-peach/90 text-eggshell px-4 py-3 md:px-6 md:py-5 text-xs md:text-sm rounded-sm animate-pulse-glow hover:scale-105 transition-transform"
-                >
-                  <a href="#experience">View Work Experience</a>
-                </Button>
-                <Button
-                  asChild
-                  variant="outline"
-                  className="border-twilight dark:border-eggshell text-twilight dark:text-eggshell hover:bg-twilight hover:text-eggshell dark:hover:bg-eggshell dark:hover:text-twilight px-4 py-3 md:px-6 md:py-5 text-xs md:text-sm rounded-sm hover:scale-105 transition-transform"
-                >
-                  <a href="#contact">Get in Touch</a>
-                </Button>
+              {/* Skills & Technologies (moved from right container) */}
+              <div className="mt-4 opacity-0 animate-fade-in delay-300">
+                <h3 className="text-sm font-semibold text-twilight dark:text-eggshell mb-2">Skills &amp; Technologies</h3>
+                <div className="flex flex-wrap justify-center gap-2">
+                  {skills.map((skill, index) => (
+                    <span
+                      key={skill}
+                      className="px-3 py-1.5 bg-twilight/5 dark:bg-eggshell/10 text-twilight dark:text-eggshell rounded-full text-xs font-medium hover:bg-muted-teal dark:hover:bg-muted-teal hover:text-eggshell dark:hover:text-eggshell transition-all duration-300 cursor-default hover:scale-110 hover:-translate-y-1"
+                      style={{ animationDelay: `${index * 50}ms` }}
+                    >
+                      {skill}
+                    </span>
+                  ))}
+                </div>
               </div>
 
               {/* Scroll indicator */}
@@ -345,14 +358,10 @@ const HeroAboutSection = () => {
             </div>
           </div>
 
-          {/* Right: About Content */}
-          <div className="relative bg-background/95 backdrop-blur-sm rounded-[5px] shadow-[0_2px_8px_rgba(61,64,91,0.08)] dark:shadow-[0_2px_12px_rgba(0,0,0,0.3)] border border-twilight/8 dark:border-eggshell/8 overflow-hidden flex flex-col">
+          {/* Right: About Content (2/3 width) */}
+          <div className="relative bg-background/95 backdrop-blur-sm rounded-[5px] shadow-[0_2px_8px_rgba(61,64,91,0.08)] dark:shadow-[0_2px_12px_rgba(0,0,0,0.3)] border border-twilight/8 dark:border-eggshell/8 overflow-hidden flex flex-col lg:col-span-2">
             <InteractiveGridDots />
             <div className="relative z-10 p-6 md:p-8 flex-1 flex flex-col">
-              <h2 className="text-2xl md:text-3xl font-bold text-twilight dark:text-eggshell mb-4 opacity-0 animate-fade-in">
-                About <span className="text-burnt-peach">Me</span>
-              </h2>
-
               {/* Profile mini */}
               <div className="flex items-center gap-4 mb-4 opacity-0 animate-fade-in-left delay-100">
                 <div className="w-16 h-16 rounded-full bg-gradient-to-br from-burnt-peach to-muted-teal flex items-center justify-center animate-morph-fast shadow-lg flex-shrink-0">
@@ -377,20 +386,28 @@ const HeroAboutSection = () => {
                 </p>
               </div>
 
-              {/* Skills */}
-              <div className="mt-4 opacity-0 animate-fade-in delay-300">
-                <h3 className="text-sm font-semibold text-twilight dark:text-eggshell mb-2">Skills &amp; Technologies</h3>
-                <div className="flex flex-wrap gap-2">
-                  {skills.map((skill, index) => (
-                    <span
-                      key={skill}
-                      className="px-3 py-1.5 bg-twilight/5 dark:bg-eggshell/10 text-twilight dark:text-eggshell rounded-full text-xs font-medium hover:bg-muted-teal dark:hover:bg-muted-teal hover:text-eggshell dark:hover:text-eggshell transition-all duration-300 cursor-default hover:scale-110 hover:-translate-y-1"
-                      style={{ animationDelay: `${index * 50}ms` }}
-                    >
-                      {skill}
-                    </span>
-                  ))}
-                </div>
+              {/* CTA Buttons (moved from left container) */}
+              <div className="flex flex-wrap justify-center gap-2 md:gap-3 mt-4 opacity-0 animate-fade-in delay-300">
+                <Button
+                  asChild
+                  className="bg-burnt-peach hover:bg-burnt-peach/90 text-eggshell px-4 py-3 md:px-6 md:py-5 text-xs md:text-sm rounded-sm animate-pulse-glow hover:scale-105 transition-transform"
+                >
+                  <a href="#experience">View Work Experience</a>
+                </Button>
+                <Button
+                  asChild
+                  variant="outline"
+                  className="border-twilight dark:border-eggshell text-twilight dark:text-eggshell hover:bg-twilight hover:text-eggshell dark:hover:bg-eggshell dark:hover:text-twilight px-4 py-3 md:px-6 md:py-5 text-xs md:text-sm rounded-sm hover:scale-105 transition-transform"
+                >
+                  <a href="#contact">Get in Touch</a>
+                </Button>
+              </div>
+
+              {/* Scroll indicator (same as left container) */}
+              <div className="mt-3 md:mt-5 opacity-0 animate-fade-in delay-500">
+                <a href="#projects" className="inline-flex flex-col items-center group w-full justify-center">
+                  <ChevronDown className="w-6 h-6 text-burnt-peach dark:text-muted-teal animate-bounce group-hover:animate-none group-hover:translate-y-1 transition-all" />
+                </a>
               </div>
             </div>
           </div>
