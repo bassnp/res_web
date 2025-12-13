@@ -83,6 +83,23 @@ html {
 .delay-700 { animation-delay: 700ms; }
 .delay-800 { animation-delay: 800ms; }
 
+/* Synchronized hero arrow bounce animation 
+ * Animation runs continuously on parent wrapper
+ * Hover only affects child transform, keeping animation in sync
+ */
+.hero-arrow-bounce {
+  animation: bounce-slow 1.2s ease-in-out infinite;
+}
+
+@keyframes bounce-slow {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-25%);
+  }
+}
+
 /* Gradient text */
 .gradient-text {
   background: linear-gradient(135deg, #e07a5f 0%, #81b29a 50%, #3d405b 100%);

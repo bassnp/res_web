@@ -6,7 +6,7 @@
         "dev": "next dev --hostname 0.0.0.0 --port 3003",
         "dev:no-reload": "next dev --hostname 0.0.0.0 --port 3003",
         "dev:webpack": "next dev --hostname 0.0.0.0 --port 3003",
-        "build": "next build",
+        "build": "node public/sync_collage_images.js && next build",
         "start": "next start"
     },
     "dependencies": {
@@ -64,7 +64,9 @@
     },
     "devDependencies": {
         "autoprefixer": "^10.4.19",
+        "canvas": "^3.2.0",
         "globals": "^16.2.0",
+        "pdfjs-dist": "^5.4.449",
         "postcss": "^8",
         "tailwindcss": "^3.4.1"
     }

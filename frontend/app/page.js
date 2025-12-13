@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useTheme } from 'next-themes';
-import { Briefcase, User, Mail, Github, ChevronDown, ExternalLink, Sun, Moon, Code } from 'lucide-react';
+import { Briefcase, User, Mail, Github, ChevronDown, ExternalLink, Sun, Moon, Code, FileText, Camera } from 'lucide-react';
 import { useHeaderVisibility } from '@/hooks/use-header-visibility';
 import { InfoDialog, InfoButton } from '@/components/fit-check/InfoDialog';
 import { Button } from '@/components/ui/button';
@@ -11,6 +11,99 @@ import InteractiveGridDots from '@/components/InteractiveGridDots';
 import CardGridDots from '@/components/CardGridDots';
 import HeroGridDots from '@/components/HeroGridDots';
 import FitCheckSection from '@/components/FitCheckSection';
+
+// ============================================
+// PERSONAL COLLAGE IMAGE PATHS
+// Fallback array - actual images loaded dynamically from manifest
+// ============================================
+const FALLBACK_COLLAGE_IMAGES = [
+  '/resources/personal_collage/0.jpg',
+];
+
+// ============================================
+// IMAGE CAROUSEL COMPONENT
+// Rotating carousel that cycles through images
+// with smooth fade transitions. Loads images
+// dynamically from manifest.json (alphanumerically sorted)
+// ============================================
+const ImageCarousel = ({ interval = 4000 }) => {
+  const [images, setImages] = useState(FALLBACK_COLLAGE_IMAGES);
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [isTransitioning, setIsTransitioning] = useState(false);
+
+  /**
+   * Fetch image list from manifest on mount.
+   * Falls back to hardcoded list if fetch fails.
+   */
+  useEffect(() => {
+    fetch('/resources/collage_manifest.json')
+      .then(res => res.json())
+      .then(data => {
+        if (data.images && data.images.length > 0) {
+          setImages(data.images);
+        }
+      })
+      .catch(() => {
+        // Use fallback images if manifest fails to load
+        console.warn('Failed to load collage manifest, using fallback images');
+      });
+  }, []);
+
+  /**
+   * Auto-advance to next image with fade transition.
+   * Uses a brief transition state for smooth crossfade effect.
+   */
+  useEffect(() => {
+    if (images.length <= 1) return;
+    
+    const timer = setInterval(() => {
+      setIsTransitioning(true);
+      // Brief delay for fade-out before switching image
+      setTimeout(() => {
+        setCurrentIndex((prev) => (prev + 1) % images.length);
+        setIsTransitioning(false);
+      }, 300);
+    }, interval);
+
+    return () => clearInterval(timer);
+  }, [images.length, interval]);
+
+  return (
+    <div className="relative w-full h-full overflow-hidden rounded-[5px]">
+      {/* Current image with fade transition */}
+      <img
+        src={images[currentIndex]}
+        alt={`Personal photo ${currentIndex + 1}`}
+        className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-300 ${
+          isTransitioning ? 'opacity-0' : 'opacity-100'
+        }`}
+      />
+      {/* Image indicator dots - only show if more than 1 image */}
+      {images.length > 1 && (
+        <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-1.5">
+          {images.map((_, idx) => (
+            <button
+              key={idx}
+              onClick={() => {
+                setIsTransitioning(true);
+                setTimeout(() => {
+                  setCurrentIndex(idx);
+                  setIsTransitioning(false);
+                }, 300);
+              }}
+              className={`w-2 h-2 rounded-full transition-all duration-300 ${
+                idx === currentIndex
+                  ? 'bg-burnt-peach scale-125'
+                  : 'bg-eggshell/60 hover:bg-eggshell/80'
+              }`}
+              aria-label={`Go to image ${idx + 1}`}
+            />
+          ))}
+        </div>
+      )}
+    </div>
+  );
+};
 
 // ============================================
 // HEADER COMPONENT
@@ -222,28 +315,89 @@ const AnimatedShapes = () => {
 };
 
 // ============================================
+// ANIMATION STATE MACHINE CONSTANTS
+// ============================================
+
+/**
+ * Animation states for the multi-phase typing effect.
+ * Flow: LEFT_TYPING -> LEFT_PAUSED -> LEFT_DELETING -> TRANSLATING_RIGHT
+ *       -> RIGHT_TYPING -> RIGHT_PAUSED -> RIGHT_DELETING -> TRANSLATING_LEFT -> (loop)
+ */
+const ANIMATION_STATES = {
+  LEFT_TYPING: 'LEFT_TYPING',           // Typing "Software Engineer" on left
+  LEFT_PAUSED: 'LEFT_PAUSED',           // Pause after completing left text
+  LEFT_DELETING: 'LEFT_DELETING',       // Deleting left text
+  TRANSLATING_RIGHT: 'TRANSLATING_RIGHT', // Cursor slides to right container
+  RIGHT_TYPING: 'RIGHT_TYPING',         // Typing "Recent Graduate" on right
+  RIGHT_PAUSED: 'RIGHT_PAUSED',         // Pause after completing right text
+  RIGHT_DELETING: 'RIGHT_DELETING',     // Deleting right text
+  TRANSLATING_LEFT: 'TRANSLATING_LEFT', // Cursor slides back to left container
+};
+
+/**
+ * Text content for each animation position.
+ */
+const ANIMATION_TEXTS = {
+  left: 'I\'m Jaden Bruha',
+  right: 'A Technical Engineer',
+};
+
+/**
+ * Timing configurations for animation phases (in milliseconds).
+ * Carefully tuned for smooth, coherent visual flow.
+ */
+const ANIMATION_TIMING = {
+  typeSpeed: 100,           // Delay between typing each character
+  deleteSpeed: 80,          // Delay between deleting each character
+  pauseAfterType: 3000,     // Hold time after text is fully typed
+  pauseAfterDelete: 400,    // Brief pause after text is fully deleted
+  translateDuration: 600,   // Duration of cursor translation animation
+  cursorBlinkSpeed: 500,    // Cursor blink interval during pauses
+};
+
+// ============================================
 // HERO + ABOUT SECTION (Combined)
 // ============================================
 const HeroAboutSection = () => {
+  // Animation state machine
+  const [animationState, setAnimationState] = useState(ANIMATION_STATES.LEFT_TYPING);
   const [typedText, setTypedText] = useState('');
   const [showCursor, setShowCursor] = useState(true);
-  const [isPaused, setIsPaused] = useState(false);
-  const fullText = 'Software Engineer';
+
+  // Derived states for easier conditionals
+  const isLeftPosition = [
+    ANIMATION_STATES.LEFT_TYPING,
+    ANIMATION_STATES.LEFT_PAUSED,
+    ANIMATION_STATES.LEFT_DELETING,
+  ].includes(animationState);
+  
+  const isTranslating = [
+    ANIMATION_STATES.TRANSLATING_RIGHT,
+    ANIMATION_STATES.TRANSLATING_LEFT,
+  ].includes(animationState);
+  
+  const isPaused = [
+    ANIMATION_STATES.LEFT_PAUSED,
+    ANIMATION_STATES.RIGHT_PAUSED,
+  ].includes(animationState);
 
   const skills = [
     'JavaScript', 'React', 'Next.js', 'Python', 'Node.js', 'TypeScript',
     'PostgreSQL', 'Git', 'AWS', 'Docker', 'TailwindCSS'
   ];
 
-  // Cursor flashing effect during pause states
+  /**
+   * Cursor blinking effect during pause and translation states.
+   * Cursor remains solid during active typing/deleting.
+   */
   useEffect(() => {
     let cursorInterval;
     
-    if (isPaused) {
+    if (isPaused || isTranslating) {
       setShowCursor(true);
       cursorInterval = setInterval(() => {
         setShowCursor(prev => !prev);
-      }, 500);
+      }, ANIMATION_TIMING.cursorBlinkSpeed);
     } else {
       setShowCursor(true);
     }
@@ -251,77 +405,204 @@ const HeroAboutSection = () => {
     return () => {
       if (cursorInterval) clearInterval(cursorInterval);
     };
-  }, [isPaused]);
+  }, [isPaused, isTranslating]);
 
+  /**
+   * Main animation state machine effect.
+   * Handles all state transitions with precise timing.
+   */
   useEffect(() => {
-    let index = 0;
-    let isDeleting = false;
-    let isPausedLocal = false;
     let timer;
+    let charIndex = 0;
 
-    const typewriterCycle = () => {
-      if (!isDeleting && !isPausedLocal && index <= fullText.length) {
-        setTypedText(fullText.slice(0, index));
-        index++;
-        timer = setTimeout(typewriterCycle, 100);
-        
-        if (index > fullText.length) {
-          isPausedLocal = true;
-          setIsPaused(true);
-          timer = setTimeout(() => {
-            isPausedLocal = false;
-            setIsPaused(false);
-            isDeleting = true;
-            typewriterCycle();
-          }, 3000);
-        }
+    /**
+     * Get the target text based on current animation state.
+     */
+    const getCurrentText = () => {
+      if ([ANIMATION_STATES.LEFT_TYPING, ANIMATION_STATES.LEFT_PAUSED, ANIMATION_STATES.LEFT_DELETING].includes(animationState)) {
+        return ANIMATION_TEXTS.left;
       }
-      else if (isDeleting && !isPausedLocal && index >= 0) {
-        setTypedText(fullText.slice(0, index));
-        index--;
-        timer = setTimeout(typewriterCycle, 80);
-        
-        if (index < 0) {
-          isDeleting = false;
-          isPausedLocal = true;
-          setIsPaused(true);
-          timer = setTimeout(() => {
-            isPausedLocal = false;
-            setIsPaused(false);
-            index = 0;
-            typewriterCycle();
-          }, 1000);
-        }
+      return ANIMATION_TEXTS.right;
+    };
+
+    /**
+     * Handle typing animation for a given text.
+     * Transitions to nextState immediately after typing completes.
+     * @param {string} text - Text to type
+     * @param {string} nextState - State to transition to after typing completes
+     */
+    const typeText = (text, nextState) => {
+      if (charIndex <= text.length) {
+        setTypedText(text.slice(0, charIndex));
+        charIndex++;
+        timer = setTimeout(() => typeText(text, nextState), ANIMATION_TIMING.typeSpeed);
+      } else {
+        // Typing complete, immediately transition to pause state
+        setAnimationState(nextState);
       }
     };
 
-    typewriterCycle();
+    /**
+     * Handle delete animation for current text.
+     * Transitions to nextState immediately after deletion completes.
+     * @param {string} text - Text being deleted
+     * @param {string} nextState - State to transition to after deletion completes
+     */
+    const deleteText = (text, nextState) => {
+      if (charIndex >= 0) {
+        setTypedText(text.slice(0, charIndex));
+        charIndex--;
+        timer = setTimeout(() => deleteText(text, nextState), ANIMATION_TIMING.deleteSpeed);
+      } else {
+        // Deletion complete, transition after brief pause for visual clarity
+        timer = setTimeout(() => {
+          setAnimationState(nextState);
+        }, ANIMATION_TIMING.pauseAfterDelete);
+      }
+    };
+
+    // State machine logic - each state handles its own timing
+    switch (animationState) {
+      case ANIMATION_STATES.LEFT_TYPING:
+        // Start typing "Software Engineer" from current position
+        charIndex = typedText.length;
+        typeText(ANIMATION_TEXTS.left, ANIMATION_STATES.LEFT_PAUSED);
+        break;
+
+      case ANIMATION_STATES.LEFT_PAUSED:
+        // Pause with blinking cursor after text is fully typed
+        // The pauseAfterType delay happens HERE so cursor blinks are visible
+        timer = setTimeout(() => {
+          setAnimationState(ANIMATION_STATES.LEFT_DELETING);
+        }, ANIMATION_TIMING.pauseAfterType);
+        break;
+
+      case ANIMATION_STATES.LEFT_DELETING:
+        // Delete "Software Engineer" character by character
+        charIndex = typedText.length;
+        deleteText(ANIMATION_TEXTS.left, ANIMATION_STATES.TRANSLATING_RIGHT);
+        break;
+
+      case ANIMATION_STATES.TRANSLATING_RIGHT:
+        // Cursor slides to center of right container
+        // Wait for CSS transition to complete before starting right typing
+        timer = setTimeout(() => {
+          setAnimationState(ANIMATION_STATES.RIGHT_TYPING);
+        }, ANIMATION_TIMING.translateDuration);
+        break;
+
+      case ANIMATION_STATES.RIGHT_TYPING:
+        // Start typing "Recent Graduate"
+        charIndex = typedText.length;
+        typeText(ANIMATION_TEXTS.right, ANIMATION_STATES.RIGHT_PAUSED);
+        break;
+
+      case ANIMATION_STATES.RIGHT_PAUSED:
+        // Pause with blinking cursor after text is fully typed
+        timer = setTimeout(() => {
+          setAnimationState(ANIMATION_STATES.RIGHT_DELETING);
+        }, ANIMATION_TIMING.pauseAfterType);
+        break;
+
+      case ANIMATION_STATES.RIGHT_DELETING:
+        // Delete "Recent Graduate" character by character
+        charIndex = typedText.length;
+        deleteText(ANIMATION_TEXTS.right, ANIMATION_STATES.TRANSLATING_LEFT);
+        break;
+
+      case ANIMATION_STATES.TRANSLATING_LEFT:
+        // Cursor slides back to left container
+        // Wait for CSS transition to complete, then restart the full cycle
+        timer = setTimeout(() => {
+          setAnimationState(ANIMATION_STATES.LEFT_TYPING);
+        }, ANIMATION_TIMING.translateDuration);
+        break;
+
+      default:
+        break;
+    }
 
     return () => {
       if (timer) clearTimeout(timer);
     };
-  }, []);
+  }, [animationState]);
+
+  /**
+   * Calculate the transform style for cursor translation.
+   * Left position: centered above left container (1/3 width element at x=0)
+   * Right position: centered above right container (2/3 width)
+   * 
+   * CSS Grid Layout: [1/3 left] [gap-4] [2/3 right]
+   * 
+   * Math for right-center positioning:
+   * - Element width: 1/3 of container (33.33%)
+   * - Right container center: 33.33% + gap + 33.33% = 66.67% + gap/2
+   * - To center element at 66.67%: left edge at 50%
+   * - TranslateX: 50% / 33.33% = 150% of element width
+   * - Plus half the gap (0.5rem) for precise centering
+   * 
+   * Note: Translation only applies on lg+ screens. On mobile/tablet, containers
+   * stack vertically so animation stays centered for both states.
+   */
+  const getTransformStyle = () => {
+    const isRightPosition = [
+      ANIMATION_STATES.TRANSLATING_RIGHT,
+      ANIMATION_STATES.RIGHT_TYPING,
+      ANIMATION_STATES.RIGHT_PAUSED,
+      ANIMATION_STATES.RIGHT_DELETING,
+    ].includes(animationState);
+
+    // Only apply transform via inline style on large screens
+    // Use window.innerWidth check for responsive behavior
+    if (typeof window !== 'undefined' && window.innerWidth < 1024) {
+      // Mobile/tablet: no translation
+      return {
+        transform: 'translateX(0)',
+        transition: `transform ${ANIMATION_TIMING.translateDuration}ms cubic-bezier(0.4, 0, 0.2, 1)`,
+      };
+    }
+
+    return {
+      // Desktop: TranslateX(150%) centers the 1/3-width element above the 2/3-width right container
+      // +0.5rem accounts for half the grid gap to achieve true center alignment
+      transform: isRightPosition 
+        ? 'translateX(calc(150% + 0.5rem))' // Center above right container on desktop only
+        : 'translateX(0)',
+      transition: `transform ${ANIMATION_TIMING.translateDuration}ms cubic-bezier(0.4, 0, 0.2, 1)`,
+    };
+  };
 
   return (
     <section id="about" className="flex items-center pt-20 pb-4">
       <div className="container mx-auto px-6">
-        {/* Typing animation - centered above left container, constrained to 1/3 width */}
-        <div className="lg:w-1/3 mb-4">
-          <h1 className="text-xl md:text-3xl font-bold text-twilight dark:text-eggshell opacity-0 animate-fade-in delay-100 text-center">
-            <span className="gradient-text">{typedText}</span>
-            <span 
-              className="inline-block w-0.5 h-5 md:h-8 bg-burnt-peach ml-1 transition-opacity duration-100"
-              style={{ opacity: showCursor ? 1 : 0 }}
-            />
-          </h1>
+        {/* 
+          Typing animation with translation capability.
+          Wrapper spans full grid width to allow smooth translation.
+          Inner container constrains text and handles positioning.
+          Uses overflow-x-hidden to clip horizontal overflow during translation
+          while preserving vertical visibility for descenders and cursor.
+        */}
+        <div className="w-full mb-4 overflow-x-hidden pb-1">
+          <div 
+            className="lg:w-1/3"
+            style={getTransformStyle()}
+          >
+            <h1 className="text-xl md:text-3xl font-bold text-twilight dark:text-eggshell opacity-0 animate-fade-in delay-100 text-center leading-relaxed">
+              <span className="gradient-text">{typedText}</span>
+              <span 
+                className="inline-block w-0.5 h-5 md:h-8 bg-burnt-peach ml-1 transition-opacity duration-100"
+                style={{ opacity: showCursor ? 1 : 0 }}
+              />
+            </h1>
+          </div>
         </div>
 
         {/* Grid: 1/3 left container, 2/3 right container */}
         <div className="grid lg:grid-cols-3 gap-4 items-stretch">
           {/* Left: Hero Content with Grid Dots (1/3 width) */}
-          <div className="relative bg-background/95 backdrop-blur-sm rounded-[5px] shadow-[0_2px_8px_rgba(61,64,91,0.08)] dark:shadow-[0_2px_12px_rgba(0,0,0,0.3)] border border-twilight/8 dark:border-eggshell/8 overflow-hidden min-h-0 md:min-h-[300px] flex flex-col justify-center lg:col-span-1">
+          <div className="relative bg-background/95 backdrop-blur-sm rounded-[5px] shadow-[0_2px_8px_rgba(61,64,91,0.08)] dark:shadow-[0_2px_12px_rgba(0,0,0,0.3)] border border-twilight/8 dark:border-eggshell/8 overflow-hidden min-h-0 md:min-h-[300px] flex flex-col lg:col-span-1">
             <HeroGridDots />
-            <div className="relative z-10 px-3 py-2 md:px-8 md:py-5 text-center">
+            <div className="relative z-10 px-3 py-2 md:px-8 md:py-5 text-center flex-1 flex flex-col justify-center">
               {/* Profile Picture Placeholder (3:4 aspect ratio) */}
               <div className="flex justify-center mb-4 opacity-0 animate-fade-in delay-200">
                 <div 
@@ -348,13 +629,14 @@ const HeroAboutSection = () => {
                   ))}
                 </div>
               </div>
-
-              {/* Scroll indicator */}
-              <div className="mt-3 md:mt-5 opacity-0 animate-fade-in delay-500">
-                <a href="#projects" className="inline-flex flex-col items-center group">
-                  <ChevronDown className="w-6 h-6 text-burnt-peach dark:text-muted-teal animate-bounce group-hover:animate-none group-hover:translate-y-1 transition-all" />
-                </a>
-              </div>
+            </div>
+            {/* Scroll indicator - docked to bottom independently */}
+            <div className="relative z-10 pb-2 md:pb-5 opacity-0 animate-fade-in delay-500">
+              <a href="#fit-check" className="inline-flex flex-col items-center group w-full justify-center">
+                <div className="hero-arrow-bounce">
+                  <ChevronDown className="w-6 h-6 text-burnt-peach dark:text-muted-teal group-hover:translate-y-1 transition-transform" />
+                </div>
+              </a>
             </div>
           </div>
 
@@ -362,37 +644,79 @@ const HeroAboutSection = () => {
           <div className="relative bg-background/95 backdrop-blur-sm rounded-[5px] shadow-[0_2px_8px_rgba(61,64,91,0.08)] dark:shadow-[0_2px_12px_rgba(0,0,0,0.3)] border border-twilight/8 dark:border-eggshell/8 overflow-hidden flex flex-col lg:col-span-2">
             <InteractiveGridDots />
             <div className="relative z-10 p-6 md:p-8 flex-1 flex flex-col">
-              {/* Profile mini */}
+              {/* Profile mini - displays school logo and degree information */}
               <div className="flex items-center gap-4 mb-4 opacity-0 animate-fade-in-left delay-100">
-                <div className="w-16 h-16 rounded-full bg-gradient-to-br from-burnt-peach to-muted-teal flex items-center justify-center animate-morph-fast shadow-lg flex-shrink-0">
-                  <User className="w-8 h-8 text-eggshell" />
+                <div className="w-16 h-16 rounded-[5px] overflow-hidden shadow-lg flex-shrink-0 bg-eggshell dark:bg-twilight/50">
+                  <img
+                    src="/resources/school_logo.png"
+                    alt="California State University, Sacramento Logo"
+                    className="w-full h-full object-contain p-1"
+                  />
                 </div>
                 <div>
-                  <h3 className="text-lg font-semibold text-twilight dark:text-eggshell">Software Engineer</h3>
-                  <p className="text-twilight/60 dark:text-eggshell/60 text-sm">Recent Graduate • Hobbyist Developer</p>
+                  <h3 className="text-lg font-semibold text-twilight dark:text-eggshell">Bachelor of Science Degree in Computer Science</h3>
+                  <p className="text-twilight/60 dark:text-eggshell/60 text-sm">California State University, Sacramento • 2025 Winter Graduate</p>
                 </div>
               </div>
 
               {/* Bio */}
-              <div className="opacity-0 animate-fade-in-right delay-200 flex-1">
+              <div className="opacity-0 animate-fade-in-right delay-200">
                 <p className="text-twilight/80 dark:text-eggshell/80 leading-relaxed mb-4 text-sm">
-                  As a recent graduate with a passion for software development, I love building 
-                  projects that solve real problems. My journey started as a hobbyist, and I&apos;ve 
-                  grown into a developer who values clean code and elegant solutions.
-                </p>
-                <p className="text-twilight/80 dark:text-eggshell/80 leading-relaxed text-sm">
-                  When I&apos;m not coding, you&apos;ll find me exploring new technologies, contributing 
-                  to open-source projects, or learning about the latest trends in software engineering.
+                  <span className="font-bold text-muted-teal">TLDR; I am Jaden Bruha, and I'm a very nerdy engineer.</span> <br></br> I have a passion for building  anything and everything from software, computers to serve my software, AI agents, and motorcycles. My journey started at a young age as a hobbyist, and I've grown into a full stack developer striving for elegant solutions.
                 </p>
               </div>
 
-              {/* CTA Buttons (moved from left container) */}
-              <div className="flex flex-wrap justify-center gap-2 md:gap-3 mt-4 opacity-0 animate-fade-in delay-300">
+              {/* Showcase Containers - Personal Collage and Transcript (compact layout, 3:2 ratio) */}
+              <div className="grid grid-cols-5 gap-3 mb-4 opacity-0 animate-fade-in delay-250 max-w-lg mx-auto">
+                {/* Get to Know Me - Personal Collage Container (3 columns, landscape aspect) */}
+                <div className="col-span-3 relative bg-twilight/5 dark:bg-eggshell/5 rounded-[5px] border border-twilight/10 dark:border-eggshell/10 overflow-hidden group hover:border-muted-teal/50 transition-all duration-300">
+                  <div className="p-2">
+                    <div className="flex items-center gap-1.5 mb-2">
+                      <Camera className="w-3.5 h-3.5 text-muted-teal" />
+                      <h4 className="text-xs font-semibold text-twilight dark:text-eggshell">Get to know me!</h4>
+                    </div>
+                    {/* Image Carousel - wider landscape aspect ratio */}
+                    <div className="relative aspect-[11/9] rounded-[3px] overflow-hidden border border-twilight/10 dark:border-eggshell/10">
+                      <ImageCarousel interval={4000} />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Official Transcript Container (2 columns) */}
+                <a
+                  href="/resources/SSR_TSRPT.pdf"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="col-span-2 relative bg-twilight/5 dark:bg-eggshell/5 rounded-[5px] border border-twilight/10 dark:border-eggshell/10 overflow-hidden group hover:border-burnt-peach/50 transition-all duration-300 hover:shadow-md"
+                >
+                  <div className="p-2">
+                    <div className="flex items-center gap-1.5 mb-2">
+                      <FileText className="w-3.5 h-3.5 text-burnt-peach" />
+                      <h4 className="text-xs font-semibold text-twilight dark:text-eggshell">My Transcript</h4>
+                    </div>
+                    {/* PDF Thumbnail Preview */}
+                    <div className="relative aspect-[4/5] bg-white dark:bg-twilight/30 rounded-[3px] border border-twilight/10 dark:border-eggshell/10 overflow-hidden">
+                      <img
+                        src="/resources/SSR_TSRPT_thumb.jpg"
+                        alt="Transcript Preview"
+                        className="w-full h-full object-cover object-top"
+                      />
+                      {/* Hover overlay */}
+                      <div className="absolute inset-0 bg-burnt-peach/0 group-hover:bg-burnt-peach/20 transition-colors duration-300 flex items-center justify-center">
+                        <ExternalLink className="w-4 h-4 text-burnt-peach opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                      </div>
+                    </div>
+                  </div>
+                </a>
+              </div>
+
+              {/* CTA Buttons */}
+              <div className="flex flex-wrap justify-center gap-2 md:gap-3 mt-auto opacity-0 animate-fade-in delay-300">
                 <Button
                   asChild
                   className="bg-burnt-peach hover:bg-burnt-peach/90 text-eggshell px-4 py-3 md:px-6 md:py-5 text-xs md:text-sm rounded-sm animate-pulse-glow hover:scale-105 transition-transform"
                 >
-                  <a href="#experience">View Work Experience</a>
+                  <a href="#experience">View Experience</a>
                 </Button>
                 <Button
                   asChild
@@ -402,13 +726,14 @@ const HeroAboutSection = () => {
                   <a href="#contact">Get in Touch</a>
                 </Button>
               </div>
-
-              {/* Scroll indicator (same as left container) */}
-              <div className="mt-3 md:mt-5 opacity-0 animate-fade-in delay-500">
-                <a href="#projects" className="inline-flex flex-col items-center group w-full justify-center">
-                  <ChevronDown className="w-6 h-6 text-burnt-peach dark:text-muted-teal animate-bounce group-hover:animate-none group-hover:translate-y-1 transition-all" />
-                </a>
-              </div>
+            </div>
+            {/* Scroll indicator - docked to bottom independently */}
+            <div className="relative z-10 pb-2 md:pb-5 opacity-0 animate-fade-in delay-500">
+              <a href="#projects" className="inline-flex flex-col items-center group w-full justify-center">
+                <div className="hero-arrow-bounce">
+                  <ChevronDown className="w-6 h-6 text-burnt-peach dark:text-muted-teal group-hover:translate-y-1 transition-transform" />
+                </div>
+              </a>
             </div>
           </div>
         </div>

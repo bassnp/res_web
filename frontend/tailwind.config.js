@@ -141,6 +141,10 @@ module.exports = {
                 'bounce-soft': {
                     '0%, 100%': { transform: 'translateY(0)' },
                     '50%': { transform: 'translateY(-5px)' }
+                },
+                'bounce-slow': {
+                    '0%, 100%': { transform: 'translateY(0)' },
+                    '50%': { transform: 'translateY(-25%)' }
                 }
             },
             animation: {
@@ -162,7 +166,8 @@ module.exports = {
                 'morph': 'morph 10s ease-in-out infinite',
                 'morph-fast': 'morph 3.75s ease-in-out infinite',
                 'shimmer': 'shimmer 2s linear infinite',
-                'bounce-soft': 'bounce-soft 2s ease-in-out infinite'
+                'bounce-soft': 'bounce-soft 2s ease-in-out infinite',
+                'bounce-slow': 'bounce-slow 1.2s ease-in-out infinite'
             }
         }
     },
