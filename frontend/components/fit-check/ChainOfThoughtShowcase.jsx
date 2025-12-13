@@ -95,7 +95,7 @@ function FloatingThoughtCard({ thought, isVisible, position, delay }) {
       className={cn(
         "absolute w-[140px] showcase-thought-card",
         "bg-white/90 dark:bg-twilight/60 backdrop-blur-sm",
-        "rounded-lg border shadow-lg",
+        "rounded-sm border shadow-lg",
         colors.border,
         isVisible ? "showcase-card-visible" : "showcase-card-hidden"
       )}
@@ -108,7 +108,7 @@ function FloatingThoughtCard({ thought, isVisible, position, delay }) {
       <div className="p-2.5">
         {/* Header */}
         <div className="flex items-center gap-1.5 mb-1.5">
-          <div className={cn("w-4 h-4 rounded flex items-center justify-center", colors.bg)}>
+          <div className={cn("w-4 h-4 rounded-sm flex items-center justify-center", colors.bg)}>
             <Icon className="w-2.5 h-2.5 text-eggshell" />
           </div>
           <span className={cn("text-[9px] font-semibold uppercase tracking-wide", colors.text)}>
@@ -204,14 +204,14 @@ export function ChainOfThoughtShowcase({ compact = false }) {
               <div
                 key={`compact-${index}`}
                 className={cn(
-                  "flex items-center gap-1.5 px-2 py-1 rounded-lg border transition-all duration-500",
+                  "flex items-center gap-1.5 px-2 py-1 rounded-sm border transition-all duration-500",
                   "bg-white/80 dark:bg-twilight/60 backdrop-blur-sm",
                   borderColor,
                   isVisible ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-2"
                 )}
                 style={{ transitionDelay: `${index * 100}ms` }}
               >
-                <div className={cn("w-4 h-4 rounded flex items-center justify-center flex-shrink-0", bgColor)}>
+                <div className={cn("w-4 h-4 rounded-sm flex items-center justify-center flex-shrink-0", bgColor)}>
                   <Icon className="w-2.5 h-2.5 text-eggshell" />
                 </div>
                 <span className={cn("text-[9px] font-medium truncate max-w-[60px]", textColor)}>

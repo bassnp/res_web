@@ -24,7 +24,7 @@ export function GrowthAreasCard({
 
   return (
     <div className={cn(
-      "relative overflow-hidden rounded-[10px]",
+      "relative overflow-hidden rounded-[5px]",
       "bg-background/95 backdrop-blur-sm glass-card",
       "shadow-[0_2px_8px_rgba(61,64,91,0.08)] dark:shadow-[0_2px_12px_rgba(0,0,0,0.3)]",
       "border border-apricot/30 dark:border-apricot/20",

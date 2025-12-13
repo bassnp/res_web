@@ -92,7 +92,7 @@ export function FitCheckSection() {
 
           {/* Main card container */}
           <div className={cn(
-            "relative bg-background/95 backdrop-blur-sm rounded-[10px]",
+            "relative bg-background/95 backdrop-blur-sm rounded-[5px]",
             "shadow-[0_2px_8px_rgba(61,64,91,0.08)] dark:shadow-[0_2px_12px_rgba(0,0,0,0.3)]",
             "border border-twilight/8 dark:border-eggshell/8 overflow-hidden"
           )}>
@@ -156,7 +156,7 @@ export function FitCheckSection() {
                         variant="outline"
                         onClick={() => setIsReasoningOpen(true)}
                         className={cn(
-                          "group gap-2 px-3 py-2 rounded-lg",
+                          "group gap-2 px-3 py-2 rounded-sm",
                           "border-burnt-peach/30 hover:border-burnt-peach",
                           "text-burnt-peach hover:bg-burnt-peach/10",
                           "transition-all duration-200 hover:scale-[1.02]"
@@ -171,7 +171,7 @@ export function FitCheckSection() {
                       <Button
                         type="button"
                         onClick={handleNewQuery}
-                        className="bg-muted-teal hover:bg-muted-teal/90 text-eggshell px-4 py-2 rounded-lg hover:scale-[1.02] transition-all duration-200"
+                        className="bg-muted-teal hover:bg-muted-teal/90 text-eggshell px-4 py-2 rounded-sm hover:scale-[1.02] transition-all duration-200"
                       >
                         <RefreshCw className="w-4 h-4 mr-2" />
                         Try Another
@@ -226,7 +226,7 @@ export function FitCheckSection() {
           {/* Error State - shown in any phase */}
           {error && (
             <div className="mt-6 animate-fade-in">
-              <div className="bg-red-50 dark:bg-red-950/30 rounded-lg p-4 border border-red-200 dark:border-red-800/50">
+              <div className="bg-red-50 dark:bg-red-950/30 rounded-sm p-4 border border-red-200 dark:border-red-800/50">
                 <div className="flex items-start gap-3">
                   <AlertCircle className="w-5 h-5 text-red-500 flex-shrink-0 mt-0.5" />
                   <div>

@@ -31,7 +31,7 @@ const ModelSelector = () => {
               type="button"
               onClick={() => updateModel(model.id)}
               className={cn(
-                "flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all duration-200",
+                "flex items-center gap-1.5 px-3 py-1.5 rounded-sm text-xs font-medium transition-all duration-200",
                 isSelected
                   ? isReasoning
                     ? "bg-muted-teal/15 border border-muted-teal text-muted-teal"
@@ -108,7 +108,7 @@ export const InputPanel = forwardRef(function InputPanel({
       
       {/* Subtitle - styled with Brutal Honesty theme */}
       <p className="text-twilight dark:text-eggshell text-sm text-center font-medium">
-        Use my <InfoTriggerLink onClick={() => setInfoOpen(true)} /> <span className="text-burnt-peach font-semibold">Non-Biased Deep Researcher</span> to analyze <span className="text-emerald-600 dark:text-emerald-400 font-semibold">my experience for your needs</span>
+        Use my <InfoTriggerLink onClick={() => setInfoOpen(true)} /> <span className="text-burnt-peach font-semibold">Non-Biased Deep Researcher.</span> Check my experience, <span className="text-emerald-600 dark:text-emerald-400 font-semibold">for YOUR needs.</span>
       </p>
       
       <div className="relative">
@@ -166,7 +166,7 @@ export const InputPanel = forwardRef(function InputPanel({
             type="submit"
             disabled={isSubmitDisabled}
             className={cn(
-              "w-full max-w-md py-5 rounded-xl transition-all duration-200",
+              "w-full max-w-md py-5 rounded-sm transition-all duration-200",
               "bg-burnt-peach hover:bg-burnt-peach/90 text-eggshell",
               isValidInput && !isLoading && "animate-pulse-glow hover:scale-[1.02]",
               isSubmitDisabled && "opacity-60 cursor-not-allowed"

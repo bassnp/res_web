@@ -54,7 +54,7 @@ const Select = React.forwardRef(({
         disabled={disabled}
         className={cn(
           "flex w-full items-center justify-between gap-2",
-          "rounded-lg border border-twilight/20 dark:border-eggshell/20",
+          "rounded-sm border border-twilight/20 dark:border-eggshell/20",
           "bg-white/80 dark:bg-twilight/40",
           "px-4 py-3 text-left text-sm",
           "transition-all duration-200",
@@ -103,7 +103,7 @@ const Select = React.forwardRef(({
             "absolute z-50 w-full mt-2",
             "bg-white dark:bg-twilight",
             "border border-twilight/20 dark:border-eggshell/20",
-            "rounded-lg shadow-lg",
+            "rounded-sm shadow-lg",
             "animate-in fade-in-0 zoom-in-95 duration-150",
             "overflow-hidden"
           )}

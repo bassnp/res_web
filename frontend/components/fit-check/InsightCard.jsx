@@ -51,7 +51,7 @@ export function InsightCard({
 
   return (
     <div className={cn(
-      "rounded-lg overflow-hidden",
+      "rounded-sm overflow-hidden",
       "border transition-all duration-200",
       config.borderColor,
       config.bgColor,
@@ -60,7 +60,7 @@ export function InsightCard({
       {/* Header */}
       <div className="flex items-center gap-2 mb-2">
         <div className={cn(
-          "flex items-center justify-center rounded-md flex-shrink-0",
+          "flex items-center justify-center rounded-sm flex-shrink-0",
           compact ? "w-5 h-5" : "w-6 h-6",
           config.iconBg
         )}>
@@ -324,7 +324,7 @@ function QualityDisplay({ data, compact }) {
           {flags.slice(0, 3).map((flag, i) => (
             <span
               key={i}
-              className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] bg-amber-500/10 text-amber-600 dark:text-amber-400"
+              className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-sm text-[10px] bg-amber-500/10 text-amber-600 dark:text-amber-400"
             >
               <AlertTriangle className="w-2.5 h-2.5" />
               {formatFlag(flag)}

@@ -200,7 +200,7 @@ export function SystemPromptDialog({
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               <div className={cn(
-                "w-10 h-10 rounded-xl flex items-center justify-center",
+                "w-10 h-10 rounded-sm flex items-center justify-center",
                 config?.bgColor || "bg-burnt-peach",
                 "shadow-lg"
               )}>
@@ -303,7 +303,7 @@ function PromptContent({ content }) {
 
   return (
     <div className={cn(
-      "rounded-lg overflow-hidden",
+      "rounded-sm overflow-hidden",
       "bg-twilight/[0.03] dark:bg-eggshell/[0.03]",
       "border border-twilight/10 dark:border-eggshell/10"
     )}>

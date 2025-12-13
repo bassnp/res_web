@@ -39,7 +39,7 @@ export function ThinkingPanel({
     <div className={cn(
       "flex flex-col h-full",
       "bg-twilight/5 dark:bg-eggshell/5",
-      "rounded-lg overflow-hidden"
+      "rounded overflow-hidden"
     )}>
       <ChainOfThought
         thoughts={thoughts}

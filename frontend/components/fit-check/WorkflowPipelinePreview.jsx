@@ -236,7 +236,7 @@ export function WorkflowPipelinePreview({ compact = false }) {
                     <div
                       ref={(el) => (phaseRefs.current[index] = el)}
                       className={cn(
-                        "flex items-center gap-2 px-2.5 py-2 rounded-lg transition-all duration-300",
+                        "flex items-center gap-2 px-2.5 py-2 rounded-sm transition-all duration-300",
                         "border",
                         isComplete && "bg-muted-teal/15 border-muted-teal/40",
                         isActive && "bg-burnt-peach/10 border-burnt-peach/30 pipeline-phase-active",
@@ -246,7 +246,7 @@ export function WorkflowPipelinePreview({ compact = false }) {
                       {/* Icon */}
                       <div
                         className={cn(
-                          "w-5 h-5 rounded flex items-center justify-center flex-shrink-0 transition-all duration-300",
+                          "w-5 h-5 rounded-sm flex items-center justify-center flex-shrink-0 transition-all duration-300",
                           isComplete && "bg-muted-teal text-eggshell",
                           isActive && `bg-gradient-to-br ${phase.color} text-eggshell`,
                           isPending && "bg-twilight/10 dark:bg-eggshell/10 text-twilight/30 dark:text-eggshell/30"

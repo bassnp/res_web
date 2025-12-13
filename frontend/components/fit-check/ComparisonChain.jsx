@@ -89,7 +89,7 @@ function StepInsightSummary({ phase, summary }) {
           )}
           {insights.queryType && (
             <span className={cn(
-              "text-[10px] px-1.5 py-0.5 rounded",
+              "text-[10px] px-1.5 py-0.5 rounded-sm",
               "bg-muted-teal/10 text-muted-teal"
             )}>
               {insights.queryType}
@@ -122,7 +122,7 @@ function StepInsightSummary({ phase, summary }) {
         <div className="flex items-center gap-1.5 flex-wrap">
           {insights.qualityTier && (
             <span className={cn(
-              "text-[10px] px-1.5 py-0.5 rounded flex items-center gap-0.5",
+              "text-[10px] px-1.5 py-0.5 rounded-sm flex items-center gap-0.5",
               insights.qualityTier === 'HIGH' ? "bg-muted-teal/10 text-muted-teal" :
               insights.qualityTier === 'MEDIUM' ? "bg-amber-500/10 text-amber-500" :
               "bg-red-500/10 text-red-500"
@@ -151,7 +151,7 @@ function StepInsightSummary({ phase, summary }) {
           )}
           {insights.matchStrength && (
             <span className={cn(
-              "text-[10px] px-1.5 py-0.5 rounded",
+              "text-[10px] px-1.5 py-0.5 rounded-sm",
               insights.matchStrength === 'strong' ? "bg-muted-teal/10 text-muted-teal" :
               insights.matchStrength === 'moderate' ? "bg-amber-500/10 text-amber-500" :
               "bg-red-500/10 text-red-500"
@@ -172,7 +172,7 @@ function StepInsightSummary({ phase, summary }) {
           )}
           {insights.matchPercentage && (
             <span className={cn(
-              "text-[10px] px-1.5 py-0.5 rounded flex items-center gap-0.5",
+              "text-[10px] px-1.5 py-0.5 rounded-sm flex items-center gap-0.5",
               insights.matchPercentage >= 70 ? "bg-muted-teal/10 text-muted-teal" :
               insights.matchPercentage >= 40 ? "bg-amber-500/10 text-amber-500" :
               "bg-red-500/10 text-red-500"
@@ -282,7 +282,7 @@ export function ComparisonChain({
           >
             {/* Step Row */}
             <div className={cn(
-              "flex items-center gap-2 px-3 py-2 rounded-lg",
+              "flex items-center gap-2 px-3 py-2 rounded-sm",
               "border transition-all duration-300",
               step.isComplete 
                 ? "bg-muted-teal/10 border-muted-teal/30" 
@@ -294,7 +294,7 @@ export function ComparisonChain({
             )}>
               {/* Icon Container */}
               <div className={cn(
-                "w-6 h-6 rounded-md flex items-center justify-center flex-shrink-0",
+                "w-6 h-6 rounded-sm flex items-center justify-center flex-shrink-0",
                 "transition-all duration-300",
                 step.isComplete 
                   ? "bg-muted-teal text-eggshell" 

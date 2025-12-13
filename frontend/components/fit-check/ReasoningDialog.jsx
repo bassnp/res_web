@@ -243,7 +243,7 @@ export function ReasoningDialog({
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
                 <div className={cn(
-                  "w-10 h-10 rounded-xl flex items-center justify-center",
+                  "w-10 h-10 rounded-sm flex items-center justify-center",
                   "bg-gradient-to-br from-burnt-peach to-burnt-peach/80",
                   "shadow-lg shadow-burnt-peach/25",
                   "animate-icon-bounce"
@@ -348,7 +348,7 @@ function PhaseSection({
   
   return (
     <div className={cn(
-      "rounded-xl overflow-hidden",
+      "rounded-sm overflow-hidden",
       "border border-twilight/10 dark:border-eggshell/10",
       "bg-white/50 dark:bg-twilight/20",
       "transition-all duration-300 ease-out",
@@ -370,7 +370,7 @@ function PhaseSection({
       >
         {/* Phase Icon */}
         <div className={cn(
-          "w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0",
+          "w-10 h-10 rounded-sm flex items-center justify-center flex-shrink-0",
           config.bgColor,
           "shadow-md"
         )}>
@@ -398,7 +398,7 @@ function PhaseSection({
           <button
             onClick={onViewPrompt}
             className={cn(
-              "flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg",
+              "flex items-center gap-1.5 px-2.5 py-1.5 rounded-sm",
               "hover:bg-twilight/10 dark:hover:bg-eggshell/10",
               "text-twilight/50 dark:text-eggshell/50",
               "hover:text-burnt-peach transition-all duration-200",
@@ -412,7 +412,7 @@ function PhaseSection({
           
           {/* Expand/Collapse */}
           <div className={cn(
-            "p-1 rounded",
+            "p-1 rounded-sm",
             "text-twilight/40 dark:text-eggshell/40",
             "transition-transform duration-300 ease-out",
             isExpanded && "rotate-90"
@@ -621,7 +621,7 @@ function ThoughtItem({ thought, config, phase }) {
   
   return (
     <div className={cn(
-      "rounded-lg p-3",
+      "rounded-sm p-3",
       "bg-white dark:bg-twilight/30",
       "border border-twilight/10 dark:border-eggshell/10",
       "hover:border-twilight/20 dark:hover:border-eggshell/20",
@@ -656,7 +656,7 @@ function ThoughtItem({ thought, config, phase }) {
               <div className="flex items-center gap-2">
                 <span className="text-xs text-twilight/60 dark:text-eggshell/60">Tool:</span>
                 <code className={cn(
-                  "text-xs px-2 py-0.5 rounded font-mono",
+                  "text-xs px-2 py-0.5 rounded-sm font-mono",
                   "bg-burnt-peach/10 text-burnt-peach",
                   "border border-burnt-peach/20"
                 )}>
@@ -695,7 +695,7 @@ function ThoughtItem({ thought, config, phase }) {
                 <div className="flex flex-wrap gap-1.5">
                   {enhancedContent.extractedData.confidence && (
                     <span className={cn(
-                      "inline-flex items-center gap-1 px-2 py-0.5 rounded text-xs",
+                      "inline-flex items-center gap-1 px-2 py-0.5 rounded-sm text-xs",
                       enhancedContent.extractedData.confidence >= 70 ? "bg-muted-teal/10 text-muted-teal" :
                       enhancedContent.extractedData.confidence >= 40 ? "bg-amber-500/10 text-amber-500" :
                       "bg-red-500/10 text-red-500"
@@ -706,7 +706,7 @@ function ThoughtItem({ thought, config, phase }) {
                   )}
                   {enhancedContent.extractedData.tier && (
                     <span className={cn(
-                      "inline-flex items-center gap-1 px-2 py-0.5 rounded text-xs",
+                      "inline-flex items-center gap-1 px-2 py-0.5 rounded-sm text-xs",
                       enhancedContent.extractedData.tier === 'HIGH' ? "bg-muted-teal/10 text-muted-teal" :
                       enhancedContent.extractedData.tier === 'MEDIUM' ? "bg-amber-500/10 text-amber-500" :
                       "bg-red-500/10 text-red-500"
@@ -715,7 +715,7 @@ function ThoughtItem({ thought, config, phase }) {
                     </span>
                   )}
                   {enhancedContent.extractedData.technologies?.slice(0, 4).map((tech, i) => (
-                    <span key={i} className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-xs bg-purple-500/10 text-purple-500">
+                    <span key={i} className="inline-flex items-center gap-1 px-2 py-0.5 rounded-sm text-xs bg-purple-500/10 text-purple-500">
                       <Code2 className="w-3 h-3" />
                       {tech}
                     </span>
@@ -748,7 +748,7 @@ function ThoughtItem({ thought, config, phase }) {
           {/* Expanded data */}
           {isDataExpanded && (
             <div className={cn(
-              "mt-2 p-2 rounded-md",
+              "mt-2 p-2 rounded-sm",
               "bg-twilight/5 dark:bg-eggshell/5",
               "border border-twilight/10 dark:border-eggshell/10",
               "font-mono text-[10px] overflow-x-auto"

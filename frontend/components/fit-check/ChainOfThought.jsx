@@ -340,7 +340,7 @@ function ActiveThinkingEntry({ phase, statusMessage }) {
   return (
     <div className={cn(
       "cot-entry-new",
-      "bg-white/80 dark:bg-twilight/40 rounded-lg p-4",
+      "bg-white/80 dark:bg-twilight/40 rounded-sm p-4",
       "border-l-2",
       config?.borderColor || "border-l-burnt-peach",
       "border border-twilight/10 dark:border-eggshell/10",
@@ -371,8 +371,8 @@ function ActiveThinkingEntry({ phase, statusMessage }) {
           
           {/* Skeleton loader */}
           <div className="space-y-2">
-            <div className="h-3 w-3/4 bg-twilight/10 dark:bg-eggshell/10 rounded animate-pulse" />
-            <div className="h-3 w-1/2 bg-twilight/5 dark:bg-eggshell/5 rounded animate-pulse" />
+            <div className="h-3 w-3/4 bg-twilight/10 dark:bg-eggshell/10 rounded-sm animate-pulse" />
+            <div className="h-3 w-1/2 bg-twilight/5 dark:bg-eggshell/5 rounded-sm animate-pulse" />
           </div>
         </div>
       </div>
@@ -433,7 +433,7 @@ function PhaseStartEntry({ entry, config, isLatest, animationDelay }) {
       style={{ animationDelay: `${animationDelay}ms` }}
     >
       <div className={cn(
-        "flex items-center gap-2 py-2 px-3 rounded-lg",
+        "flex items-center gap-2 py-2 px-3 rounded-sm",
         "bg-twilight/5 dark:bg-eggshell/5",
         "border-l-2",
         config?.borderColor || "border-l-gray-400"
@@ -475,7 +475,7 @@ function PhaseCompleteEntry({ entry, config, isLatest, animationDelay }) {
       style={{ animationDelay: `${animationDelay}ms` }}
     >
       <div className={cn(
-        "bg-white/80 dark:bg-twilight/40 rounded-lg p-3",
+        "bg-white/80 dark:bg-twilight/40 rounded-sm p-3",
         "border-l-2",
         config?.borderColor || "border-l-gray-400",
         "border border-twilight/10 dark:border-eggshell/10"
@@ -539,7 +539,7 @@ function ThoughtEntry({ entry, config, isLatest, animationDelay }) {
       style={{ animationDelay: `${animationDelay}ms` }}
     >
       <div className={cn(
-        "bg-white/80 dark:bg-twilight/40 rounded-lg p-3",
+        "bg-white/80 dark:bg-twilight/40 rounded-sm p-3",
         "border-l-2",
         config?.borderColor || "border-l-gray-400",
         "border border-twilight/10 dark:border-eggshell/10"
@@ -573,7 +573,7 @@ function ThoughtEntry({ entry, config, isLatest, animationDelay }) {
                 <div className="flex items-center gap-2">
                   <span className="text-xs text-twilight/60 dark:text-eggshell/60">Tool:</span>
                   <code className={cn(
-                    "text-xs px-2 py-0.5 rounded font-mono",
+                    "text-xs px-2 py-0.5 rounded-sm font-mono",
                     "bg-burnt-peach/10 text-burnt-peach",
                     "border border-burnt-peach/20"
                   )}>
@@ -612,7 +612,7 @@ function ThoughtEntry({ entry, config, isLatest, animationDelay }) {
                   <div className="flex flex-wrap gap-1.5 mt-1">
                     {enhancedContent.extractedData.confidence && (
                       <span className={cn(
-                        "inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px]",
+                        "inline-flex items-center gap-1 px-1.5 py-0.5 rounded-sm text-[10px]",
                         enhancedContent.extractedData.confidence >= 70 ? "bg-muted-teal/10 text-muted-teal" :
                         enhancedContent.extractedData.confidence >= 40 ? "bg-amber-500/10 text-amber-500" :
                         "bg-red-500/10 text-red-500"
@@ -623,7 +623,7 @@ function ThoughtEntry({ entry, config, isLatest, animationDelay }) {
                     )}
                     {enhancedContent.extractedData.tier && (
                       <span className={cn(
-                        "inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px]",
+                        "inline-flex items-center gap-1 px-1.5 py-0.5 rounded-sm text-[10px]",
                         enhancedContent.extractedData.tier === 'HIGH' ? "bg-muted-teal/10 text-muted-teal" :
                         enhancedContent.extractedData.tier === 'MEDIUM' ? "bg-amber-500/10 text-amber-500" :
                         "bg-red-500/10 text-red-500"
@@ -632,7 +632,7 @@ function ThoughtEntry({ entry, config, isLatest, animationDelay }) {
                       </span>
                     )}
                     {enhancedContent.extractedData.technologies?.slice(0, 3).map((tech, i) => (
-                      <span key={i} className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] bg-purple-500/10 text-purple-500">
+                      <span key={i} className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-sm text-[10px] bg-purple-500/10 text-purple-500">
                         <Code2 className="w-2.5 h-2.5" />
                         {tech}
                       </span>
@@ -683,7 +683,7 @@ function PhaseInsightReveal({ data, phase, summary, compact = false }) {
       {/* Structured insights summary */}
       {hasStructuredInsights && (
         <div className={cn(
-          "rounded-lg p-2 mb-2",
+          "rounded-sm p-2 mb-2",
           "bg-gradient-to-r",
           phase === 'deep_research' ? "from-purple-500/5 to-transparent" :
           phase === 'research_reranker' ? "from-violet-500/5 to-transparent" :
@@ -741,7 +741,7 @@ function PhaseInsightReveal({ data, phase, summary, compact = false }) {
             <ChevronDown className="w-2.5 h-2.5 group-open:rotate-180 transition-transform" />
           </summary>
           <div className={cn(
-            "mt-1.5 p-2 rounded-md",
+            "mt-1.5 p-2 rounded-sm",
             "bg-twilight/5 dark:bg-eggshell/5",
             "border border-twilight/10 dark:border-eggshell/10",
             "font-mono text-[10px] overflow-x-auto"
@@ -781,7 +781,7 @@ function DataReveal({ data, phase, compact = false }) {
         <ChevronDown className="w-3 h-3 group-open:rotate-180 transition-transform" />
       </summary>
       <div className={cn(
-        "mt-2 p-2 rounded-md",
+        "mt-2 p-2 rounded-sm",
         "bg-twilight/5 dark:bg-eggshell/5",
         "border border-twilight/10 dark:border-eggshell/10",
         "font-mono text-xs overflow-x-auto"

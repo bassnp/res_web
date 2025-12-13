@@ -68,9 +68,9 @@ export function ThinkingTimeline({
               </div>
               
               {/* Placeholder card */}
-              <div className="bg-white/50 dark:bg-twilight/30 rounded-lg p-4 border border-dashed border-twilight/20 dark:border-eggshell/20">
-                <div className="h-2 w-24 bg-twilight/10 dark:bg-eggshell/10 rounded" />
-                <div className="h-3 w-full bg-twilight/5 dark:bg-eggshell/5 rounded mt-2" />
+              <div className="bg-white/50 dark:bg-twilight/30 rounded-sm p-4 border border-dashed border-twilight/20 dark:border-eggshell/20">
+                <div className="h-2 w-24 bg-twilight/10 dark:bg-eggshell/10 rounded-sm" />
+                <div className="h-3 w-full bg-twilight/5 dark:bg-eggshell/5 rounded-sm mt-2" />
               </div>
             </div>
           )}
@@ -84,7 +84,7 @@ export function ThinkingTimeline({
       {/* Header with expand/collapse toggle */}
       <button
         onClick={() => setIsExpanded(!isExpanded)}
-        className="w-full flex items-center justify-between p-3 rounded-lg bg-twilight/5 dark:bg-eggshell/5 hover:bg-twilight/10 dark:hover:bg-eggshell/10 transition-colors duration-200 group"
+        className="w-full flex items-center justify-between p-3 rounded-sm bg-twilight/5 dark:bg-eggshell/5 hover:bg-twilight/10 dark:hover:bg-eggshell/10 transition-colors duration-200 group"
         aria-expanded={isExpanded}
         aria-controls="thinking-timeline-content"
       >
@@ -156,9 +156,9 @@ export function ThinkingTimeline({
               </div>
               
               {/* Placeholder card */}
-              <div className="bg-white/50 dark:bg-twilight/30 rounded-lg p-4 border border-dashed border-twilight/20 dark:border-eggshell/20">
-                <div className="h-2 w-24 bg-twilight/10 dark:bg-eggshell/10 rounded" />
-                <div className="h-3 w-full bg-twilight/5 dark:bg-eggshell/5 rounded mt-2" />
+              <div className="bg-white/50 dark:bg-twilight/30 rounded-sm p-4 border border-dashed border-twilight/20 dark:border-eggshell/20">
+                <div className="h-2 w-24 bg-twilight/10 dark:bg-eggshell/10 rounded-sm" />
+                <div className="h-3 w-full bg-twilight/5 dark:bg-eggshell/5 rounded-sm mt-2" />
               </div>
             </div>
           )}

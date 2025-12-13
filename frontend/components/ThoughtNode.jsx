@@ -76,7 +76,7 @@ export function ThoughtNode({ thought, isLast = false, isActive = false }) {
       {/* Content card with phase-specific left border */}
       <div 
         className={cn(
-          "bg-white/80 dark:bg-twilight/40 rounded-lg p-4 border transition-all duration-300",
+          "bg-white/80 dark:bg-twilight/40 rounded-sm p-4 border transition-all duration-300",
           "border-l-2",
           phaseColorClass,
           config.borderColor,
@@ -103,7 +103,7 @@ export function ThoughtNode({ thought, isLast = false, isActive = false }) {
           <div className="space-y-1">
             <div className="flex items-center gap-2">
               <span className="text-xs text-twilight/60 dark:text-eggshell/60">Tool:</span>
-              <code className="text-xs bg-twilight/10 dark:bg-eggshell/10 px-2 py-0.5 rounded font-mono">
+              <code className="text-xs bg-twilight/10 dark:bg-eggshell/10 px-2 py-0.5 rounded-sm font-mono">
                 {formatToolName(tool)}
               </code>
             </div>

@@ -47,7 +47,7 @@ export function InfoDialog({
             target="_blank"
             rel="noopener noreferrer"
             className={cn(
-              "block p-4 rounded-xl",
+              "block p-4 rounded-sm",
               "bg-twilight/5 dark:bg-eggshell/5",
               "border border-twilight/15 dark:border-eggshell/15",
               "hover:border-emerald-500/40 dark:hover:border-emerald-400/40",
@@ -99,14 +99,14 @@ export function InfoDialog({
 
           {/* AI Disclaimer Card */}
           <div className={cn(
-            "p-4 rounded-xl",
+            "p-4 rounded-sm",
             "bg-amber-500/10 dark:bg-amber-400/10",
             "border border-amber-500/20 dark:border-amber-400/20",
             "transition-all duration-300"
           )}>
             <div className="flex items-start gap-3">
               <div className={cn(
-                "flex-shrink-0 p-2 rounded-lg",
+                "flex-shrink-0 p-2 rounded-sm",
                 "bg-amber-500/10 dark:bg-amber-400/10"
               )}>
                 <AlertTriangle className="w-5 h-5 text-amber-600 dark:text-amber-400" />
@@ -116,8 +116,8 @@ export function InfoDialog({
                   AI-Generated Content
                 </h3>
                 <p className="text-xs text-twilight/70 dark:text-eggshell/70 leading-relaxed">
-                  This website uses Gemini AI Models to analyze and generate insights using an Agentic Framework.
-                  AI generated results are can be incorrect.
+                  Gemini AI models analyze and generate insights using an Agentic Framework.
+                  AI generated results can be incorrect.
                 </p>
               </div>
             </div>
@@ -125,7 +125,7 @@ export function InfoDialog({
 
           {/* Terms Notice */}
           <div className={cn(
-            "flex items-center gap-2 px-3 py-2 rounded-lg",
+            "flex items-center gap-2 px-3 py-2 rounded-sm",
             "bg-twilight/5 dark:bg-eggshell/5",
             "border border-twilight/10 dark:border-eggshell/10"
           )}>
@@ -178,7 +178,7 @@ export function InfoButton({ onClick, className }) {
       type="button"
       onClick={onClick}
       className={cn(
-        "group p-2 rounded-lg",
+        "group p-2 rounded-sm",
         "hover:bg-twilight/10 dark:hover:bg-eggshell/10",
         "transition-all duration-300",
         className
