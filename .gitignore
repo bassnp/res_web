@@ -1,7 +1,7 @@
 # =============================================================================
 # Resume Portfolio - Consolidated Git Ignore
 # =============================================================================
-# Covers both res_web (Next.js) and res_backend (Python/FastAPI)
+# Covers both frontend (Next.js) and backend (Python/FastAPI)
 # =============================================================================
 
 # =============================================================================
@@ -38,7 +38,7 @@ config.local.json
 *~
 
 # =============================================================================
-# NEXT.JS / FRONTEND (res_web)
+# NEXT.JS / FRONTEND (frontend)
 # =============================================================================
 # Dependencies
 node_modules/
@@ -52,8 +52,8 @@ node_modules/
 !.yarn/versions
 
 # Build outputs
-res_web/.next/
-res_web/out/
+frontend/.next/
+frontend/out/
 next-env.d.ts
 *.tsbuildinfo
 /build
@@ -72,7 +72,7 @@ yarn-error.log*
 .vercel
 
 # =============================================================================
-# PYTHON / BACKEND (res_backend)
+# PYTHON / BACKEND (backend)
 # =============================================================================
 # Byte-compiled / optimized
 __pycache__/
@@ -95,7 +95,7 @@ downloads/
 eggs/
 .eggs/
 lib/
-!res_web/lib/
+!frontend/lib/
 lib64/
 parts/
 sdist/
