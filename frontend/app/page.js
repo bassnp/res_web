@@ -774,7 +774,7 @@ const ProjectsSection = () => {
           Featured <span className="text-burnt-peach">Projects</span>
         </h2>
         <p className="text-twilight/60 dark:text-eggshell/60 text-center mb-8 max-w-2xl mx-auto">
-          A selection of projects that showcase my skills and passion for building great software.
+          My top-3 favorite projects to showcase my diverse skills and passion for building.
         </p>
 
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
@@ -851,11 +851,8 @@ const ExperienceSection = () => {
           <InteractiveGridDots />
           <div className="relative z-10">
             <h2 className="text-3xl md:text-4xl font-bold text-twilight dark:text-eggshell mb-3 text-center">
-              Work <span className="text-burnt-peach">Experience</span>
+            <span className="text-burnt-peach">My Experience</span>
             </h2>
-            <p className="text-twilight/60 dark:text-eggshell/60 text-center mb-8 max-w-2xl mx-auto">
-              My professional journey and educational background.
-            </p>
 
             <div className="max-w-3xl mx-auto">
           {experiences.map((exp, index) => (
