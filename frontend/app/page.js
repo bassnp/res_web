@@ -23,13 +23,16 @@ const FALLBACK_COLLAGE_IMAGES = [
 // ============================================
 // IMAGE CAROUSEL COMPONENT
 // Rotating carousel that cycles through images
-// with smooth fade transitions. Loads images
-// dynamically from manifest.json (alphanumerically sorted)
+// with smooth right-to-left slide transitions.
+// Loads images dynamically from manifest.json (alphanumerically sorted)
 // ============================================
+const HERO_SLIDE_DURATION = 500; // Slide animation duration in ms
+
 const ImageCarousel = ({ interval = 4000 }) => {
   const [images, setImages] = useState(FALLBACK_COLLAGE_IMAGES);
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [isTransitioning, setIsTransitioning] = useState(false);
+  const [previousIndex, setPreviousIndex] = useState(null);
+  const [isSliding, setIsSliding] = useState(false);
 
   /**
    * Fetch image list from manifest on mount.
@@ -50,19 +53,39 @@ const ImageCarousel = ({ interval = 4000 }) => {
   }, []);
 
   /**
-   * Auto-advance to next image with fade transition.
-   * Uses a brief transition state for smooth crossfade effect.
+   * Trigger slide transition to a specific index.
+   * New image slides in from right, current slides out to left.
+   */
+  const slideToIndex = (newIndex) => {
+    if (isSliding || newIndex === currentIndex) return;
+    
+    setPreviousIndex(currentIndex);
+    setCurrentIndex(newIndex);
+    setIsSliding(true);
+    
+    setTimeout(() => {
+      setIsSliding(false);
+      setPreviousIndex(null);
+    }, HERO_SLIDE_DURATION);
+  };
+
+  /**
+   * Auto-advance to next image with slide transition.
    */
   useEffect(() => {
     if (images.length <= 1) return;
     
     const timer = setInterval(() => {
-      setIsTransitioning(true);
-      // Brief delay for fade-out before switching image
-      setTimeout(() => {
-        setCurrentIndex((prev) => (prev + 1) % images.length);
-        setIsTransitioning(false);
-      }, 300);
+      setCurrentIndex(prev => {
+        const next = (prev + 1) % images.length;
+        setPreviousIndex(prev);
+        setIsSliding(true);
+        setTimeout(() => {
+          setIsSliding(false);
+          setPreviousIndex(null);
+        }, HERO_SLIDE_DURATION);
+        return next;
+      });
     }, interval);
 
     return () => clearInterval(timer);
@@ -70,28 +93,36 @@ const ImageCarousel = ({ interval = 4000 }) => {
 
   return (
     <div className="relative w-full h-full overflow-hidden rounded-[5px]">
-      {/* Current image with fade transition */}
+      {/* Previous image - slides out to the left */}
+      {previousIndex !== null && (
+        <img
+          src={images[previousIndex]}
+          alt={`Personal photo ${previousIndex + 1}`}
+          className="absolute inset-0 w-full h-full object-cover animate-slide-out-left"
+          style={{
+            animationDuration: `${HERO_SLIDE_DURATION}ms`,
+          }}
+        />
+      )}
+      {/* Current image - slides in from the right (or static if not sliding) */}
       <img
         src={images[currentIndex]}
         alt={`Personal photo ${currentIndex + 1}`}
-        className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-300 ${
-          isTransitioning ? 'opacity-0' : 'opacity-100'
+        className={`absolute inset-0 w-full h-full object-cover ${
+          isSliding && previousIndex !== null ? 'animate-slide-in-right' : ''
         }`}
+        style={{
+          animationDuration: `${HERO_SLIDE_DURATION}ms`,
+        }}
       />
       {/* Image indicator dots - only show if more than 1 image */}
       {images.length > 1 && (
-        <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-1.5">
+        <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-1.5 z-10">
           {images.map((_, idx) => (
             <button
               key={idx}
-              onClick={() => {
-                setIsTransitioning(true);
-                setTimeout(() => {
-                  setCurrentIndex(idx);
-                  setIsTransitioning(false);
-                }, 300);
-              }}
-              className={`w-2 h-2 rounded-full transition-all duration-300 ${
+              onClick={() => slideToIndex(idx)}
+              className={`w-2.5 h-2.5 rounded-full transition-all duration-300 ${
                 idx === currentIndex
                   ? 'bg-burnt-peach scale-125'
                   : 'bg-eggshell/60 hover:bg-eggshell/80'
@@ -820,71 +851,438 @@ const ProjectsSection = () => {
 };
 
 // ============================================
-// EXPERIENCE SECTION
+// TIMELINE SHOWCASE IMAGE CAROUSEL COMPONENT
+// Rotating carousel for timeline showcase cards
+// Uses staggered offsets for graceful cascade effect
+// Smooth right-to-left sliding animation
+// ============================================
+const TOTAL_SHOWCASE_CARDS = 7;
+const CAROUSEL_INTERVAL = 3500; // Base interval in ms
+const SLIDE_DURATION = 500; // Slide animation duration in ms
+
+const TimelineShowcaseCarousel = ({ showcaseId, interval = CAROUSEL_INTERVAL }) => {
+  const [images, setImages] = useState([]);
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [previousIndex, setPreviousIndex] = useState(null);
+  const [isSliding, setIsSliding] = useState(false);
+  const [hasImages, setHasImages] = useState(true);
+  const [isInitialized, setIsInitialized] = useState(false);
+
+  /**
+   * Fetch showcase images from manifest on mount.
+   * Falls back to placeholder if no images available.
+   */
+  useEffect(() => {
+    fetch(`/resources/timeline_images/showcase${showcaseId}/manifest.json`)
+      .then(res => res.json())
+      .then(data => {
+        if (data.images && data.images.length > 0) {
+          setImages(data.images);
+        } else {
+          setHasImages(false);
+        }
+      })
+      .catch(() => {
+        setHasImages(false);
+      });
+  }, [showcaseId]);
+
+  /**
+   * Trigger slide transition to next image.
+   * New image slides in from right, current slides out to left.
+   */
+  const slideToIndex = (newIndex) => {
+    if (isSliding || newIndex === currentIndex) return;
+    
+    setPreviousIndex(currentIndex);
+    setCurrentIndex(newIndex);
+    setIsSliding(true);
+    
+    setTimeout(() => {
+      setIsSliding(false);
+      setPreviousIndex(null);
+    }, SLIDE_DURATION);
+  };
+
+  /**
+   * Auto-advance carousel with slide transition.
+   * Each card has a staggered start offset to create a graceful cascade effect.
+   * Cards are evenly distributed: card 1 starts at 0ms, card 2 at interval/7, etc.
+   * This creates a beautiful wave where image changes ripple across all 7 cards.
+   */
+  useEffect(() => {
+    if (images.length <= 1) return;
+    
+    // Calculate staggered offset: evenly distribute across the interval
+    const staggerOffset = ((showcaseId - 1) / TOTAL_SHOWCASE_CARDS) * interval;
+    
+    // Initial delay before starting the interval (creates the cascade effect)
+    const initialDelay = setTimeout(() => {
+      setIsInitialized(true);
+    }, staggerOffset);
+    
+    return () => clearTimeout(initialDelay);
+  }, [images.length, interval, showcaseId]);
+
+  // Main carousel interval (only starts after initial stagger delay)
+  useEffect(() => {
+    if (images.length <= 1 || !isInitialized) return;
+    
+    // Trigger first transition immediately when initialized
+    const nextIndex = (currentIndex + 1) % images.length;
+    slideToIndex(nextIndex);
+    
+    const timer = setInterval(() => {
+      setCurrentIndex(prev => {
+        const next = (prev + 1) % images.length;
+        setPreviousIndex(prev);
+        setIsSliding(true);
+        setTimeout(() => {
+          setIsSliding(false);
+          setPreviousIndex(null);
+        }, SLIDE_DURATION);
+        return next;
+      });
+    }, interval);
+
+    return () => clearInterval(timer);
+  }, [images.length, interval, isInitialized]);
+
+  // Placeholder when no images are available
+  if (!hasImages || images.length === 0) {
+    return (
+      <div className="relative w-full h-full overflow-hidden rounded-[5px] bg-twilight/10 dark:bg-eggshell/10 flex items-center justify-center border-2 border-dashed border-twilight/20 dark:border-eggshell/20">
+        <div className="text-center p-4">
+          <Camera className="w-8 h-8 mx-auto mb-2 text-twilight/30 dark:text-eggshell/30" />
+          <p className="text-xs text-twilight/40 dark:text-eggshell/40">Showcase {showcaseId}</p>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="relative w-full h-full overflow-hidden rounded-[5px]">
+      {/* Previous image - slides out to the left */}
+      {previousIndex !== null && (
+        <img
+          src={images[previousIndex]}
+          alt={`Showcase ${showcaseId} - ${previousIndex + 1}`}
+          className="absolute inset-0 w-full h-full object-cover animate-slide-out-left"
+          style={{
+            animationDuration: `${SLIDE_DURATION}ms`,
+          }}
+        />
+      )}
+      {/* Current image - slides in from the right (or static if not sliding) */}
+      <img
+        src={images[currentIndex]}
+        alt={`Showcase ${showcaseId} - ${currentIndex + 1}`}
+        className={`absolute inset-0 w-full h-full object-cover ${
+          isSliding && previousIndex !== null ? 'animate-slide-in-right' : ''
+        }`}
+        style={{
+          animationDuration: `${SLIDE_DURATION}ms`,
+        }}
+      />
+      {/* Image indicator dots */}
+      {images.length > 1 && (
+        <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-1.5 z-10">
+          {images.map((_, idx) => (
+            <button
+              key={idx}
+              onClick={() => slideToIndex(idx)}
+              className={`w-2.5 h-2.5 rounded-full transition-all duration-200 ${
+                idx === currentIndex
+                  ? 'bg-burnt-peach scale-125'
+                  : 'bg-eggshell/60 hover:bg-eggshell/80'
+              }`}
+              aria-label={`Go to image ${idx + 1}`}
+            />
+          ))}
+        </div>
+      )}
+    </div>
+  );
+};
+
+// ============================================
+// EXPERIENCE SECTION - CENTERED TIMELINE
+// Elegant alternating left/right timeline layout
+// with showcase cards and connecting lines
 // ============================================
 const ExperienceSection = () => {
+  /**
+   * Timeline experience data - 7 entries from Dec 2025 to 2016
+   * Each entry alternates between left and right positioning
+   */
   const experiences = [
     {
-      title: 'Software Engineer Intern',
-      company: 'Tech Company',
-      period: '2024 - Present',
-      description: 'Developed and maintained web applications using modern JavaScript frameworks. Collaborated with cross-functional teams to deliver high-quality software solutions.',
+      id: 1,
+      title: 'Software Engineer',
+      company: 'Tech Innovation Corp',
+      period: 'December 2025',
+      description: 'Leading full-stack development initiatives, architecting scalable solutions with React, Node.js, and cloud services. Implementing CI/CD pipelines and mentoring junior developers.',
+      tags: ['React', 'Node.js', 'AWS', 'TypeScript'],
+      color: 'burnt-peach',
     },
     {
-      title: 'Freelance Developer',
+      id: 2,
+      title: 'Full Stack Developer',
+      company: 'Digital Solutions Inc',
+      period: '2024',
+      description: 'Built and deployed production-ready web applications serving thousands of users. Optimized database queries resulting in 40% performance improvement.',
+      tags: ['Next.js', 'PostgreSQL', 'Docker'],
+      color: 'muted-teal',
+    },
+    {
+      id: 3,
+      title: 'Software Development Intern',
+      company: 'StartupXYZ',
+      period: '2023',
+      description: 'Developed RESTful APIs and integrated third-party services. Contributed to agile sprints and participated in code reviews with senior engineers.',
+      tags: ['Python', 'FastAPI', 'Git'],
+      color: 'apricot',
+    },
+    {
+      id: 4,
+      title: 'Freelance Web Developer',
       company: 'Self-Employed',
-      period: '2023 - 2024',
-      description: 'Built custom websites and applications for various clients. Managed full project lifecycle from requirements gathering to deployment.',
+      period: '2022',
+      description: 'Delivered custom websites and e-commerce solutions for small businesses. Managed client relationships and project timelines independently.',
+      tags: ['JavaScript', 'WordPress', 'CSS'],
+      color: 'burnt-peach',
     },
     {
-      title: 'Computer Science Graduate',
-      company: 'University',
-      period: '2020 - 2024',
-      description: 'Bachelor of Science in Computer Science. Coursework included algorithms, data structures, software engineering, and database systems.',
+      id: 5,
+      title: 'Research Assistant',
+      company: 'University CS Department',
+      period: '2020',
+      description: 'Assisted in machine learning research projects. Processed datasets, implemented algorithms, and co-authored a conference paper on NLP techniques.',
+      tags: ['Python', 'TensorFlow', 'NLP'],
+      color: 'muted-teal',
+    },
+    {
+      id: 6,
+      title: 'IT Support Technician',
+      company: 'Campus Tech Services',
+      period: '2018',
+      description: 'Provided technical support for faculty and students. Troubleshot hardware/software issues and maintained computer lab equipment.',
+      tags: ['Troubleshooting', 'Windows', 'Linux'],
+      color: 'apricot',
+    },
+    {
+      id: 7,
+      title: 'Programming Hobbyist',
+      company: 'Self-Taught Journey',
+      period: '2016',
+      description: 'Discovered passion for programming through game development and automation scripts. Built first website and learned fundamentals of coding logic.',
+      tags: ['Java', 'HTML', 'CSS'],
+      color: 'burnt-peach',
     },
   ];
 
   return (
     <section id="experience" className="py-6 relative">
       <div className="container mx-auto px-6">
-        <div className="relative bg-background/95 backdrop-blur-sm rounded-[5px] shadow-[0_2px_8px_rgba(61,64,91,0.08)] dark:shadow-[0_2px_12px_rgba(0,0,0,0.3)] border border-twilight/8 dark:border-eggshell/8 overflow-hidden py-6">
+        <div className="relative bg-background/30 backdrop-blur-sm rounded-[5px] shadow-[0_2px_8px_rgba(61,64,91,0.08)] dark:shadow-[0_2px_12px_rgba(0,0,0,0.3)] border border-twilight/8 dark:border-eggshell/8 overflow-hidden py-8">
           <InteractiveGridDots />
           <div className="relative z-10">
-            <h2 className="text-3xl md:text-4xl font-bold text-twilight dark:text-eggshell mb-3 text-center">
-            <span className="text-burnt-peach">My Experience</span>
+            {/* Section Header */}
+            <h2 className="text-3xl md:text-4xl font-bold text-twilight dark:text-eggshell mb-8 text-center">
+              <span className="text-burnt-peach">My Experience</span>
             </h2>
 
-            <div className="max-w-3xl mx-auto">
-          {experiences.map((exp, index) => (
-            <div
-              key={exp.title}
-              className="relative pl-8 pb-12 last:pb-0 opacity-0 animate-slide-up"
-              style={{ animationDelay: `${index * 200}ms` }}
-            >
-              {/* Timeline line */}
-              {index !== experiences.length - 1 && (
-                <div className="absolute left-[11px] top-8 bottom-0 w-0.5 bg-gradient-to-b from-burnt-peach to-muted-teal" />
-              )}
+            {/* Centered Timeline Container */}
+            <div className="relative max-w-5xl mx-auto px-4">
+              {/* Central Timeline Line */}
+              <div className="absolute left-1/2 top-0 bottom-0 w-1 bg-gradient-to-b from-burnt-peach via-muted-teal to-apricot transform -translate-x-1/2 rounded-full hidden md:block" />
+              
+              {/* Mobile Timeline Line (left-aligned) */}
+              <div className="absolute left-4 top-0 bottom-0 w-1 bg-gradient-to-b from-burnt-peach via-muted-teal to-apricot rounded-full md:hidden" />
 
-              {/* Timeline dot */}
-              <div className="absolute left-0 top-1 w-6 h-6 rounded-full bg-burnt-peach flex items-center justify-center animate-pulse-glow">
-                <Briefcase className="w-3 h-3 text-eggshell" />
-              </div>
+              {/* Timeline Entries */}
+              {experiences.map((exp, index) => {
+                const isLeft = index % 2 === 0;
+                
+                return (
+                  <div
+                    key={exp.id}
+                    className={`relative -mb-4 last:mb-0 opacity-0 animate-slide-up`}
+                    style={{ animationDelay: `${index * 150}ms` }}
+                  >
+                    {/* Desktop Layout - Alternating */}
+                    <div className="hidden md:grid md:grid-cols-[1fr_60px_1fr] gap-0 items-center">
+                      {/* Left Side Content */}
+                      <div className={`${isLeft ? 'pr-4' : ''}`}>
+                        {isLeft ? (
+                          /* Showcase Card - Left */
+                          <div className="flex justify-end">
+                            <div className="relative w-full max-w-sm bg-white dark:bg-twilight/50 rounded-[5px] shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 overflow-hidden group glass">
+                              {/* Showcase Image Container */}
+                              <div className="aspect-[16/10] relative">
+                                <TimelineShowcaseCarousel showcaseId={exp.id} />
+                                {/* Gradient Overlay */}
+                                <div className="absolute inset-0 bg-gradient-to-t from-twilight/60 via-transparent to-transparent pointer-events-none" />
+                                {/* Period Badge */}
+                                <div className={`absolute top-3 right-3 px-3 py-1 bg-${exp.color}/90 text-eggshell text-xs font-semibold rounded-full shadow-md pointer-events-none`}>
+                                  {exp.period}
+                                </div>
+                              </div>
+                              {/* Card Content */}
+                              <div className="p-4">
+                                <h3 className="text-lg font-bold text-twilight dark:text-eggshell mb-1 group-hover:text-burnt-peach transition-colors">
+                                  {exp.title}
+                                </h3>
+                                <p className="text-muted-teal font-medium text-sm mb-2">{exp.company}</p>
+                                {/* Tags */}
+                                <div className="flex flex-wrap gap-1.5">
+                                  {exp.tags.map((tag) => (
+                                    <span
+                                      key={tag}
+                                      className="px-2 py-0.5 bg-twilight/5 dark:bg-eggshell/10 text-twilight dark:text-eggshell text-xs rounded-full hover:bg-muted-teal hover:text-eggshell transition-all duration-200"
+                                    >
+                                      {tag}
+                                    </span>
+                                  ))}
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        ) : (
+                          /* Description Card - Left */
+                          <div className="flex justify-end">
+                            <div className="w-full max-w-sm text-right">
+                              <div className="bg-white/50 dark:bg-twilight/30 backdrop-blur-sm rounded-[5px] p-5 border border-twilight/10 dark:border-eggshell/10 hover:border-muted-teal/50 transition-all duration-300">
+                                <p className="text-twilight/80 dark:text-eggshell/80 text-sm leading-relaxed">
+                                  {exp.description}
+                                </p>
+                              </div>
+                            </div>
+                          </div>
+                        )}
+                      </div>
 
-              {/* Content */}
-              <div 
-                data-work-experience-card
-                className="bg-white dark:bg-twilight/50 rounded-sm p-6 shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-1 glass"
-              >
-                <div className="flex flex-wrap items-center justify-between gap-2 mb-2">
-                  <h3 className="text-lg font-semibold text-twilight dark:text-eggshell">{exp.title}</h3>
-                  <span className="text-sm text-burnt-peach font-medium">{exp.period}</span>
-                </div>
-                <p className="text-muted-teal font-medium text-sm mb-3">{exp.company}</p>
-                  <p className="text-twilight/70 dark:text-eggshell/70 text-sm leading-relaxed">{exp.description}</p>
-                </div>
+                      {/* Center - Timeline Node with Connecting Lines */}
+                      <div className="relative flex items-center justify-center">
+                        {/* Connecting Line - Left */}
+                        <div className={`absolute h-0.5 bg-gradient-to-r ${
+                          isLeft 
+                            ? `from-${exp.color}/60 to-${exp.color} right-1/2 w-[30px]`
+                            : `from-${exp.color} to-${exp.color}/60 left-1/2 w-[30px]`
+                        }`} />
+                        {/* Connecting Line - Right */}
+                        <div className={`absolute h-0.5 bg-gradient-to-r ${
+                          isLeft 
+                            ? `from-${exp.color} to-${exp.color}/60 left-1/2 w-[30px]`
+                            : `from-${exp.color}/60 to-${exp.color} right-1/2 w-[30px]`
+                        }`} />
+                        {/* Timeline Node */}
+                        <div className={`relative z-10 w-10 h-10 rounded-full bg-${exp.color} flex items-center justify-center shadow-lg animate-pulse-glow`}>
+                          <Briefcase className="w-5 h-5 text-eggshell" />
+                        </div>
+                      </div>
+
+                      {/* Right Side Content */}
+                      <div className={`${!isLeft ? 'pl-4' : ''}`}>
+                        {!isLeft ? (
+                          /* Showcase Card - Right */
+                          <div className="flex justify-start">
+                            <div className="relative w-full max-w-sm bg-white dark:bg-twilight/50 rounded-[5px] shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 overflow-hidden group glass">
+                              {/* Showcase Image Container */}
+                              <div className="aspect-[16/10] relative">
+                                <TimelineShowcaseCarousel showcaseId={exp.id} />
+                                {/* Gradient Overlay */}
+                                <div className="absolute inset-0 bg-gradient-to-t from-twilight/60 via-transparent to-transparent pointer-events-none" />
+                                {/* Period Badge */}
+                                <div className={`absolute top-3 left-3 px-3 py-1 bg-${exp.color}/90 text-eggshell text-xs font-semibold rounded-full shadow-md pointer-events-none`}>
+                                  {exp.period}
+                                </div>
+                              </div>
+                              {/* Card Content */}
+                              <div className="p-4">
+                                <h3 className="text-lg font-bold text-twilight dark:text-eggshell mb-1 group-hover:text-burnt-peach transition-colors">
+                                  {exp.title}
+                                </h3>
+                                <p className="text-muted-teal font-medium text-sm mb-2">{exp.company}</p>
+                                {/* Tags */}
+                                <div className="flex flex-wrap gap-1.5">
+                                  {exp.tags.map((tag) => (
+                                    <span
+                                      key={tag}
+                                      className="px-2 py-0.5 bg-twilight/5 dark:bg-eggshell/10 text-twilight dark:text-eggshell text-xs rounded-full hover:bg-muted-teal hover:text-eggshell transition-all duration-200"
+                                    >
+                                      {tag}
+                                    </span>
+                                  ))}
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        ) : (
+                          /* Description Card - Right */
+                          <div className="flex justify-start">
+                            <div className="w-full max-w-sm text-left">
+                              <div className="bg-white/50 dark:bg-twilight/30 backdrop-blur-sm rounded-[5px] p-5 border border-twilight/10 dark:border-eggshell/10 hover:border-muted-teal/50 transition-all duration-300">
+                                <p className="text-twilight/80 dark:text-eggshell/80 text-sm leading-relaxed">
+                                  {exp.description}
+                                </p>
+                              </div>
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* Mobile Layout - Single Column */}
+                    <div className="md:hidden relative pl-12">
+                      {/* Connecting Line to Timeline */}
+                      <div className={`absolute left-4 top-6 w-6 h-0.5 bg-${exp.color}`} />
+                      
+                      {/* Timeline Node */}
+                      <div className={`absolute left-1 top-3 w-7 h-7 rounded-full bg-${exp.color} flex items-center justify-center shadow-md z-10`}>
+                        <Briefcase className="w-3.5 h-3.5 text-eggshell" />
+                      </div>
+
+                      {/* Combined Card for Mobile */}
+                      <div className="bg-white dark:bg-twilight/50 rounded-[5px] shadow-lg overflow-hidden glass">
+                        {/* Showcase Image */}
+                        <div className="aspect-[16/9] relative">
+                          <TimelineShowcaseCarousel showcaseId={exp.id} />
+                          <div className="absolute inset-0 bg-gradient-to-t from-twilight/60 via-transparent to-transparent pointer-events-none" />
+                          <div className={`absolute top-2 right-2 px-2 py-0.5 bg-${exp.color}/90 text-eggshell text-xs font-semibold rounded-full pointer-events-none`}>
+                            {exp.period}
+                          </div>
+                        </div>
+                        {/* Content */}
+                        <div className="p-4">
+                          <h3 className="text-base font-bold text-twilight dark:text-eggshell mb-1">
+                            {exp.title}
+                          </h3>
+                          <p className="text-muted-teal font-medium text-sm mb-2">{exp.company}</p>
+                          <p className="text-twilight/70 dark:text-eggshell/70 text-sm leading-relaxed mb-3">
+                            {exp.description}
+                          </p>
+                          <div className="flex flex-wrap gap-1.5">
+                            {exp.tags.map((tag) => (
+                              <span
+                                key={tag}
+                                className="px-2 py-0.5 bg-twilight/5 dark:bg-eggshell/10 text-twilight dark:text-eggshell text-xs rounded-full"
+                              >
+                                {tag}
+                              </span>
+                            ))}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+
+              {/* Timeline End Cap */}
+              <div className="hidden md:flex justify-center mt-4">
+                <div className="w-4 h-4 rounded-full bg-gradient-to-br from-apricot to-burnt-peach shadow-lg" />
               </div>
-            ))}
             </div>
           </div>
         </div>

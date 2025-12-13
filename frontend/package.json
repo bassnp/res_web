@@ -6,7 +6,7 @@
         "dev": "next dev --hostname 0.0.0.0 --port 3003",
         "dev:no-reload": "next dev --hostname 0.0.0.0 --port 3003",
         "dev:webpack": "next dev --hostname 0.0.0.0 --port 3003",
-        "build": "node public/sync_collage_images.js && next build",
+        "build": "node public/sync_collage_images.js && node public/sync_timeline_images.js && next build",
         "start": "next start"
     },
     "dependencies": {

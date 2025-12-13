@@ -7,6 +7,21 @@ module.exports = {
       './app/**/*.{js,jsx}',
       './src/**/*.{js,jsx}',
     ],
+    /**
+     * Safelist for dynamically constructed class names in Experience Timeline.
+     * Tailwind cannot detect classes built with template literals at build time.
+     */
+    safelist: [
+      // Timeline node backgrounds
+      'bg-burnt-peach', 'bg-muted-teal', 'bg-apricot',
+      // Timeline badge backgrounds with opacity
+      'bg-burnt-peach/90', 'bg-muted-teal/90', 'bg-apricot/90',
+      // Timeline connecting line gradients
+      'from-burnt-peach', 'from-muted-teal', 'from-apricot',
+      'to-burnt-peach', 'to-muted-teal', 'to-apricot',
+      'from-burnt-peach/60', 'from-muted-teal/60', 'from-apricot/60',
+      'to-burnt-peach/60', 'to-muted-teal/60', 'to-apricot/60',
+    ],
     prefix: "",
     theme: {
         container: {
