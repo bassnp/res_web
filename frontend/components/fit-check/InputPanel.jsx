@@ -108,7 +108,7 @@ export const InputPanel = forwardRef(function InputPanel({
       
       {/* Subtitle - styled with Brutal Honesty theme */}
       <p className="text-twilight dark:text-eggshell text-sm text-center font-medium">
-        Use my <InfoTriggerLink onClick={() => setInfoOpen(true)} /> <span className="text-burnt-peach font-semibold">Non-Biased Deep Researcher.</span> Check my experience, <span className="text-emerald-600 dark:text-emerald-400 font-semibold">for YOUR needs.</span>
+        Use my <InfoTriggerLink onClick={() => setInfoOpen(true)} /> <span className="text-burnt-peach font-semibold">Deep Researcher </span> to evaluate MY qualifications <span className="text-emerald-600 dark:text-emerald-400 font-semibold">for YOUR needs</span>
       </p>
       
       <div className="relative">

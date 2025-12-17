@@ -162,7 +162,7 @@ export function InfoTriggerLink({ onClick, className }) {
         className
       )}
     >
-      open-source
+      Open-Source
     </button>
   );
 }

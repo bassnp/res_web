@@ -604,7 +604,7 @@ const HeroAboutSection = () => {
   };
 
   return (
-    <section id="about" className="flex items-center pt-20 pb-4">
+    <section id="about" className="flex items-center pt-20 pb-3">
       <div className="container mx-auto px-6">
         {/* 
           Typing animation with translation capability.
@@ -629,7 +629,7 @@ const HeroAboutSection = () => {
         </div>
 
         {/* Grid: 1/3 left container, 2/3 right container */}
-        <div className="grid lg:grid-cols-3 gap-4 items-stretch">
+        <div className="grid lg:grid-cols-3 gap-6 items-stretch">
           {/* Left: Hero Content with Grid Dots (1/3 width) */}
           <div className="relative bg-background/95 backdrop-blur-sm rounded-[5px] shadow-[0_2px_8px_rgba(61,64,91,0.08)] dark:shadow-[0_2px_12px_rgba(0,0,0,0.3)] border border-twilight/8 dark:border-eggshell/8 overflow-hidden min-h-0 md:min-h-[300px] flex flex-col lg:col-span-1">
             <HeroGridDots />

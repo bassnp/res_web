@@ -9,7 +9,7 @@ import {
   Briefcase, 
   FileCheck2,
   Loader2,
-  Zap
+  Brain
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -154,13 +154,13 @@ export function WorkflowPipelinePreview({ compact = false }) {
         compact ? "flex-shrink-0" : "mb-2 flex-shrink-0"
       )}>
         <div className="w-6 h-6 rounded-full bg-gradient-to-br from-burnt-peach to-burnt-peach/60 flex items-center justify-center pipeline-icon-glow">
-          <Zap className="w-3 h-3 text-eggshell" />
+          <Brain className="w-3 h-3 text-eggshell" />
         </div>
         <span className={cn(
           "font-semibold text-twilight/80 dark:text-eggshell/80 uppercase tracking-wide",
           compact ? "text-[10px]" : "text-xs"
         )}>
-          {compact ? "Research" : "Agentic Research"}
+          {compact ? "Agentic A.I." : "Utilize Agentic A.I."}
         </span>
       </div>
 

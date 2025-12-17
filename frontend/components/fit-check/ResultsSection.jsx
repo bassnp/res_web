@@ -63,22 +63,26 @@ export function ResultsSection({
       {/* Two-column card layout */}
       <div className={cn(
         "grid gap-4",
-        "grid-cols-1 lg:grid-cols-2"
+        "grid-cols-1 lg:grid-cols-3"
       )}>
-        {/* Strengths Card - Left */}
-        <StrengthsCard
-          title="Key Strengths"
-          strengths={strengths}
-          valueProposition={valueProposition}
-          isVisible={true}
-        />
+        {/* Strengths Card - Left (1/3) */}
+        <div className="lg:col-span-1">
+          <StrengthsCard
+            title="Key Strengths"
+            strengths={strengths}
+            valueProposition={valueProposition}
+            isVisible={true}
+          />
+        </div>
 
-        {/* Growth Areas Card - Right */}
-        <GrowthAreasCard
-          title="Growth Opportunities"
-          growthAreas={growthAreas}
-          isVisible={true}
-        />
+        {/* Growth Areas Card - Right (2/3) */}
+        <div className="lg:col-span-2">
+          <GrowthAreasCard
+            title="Growth Opportunities"
+            growthAreas={growthAreas}
+            isVisible={true}
+          />
+        </div>
       </div>
     </div>
   );

@@ -37,7 +37,7 @@ export function GrowthAreasCard({
       {/* Background dots */}
       <InteractiveGridDots />
       
-      <div className="relative z-10 p-6">
+      <div className="relative z-10 p-6 md:p-8">
         {/* Header */}
         <div className="flex items-center gap-3 mb-4">
           <div className={cn(
