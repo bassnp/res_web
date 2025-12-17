@@ -2,9 +2,10 @@
 
 import { useState, useEffect } from 'react';
 import { useTheme } from 'next-themes';
-import { Briefcase, User, Mail, Github, ChevronDown, ExternalLink, Sun, Moon, Code, FileText, Camera } from 'lucide-react';
+import { Briefcase, User, Mail, Github, ChevronDown, ExternalLink, Sun, Moon, Code, FileText, Camera, Eye } from 'lucide-react';
 import { useHeaderVisibility } from '@/hooks/use-header-visibility';
 import { InfoDialog, InfoButton } from '@/components/fit-check/InfoDialog';
+import { ProjectModal, ReadSummaryButton } from '@/components/ProjectModal';
 import { Button } from '@/components/ui/button';
 import ParticleBackground from '@/components/ParticleBackground';
 import InteractiveGridDots from '@/components/InteractiveGridDots';
@@ -775,74 +776,146 @@ const HeroAboutSection = () => {
 
 // ============================================
 // PROJECTS SECTION
+// Features interactive project cards with modal pop-ups
+// for detailed project information and image galleries
 // ============================================
+
+/**
+ * Project data with extended properties for modal display.
+ * Each project includes:
+ * - id: Unique identifier matching the image folder name
+ * - title: Display name
+ * - description: Brief card description
+ * - about: Extended description for modal
+ * - learningOutcomes: Array of key takeaways
+ * - tags: Technology stack
+ * - color: Gradient class for visual theming
+ * - link: Optional external project URL
+ */
+const PROJECTS_DATA = [
+  {
+    id: 'project-alpha',
+    title: 'Project Alpha',
+    description: 'A full-stack web application built with React and Node.js, featuring real-time updates and modern UI.',
+    about: 'Project Alpha is a comprehensive full-stack application that demonstrates modern web development practices. It features a React frontend with a Node.js backend, utilizing WebSocket connections for real-time updates. The application includes user authentication, data persistence with PostgreSQL, and a responsive design that works seamlessly across all devices.',
+    learningOutcomes: [
+      'Mastered React hooks and state management patterns',
+      'Implemented WebSocket connections for real-time data synchronization',
+      'Designed and optimized PostgreSQL database schemas',
+      'Built RESTful APIs with proper error handling and validation',
+      'Deployed containerized applications using Docker'
+    ],
+    tags: ['React', 'Node.js', 'PostgreSQL'],
+    color: 'from-burnt-peach to-apricot',
+    link: null,
+  },
+  {
+    id: 'project-beta',
+    title: 'Project Beta',
+    description: 'Mobile-first progressive web app with offline capabilities and push notifications.',
+    about: 'Project Beta showcases the power of Progressive Web Apps (PWAs) with a mobile-first approach. The application leverages service workers for offline functionality, implements push notifications for user engagement, and provides a native app-like experience directly in the browser. Built with Next.js and TypeScript for type safety and improved developer experience.',
+    learningOutcomes: [
+      'Implemented service workers for offline-first functionality',
+      'Configured push notifications with proper permission handling',
+      'Utilized TypeScript for enhanced code quality and maintainability',
+      'Optimized performance with Next.js static generation and caching',
+      'Designed responsive layouts following mobile-first principles'
+    ],
+    tags: ['Next.js', 'PWA', 'TypeScript'],
+    color: 'from-muted-teal to-twilight',
+    link: null,
+  },
+  {
+    id: 'project-gamma',
+    title: 'Project Gamma',
+    description: 'Data visualization dashboard with interactive charts and real-time analytics.',
+    about: 'Project Gamma is an advanced data visualization dashboard that transforms complex datasets into intuitive, interactive visualizations. Using D3.js for custom charts and Python for backend data processing, the dashboard provides real-time analytics with filtering, zooming, and drill-down capabilities. The system processes large datasets efficiently and presents insights in a visually compelling manner.',
+    learningOutcomes: [
+      'Created custom D3.js visualizations with interactive features',
+      'Built efficient data processing pipelines in Python',
+      'Implemented real-time data streaming and updates',
+      'Designed intuitive UX for complex data exploration',
+      'Optimized rendering performance for large datasets'
+    ],
+    tags: ['Python', 'D3.js', 'PostgreSQL'],
+    color: 'from-apricot to-muted-teal',
+    link: null,
+  },
+];
+
 const ProjectsSection = () => {
-  const projects = [
-    {
-      title: 'Project Alpha',
-      description: 'A full-stack web application built with React and Node.js, featuring real-time updates and modern UI.',
-      tags: ['React', 'Node.js', 'PostgreSQL'],
-      color: 'from-burnt-peach to-apricot',
-    },
-    {
-      title: 'Project Beta',
-      description: 'Mobile-first progressive web app with offline capabilities and push notifications.',
-      tags: ['Next.js', 'PWA', 'TypeScript'],
-      color: 'from-muted-teal to-twilight',
-    },
-    {
-      title: 'Project Gamma',
-      description: 'Data visualization dashboard with interactive charts and real-time analytics.',
-      tags: ['Python', 'D3.js', 'PostgreSQL'],
-      color: 'from-apricot to-muted-teal',
-    },
-  ];
+  // Track which project modal is open (null = none open)
+  const [openProjectId, setOpenProjectId] = useState(null);
 
   return (
     <section id="projects" className="py-6">
       <div className="container mx-auto px-6">
         <h2 className="text-3xl md:text-4xl font-bold text-twilight dark:text-eggshell mb-3 text-center">
-          Featured <span className="text-burnt-peach">Projects</span>
+          Featured <span className="text-muted-teal">Projects</span>
         </h2>
         <p className="text-twilight/60 dark:text-eggshell/60 text-center mb-8 max-w-2xl mx-auto">
           My top-3 favorite projects to showcase my diverse skills and passion for building.
         </p>
 
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
-          {projects.map((project, index) => (
-            <div
-              key={project.title}
-              className="group bg-white dark:bg-twilight/50 rounded-sm overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500 hover:-translate-y-1 opacity-0 animate-scale-in-no-transform glass flex flex-col"
-              style={{ animationDelay: `${index * 150}ms` }}
+          {PROJECTS_DATA.map((project, index) => (
+            <ProjectModal
+              key={project.id}
+              project={project}
+              open={openProjectId === project.id}
+              onOpenChange={(isOpen) => setOpenProjectId(isOpen ? project.id : null)}
             >
-              {/* Project image placeholder */}
-              <div className={`h-48 bg-gradient-to-br ${project.color} flex items-center justify-center relative overflow-hidden`}>
-                <Code className="w-16 h-16 text-eggshell/80 group-hover:scale-125 group-hover:rotate-12 transition-all duration-500" />
-                {/* Shimmer overlay on hover */}
-                <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 shimmer" />
-              </div>
+              <div
+                className="group bg-white dark:bg-twilight/50 rounded-sm overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500 hover:-translate-y-1 opacity-0 animate-scale-in-no-transform glass flex flex-col cursor-pointer"
+                style={{ animationDelay: `${index * 150}ms` }}
+                role="button"
+                tabIndex={0}
+                aria-label={`View details for ${project.title}`}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    setOpenProjectId(project.id);
+                  }
+                }}
+              >
+                {/* Project image placeholder with gradient */}
+                <div className={`h-48 bg-gradient-to-br ${project.color} flex items-center justify-center relative overflow-hidden`}>
+                  <Code className="w-16 h-16 text-eggshell/80 group-hover:scale-125 group-hover:rotate-12 transition-all duration-500" />
+                  {/* Shimmer overlay on hover */}
+                  <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 shimmer" />
+                </div>
 
-              {/* Content */}
-              <div className="relative flex-1 flex flex-col">
-                <CardGridDots />
-                <div className="p-6 relative z-10 flex-1 flex flex-col">
-                  <h3 className="text-xl font-semibold text-twilight dark:text-eggshell mb-3 flex items-center justify-between">
-                    {project.title}
-                    <ExternalLink className="w-5 h-5 text-twilight/40 dark:text-eggshell/40 group-hover:text-burnt-peach group-hover:translate-x-1 group-hover:-translate-y-1 transition-all duration-300" />
-                  </h3>
-                  <p className="text-twilight/70 dark:text-eggshell/70 text-sm mb-4 leading-relaxed flex-1">
-                    {project.description}
-                  </p>
-                  <div className="flex flex-wrap gap-2 mt-auto">
-                    {project.tags.map((tag) => (
-                      <span key={tag} className="px-3 py-1 bg-muted-teal/10 dark:bg-muted-teal/20 text-muted-teal text-xs rounded-full transition-all duration-300 hover:bg-muted-teal hover:text-eggshell">
-                        {tag}
-                      </span>
-                    ))}
+                {/* Content */}
+                <div className="relative flex-1 flex flex-col">
+                  <CardGridDots />
+                  <div className="p-6 relative z-10 flex-1 flex flex-col">
+                    {/* Header with title and Read Summary button */}
+                    <div className="flex items-center justify-between gap-2 mb-3">
+                      <h3 className="text-xl font-semibold text-twilight dark:text-eggshell">
+                        {project.title}
+                      </h3>
+                      {/* Read Summary Button with Eye Icon */}
+                      <ReadSummaryButton />
+                    </div>
+                    <p className="text-twilight/70 dark:text-eggshell/70 text-sm mb-4 leading-relaxed flex-1">
+                      {project.description}
+                    </p>
+                    
+                    {/* Tags */}
+                    <div className="flex flex-wrap gap-2 mt-auto">
+                      {project.tags.map((tag) => (
+                        <span 
+                          key={tag} 
+                          className="px-3 py-1 bg-muted-teal/10 dark:bg-muted-teal/20 text-muted-teal text-xs rounded-full transition-all duration-300 hover:bg-muted-teal hover:text-eggshell"
+                        >
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
+            </ProjectModal>
           ))}
         </div>
       </div>
@@ -860,7 +933,7 @@ const TOTAL_SHOWCASE_CARDS = 7;
 const CAROUSEL_INTERVAL = 3500; // Base interval in ms
 const SLIDE_DURATION = 500; // Slide animation duration in ms
 
-const TimelineShowcaseCarousel = ({ showcaseId, interval = CAROUSEL_INTERVAL }) => {
+const TimelineShowcaseCarousel = ({ showcaseId, interval = CAROUSEL_INTERVAL, color = 'burnt-peach' }) => {
   const [images, setImages] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [previousIndex, setPreviousIndex] = useState(null);
@@ -953,7 +1026,7 @@ const TimelineShowcaseCarousel = ({ showcaseId, interval = CAROUSEL_INTERVAL }) 
     return (
       <div className="relative w-full h-full overflow-hidden rounded-[5px] bg-twilight/10 dark:bg-eggshell/10 flex items-center justify-center border-2 border-dashed border-twilight/20 dark:border-eggshell/20">
         <div className="text-center p-4">
-          <Camera className="w-8 h-8 mx-auto mb-2 text-twilight/30 dark:text-eggshell/30" />
+          <Camera className={`w-8 h-8 mx-auto mb-2 text-${color}/30`} />
           <p className="text-xs text-twilight/40 dark:text-eggshell/40">Showcase {showcaseId}</p>
         </div>
       </div>
@@ -993,7 +1066,7 @@ const TimelineShowcaseCarousel = ({ showcaseId, interval = CAROUSEL_INTERVAL }) 
               onClick={() => slideToIndex(idx)}
               className={`w-2.5 h-2.5 rounded-full transition-all duration-200 ${
                 idx === currentIndex
-                  ? 'bg-burnt-peach scale-125'
+                  ? `bg-${color} scale-125`
                   : 'bg-eggshell/60 hover:bg-eggshell/80'
               }`}
               aria-label={`Go to image ${idx + 1}`}
@@ -1087,22 +1160,40 @@ const ExperienceSection = () => {
         <div className="relative bg-background/30 backdrop-blur-sm rounded-[5px] shadow-[0_2px_8px_rgba(61,64,91,0.08)] dark:shadow-[0_2px_12px_rgba(0,0,0,0.3)] border border-twilight/8 dark:border-eggshell/8 overflow-hidden py-8">
           <InteractiveGridDots />
           <div className="relative z-10">
-            {/* Section Header */}
-            <h2 className="text-3xl md:text-4xl font-bold text-twilight dark:text-eggshell mb-8 text-center">
-              <span className="text-burnt-peach">My Experience</span>
-            </h2>
-
             {/* Centered Timeline Container */}
             <div className="relative max-w-5xl mx-auto px-4">
               {/* Central Timeline Line */}
-              <div className="absolute left-1/2 top-0 bottom-0 w-1 bg-gradient-to-b from-burnt-peach via-muted-teal to-apricot transform -translate-x-1/2 rounded-full hidden md:block" />
+              <div className="absolute left-1/2 top-0 bottom-0 w-1 bg-gradient-to-b from-muted-teal via-apricot to-burnt-peach transform -translate-x-1/2 rounded-full hidden md:block" />
               
+              {/* Desktop Timeline Caps */}
+              <div className="absolute left-1/2 top-0 w-3 h-3 bg-muted-teal rounded-full transform -translate-x-1/2 -translate-y-1/2 z-10 hidden md:block shadow-[0_0_10px_rgba(129,178,154,0.5)]" />
+              <div className="absolute left-1/2 bottom-0 w-3 h-3 bg-burnt-peach rounded-full transform -translate-x-1/2 translate-y-1/2 z-10 hidden md:block shadow-[0_0_10px_rgba(224,122,95,0.5)]" />
+
               {/* Mobile Timeline Line (left-aligned) */}
-              <div className="absolute left-4 top-0 bottom-0 w-1 bg-gradient-to-b from-burnt-peach via-muted-teal to-apricot rounded-full md:hidden" />
+              <div className="absolute left-4 top-0 bottom-0 w-1 bg-gradient-to-b from-muted-teal via-apricot to-burnt-peach rounded-full md:hidden" />
+              
+              {/* Mobile Timeline Caps */}
+              <div className="absolute left-4 top-0 w-3 h-3 bg-muted-teal rounded-full transform -translate-x-1/2 -translate-y-1/2 z-10 md:hidden shadow-[0_0_10px_rgba(129,178,154,0.5)]" />
+              <div className="absolute left-4 bottom-0 w-3 h-3 bg-burnt-peach rounded-full transform -translate-x-1/2 translate-y-1/2 z-10 md:hidden shadow-[0_0_10px_rgba(224,122,95,0.5)]" />
 
               {/* Timeline Entries */}
               {experiences.map((exp, index) => {
                 const isLeft = index % 2 === 0;
+                
+                // Calculate dynamic color based on position in the gradient
+                // Top (0) -> muted-teal, Center (0.5) -> apricot, Bottom (1) -> burnt-peach
+                const total = experiences.length;
+                const ratio = index / (total - 1);
+                let nodeColor = 'muted-teal';
+                let glowRgb = '129, 178, 154'; // muted-teal
+                
+                if (ratio > 0.33 && ratio <= 0.66) {
+                  nodeColor = 'apricot';
+                  glowRgb = '242, 204, 143'; // apricot
+                } else if (ratio > 0.66) {
+                  nodeColor = 'burnt-peach';
+                  glowRgb = '224, 122, 95'; // burnt-peach
+                }
                 
                 return (
                   <div
@@ -1120,26 +1211,26 @@ const ExperienceSection = () => {
                             <div className="relative w-full max-w-sm bg-white dark:bg-twilight/50 rounded-[5px] shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 overflow-hidden group glass">
                               {/* Showcase Image Container */}
                               <div className="aspect-[16/10] relative">
-                                <TimelineShowcaseCarousel showcaseId={exp.id} />
+                                <TimelineShowcaseCarousel showcaseId={exp.id} color={nodeColor} />
                                 {/* Gradient Overlay */}
                                 <div className="absolute inset-0 bg-gradient-to-t from-twilight/60 via-transparent to-transparent pointer-events-none" />
                                 {/* Period Badge */}
-                                <div className={`absolute top-3 right-3 px-3 py-1 bg-${exp.color}/90 text-eggshell text-xs font-semibold rounded-full shadow-md pointer-events-none`}>
+                                <div className={`absolute top-3 right-3 px-3 py-1 bg-${nodeColor}/90 text-eggshell text-xs font-semibold rounded-full shadow-md pointer-events-none`}>
                                   {exp.period}
                                 </div>
                               </div>
                               {/* Card Content */}
                               <div className="p-4">
-                                <h3 className="text-lg font-bold text-twilight dark:text-eggshell mb-1 group-hover:text-burnt-peach transition-colors">
+                                <h3 className={`text-lg font-bold text-twilight dark:text-eggshell mb-1 group-hover:text-${nodeColor} transition-colors`}>
                                   {exp.title}
                                 </h3>
-                                <p className="text-muted-teal font-medium text-sm mb-2">{exp.company}</p>
+                                <p className={`text-${nodeColor} font-medium text-sm mb-2`}>{exp.company}</p>
                                 {/* Tags */}
                                 <div className="flex flex-wrap gap-1.5">
                                   {exp.tags.map((tag) => (
                                     <span
                                       key={tag}
-                                      className="px-2 py-0.5 bg-twilight/5 dark:bg-eggshell/10 text-twilight dark:text-eggshell text-xs rounded-full hover:bg-muted-teal hover:text-eggshell transition-all duration-200"
+                                      className={`px-2 py-0.5 bg-twilight/5 dark:bg-eggshell/10 text-twilight dark:text-eggshell text-xs rounded-full hover:bg-${nodeColor} hover:text-eggshell transition-all duration-200`}
                                     >
                                       {tag}
                                     </span>
@@ -1152,7 +1243,7 @@ const ExperienceSection = () => {
                           /* Description Card - Left */
                           <div className="flex justify-end">
                             <div className="w-full max-w-sm text-right">
-                              <div className="bg-white/50 dark:bg-twilight/30 backdrop-blur-sm rounded-[5px] p-5 border border-twilight/10 dark:border-eggshell/10 hover:border-muted-teal/50 transition-all duration-300">
+                              <div className={`bg-white/50 dark:bg-twilight/30 backdrop-blur-sm rounded-[5px] p-5 border border-twilight/10 dark:border-eggshell/10 hover:border-${nodeColor}/50 transition-all duration-300`}>
                                 <p className="text-twilight/80 dark:text-eggshell/80 text-sm leading-relaxed">
                                   {exp.description}
                                 </p>
@@ -1167,17 +1258,20 @@ const ExperienceSection = () => {
                         {/* Connecting Line - Left */}
                         <div className={`absolute h-0.5 bg-gradient-to-r ${
                           isLeft 
-                            ? `from-${exp.color}/60 to-${exp.color} right-1/2 w-[30px]`
-                            : `from-${exp.color} to-${exp.color}/60 left-1/2 w-[30px]`
+                            ? `from-${nodeColor}/60 to-${nodeColor} right-1/2 w-[30px]`
+                            : `from-${nodeColor} to-${nodeColor}/60 left-1/2 w-[30px]`
                         }`} />
                         {/* Connecting Line - Right */}
                         <div className={`absolute h-0.5 bg-gradient-to-r ${
                           isLeft 
-                            ? `from-${exp.color} to-${exp.color}/60 left-1/2 w-[30px]`
-                            : `from-${exp.color}/60 to-${exp.color} right-1/2 w-[30px]`
+                            ? `from-${nodeColor} to-${nodeColor}/60 left-1/2 w-[30px]`
+                            : `from-${nodeColor}/60 to-${nodeColor} right-1/2 w-[30px]`
                         }`} />
                         {/* Timeline Node */}
-                        <div className={`relative z-10 w-10 h-10 rounded-full bg-${exp.color} flex items-center justify-center shadow-lg animate-pulse-glow`}>
+                        <div 
+                          className={`relative z-10 w-10 h-10 rounded-full bg-${nodeColor} flex items-center justify-center shadow-lg animate-pulse-glow`}
+                          style={{ '--glow-color': `rgba(${glowRgb}, 0.3)` }}
+                        >
                           <Briefcase className="w-5 h-5 text-eggshell" />
                         </div>
                       </div>
@@ -1190,26 +1284,26 @@ const ExperienceSection = () => {
                             <div className="relative w-full max-w-sm bg-white dark:bg-twilight/50 rounded-[5px] shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 overflow-hidden group glass">
                               {/* Showcase Image Container */}
                               <div className="aspect-[16/10] relative">
-                                <TimelineShowcaseCarousel showcaseId={exp.id} />
+                                <TimelineShowcaseCarousel showcaseId={exp.id} color={nodeColor} />
                                 {/* Gradient Overlay */}
                                 <div className="absolute inset-0 bg-gradient-to-t from-twilight/60 via-transparent to-transparent pointer-events-none" />
                                 {/* Period Badge */}
-                                <div className={`absolute top-3 left-3 px-3 py-1 bg-${exp.color}/90 text-eggshell text-xs font-semibold rounded-full shadow-md pointer-events-none`}>
+                                <div className={`absolute top-3 left-3 px-3 py-1 bg-${nodeColor}/90 text-eggshell text-xs font-semibold rounded-full shadow-md pointer-events-none`}>
                                   {exp.period}
                                 </div>
                               </div>
                               {/* Card Content */}
                               <div className="p-4">
-                                <h3 className="text-lg font-bold text-twilight dark:text-eggshell mb-1 group-hover:text-burnt-peach transition-colors">
+                                <h3 className={`text-lg font-bold text-twilight dark:text-eggshell mb-1 group-hover:text-${nodeColor} transition-colors`}>
                                   {exp.title}
                                 </h3>
-                                <p className="text-muted-teal font-medium text-sm mb-2">{exp.company}</p>
+                                <p className={`text-${nodeColor} font-medium text-sm mb-2`}>{exp.company}</p>
                                 {/* Tags */}
                                 <div className="flex flex-wrap gap-1.5">
                                   {exp.tags.map((tag) => (
                                     <span
                                       key={tag}
-                                      className="px-2 py-0.5 bg-twilight/5 dark:bg-eggshell/10 text-twilight dark:text-eggshell text-xs rounded-full hover:bg-muted-teal hover:text-eggshell transition-all duration-200"
+                                      className={`px-2 py-0.5 bg-twilight/5 dark:bg-eggshell/10 text-twilight dark:text-eggshell text-xs rounded-full hover:bg-${nodeColor} hover:text-eggshell transition-all duration-200`}
                                     >
                                       {tag}
                                     </span>
@@ -1222,7 +1316,7 @@ const ExperienceSection = () => {
                           /* Description Card - Right */
                           <div className="flex justify-start">
                             <div className="w-full max-w-sm text-left">
-                              <div className="bg-white/50 dark:bg-twilight/30 backdrop-blur-sm rounded-[5px] p-5 border border-twilight/10 dark:border-eggshell/10 hover:border-muted-teal/50 transition-all duration-300">
+                              <div className={`bg-white/50 dark:bg-twilight/30 backdrop-blur-sm rounded-[5px] p-5 border border-twilight/10 dark:border-eggshell/10 hover:border-${nodeColor}/50 transition-all duration-300`}>
                                 <p className="text-twilight/80 dark:text-eggshell/80 text-sm leading-relaxed">
                                   {exp.description}
                                 </p>
@@ -1236,10 +1330,13 @@ const ExperienceSection = () => {
                     {/* Mobile Layout - Single Column */}
                     <div className="md:hidden relative pl-12">
                       {/* Connecting Line to Timeline */}
-                      <div className={`absolute left-4 top-6 w-6 h-0.5 bg-${exp.color}`} />
+                      <div className={`absolute left-4 top-6 w-6 h-0.5 bg-${nodeColor}`} />
                       
                       {/* Timeline Node */}
-                      <div className={`absolute left-1 top-3 w-7 h-7 rounded-full bg-${exp.color} flex items-center justify-center shadow-md z-10`}>
+                      <div 
+                        className={`absolute left-1 top-3 w-7 h-7 rounded-full bg-${nodeColor} flex items-center justify-center shadow-md z-10`}
+                        style={{ '--glow-color': `rgba(${glowRgb}, 0.3)` }}
+                      >
                         <Briefcase className="w-3.5 h-3.5 text-eggshell" />
                       </div>
 
@@ -1247,9 +1344,9 @@ const ExperienceSection = () => {
                       <div className="bg-white dark:bg-twilight/50 rounded-[5px] shadow-lg overflow-hidden glass">
                         {/* Showcase Image */}
                         <div className="aspect-[16/9] relative">
-                          <TimelineShowcaseCarousel showcaseId={exp.id} />
+                          <TimelineShowcaseCarousel showcaseId={exp.id} color={nodeColor} />
                           <div className="absolute inset-0 bg-gradient-to-t from-twilight/60 via-transparent to-transparent pointer-events-none" />
-                          <div className={`absolute top-2 right-2 px-2 py-0.5 bg-${exp.color}/90 text-eggshell text-xs font-semibold rounded-full pointer-events-none`}>
+                          <div className={`absolute top-2 right-2 px-2 py-0.5 bg-${nodeColor}/90 text-eggshell text-xs font-semibold rounded-full pointer-events-none`}>
                             {exp.period}
                           </div>
                         </div>
@@ -1258,7 +1355,7 @@ const ExperienceSection = () => {
                           <h3 className="text-base font-bold text-twilight dark:text-eggshell mb-1">
                             {exp.title}
                           </h3>
-                          <p className="text-muted-teal font-medium text-sm mb-2">{exp.company}</p>
+                          <p className={`text-${nodeColor} font-medium text-sm mb-2`}>{exp.company}</p>
                           <p className="text-twilight/70 dark:text-eggshell/70 text-sm leading-relaxed mb-3">
                             {exp.description}
                           </p>
@@ -1266,7 +1363,7 @@ const ExperienceSection = () => {
                             {exp.tags.map((tag) => (
                               <span
                                 key={tag}
-                                className="px-2 py-0.5 bg-twilight/5 dark:bg-eggshell/10 text-twilight dark:text-eggshell text-xs rounded-full"
+                                className={`px-2 py-0.5 bg-twilight/5 dark:bg-eggshell/10 text-twilight dark:text-eggshell text-xs rounded-full hover:bg-${nodeColor} hover:text-eggshell transition-all duration-200`}
                               >
                                 {tag}
                               </span>
@@ -1278,11 +1375,6 @@ const ExperienceSection = () => {
                   </div>
                 );
               })}
-
-              {/* Timeline End Cap */}
-              <div className="hidden md:flex justify-center mt-4">
-                <div className="w-4 h-4 rounded-full bg-gradient-to-br from-apricot to-burnt-peach shadow-lg" />
-              </div>
             </div>
           </div>
         </div>

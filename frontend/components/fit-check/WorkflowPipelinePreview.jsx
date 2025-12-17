@@ -150,18 +150,25 @@ export function WorkflowPipelinePreview({ compact = false }) {
     )}>
       {/* Header - docked at top */}
       <div className={cn(
-        "flex items-center justify-center gap-2",
-        compact ? "flex-shrink-0" : "mb-2 flex-shrink-0"
+        "flex flex-col items-center justify-center",
+        compact ? "flex-shrink-0" : "mb-4 flex-shrink-0"
       )}>
-        <div className="w-6 h-6 rounded-full bg-gradient-to-br from-burnt-peach to-burnt-peach/60 flex items-center justify-center pipeline-icon-glow">
-          <Brain className="w-3 h-3 text-eggshell" />
+        <div className="flex items-center justify-center gap-2">
+          <div className="w-6 h-6 rounded-full bg-gradient-to-br from-burnt-peach to-burnt-peach/60 flex items-center justify-center pipeline-icon-glow">
+            <Brain className="w-3 h-3 text-eggshell" />
+          </div>
+          <span className={cn(
+            "font-semibold text-twilight/80 dark:text-eggshell/80 uppercase tracking-wide",
+            compact ? "text-[10px]" : "text-xs"
+          )}>
+            {compact ? "Agentic A.I." : "Utilize Agentic A.I."}
+          </span>
         </div>
-        <span className={cn(
-          "font-semibold text-twilight/80 dark:text-eggshell/80 uppercase tracking-wide",
-          compact ? "text-[10px]" : "text-xs"
-        )}>
-          {compact ? "Agentic A.I." : "Utilize Agentic A.I."}
-        </span>
+        {!compact && (
+          <p className="text-xs text-twilight/60 dark:text-eggshell/60 mt-1.5 text-center max-w-[240px] leading-relaxed">
+            Watch A.I. think in real-time about my resume versus your requirements
+          </p>
+        )}
       </div>
 
       {/* Compact Mode: Horizontal pill layout */}

@@ -355,6 +355,76 @@ html {
   animation: slideOutLeft 500ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
 }
 
+/* ============================================
+   PROJECT MODAL CAROUSEL ANIMATIONS
+   Bidirectional slide animations for project
+   image carousel with left/right navigation
+   ============================================ */
+
+/* Slide in from right (forward navigation) */
+@keyframes carouselSlideInRight {
+  from {
+    transform: translateX(100%);
+    opacity: 0.8;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+/* Slide out to left (forward navigation) */
+@keyframes carouselSlideOutLeft {
+  from {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateX(-100%);
+    opacity: 0.8;
+  }
+}
+
+/* Slide in from left (backward navigation) */
+@keyframes carouselSlideInLeft {
+  from {
+    transform: translateX(-100%);
+    opacity: 0.8;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+/* Slide out to right (backward navigation) */
+@keyframes carouselSlideOutRight {
+  from {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateX(100%);
+    opacity: 0.8;
+  }
+}
+
+.animate-carousel-slide-in-right {
+  animation: carouselSlideInRight 400ms cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+}
+
+.animate-carousel-slide-out-left {
+  animation: carouselSlideOutLeft 400ms cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+}
+
+.animate-carousel-slide-in-left {
+  animation: carouselSlideInLeft 400ms cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+}
+
+.animate-carousel-slide-out-right {
+  animation: carouselSlideOutRight 400ms cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+}
+
 /* Spinning wheel overlay */
 @keyframes spinnerRotate {
   from { transform: rotate(0deg); }
@@ -733,10 +803,10 @@ html {
 
 @keyframes pulseGlow {
   0%, 100% {
-    box-shadow: 0 0 0 0 rgba(224, 122, 95, 0);
+    box-shadow: 0 0 0 0 var(--glow-color, rgba(224, 122, 95, 0));
   }
   50% {
-    box-shadow: 0 0 20px 4px rgba(224, 122, 95, 0.3);
+    box-shadow: 0 0 20px 4px var(--glow-color, rgba(224, 122, 95, 0.3));
   }
 }
 

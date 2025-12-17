@@ -21,6 +21,12 @@ module.exports = {
       'to-burnt-peach', 'to-muted-teal', 'to-apricot',
       'from-burnt-peach/60', 'from-muted-teal/60', 'from-apricot/60',
       'to-burnt-peach/60', 'to-muted-teal/60', 'to-apricot/60',
+      // Timeline text colors
+      'text-burnt-peach', 'text-muted-teal', 'text-apricot',
+      // Timeline hover colors
+      'hover:bg-burnt-peach', 'hover:bg-muted-teal', 'hover:bg-apricot',
+      'group-hover:text-burnt-peach', 'group-hover:text-muted-teal', 'group-hover:text-apricot',
+      'hover:border-burnt-peach/50', 'hover:border-muted-teal/50', 'hover:border-apricot/50',
     ],
     prefix: "",
     theme: {
