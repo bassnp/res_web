@@ -34,10 +34,10 @@ const ModelSelector = () => {
                 "flex items-center gap-1.5 px-3 py-1.5 rounded-sm text-xs font-medium transition-all duration-200",
                 isSelected
                   ? isReasoning
-                    ? "bg-muted-teal/15 border border-muted-teal text-muted-teal"
+                    ? "bg-emerald-500/15 border border-emerald-500 text-emerald-600 dark:text-emerald-400"
                     : "bg-burnt-peach/15 border border-burnt-peach text-burnt-peach"
                   : isReasoning
-                    ? "bg-twilight/5 dark:bg-eggshell/5 border border-twilight/15 dark:border-eggshell/15 text-twilight/70 dark:text-eggshell/70 hover:border-muted-teal/50 hover:text-muted-teal"
+                    ? "bg-twilight/5 dark:bg-eggshell/5 border border-twilight/15 dark:border-eggshell/15 text-twilight/70 dark:text-eggshell/70 hover:border-emerald-500/50 hover:text-emerald-500"
                     : "bg-twilight/5 dark:bg-eggshell/5 border border-twilight/15 dark:border-eggshell/15 text-twilight/70 dark:text-eggshell/70 hover:border-burnt-peach/50 hover:text-burnt-peach"
               )}
               aria-pressed={isSelected}
@@ -105,11 +105,27 @@ export const InputPanel = forwardRef(function InputPanel({
     <form onSubmit={handleSubmit} className="space-y-4">
       {/* InfoDialog for open-source link */}
       <InfoDialog open={infoOpen} onOpenChange={setInfoOpen} />
-      
-      {/* Subtitle - styled with Brutal Honesty theme */}
-      <p className="text-twilight dark:text-eggshell text-sm text-center font-medium">
-        Use my <InfoTriggerLink onClick={() => setInfoOpen(true)} /> <span className="text-burnt-peach font-semibold">Deep Researcher </span> to evaluate MY qualifications <span className="text-emerald-600 dark:text-emerald-400 font-semibold">for YOUR needs</span>
-      </p>
+
+      {/* Header */}
+      <div className="text-center pb-5 mb-6 border-b border-twilight/10 dark:border-eggshell/10">
+        <h2 className="text-lg md:text-xl font-medium text-twilight dark:text-eggshell tracking-tight leading-tight">
+          Use my <InfoTriggerLink onClick={() => setInfoOpen(true)} /> <span className="text-burnt-peach font-semibold">Deep Researcher </span> to evaluate my qualifications <span className="text-emerald-600 dark:text-emerald-400 font-semibold">for YOUR needs</span>
+        </h2>
+      </div>
+
+      {/* Feature Highlights Bubbles */}
+      <div className="flex flex-row gap-3 justify-center mb-6">
+        <div className="flex-1 max-w-[240px] px-4 py-2 bg-emerald-500/20 dark:bg-emerald-500/15 backdrop-blur-sm border border-emerald-500/40 rounded-2xl shadow-sm text-center flex items-center justify-center">
+          <p className="text-xs text-twilight dark:text-eggshell leading-relaxed font-semibold">
+            Modern AI Agent-Harnesses allow real-time research
+          </p>
+        </div>
+        <div className="flex-1 max-w-[240px] px-4 py-2 bg-emerald-500/20 dark:bg-emerald-500/15 backdrop-blur-sm border border-emerald-500/40 rounded-2xl shadow-sm text-center flex items-center justify-center">
+          <p className="text-xs text-twilight dark:text-eggshell leading-relaxed font-semibold">
+            Visualize the Agents's thoughts as it brutally compares my resume
+          </p>
+        </div>
+      </div>
       
       <div className="relative">
         <Textarea

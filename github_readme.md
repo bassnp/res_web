@@ -10,7 +10,7 @@
 <tr>
 <td width="50%" valign="top">
 
-### 🙏 ChurchLink — Team of 7, Graduation Project
+### 🙏 ChurchLink — Team of 6, Graduation Project
 
 Deployed Web Builder Platform for Churches to customize a Website + App w/ Localization, Admin Dashboards, & Payments
 

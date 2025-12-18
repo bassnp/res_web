@@ -41,7 +41,7 @@ export function ResultsSection({
       {/* Results header with title and duration */}
       <div className="flex items-center justify-between px-2">
         <div className="flex items-center gap-2">
-          <CheckCircle2 className="w-4 h-4 text-muted-teal" />
+          <CheckCircle2 className="w-4 h-4 text-emerald-500" />
           {title ? (
             <h3 className="text-lg font-semibold text-twilight dark:text-eggshell text-glow">
               {title}

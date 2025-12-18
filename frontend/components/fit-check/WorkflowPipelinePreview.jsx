@@ -74,7 +74,6 @@ export function WorkflowPipelinePreview({ compact = false }) {
   const [activePhaseIndex, setActivePhaseIndex] = useState(-1);
   const [completedPhases, setCompletedPhases] = useState([]);
   const [isAnimating, setIsAnimating] = useState(false);
-  const [spinnerTop, setSpinnerTop] = useState(0);
   const animationRef = useRef(null);
   const phaseRef = useRef(activePhaseIndex);
   const containerRef = useRef(null);
@@ -83,20 +82,6 @@ export function WorkflowPipelinePreview({ compact = false }) {
   // Keep ref in sync with state
   useEffect(() => {
     phaseRef.current = activePhaseIndex;
-  }, [activePhaseIndex]);
-
-  // Update spinner position when active phase changes
-  useEffect(() => {
-    if (activePhaseIndex >= 0 && phaseRefs.current[activePhaseIndex] && containerRef.current) {
-      const phaseEl = phaseRefs.current[activePhaseIndex];
-      const containerRect = containerRef.current.getBoundingClientRect();
-      const phaseRect = phaseEl.getBoundingClientRect();
-      
-      // Calculate center of the phase node relative to container
-      const phaseCenterY = phaseRect.top - containerRect.top + (phaseRect.height / 2);
-      // Offset by half the spinner height (w-4 h-4 = 16px, so 8px)
-      setSpinnerTop(phaseCenterY - 8);
-    }
   }, [activePhaseIndex]);
 
   // Single, reliable animation loop using recursive setTimeout
@@ -161,14 +146,9 @@ export function WorkflowPipelinePreview({ compact = false }) {
             "font-semibold text-twilight/80 dark:text-eggshell/80 uppercase tracking-wide",
             compact ? "text-[10px]" : "text-xs"
           )}>
-            {compact ? "Agentic A.I." : "Utilize Agentic A.I."}
+            {"Powered by Agentic A.I."}
           </span>
         </div>
-        {!compact && (
-          <p className="text-xs text-twilight/60 dark:text-eggshell/60 mt-1.5 text-center max-w-[240px] leading-relaxed">
-            Watch A.I. think in real-time about my resume versus your requirements
-          </p>
-        )}
       </div>
 
       {/* Compact Mode: Horizontal pill layout */}
@@ -185,7 +165,7 @@ export function WorkflowPipelinePreview({ compact = false }) {
                 ref={(el) => (phaseRefs.current[index] = el)}
                 className={cn(
                   "flex items-center gap-1 px-2 py-1 rounded-full transition-all duration-300",
-                  "border text-[9px] font-medium whitespace-nowrap",
+                  "border text-[9px] font-medium whitespace-nowrap cursor-default hover:scale-110 hover:-translate-y-0.5",
                   isComplete && "bg-muted-teal/20 border-muted-teal/50 text-muted-teal",
                   isActive && "bg-burnt-peach/15 border-burnt-peach/50 text-burnt-peach pipeline-phase-active",
                   !isComplete && !isActive && "bg-twilight/5 dark:bg-eggshell/5 border-twilight/15 dark:border-eggshell/15 text-twilight/40 dark:text-eggshell/40"
@@ -216,20 +196,6 @@ export function WorkflowPipelinePreview({ compact = false }) {
         <div className="flex-1 flex flex-col items-center justify-center">
           {/* Pipeline Steps - wrapper includes space for spinner to keep content centered */}
           <div className="relative w-full max-w-[184px] pl-3" ref={containerRef}>
-            {/* Fixed position spinner - positioned within the padded area */}
-            <div className="absolute right-0 top-0 bottom-0 w-5 pointer-events-none">
-              {activePhaseIndex >= 0 && isAnimating && (
-                <div 
-                  className="absolute w-4 h-4 transition-all duration-300 ease-out flex items-center justify-center"
-                  style={{ 
-                    top: `${spinnerTop}px`,
-                  }}
-                >
-                  <Loader2 className="w-4 h-4 text-burnt-peach animate-spin" />
-                </div>
-              )}
-            </div>
-
             <div className="flex flex-col">
               {PIPELINE_PHASES.map((phase, index) => {
                 const isActive = index === activePhaseIndex;
@@ -244,12 +210,19 @@ export function WorkflowPipelinePreview({ compact = false }) {
                       ref={(el) => (phaseRefs.current[index] = el)}
                       className={cn(
                         "flex items-center gap-2 px-2.5 py-2 rounded-sm transition-all duration-300",
-                        "border",
+                        "border cursor-default hover:scale-110 hover:-translate-y-1 relative",
                         isComplete && "bg-muted-teal/15 border-muted-teal/40",
                         isActive && "bg-burnt-peach/10 border-burnt-peach/30 pipeline-phase-active",
                         isPending && "bg-twilight/5 dark:bg-eggshell/5 border-twilight/10 dark:border-eggshell/10"
                       )}
                     >
+                      {/* Active Spinner - Surgical addition to ensure perfect alignment with card transforms */}
+                      {isActive && isAnimating && (
+                        <div className="absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none">
+                          <Loader2 className="w-3.5 h-3.5 text-burnt-peach animate-spin" />
+                        </div>
+                      )}
+
                       {/* Icon */}
                       <div
                         className={cn(
@@ -271,7 +244,7 @@ export function WorkflowPipelinePreview({ compact = false }) {
                         className={cn(
                           "text-[10px] font-medium transition-colors duration-300 truncate",
                           isComplete && "text-muted-teal",
-                          isActive && "text-twilight dark:text-eggshell font-semibold",
+                          isActive && "text-twilight dark:text-eggshell font-semibold pr-6",
                           isPending && "text-twilight/30 dark:text-eggshell/30"
                         )}
                       >

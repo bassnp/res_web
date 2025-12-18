@@ -12,7 +12,7 @@ const PHASE_COLORS = {
   deep_research: 'border-l-purple-400',
   research_reranker: 'border-l-violet-400',
   skeptical_comparison: 'border-l-amber-400',
-  skills_matching: 'border-l-muted-teal',
+  skills_matching: 'border-l-emerald-400',
   confidence_reranker: 'border-l-emerald-400',
   generate_results: 'border-l-burnt-peach',
 };
@@ -54,7 +54,7 @@ export function ThoughtNode({ thought, isLast = false, isActive = false }) {
       {/* Timeline connector line */}
       {!isLast && (
         <div 
-          className="absolute left-[11px] top-8 bottom-0 w-0.5 bg-gradient-to-b from-burnt-peach/50 to-muted-teal/30 timeline-connector" 
+          className="absolute left-[11px] top-8 bottom-0 w-0.5 bg-gradient-to-b from-burnt-peach/50 to-emerald-500/30 timeline-connector" 
         />
       )}
 
@@ -131,8 +131,8 @@ export function ThoughtNode({ thought, isLast = false, isActive = false }) {
         {/* Status indicator */}
         {!isActive && (
           <div className="flex items-center gap-1 mt-2">
-            <CheckCircle2 className="w-3 h-3 text-muted-teal" />
-            <span className="text-xs text-muted-teal">Complete</span>
+            <CheckCircle2 className="w-3 h-3 text-emerald-500" />
+            <span className="text-xs text-emerald-500">Complete</span>
           </div>
         )}
       </div>
@@ -157,9 +157,9 @@ function getThoughtConfig(type, tool) {
       return {
         icon: Eye,
         label: 'Observation',
-        dotBg: 'bg-muted-teal',
-        borderColor: 'border-muted-teal/20',
-        labelColor: 'text-muted-teal',
+        dotBg: 'bg-emerald-500',
+        borderColor: 'border-emerald-500/20',
+        labelColor: 'text-emerald-500',
       };
     case 'reasoning':
       return {

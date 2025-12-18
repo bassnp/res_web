@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useTheme } from 'next-themes';
-import { Briefcase, User, Mail, Github, ChevronDown, ExternalLink, Sun, Moon, Code, FileText, Camera, Eye } from 'lucide-react';
+import { Briefcase, User, Mail, Github, ChevronDown, ExternalLink, Sun, Moon, Code, FileText, Camera, Eye, Clock } from 'lucide-react';
 import { useHeaderVisibility } from '@/hooks/use-header-visibility';
 import { InfoDialog, InfoButton } from '@/components/fit-check/InfoDialog';
 import { ProjectModal, ReadSummaryButton } from '@/components/ProjectModal';
@@ -415,7 +415,11 @@ const HeroAboutSection = () => {
 
   const skills = [
     'JavaScript', 'React', 'Next.js', 'Python', 'Node.js', 'TypeScript',
-    'PostgreSQL', 'Git', 'AWS', 'Docker', 'TailwindCSS'
+    'PostgreSQL', 'AWS', 'Docker', 'TailwindCSS'
+  ];
+
+  const devOps = [
+    'Jira', 'Slack', 'Git', 'Github', 'Figma', 'CapCut', 'Discord'
   ];
 
   /**
@@ -653,10 +657,26 @@ const HeroAboutSection = () => {
                   {skills.map((skill, index) => (
                     <span
                       key={skill}
-                      className="px-3 py-1.5 bg-twilight/5 dark:bg-eggshell/10 text-twilight dark:text-eggshell rounded-full text-xs font-medium hover:bg-muted-teal dark:hover:bg-muted-teal hover:text-eggshell dark:hover:text-eggshell transition-all duration-300 cursor-default hover:scale-110 hover:-translate-y-1"
+                      className="inline-flex items-center justify-center h-7 px-3 bg-muted-teal/10 dark:bg-muted-teal/18 text-twilight dark:text-eggshell rounded-full text-xs font-medium border border-muted-teal/20 dark:border-muted-teal/30 hover:bg-muted-teal hover:border-muted-teal hover:text-eggshell transition-all duration-300 cursor-default hover:scale-110 hover:-translate-y-1 transform-gpu whitespace-nowrap"
                       style={{ animationDelay: `${index * 50}ms` }}
                     >
                       {skill}
+                    </span>
+                  ))}
+                </div>
+              </div>
+
+              {/* Dev Ops */}
+              <div className="mt-4 opacity-0 animate-fade-in delay-400">
+                <h3 className="text-sm font-semibold text-twilight dark:text-eggshell mb-2">Dev Ops</h3>
+                <div className="flex flex-wrap justify-center gap-2">
+                  {devOps.map((tool, index) => (
+                    <span
+                      key={tool}
+                      className="inline-flex items-center justify-center h-7 px-3 bg-burnt-peach/10 dark:bg-burnt-peach/18 text-twilight dark:text-eggshell rounded-full text-xs font-medium border border-burnt-peach/20 dark:border-burnt-peach/30 hover:bg-burnt-peach hover:border-burnt-peach hover:text-eggshell transition-all duration-300 cursor-default hover:scale-110 hover:-translate-y-1 transform-gpu whitespace-nowrap"
+                      style={{ animationDelay: `${(index + skills.length) * 50}ms` }}
+                    >
+                      {tool}
                     </span>
                   ))}
                 </div>
@@ -686,7 +706,9 @@ const HeroAboutSection = () => {
                   />
                 </div>
                 <div>
-                  <h3 className="text-lg font-semibold text-twilight dark:text-eggshell">Bachelor of Science Degree in Computer Science</h3>
+                  <h3 className="text-lg font-bold text-muted-teal">
+                    Bachelor of Science Degree in Computer Science
+                  </h3>
                   <p className="text-twilight/60 dark:text-eggshell/60 text-sm">California State University, Sacramento • 2025 Winter Graduate</p>
                 </div>
               </div>
@@ -694,7 +716,7 @@ const HeroAboutSection = () => {
               {/* Bio */}
               <div className="opacity-0 animate-fade-in-right delay-200">
                 <p className="text-twilight/80 dark:text-eggshell/80 leading-relaxed mb-4 text-sm">
-                  <span className="font-bold text-muted-teal">TLDR; I am Jaden Bruha, and I'm a very nerdy engineer.</span> <br></br> I have a passion for building  anything and everything from software, computers to serve my software, AI agents, and motorcycles. My journey started at a young age as a hobbyist, and I've grown into a full stack developer striving for elegant solutions.
+                  <span className="font-bold text-muted-teal">TLDR; I am Jaden Bruha, I'm a 22 year old new-grad, and I'm a very nerdy engineer with big aspirations.</span> <br></br> I have a passion for building anything and everything from software, computers to serve my software, AI agents, and motorcycles. My journey started at a young age as a hobbyist, and I've grown into a full stack developer striving for elegant solutions. My current fixations include learning about quantum philosophy, parallelized programming, and AI agent harnesses. <br></br>
                 </p>
               </div>
 
@@ -724,7 +746,7 @@ const HeroAboutSection = () => {
                   <div className="p-2">
                     <div className="flex items-center gap-1.5 mb-2">
                       <FileText className="w-3.5 h-3.5 text-burnt-peach" />
-                      <h4 className="text-xs font-semibold text-twilight dark:text-eggshell">My Transcript</h4>
+                      <h4 className="text-xs font-semibold text-twilight dark:text-eggshell">PDF Formatted Resume</h4>
                     </div>
                     {/* PDF Thumbnail Preview */}
                     <div className="relative aspect-[4/5] bg-white dark:bg-twilight/30 rounded-[3px] border border-twilight/10 dark:border-eggshell/10 overflow-hidden">
@@ -854,7 +876,7 @@ const ProjectsSection = () => {
           Featured <span className="text-muted-teal">Projects</span>
         </h2>
         <p className="text-twilight/60 dark:text-eggshell/60 text-center mb-8 max-w-2xl mx-auto">
-          My top-3 favorite projects to showcase my diverse skills and passion for building.
+          My top-3 favorite projects showcasing my diverse skills, hard work, and passion for building
         </p>
 
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
@@ -866,7 +888,7 @@ const ProjectsSection = () => {
               onOpenChange={(isOpen) => setOpenProjectId(isOpen ? project.id : null)}
             >
               <div
-                className="group bg-white dark:bg-twilight/50 rounded-sm overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500 hover:-translate-y-1 opacity-0 animate-scale-in-no-transform glass flex flex-col cursor-pointer"
+                className="group bg-white dark:bg-twilight/50 rounded-sm overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-200 hover:-translate-y-0.5 opacity-0 animate-scale-in-no-transform glass flex flex-col cursor-pointer"
                 style={{ animationDelay: `${index * 150}ms` }}
                 role="button"
                 tabIndex={0}
@@ -1198,7 +1220,7 @@ const ExperienceSection = () => {
                 return (
                   <div
                     key={exp.id}
-                    className={`relative -mb-4 last:mb-0 opacity-0 animate-slide-up`}
+                    className={`relative md:-mb-36 -mb-10 last:mb-0 opacity-0 animate-slide-up`}
                     style={{ animationDelay: `${index * 150}ms` }}
                   >
                     {/* Desktop Layout - Alternating */}
@@ -1208,25 +1230,37 @@ const ExperienceSection = () => {
                         {isLeft ? (
                           /* Showcase Card - Left */
                           <div className="flex justify-end">
-                            <div className="relative w-full max-w-sm bg-white dark:bg-twilight/50 rounded-[5px] shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 overflow-hidden group glass">
+                            <div className="relative w-full max-w-sm bg-white dark:bg-twilight/50 rounded-[5px] shadow-lg hover:shadow-xl transition-all duration-200 hover:-translate-y-0.5 overflow-hidden group glass">
                               {/* Showcase Image Container */}
-                              <div className="aspect-[16/10] relative">
+                              <div className="aspect-[16/9] relative">
                                 <TimelineShowcaseCarousel showcaseId={exp.id} color={nodeColor} />
                                 {/* Gradient Overlay */}
                                 <div className="absolute inset-0 bg-gradient-to-t from-twilight/60 via-transparent to-transparent pointer-events-none" />
-                                {/* Period Badge */}
-                                <div className={`absolute top-3 right-3 px-3 py-1 bg-${nodeColor}/90 text-eggshell text-xs font-semibold rounded-full shadow-md pointer-events-none`}>
-                                  {exp.period}
-                                </div>
                               </div>
                               {/* Card Content */}
-                              <div className="p-4">
-                                <h3 className={`text-lg font-bold text-twilight dark:text-eggshell mb-1 group-hover:text-${nodeColor} transition-colors`}>
-                                  {exp.title}
-                                </h3>
-                                <p className={`text-${nodeColor} font-medium text-sm mb-2`}>{exp.company}</p>
+                              <div className="p-3.5">
+                                <div className="flex items-center justify-between gap-2 mb-0.5">
+                                  <h3 className="text-lg font-bold text-twilight dark:text-eggshell transition-colors">
+                                    {exp.title}
+                                  </h3>
+                                  <div className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-twilight/5 dark:bg-eggshell/15 border border-twilight/15 dark:border-eggshell/20 group-hover:bg-${nodeColor}/20 group-hover:border-${nodeColor}/40 transition-all duration-300`}>
+                                    <Clock className={`w-4 h-4 text-${nodeColor} transition-transform duration-300 group-hover:scale-110`} />
+                                    <span className={`text-xs font-bold text-twilight/60 dark:text-eggshell/80 group-hover:text-${nodeColor} transition-colors whitespace-nowrap`}>
+                                      {exp.period}
+                                    </span>
+                                  </div>
+                                </div>
+                                <p className={`text-${nodeColor} font-medium text-xs mb-2`}>{exp.company}</p>
+                                
+                                {/* Description Row */}
+                                <div className={`mt-1.5 mb-2 p-2.5 rounded-[5px] border border-${nodeColor}/20 bg-twilight/5 dark:bg-eggshell/5`}>
+                                  <p className="text-twilight/70 dark:text-eggshell/70 text-sm leading-relaxed">
+                                    {exp.description}
+                                  </p>
+                                </div>
+
                                 {/* Tags */}
-                                <div className="flex flex-wrap gap-1.5">
+                                <div className="flex flex-wrap gap-1">
                                   {exp.tags.map((tag) => (
                                     <span
                                       key={tag}
@@ -1240,32 +1274,18 @@ const ExperienceSection = () => {
                             </div>
                           </div>
                         ) : (
-                          /* Description Card - Left */
-                          <div className="flex justify-end">
-                            <div className="w-full max-w-sm text-right">
-                              <div className={`bg-white/50 dark:bg-twilight/30 backdrop-blur-sm rounded-[5px] p-5 border border-twilight/10 dark:border-eggshell/10 hover:border-${nodeColor}/50 transition-all duration-300`}>
-                                <p className="text-twilight/80 dark:text-eggshell/80 text-sm leading-relaxed">
-                                  {exp.description}
-                                </p>
-                              </div>
-                            </div>
-                          </div>
+                          /* Empty space where Description Card used to be */
+                          <div className="w-full max-w-sm" />
                         )}
                       </div>
 
-                      {/* Center - Timeline Node with Connecting Lines */}
+                      {/* Center - Timeline Node with Connecting Line */}
                       <div className="relative flex items-center justify-center">
-                        {/* Connecting Line - Left */}
+                        {/* Connecting Line to Card */}
                         <div className={`absolute h-0.5 bg-gradient-to-r ${
                           isLeft 
                             ? `from-${nodeColor}/60 to-${nodeColor} right-1/2 w-[30px]`
                             : `from-${nodeColor} to-${nodeColor}/60 left-1/2 w-[30px]`
-                        }`} />
-                        {/* Connecting Line - Right */}
-                        <div className={`absolute h-0.5 bg-gradient-to-r ${
-                          isLeft 
-                            ? `from-${nodeColor} to-${nodeColor}/60 left-1/2 w-[30px]`
-                            : `from-${nodeColor}/60 to-${nodeColor} right-1/2 w-[30px]`
                         }`} />
                         {/* Timeline Node */}
                         <div 
@@ -1281,25 +1301,37 @@ const ExperienceSection = () => {
                         {!isLeft ? (
                           /* Showcase Card - Right */
                           <div className="flex justify-start">
-                            <div className="relative w-full max-w-sm bg-white dark:bg-twilight/50 rounded-[5px] shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 overflow-hidden group glass">
+                            <div className="relative w-full max-w-sm bg-white dark:bg-twilight/50 rounded-[5px] shadow-lg hover:shadow-xl transition-all duration-200 hover:-translate-y-0.5 overflow-hidden group glass">
                               {/* Showcase Image Container */}
-                              <div className="aspect-[16/10] relative">
+                              <div className="aspect-[16/9] relative">
                                 <TimelineShowcaseCarousel showcaseId={exp.id} color={nodeColor} />
                                 {/* Gradient Overlay */}
                                 <div className="absolute inset-0 bg-gradient-to-t from-twilight/60 via-transparent to-transparent pointer-events-none" />
-                                {/* Period Badge */}
-                                <div className={`absolute top-3 left-3 px-3 py-1 bg-${nodeColor}/90 text-eggshell text-xs font-semibold rounded-full shadow-md pointer-events-none`}>
-                                  {exp.period}
-                                </div>
                               </div>
                               {/* Card Content */}
-                              <div className="p-4">
-                                <h3 className={`text-lg font-bold text-twilight dark:text-eggshell mb-1 group-hover:text-${nodeColor} transition-colors`}>
-                                  {exp.title}
-                                </h3>
-                                <p className={`text-${nodeColor} font-medium text-sm mb-2`}>{exp.company}</p>
+                              <div className="p-3.5">
+                                <div className="flex items-center justify-between gap-2 mb-0.5">
+                                  <h3 className="text-lg font-bold text-twilight dark:text-eggshell transition-colors">
+                                    {exp.title}
+                                  </h3>
+                                  <div className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-twilight/5 dark:bg-eggshell/15 border border-twilight/15 dark:border-eggshell/20 group-hover:bg-${nodeColor}/20 group-hover:border-${nodeColor}/40 transition-all duration-300`}>
+                                    <Clock className={`w-4 h-4 text-${nodeColor} transition-transform duration-300 group-hover:scale-110`} />
+                                    <span className={`text-xs font-bold text-twilight/60 dark:text-eggshell/80 group-hover:text-${nodeColor} transition-colors whitespace-nowrap`}>
+                                      {exp.period}
+                                    </span>
+                                  </div>
+                                </div>
+                                <p className={`text-${nodeColor} font-medium text-xs mb-2`}>{exp.company}</p>
+                                
+                                {/* Description Row */}
+                                <div className={`mt-1.5 mb-2 p-2.5 rounded-[5px] border border-${nodeColor}/20 bg-twilight/5 dark:bg-eggshell/5`}>
+                                  <p className="text-twilight/70 dark:text-eggshell/70 text-sm leading-relaxed">
+                                    {exp.description}
+                                  </p>
+                                </div>
+
                                 {/* Tags */}
-                                <div className="flex flex-wrap gap-1.5">
+                                <div className="flex flex-wrap gap-1">
                                   {exp.tags.map((tag) => (
                                     <span
                                       key={tag}
@@ -1313,16 +1345,8 @@ const ExperienceSection = () => {
                             </div>
                           </div>
                         ) : (
-                          /* Description Card - Right */
-                          <div className="flex justify-start">
-                            <div className="w-full max-w-sm text-left">
-                              <div className={`bg-white/50 dark:bg-twilight/30 backdrop-blur-sm rounded-[5px] p-5 border border-twilight/10 dark:border-eggshell/10 hover:border-${nodeColor}/50 transition-all duration-300`}>
-                                <p className="text-twilight/80 dark:text-eggshell/80 text-sm leading-relaxed">
-                                  {exp.description}
-                                </p>
-                              </div>
-                            </div>
-                          </div>
+                          /* Empty space where Description Card used to be */
+                          <div className="w-full max-w-sm" />
                         )}
                       </div>
                     </div>
@@ -1346,20 +1370,30 @@ const ExperienceSection = () => {
                         <div className="aspect-[16/9] relative">
                           <TimelineShowcaseCarousel showcaseId={exp.id} color={nodeColor} />
                           <div className="absolute inset-0 bg-gradient-to-t from-twilight/60 via-transparent to-transparent pointer-events-none" />
-                          <div className={`absolute top-2 right-2 px-2 py-0.5 bg-${nodeColor}/90 text-eggshell text-xs font-semibold rounded-full pointer-events-none`}>
-                            {exp.period}
-                          </div>
                         </div>
                         {/* Content */}
-                        <div className="p-4">
-                          <h3 className="text-base font-bold text-twilight dark:text-eggshell mb-1">
-                            {exp.title}
-                          </h3>
-                          <p className={`text-${nodeColor} font-medium text-sm mb-2`}>{exp.company}</p>
-                          <p className="text-twilight/70 dark:text-eggshell/70 text-sm leading-relaxed mb-3">
-                            {exp.description}
-                          </p>
-                          <div className="flex flex-wrap gap-1.5">
+                        <div className="p-3.5">
+                          <div className="flex items-center justify-between gap-2 mb-0.5">
+                            <h3 className="text-base font-bold text-twilight dark:text-eggshell">
+                              {exp.title}
+                            </h3>
+                            <div className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-twilight/5 dark:bg-eggshell/15 border border-twilight/15 dark:border-eggshell/20 transition-all duration-300`}>
+                              <Clock className={`w-3.5 h-3.5 text-${nodeColor}`} />
+                              <span className={`text-[10px] font-bold text-twilight/60 dark:text-eggshell/80 whitespace-nowrap`}>
+                                {exp.period}
+                              </span>
+                            </div>
+                          </div>
+                          <p className={`text-${nodeColor} font-medium text-xs mb-2`}>{exp.company}</p>
+                          
+                          {/* Description Row */}
+                          <div className={`mt-1.5 mb-2 p-2.5 rounded-[5px] border border-${nodeColor}/20 bg-twilight/5 dark:bg-eggshell/5`}>
+                            <p className="text-twilight/70 dark:text-eggshell/70 text-sm leading-relaxed">
+                              {exp.description}
+                            </p>
+                          </div>
+
+                          <div className="flex flex-wrap gap-1">
                             {exp.tags.map((tag) => (
                               <span
                                 key={tag}

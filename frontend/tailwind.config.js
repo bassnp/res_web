@@ -27,6 +27,7 @@ module.exports = {
       'hover:bg-burnt-peach', 'hover:bg-muted-teal', 'hover:bg-apricot',
       'group-hover:text-burnt-peach', 'group-hover:text-muted-teal', 'group-hover:text-apricot',
       'hover:border-burnt-peach/50', 'hover:border-muted-teal/50', 'hover:border-apricot/50',
+      'border-burnt-peach/20', 'border-muted-teal/20', 'border-apricot/20',
     ],
     prefix: "",
     theme: {

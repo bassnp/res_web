@@ -102,7 +102,7 @@ export function FitCheckSection() {
                 </div>
               ) : (
                 <div className="p-6 flex flex-col items-center justify-center h-full text-center">
-                  <CheckCircle2 className="w-12 h-12 text-muted-teal mb-4 animate-bounce-slow" />
+                  <CheckCircle2 className="w-12 h-12 text-emerald-500 mb-4 animate-bounce-slow" />
                   <p className="text-sm font-medium text-twilight/60 dark:text-eggshell/60">Analysis Complete</p>
                 </div>
               )}
@@ -147,7 +147,7 @@ export function FitCheckSection() {
               ) : (
                 <div className="p-4 md:p-6 flex items-center justify-between gap-4 h-full">
                   <div className="flex items-center gap-2">
-                    <CheckCircle2 className="w-5 h-5 text-muted-teal" />
+                    <CheckCircle2 className="w-5 h-5 text-emerald-500" />
                     <h2 className="text-lg md:text-xl font-bold text-twilight dark:text-eggshell">
                       Analysis Complete
                     </h2>
@@ -182,7 +182,7 @@ export function FitCheckSection() {
                     <Button
                       type="button"
                       onClick={handleNewQuery}
-                      className="bg-muted-teal hover:bg-muted-teal/90 text-eggshell px-4 py-2 rounded-sm hover:scale-[1.02] transition-all duration-200"
+                      className="bg-emerald-600 hover:bg-emerald-500 text-eggshell px-4 py-2 rounded-sm hover:scale-[1.02] transition-all duration-200"
                     >
                       <RefreshCw className="w-4 h-4 mr-2" />
                       Try Another
