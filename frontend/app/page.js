@@ -263,7 +263,7 @@ const Footer = () => {
   return (
     <footer className="text-twilight dark:text-eggshell py-6 relative z-20">
       <div className="container mx-auto px-6">
-        <div className="relative bg-background/95 backdrop-blur-sm rounded-[5px] shadow-[0_2px_8px_rgba(61,64,91,0.08)] dark:shadow-[0_2px_12px_rgba(0,0,0,0.3)] border border-twilight/8 dark:border-eggshell/8 overflow-hidden py-6">
+        <div className="relative bg-background/30 backdrop-blur-sm rounded-[5px] shadow-[0_2px_8px_rgba(61,64,91,0.08)] dark:shadow-[0_2px_12px_rgba(0,0,0,0.3)] border border-twilight/8 dark:border-eggshell/8 overflow-hidden py-6">
           <InteractiveGridDots />
           <div className="relative z-10 px-8">
             {/* Main footer content */}
