@@ -115,12 +115,12 @@ export const InputPanel = forwardRef(function InputPanel({
 
       {/* Feature Highlights Bubbles */}
       <div className="flex flex-row gap-3 justify-center mb-6">
-        <div className="flex-1 max-w-[240px] px-4 py-2 bg-emerald-500/20 dark:bg-emerald-500/15 backdrop-blur-sm border border-emerald-500/40 rounded-2xl shadow-sm text-center flex items-center justify-center">
+        <div className="flex-1 max-w-[240px] px-4 py-2 bg-emerald-500/20 dark:bg-emerald-500/15 backdrop-blur-sm border border-emerald-500/40 rounded-2xl shadow-sm text-center flex items-center justify-center transition-[transform,background-color,border-color] duration-300 hover:scale-105 hover:-translate-y-1 hover:bg-emerald-500/30 hover:border-emerald-500/60 cursor-default">
           <p className="text-xs text-twilight dark:text-eggshell leading-relaxed font-semibold">
-            Modern AI Agent-Harnesses allow real-time research
+            Modern AI Agent-Harnesses allow for real-time internet research
           </p>
         </div>
-        <div className="flex-1 max-w-[240px] px-4 py-2 bg-emerald-500/20 dark:bg-emerald-500/15 backdrop-blur-sm border border-emerald-500/40 rounded-2xl shadow-sm text-center flex items-center justify-center">
+        <div className="flex-1 max-w-[240px] px-4 py-2 bg-emerald-500/20 dark:bg-emerald-500/15 backdrop-blur-sm border border-emerald-500/40 rounded-2xl shadow-sm text-center flex items-center justify-center transition-[transform,background-color,border-color] duration-300 hover:scale-105 hover:-translate-y-1 hover:bg-emerald-500/30 hover:border-emerald-500/60 cursor-default">
           <p className="text-xs text-twilight dark:text-eggshell leading-relaxed font-semibold">
             Visualize the Agents's thoughts as it brutally compares my resume
           </p>

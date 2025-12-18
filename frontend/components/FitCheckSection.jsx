@@ -75,6 +75,7 @@ export function FitCheckSection() {
             "shadow-[0_2px_8px_rgba(61,64,91,0.08)] dark:shadow-[0_2px_12px_rgba(0,0,0,0.3)]",
             "border border-twilight/8 dark:border-eggshell/8 overflow-hidden",
             "flex flex-col lg:col-span-1",
+            "transition-all duration-300 hover:-translate-y-1 hover:shadow-xl",
             uiPhase === 'results' && "hidden lg:flex"
           )}>
             <HeroGridDots />
@@ -114,7 +115,8 @@ export function FitCheckSection() {
             "relative bg-background/95 backdrop-blur-sm rounded-[5px]",
             "shadow-[0_2px_8px_rgba(61,64,91,0.08)] dark:shadow-[0_2px_12px_rgba(0,0,0,0.3)]",
             "border border-twilight/8 dark:border-eggshell/8 overflow-hidden",
-            "flex flex-col lg:col-span-2"
+            "flex flex-col lg:col-span-2",
+            "transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
           )}>
             <InteractiveGridDots />
             <div className="relative z-10 flex-1 flex flex-col">

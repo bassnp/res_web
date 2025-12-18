@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useTheme } from 'next-themes';
-import { Briefcase, User, Mail, Github, ChevronDown, ExternalLink, Sun, Moon, Code, FileText, Camera, Eye, Clock } from 'lucide-react';
+import { Briefcase, Mail, Github, ChevronDown, ExternalLink, Sun, Moon, Code, FileText, Camera, Eye, Clock } from 'lucide-react';
 import { useHeaderVisibility } from '@/hooks/use-header-visibility';
 import { InfoDialog, InfoButton } from '@/components/fit-check/InfoDialog';
 import { ProjectModal, ReadSummaryButton } from '@/components/ProjectModal';
@@ -272,7 +272,8 @@ const Footer = () => {
               <div>
                 <h3 className="text-lg font-semibold mb-3">Portfolio</h3>
                 <p className="text-twilight/70 dark:text-eggshell/70 text-sm leading-relaxed">
-                  Hobbyist software engineer &amp; recent graduate passionate about building elegant solutions.
+                  Feel free to reach out to chat, collaborate, inquirie, or just say hi!
+                  <br />I'm always open to meeting new people who share similar interets and passions, as well as people who also don't but would like to !
                 </p>
               </div>
 
@@ -414,12 +415,11 @@ const HeroAboutSection = () => {
   ].includes(animationState);
 
   const skills = [
-    'JavaScript', 'React', 'Next.js', 'Python', 'Node.js', 'TypeScript',
-    'PostgreSQL', 'AWS', 'Docker', 'TailwindCSS'
+    'TODO'
   ];
 
   const devOps = [
-    'Jira', 'Slack', 'Git', 'Github', 'Figma', 'CapCut', 'Discord'
+    'Jira', 'Slack', 'Git', 'Github', 'Figma', 'Excel Sheets', 'CapCut'
   ];
 
   /**
@@ -636,17 +636,20 @@ const HeroAboutSection = () => {
         {/* Grid: 1/3 left container, 2/3 right container */}
         <div className="grid lg:grid-cols-3 gap-6 items-stretch">
           {/* Left: Hero Content with Grid Dots (1/3 width) */}
-          <div className="relative bg-background/95 backdrop-blur-sm rounded-[5px] shadow-[0_2px_8px_rgba(61,64,91,0.08)] dark:shadow-[0_2px_12px_rgba(0,0,0,0.3)] border border-twilight/8 dark:border-eggshell/8 overflow-hidden min-h-0 md:min-h-[300px] flex flex-col lg:col-span-1">
+          <div className="relative bg-background/95 backdrop-blur-sm rounded-[5px] shadow-[0_2px_8px_rgba(61,64,91,0.08)] dark:shadow-[0_2px_12px_rgba(0,0,0,0.3)] border border-twilight/8 dark:border-eggshell/8 overflow-hidden min-h-0 md:min-h-[300px] flex flex-col lg:col-span-1 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
             <HeroGridDots />
             <div className="relative z-10 px-3 py-2 md:px-8 md:py-5 text-center flex-1 flex flex-col justify-center">
-              {/* Profile Picture Placeholder (3:4 aspect ratio) */}
+              {/* Profile Picture (3:4 aspect ratio) */}
               <div className="flex justify-center mb-4 opacity-0 animate-fade-in delay-200 group">
                 <div 
-                  className="w-36 md:w-48 bg-twilight/10 dark:bg-eggshell/10 rounded-[5px] border-2 border-dashed border-twilight/30 dark:border-eggshell/30 flex items-center justify-center transition-all duration-300 group-hover:scale-110 group-hover:border-muted-teal/50 group-hover:bg-twilight/5 dark:group-hover:bg-eggshell/5 transform-gpu will-change-transform cursor-pointer shadow-none group-hover:shadow-2xl"
+                  className="w-36 md:w-48 bg-twilight/10 dark:bg-eggshell/10 rounded-[5px] border-2 border-solid border-twilight/30 dark:border-eggshell/30 flex items-center justify-center transition-all duration-300 group-hover:scale-110 group-hover:border-muted-teal/50 group-hover:bg-twilight/5 dark:group-hover:bg-eggshell/5 cursor-pointer shadow-none group-hover:shadow-2xl overflow-hidden"
                   style={{ aspectRatio: '3/4' }}
                 >
-                  {/* Placeholder icon for future profile picture */}
-                  <User className="w-12 h-12 md:w-16 md:h-16 text-twilight/40 dark:text-eggshell/40 transition-all duration-300 group-hover:scale-125 group-hover:text-muted-teal/60" />
+                  <img 
+                    src="/resources/portrait.jpg" 
+                    alt="Jaden Bruha Portrait" 
+                    className="w-full h-full object-cover transition-all duration-300 group-hover:scale-105"
+                  />
                 </div>
               </div>
 
@@ -657,7 +660,7 @@ const HeroAboutSection = () => {
                   {skills.map((skill, index) => (
                     <span
                       key={skill}
-                      className="inline-flex items-center justify-center h-7 px-3 bg-muted-teal/10 dark:bg-muted-teal/18 text-twilight dark:text-eggshell rounded-full text-xs font-medium border border-muted-teal/20 dark:border-muted-teal/30 hover:bg-muted-teal hover:border-muted-teal hover:text-eggshell transition-all duration-300 cursor-default hover:scale-110 hover:-translate-y-1 transform-gpu whitespace-nowrap"
+                      className="inline-flex items-center justify-center h-7 px-3 bg-muted-teal/10 dark:bg-muted-teal/18 text-twilight dark:text-eggshell rounded-full text-xs font-medium border border-muted-teal/20 dark:border-muted-teal/30 hover:bg-muted-teal hover:border-muted-teal hover:text-eggshell transition-all duration-300 cursor-default hover:scale-110 hover:-translate-y-1 whitespace-nowrap"
                       style={{ animationDelay: `${index * 50}ms` }}
                     >
                       {skill}
@@ -673,7 +676,7 @@ const HeroAboutSection = () => {
                   {devOps.map((tool, index) => (
                     <span
                       key={tool}
-                      className="inline-flex items-center justify-center h-7 px-3 bg-burnt-peach/10 dark:bg-burnt-peach/18 text-twilight dark:text-eggshell rounded-full text-xs font-medium border border-burnt-peach/20 dark:border-burnt-peach/30 hover:bg-burnt-peach hover:border-burnt-peach hover:text-eggshell transition-all duration-300 cursor-default hover:scale-110 hover:-translate-y-1 transform-gpu whitespace-nowrap"
+                      className="inline-flex items-center justify-center h-7 px-3 bg-burnt-peach/10 dark:bg-burnt-peach/18 text-twilight dark:text-eggshell rounded-full text-xs font-medium border border-burnt-peach/20 dark:border-burnt-peach/30 hover:bg-burnt-peach hover:border-burnt-peach hover:text-eggshell transition-all duration-300 cursor-default hover:scale-110 hover:-translate-y-1 whitespace-nowrap"
                       style={{ animationDelay: `${(index + skills.length) * 50}ms` }}
                     >
                       {tool}
@@ -693,7 +696,7 @@ const HeroAboutSection = () => {
           </div>
 
           {/* Right: About Content (2/3 width) */}
-          <div className="relative bg-background/95 backdrop-blur-sm rounded-[5px] shadow-[0_2px_8px_rgba(61,64,91,0.08)] dark:shadow-[0_2px_12px_rgba(0,0,0,0.3)] border border-twilight/8 dark:border-eggshell/8 overflow-hidden flex flex-col lg:col-span-2">
+          <div className="relative bg-background/95 backdrop-blur-sm rounded-[5px] shadow-[0_2px_8px_rgba(61,64,91,0.08)] dark:shadow-[0_2px_12px_rgba(0,0,0,0.3)] border border-twilight/8 dark:border-eggshell/8 overflow-hidden flex flex-col lg:col-span-2 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
             <InteractiveGridDots />
             <div className="relative z-10 p-6 md:p-8 flex-1 flex flex-col">
               {/* Profile mini - displays school logo and degree information */}
@@ -723,7 +726,7 @@ const HeroAboutSection = () => {
               {/* Showcase Containers - Personal Collage and Transcript (compact layout, 3:2 ratio) */}
               <div className="grid grid-cols-5 gap-3 mb-4 opacity-0 animate-fade-in delay-250 max-w-lg mx-auto">
                 {/* Get to Know Me - Personal Collage Container (3 columns, landscape aspect) */}
-                <div className="col-span-3 relative bg-twilight/5 dark:bg-eggshell/5 rounded-[5px] border border-twilight/10 dark:border-eggshell/10 overflow-hidden group hover:border-muted-teal/50 transition-all duration-300">
+                <div className="col-span-3 relative bg-twilight/5 dark:bg-eggshell/5 rounded-[5px] border border-twilight/10 dark:border-eggshell/10 overflow-hidden group hover:border-muted-teal/50 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg">
                   <div className="p-2">
                     <div className="flex items-center gap-1.5 mb-2">
                       <Camera className="w-3.5 h-3.5 text-muted-teal" />
@@ -741,7 +744,7 @@ const HeroAboutSection = () => {
                   href="/resources/SSR_TSRPT.pdf"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="col-span-2 relative bg-twilight/5 dark:bg-eggshell/5 rounded-[5px] border border-twilight/10 dark:border-eggshell/10 overflow-hidden group hover:border-burnt-peach/50 transition-all duration-300 hover:shadow-md"
+                  className="col-span-2 relative bg-twilight/5 dark:bg-eggshell/5 rounded-[5px] border border-twilight/10 dark:border-eggshell/10 overflow-hidden group hover:border-burnt-peach/50 transition-all duration-300 hover:shadow-lg hover:-translate-y-1"
                 >
                   <div className="p-2">
                     <div className="flex items-center gap-1.5 mb-2">
@@ -888,7 +891,7 @@ const ProjectsSection = () => {
               onOpenChange={(isOpen) => setOpenProjectId(isOpen ? project.id : null)}
             >
               <div
-                className="group bg-white dark:bg-twilight/50 rounded-sm overflow-hidden shadow-lg hover:shadow-2xl transition-transform transition-shadow duration-300 hover:-translate-y-1 translate-y-0 transform-gpu opacity-0 animate-scale-in-no-transform glass flex flex-col cursor-pointer will-change-transform"
+                className="group bg-white dark:bg-twilight/50 rounded-sm overflow-hidden shadow-lg hover:shadow-2xl transition-transform transition-shadow duration-300 hover:-translate-y-1 translate-y-0 opacity-0 animate-scale-in-no-transform glass flex flex-col cursor-pointer"
                 style={{ animationDelay: `${index * 150}ms` }}
                 role="button"
                 tabIndex={0}
@@ -1233,7 +1236,7 @@ const ExperienceSection = () => {
                         {isLeft ? (
                           /* Showcase Card - Left */
                           <div className="flex justify-end">
-                            <div className="relative w-full max-w-sm bg-white dark:bg-twilight/50 rounded-[5px] shadow-lg hover:shadow-xl transition-transform transition-shadow duration-300 hover:-translate-y-1 translate-y-0 transform-gpu overflow-hidden group glass pointer-events-auto will-change-transform">
+                            <div className="relative w-full max-w-sm bg-white dark:bg-twilight/50 rounded-[5px] shadow-lg hover:shadow-xl transition-transform transition-shadow duration-300 hover:-translate-y-1 translate-y-0 overflow-hidden group glass pointer-events-auto">
                               {/* Showcase Image Container */}
                               <div className="aspect-[16/9] relative">
                                 <TimelineShowcaseCarousel showcaseId={exp.id} color={nodeColor} />
@@ -1304,7 +1307,7 @@ const ExperienceSection = () => {
                         {!isLeft ? (
                           /* Showcase Card - Right */
                           <div className="flex justify-start">
-                            <div className="relative w-full max-w-sm bg-white dark:bg-twilight/50 rounded-[5px] shadow-lg hover:shadow-xl transition-transform transition-shadow duration-300 hover:-translate-y-1 translate-y-0 transform-gpu overflow-hidden group glass pointer-events-auto will-change-transform">
+                            <div className="relative w-full max-w-sm bg-white dark:bg-twilight/50 rounded-[5px] shadow-lg hover:shadow-xl transition-transform transition-shadow duration-300 hover:-translate-y-1 translate-y-0 overflow-hidden group glass pointer-events-auto">
                               {/* Showcase Image Container */}
                               <div className="aspect-[16/9] relative">
                                 <TimelineShowcaseCarousel showcaseId={exp.id} color={nodeColor} />
@@ -1368,7 +1371,7 @@ const ExperienceSection = () => {
                       </div>
 
                       {/* Combined Card for Mobile */}
-                      <div className="bg-white dark:bg-twilight/50 rounded-[5px] shadow-lg hover:shadow-xl transition-transform transition-shadow duration-300 hover:-translate-y-1 translate-y-0 transform-gpu overflow-hidden glass pointer-events-auto will-change-transform">
+                      <div className="bg-white dark:bg-twilight/50 rounded-[5px] shadow-lg hover:shadow-xl transition-transform transition-shadow duration-300 hover:-translate-y-1 translate-y-0 overflow-hidden glass pointer-events-auto">
                         {/* Showcase Image */}
                         <div className="aspect-[16/9] relative">
                           <TimelineShowcaseCarousel showcaseId={exp.id} color={nodeColor} />

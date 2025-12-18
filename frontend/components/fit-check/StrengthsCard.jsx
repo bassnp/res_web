@@ -31,7 +31,8 @@ export function StrengthsCard({
       "shadow-[0_2px_8px_rgba(61,64,91,0.08)] dark:shadow-[0_2px_12px_rgba(0,0,0,0.3)]",
       "border border-muted-teal/30 dark:border-muted-teal/20",
       "strengths-card-glow card-shimmer",
-      "animate-slide-up-card"
+      "animate-slide-up-card",
+      "transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
     )}>
       {/* Gradient border overlay */}
       <div className="absolute inset-0 gradient-border-strengths opacity-50" />
