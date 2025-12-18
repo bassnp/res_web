@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useTheme } from 'next-themes';
-import { Briefcase, Mail, Github, ChevronDown, ExternalLink, Sun, Moon, Code, FileText, Camera, Eye, Clock } from 'lucide-react';
+import { Briefcase, Mail, Github, ChevronDown, ExternalLink, Sun, Moon, Code, FileText, Camera, Eye, Clock, Menu, X } from 'lucide-react';
 import { useHeaderVisibility } from '@/hooks/use-header-visibility';
 import { InfoDialog, InfoButton } from '@/components/fit-check/InfoDialog';
 import { ProjectModal, ReadSummaryButton } from '@/components/ProjectModal';
@@ -142,6 +142,7 @@ const ImageCarousel = ({ interval = 4000 }) => {
 // ============================================
 const Header = () => {
   const [infoOpen, setInfoOpen] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const { theme, setTheme, resolvedTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
   
@@ -162,6 +163,7 @@ const Header = () => {
 
   const navItems = [
     { name: 'About', href: '#about' },
+    { name: 'Fit Check', href: '#fit-check' },
     { name: 'Projects', href: '#projects' },
     { name: 'Experience', href: '#experience' },
     { name: 'Contact', href: '#contact' },
@@ -174,14 +176,14 @@ const Header = () => {
   return (
     <header 
       className={`fixed top-0 left-0 right-0 z-50 overflow-visible transition-all duration-300 ease-out
-        ${isVisible 
+        ${isVisible || mobileMenuOpen
           ? 'translate-y-0 opacity-100' 
           : '-translate-y-full opacity-0 pointer-events-none'
         }
       `}
       style={{
-        transform: isVisible ? 'translateY(0)' : 'translateY(-100%)',
-        transition: isVisible 
+        transform: (isVisible || mobileMenuOpen) ? 'translateY(0)' : 'translateY(-100%)',
+        transition: (isVisible || mobileMenuOpen) 
           ? 'transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.2s ease-out' 
           : 'transform 0.35s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.25s ease-in',
       }}
@@ -227,6 +229,19 @@ const Header = () => {
                 ))}
               </nav>
 
+              {/* Mobile Menu Toggle */}
+              <button 
+                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                className="md:hidden p-2 rounded-sm hover:bg-twilight/10 dark:hover:bg-eggshell/10 transition-all duration-300"
+                aria-label="Toggle menu"
+              >
+                {mobileMenuOpen ? (
+                  <X className="w-6 h-6 text-twilight dark:text-eggshell" />
+                ) : (
+                  <Menu className="w-6 h-6 text-twilight dark:text-eggshell" />
+                )}
+              </button>
+
               {/* Info */}
               <div className="flex items-center gap-1">
                 {/* Info Button */}
@@ -237,6 +252,22 @@ const Header = () => {
                 />
               </div>
             </div>
+
+            {/* Mobile Navigation Menu */}
+            {mobileMenuOpen && (
+              <nav className="md:hidden flex flex-col gap-1 mt-1 pb-2 border-t border-twilight/10 dark:border-eggshell/10 animate-in fade-in slide-in-from-top-2 duration-300">
+                {navItems.map((item) => (
+                  <a
+                    key={item.name}
+                    href={item.href}
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="px-4 py-3 text-sm font-medium text-twilight dark:text-eggshell hover:text-eggshell transition-all duration-300 rounded-sm hover:bg-burnt-peach"
+                  >
+                    {item.name}
+                  </a>
+                ))}
+              </nav>
+            )}
           </div>
         </div>
       </div>
@@ -262,38 +293,22 @@ const Footer = () => {
 
   return (
     <footer className="text-twilight dark:text-eggshell py-6 relative z-20">
-      <div className="container mx-auto px-6">
+      <div className="max-w-4xl mx-auto px-6">
         <div className="relative bg-background/30 backdrop-blur-sm rounded-[5px] shadow-[0_2px_8px_rgba(61,64,91,0.08)] dark:shadow-[0_2px_12px_rgba(0,0,0,0.3)] border border-twilight/8 dark:border-eggshell/8 overflow-hidden py-6">
           <InteractiveGridDots />
           <div className="relative z-10 px-8">
             {/* Main footer content */}
-            <div className="grid md:grid-cols-3 gap-8">
+            <div className="grid md:grid-cols-4 gap-8">
               {/* Brand */}
-              <div>
-                <h3 className="text-lg font-semibold mb-3">Portfolio</h3>
+              <div className="md:col-span-3">
+                <h3 className="text-lg font-semibold mb-3">Whats next?</h3>
                 <p className="text-twilight/70 dark:text-eggshell/70 text-sm leading-relaxed">
-                  Feel free to reach out to chat, collaborate, inquirie, or just say hi!
-                  <br />I'm always open to meeting new people who share similar interets and passions, as well as people who also don't but would like to !
+                  Feel free to reach out to chat, collaborate, inquire, or just to say hi! I'm always open to meeting new people who share similar interets and passions, as well as people who also don't but still want to get in touch to talk anyways!
                 </p>
               </div>
 
-              {/* Navigation */}
-              <div>
-                <h3 className="text-lg font-semibold mb-3">Navigation</h3>
-                <ul className="space-y-2">
-                  {footerLinks.map((link) => (
-                    <li key={link.name}>
-                      <a href={link.href} className="text-twilight/70 dark:text-eggshell/70 hover:text-burnt-peach transition-colors text-sm animated-underline">
-                        {link.name}
-                      </a>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-
               {/* Contact */}
-              <div>
-                <h3 className="text-lg font-semibold mb-3">Connect</h3>
+              <div className="md:col-start-4 flex flex-col md:items-end text-left md:text-right">
                 <div className="flex gap-4 mb-3">
                   {socialLinks.map((social) => (
                     <a
@@ -315,7 +330,7 @@ const Footer = () => {
             {/* Copyright */}
             <div className="mt-8 pt-6 border-t border-twilight/20 dark:border-eggshell/20 text-center">
               <p className="text-twilight/50 dark:text-eggshell/50 text-sm">
-                &copy; {new Date().getFullYear()} Portfolio. All rights reserved.
+                &copy; {new Date().getFullYear()} Portfolio. No rights reserved haha.
               </p>
             </div>
           </div>
@@ -724,9 +739,9 @@ const HeroAboutSection = () => {
               </div>
 
               {/* Showcase Containers - Personal Collage and Transcript (compact layout, 3:2 ratio) */}
-              <div className="grid grid-cols-5 gap-3 mb-4 opacity-0 animate-fade-in delay-250 max-w-lg mx-auto">
+              <div className="grid grid-cols-1 md:grid-cols-5 gap-3 mb-4 opacity-0 animate-fade-in delay-250 max-w-lg mx-auto">
                 {/* Get to Know Me - Personal Collage Container (3 columns, landscape aspect) */}
-                <div className="col-span-3 relative bg-twilight/5 dark:bg-eggshell/5 rounded-[5px] border border-twilight/10 dark:border-eggshell/10 overflow-hidden group hover:border-muted-teal/50 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg">
+                <div className="col-span-1 md:col-span-3 relative bg-twilight/5 dark:bg-eggshell/5 rounded-[5px] border border-twilight/10 dark:border-eggshell/10 overflow-hidden group hover:border-muted-teal/50 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg">
                   <div className="p-2">
                     <div className="flex items-center gap-1.5 mb-2">
                       <Camera className="w-3.5 h-3.5 text-muted-teal" />
@@ -744,7 +759,7 @@ const HeroAboutSection = () => {
                   href="/resources/SSR_TSRPT.pdf"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="col-span-2 relative bg-twilight/5 dark:bg-eggshell/5 rounded-[5px] border border-twilight/10 dark:border-eggshell/10 overflow-hidden group hover:border-burnt-peach/50 transition-all duration-300 hover:shadow-lg hover:-translate-y-1"
+                  className="col-span-1 md:col-span-2 relative bg-twilight/5 dark:bg-eggshell/5 rounded-[5px] border border-twilight/10 dark:border-eggshell/10 overflow-hidden group hover:border-burnt-peach/50 transition-all duration-300 hover:shadow-lg hover:-translate-y-1"
                 >
                   <div className="p-2">
                     <div className="flex items-center gap-1.5 mb-2">
@@ -1195,11 +1210,11 @@ const ExperienceSection = () => {
               <div className="absolute left-1/2 bottom-0 w-3 h-3 bg-burnt-peach rounded-full transform -translate-x-1/2 translate-y-1/2 z-10 hidden md:block shadow-[0_0_10px_rgba(224,122,95,0.5)]" />
 
               {/* Mobile Timeline Line (left-aligned) */}
-              <div className="absolute left-4 top-0 bottom-0 w-1 bg-gradient-to-b from-muted-teal via-apricot to-burnt-peach rounded-full md:hidden" />
+              <div className="absolute left-8 top-0 bottom-0 w-1 bg-gradient-to-b from-muted-teal via-apricot to-burnt-peach transform -translate-x-1/2 rounded-full md:hidden" />
               
               {/* Mobile Timeline Caps */}
-              <div className="absolute left-4 top-0 w-3 h-3 bg-muted-teal rounded-full transform -translate-x-1/2 -translate-y-1/2 z-10 md:hidden shadow-[0_0_10px_rgba(129,178,154,0.5)]" />
-              <div className="absolute left-4 bottom-0 w-3 h-3 bg-burnt-peach rounded-full transform -translate-x-1/2 translate-y-1/2 z-10 md:hidden shadow-[0_0_10px_rgba(224,122,95,0.5)]" />
+              <div className="absolute left-8 top-0 w-3 h-3 bg-muted-teal rounded-full transform -translate-x-1/2 -translate-y-1/2 z-10 md:hidden shadow-[0_0_10px_rgba(129,178,154,0.5)]" />
+              <div className="absolute left-8 bottom-0 w-3 h-3 bg-burnt-peach rounded-full transform -translate-x-1/2 translate-y-1/2 z-10 md:hidden shadow-[0_0_10px_rgba(224,122,95,0.5)]" />
 
               {/* Timeline Entries */}
               {experiences.map((exp, index) => {
@@ -1223,7 +1238,7 @@ const ExperienceSection = () => {
                 return (
                   <div
                     key={exp.id}
-                    className={`relative md:-mb-36 -mb-10 last:mb-0 opacity-0 animate-slide-up pointer-events-none`}
+                    className={`relative md:-mb-36 mb-12 last:mb-0 opacity-0 animate-slide-up pointer-events-none`}
                     style={{ 
                       animationDelay: `${index * 150}ms`,
                       zIndex: experiences.length - index
@@ -1360,14 +1375,14 @@ const ExperienceSection = () => {
                     {/* Mobile Layout - Single Column */}
                     <div className="md:hidden relative pl-12">
                       {/* Connecting Line to Timeline */}
-                      <div className={`absolute left-4 top-6 w-6 h-0.5 bg-${nodeColor}`} />
+                      <div className={`absolute left-4 top-8 w-8 h-0.5 bg-${nodeColor}`} />
                       
                       {/* Timeline Node */}
                       <div 
-                        className={`absolute left-1 top-3 w-7 h-7 rounded-full bg-${nodeColor} flex items-center justify-center shadow-md z-10`}
+                        className={`absolute left-4 top-4 w-8 h-8 rounded-full bg-${nodeColor} flex items-center justify-center shadow-md z-10 transform -translate-x-1/2`}
                         style={{ '--glow-color': `rgba(${glowRgb}, 0.3)` }}
                       >
-                        <Briefcase className="w-3.5 h-3.5 text-eggshell" />
+                        <Briefcase className="w-4 h-4 text-eggshell" />
                       </div>
 
                       {/* Combined Card for Mobile */}

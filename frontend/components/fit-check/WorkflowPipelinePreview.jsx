@@ -130,7 +130,7 @@ export function WorkflowPipelinePreview({ compact = false }) {
     <div className={cn(
       "flex w-full",
       compact 
-        ? "flex-row items-center justify-center py-3 px-4 gap-2" 
+        ? "flex-col items-center justify-center py-3 px-4 gap-2" 
         : "flex-col h-full py-4 px-3"
     )}>
       {/* Header - docked at top */}
@@ -153,7 +153,7 @@ export function WorkflowPipelinePreview({ compact = false }) {
 
       {/* Compact Mode: Horizontal pill layout */}
       {compact ? (
-        <div className="flex items-center gap-1.5 overflow-hidden" ref={containerRef}>
+        <div className="flex flex-wrap items-center justify-center gap-1.5" ref={containerRef}>
           {PIPELINE_PHASES.map((phase, index) => {
             const isActive = index === activePhaseIndex;
             const isComplete = completedPhases.includes(index);
