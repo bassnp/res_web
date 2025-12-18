@@ -640,13 +640,13 @@ const HeroAboutSection = () => {
             <HeroGridDots />
             <div className="relative z-10 px-3 py-2 md:px-8 md:py-5 text-center flex-1 flex flex-col justify-center">
               {/* Profile Picture Placeholder (3:4 aspect ratio) */}
-              <div className="flex justify-center mb-4 opacity-0 animate-fade-in delay-200">
+              <div className="flex justify-center mb-4 opacity-0 animate-fade-in delay-200 group">
                 <div 
-                  className="w-36 md:w-48 bg-twilight/10 dark:bg-eggshell/10 rounded-[5px] border-2 border-dashed border-twilight/30 dark:border-eggshell/30 flex items-center justify-center"
+                  className="w-36 md:w-48 bg-twilight/10 dark:bg-eggshell/10 rounded-[5px] border-2 border-dashed border-twilight/30 dark:border-eggshell/30 flex items-center justify-center transition-all duration-300 group-hover:scale-110 group-hover:border-muted-teal/50 group-hover:bg-twilight/5 dark:group-hover:bg-eggshell/5 transform-gpu will-change-transform cursor-pointer shadow-none group-hover:shadow-2xl"
                   style={{ aspectRatio: '3/4' }}
                 >
                   {/* Placeholder icon for future profile picture */}
-                  <User className="w-12 h-12 md:w-16 md:h-16 text-twilight/40 dark:text-eggshell/40" />
+                  <User className="w-12 h-12 md:w-16 md:h-16 text-twilight/40 dark:text-eggshell/40 transition-all duration-300 group-hover:scale-125 group-hover:text-muted-teal/60" />
                 </div>
               </div>
 
@@ -888,7 +888,7 @@ const ProjectsSection = () => {
               onOpenChange={(isOpen) => setOpenProjectId(isOpen ? project.id : null)}
             >
               <div
-                className="group bg-white dark:bg-twilight/50 rounded-sm overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-200 hover:-translate-y-0.5 opacity-0 animate-scale-in-no-transform glass flex flex-col cursor-pointer"
+                className="group bg-white dark:bg-twilight/50 rounded-sm overflow-hidden shadow-lg hover:shadow-2xl transition-transform transition-shadow duration-300 hover:-translate-y-1 translate-y-0 transform-gpu opacity-0 animate-scale-in-no-transform glass flex flex-col cursor-pointer will-change-transform"
                 style={{ animationDelay: `${index * 150}ms` }}
                 role="button"
                 tabIndex={0}
@@ -1220,8 +1220,11 @@ const ExperienceSection = () => {
                 return (
                   <div
                     key={exp.id}
-                    className={`relative md:-mb-36 -mb-10 last:mb-0 opacity-0 animate-slide-up`}
-                    style={{ animationDelay: `${index * 150}ms` }}
+                    className={`relative md:-mb-36 -mb-10 last:mb-0 opacity-0 animate-slide-up pointer-events-none`}
+                    style={{ 
+                      animationDelay: `${index * 150}ms`,
+                      zIndex: experiences.length - index
+                    }}
                   >
                     {/* Desktop Layout - Alternating */}
                     <div className="hidden md:grid md:grid-cols-[1fr_60px_1fr] gap-0 items-center">
@@ -1230,7 +1233,7 @@ const ExperienceSection = () => {
                         {isLeft ? (
                           /* Showcase Card - Left */
                           <div className="flex justify-end">
-                            <div className="relative w-full max-w-sm bg-white dark:bg-twilight/50 rounded-[5px] shadow-lg hover:shadow-xl transition-all duration-200 hover:-translate-y-0.5 overflow-hidden group glass">
+                            <div className="relative w-full max-w-sm bg-white dark:bg-twilight/50 rounded-[5px] shadow-lg hover:shadow-xl transition-transform transition-shadow duration-300 hover:-translate-y-1 translate-y-0 transform-gpu overflow-hidden group glass pointer-events-auto will-change-transform">
                               {/* Showcase Image Container */}
                               <div className="aspect-[16/9] relative">
                                 <TimelineShowcaseCarousel showcaseId={exp.id} color={nodeColor} />
@@ -1243,9 +1246,9 @@ const ExperienceSection = () => {
                                   <h3 className="text-lg font-bold text-twilight dark:text-eggshell transition-colors">
                                     {exp.title}
                                   </h3>
-                                  <div className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-twilight/5 dark:bg-eggshell/15 border border-twilight/15 dark:border-eggshell/20 group-hover:bg-${nodeColor}/20 group-hover:border-${nodeColor}/40 transition-all duration-300`}>
-                                    <Clock className={`w-4 h-4 text-${nodeColor} transition-transform duration-300 group-hover:scale-110`} />
-                                    <span className={`text-xs font-bold text-twilight/60 dark:text-eggshell/80 group-hover:text-${nodeColor} transition-colors whitespace-nowrap`}>
+                                  <div className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-twilight/5 dark:bg-eggshell/15 border border-twilight/15 dark:border-eggshell/20 transition-all duration-300`}>
+                                    <Clock className={`w-4 h-4 text-${nodeColor} transition-transform duration-300`} />
+                                    <span className={`text-xs font-bold text-twilight/60 dark:text-eggshell/80 transition-colors whitespace-nowrap`}>
                                       {exp.period}
                                     </span>
                                   </div>
@@ -1289,7 +1292,7 @@ const ExperienceSection = () => {
                         }`} />
                         {/* Timeline Node */}
                         <div 
-                          className={`relative z-10 w-10 h-10 rounded-full bg-${nodeColor} flex items-center justify-center shadow-lg animate-pulse-glow`}
+                          className={`relative z-10 w-10 h-10 rounded-full bg-${nodeColor} flex items-center justify-center shadow-lg animate-pulse-glow pointer-events-auto`}
                           style={{ '--glow-color': `rgba(${glowRgb}, 0.3)` }}
                         >
                           <Briefcase className="w-5 h-5 text-eggshell" />
@@ -1301,7 +1304,7 @@ const ExperienceSection = () => {
                         {!isLeft ? (
                           /* Showcase Card - Right */
                           <div className="flex justify-start">
-                            <div className="relative w-full max-w-sm bg-white dark:bg-twilight/50 rounded-[5px] shadow-lg hover:shadow-xl transition-all duration-200 hover:-translate-y-0.5 overflow-hidden group glass">
+                            <div className="relative w-full max-w-sm bg-white dark:bg-twilight/50 rounded-[5px] shadow-lg hover:shadow-xl transition-transform transition-shadow duration-300 hover:-translate-y-1 translate-y-0 transform-gpu overflow-hidden group glass pointer-events-auto will-change-transform">
                               {/* Showcase Image Container */}
                               <div className="aspect-[16/9] relative">
                                 <TimelineShowcaseCarousel showcaseId={exp.id} color={nodeColor} />
@@ -1314,9 +1317,9 @@ const ExperienceSection = () => {
                                   <h3 className="text-lg font-bold text-twilight dark:text-eggshell transition-colors">
                                     {exp.title}
                                   </h3>
-                                  <div className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-twilight/5 dark:bg-eggshell/15 border border-twilight/15 dark:border-eggshell/20 group-hover:bg-${nodeColor}/20 group-hover:border-${nodeColor}/40 transition-all duration-300`}>
-                                    <Clock className={`w-4 h-4 text-${nodeColor} transition-transform duration-300 group-hover:scale-110`} />
-                                    <span className={`text-xs font-bold text-twilight/60 dark:text-eggshell/80 group-hover:text-${nodeColor} transition-colors whitespace-nowrap`}>
+                                  <div className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-twilight/5 dark:bg-eggshell/15 border border-twilight/15 dark:border-eggshell/20 transition-all duration-300`}>
+                                    <Clock className={`w-4 h-4 text-${nodeColor} transition-transform duration-300`} />
+                                    <span className={`text-xs font-bold text-twilight/60 dark:text-eggshell/80 transition-colors whitespace-nowrap`}>
                                       {exp.period}
                                     </span>
                                   </div>
@@ -1365,7 +1368,7 @@ const ExperienceSection = () => {
                       </div>
 
                       {/* Combined Card for Mobile */}
-                      <div className="bg-white dark:bg-twilight/50 rounded-[5px] shadow-lg overflow-hidden glass">
+                      <div className="bg-white dark:bg-twilight/50 rounded-[5px] shadow-lg hover:shadow-xl transition-transform transition-shadow duration-300 hover:-translate-y-1 translate-y-0 transform-gpu overflow-hidden glass pointer-events-auto will-change-transform">
                         {/* Showcase Image */}
                         <div className="aspect-[16/9] relative">
                           <TimelineShowcaseCarousel showcaseId={exp.id} color={nodeColor} />
