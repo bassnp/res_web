@@ -189,15 +189,22 @@ class FitCheckPipelineState(TypedDict):
         phase_4_output: Output from SKILLS_MATCHING phase.
         reranker_output: Output from CONFIDENCE_RERANKER phase (5B).
         
+        expanded_queries: Optional[List[Dict[str, str]]]  # Queries with purposes
+        query_expansion_strategy: Optional[str]  # company_focus, job_focus, hybrid
+        
         search_attempt: Current search attempt number (1 = primary, 2 = enhanced).
         low_data_flag: Flag indicating insufficient research data.
         early_exit: Flag indicating pipeline should skip to generate_results.
         
         final_response: Generated markdown response from GENERATE_RESULTS.
         
+        enriched_content: Optional[List[Dict[str, Any]]]  # Full content from top sources
+        
         messages: Conversation history for LangGraph compatibility.
         processing_errors: Non-fatal errors encountered during processing.
         error: Fatal error that stopped the pipeline.
+        should_abort: Flag indicating pipeline should stop due to fatal error.
+        abort_reason: User-friendly reason for the abort.
         rejection_reason: Reason if query was rejected as irrelevant/malicious.
         
         model_id: AI model ID to use for analysis.
@@ -218,6 +225,15 @@ class FitCheckPipelineState(TypedDict):
     phase_4_output: Optional[Phase4Output]
     reranker_output: Optional[RerankerOutput]
     
+    # Scoring results (Phase 2B)
+    scoring_result: Optional[Any]  # ScoringResult model
+    top_sources: Optional[List[Any]]  # List[DocumentScore]
+    
+    # Query expansion tracking
+    raw_search_results: Optional[List[Dict[str, Any]]]
+    expanded_queries: Optional[List[Dict[str, str]]]
+    query_expansion_strategy: Optional[str]
+    
     # Research quality tracking
     search_attempt: int
     low_data_flag: bool
@@ -225,13 +241,16 @@ class FitCheckPipelineState(TypedDict):
     
     # Final output
     final_response: Optional[str]
+    enriched_content: Optional[List[Dict[str, Any]]]
     
     # LangGraph compatibility
     messages: Annotated[List[BaseMessage], add_messages]
     
     # Error handling
-    processing_errors: List[str]
+    processing_errors: List[Dict[str, Any]]
     error: Optional[str]
+    should_abort: bool
+    abort_reason: Optional[str]
     
     # Query rejection
     rejection_reason: Optional[str]
@@ -271,6 +290,11 @@ def create_initial_state(
         phase_3_output=None,
         phase_4_output=None,
         reranker_output=None,
+        scoring_result=None,
+        top_sources=None,
+        raw_search_results=None,
+        expanded_queries=None,
+        query_expansion_strategy=None,
         search_attempt=1,
         low_data_flag=False,
         early_exit=False,
@@ -278,6 +302,8 @@ def create_initial_state(
         messages=[],
         processing_errors=[],
         error=None,
+        should_abort=False,
+        abort_reason=None,
         rejection_reason=None,
         model_id=model_id,
         config_type=config_type,

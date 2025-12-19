@@ -48,6 +48,13 @@ from services.pipeline_state import FitCheckPipelineState, Phase2Output
 from services.callbacks import ThoughtCallback
 from services.utils import get_response_text
 from services.prompt_loader import load_prompt, PHASE_RESEARCH_RERANKER
+from services.utils.parallel_scorer import (
+    score_documents_parallel,
+    calculate_adaptive_threshold,
+)
+from services.utils.source_classifier import classify_source, SourceType
+from models.fit_check import DocumentScore, ScoringResult
+from services.utils.circuit_breaker import llm_breaker, CircuitOpenError
 
 logger = logging.getLogger(__name__)
 
@@ -810,8 +817,76 @@ async def research_reranker_node(
         )
     
     try:
-        # Perform heuristic assessment first
+        # NEW: Parallel AI scoring of raw search results
+        raw_results = state.get("raw_search_results") or []
+        scoring_result = None
+        top_sources = []
+        
+        if raw_results:
+            # Emit scoring start event
+            if callback:
+                await callback.on_thought(
+                    step=step + 1,
+                    thought_type="reasoning",
+                    content=f"Scoring {len(raw_results)} sources with multi-dimensional AI evaluation...",
+                    phase=PHASE_NAME,
+                )
+            
+            # Parallel AI scoring
+            scores = await score_documents_parallel(
+                documents=raw_results,
+                query=state.get("query", ""),
+                max_concurrent=5,
+            )
+            
+            if scores:
+                # Calculate social media ratio
+                social_count = sum(1 for s in scores if s.source_type == SourceType.SOCIAL_MEDIA)
+                social_ratio = social_count / len(scores) if scores else 0.0
+                
+                # Calculate adaptive threshold
+                threshold = calculate_adaptive_threshold(
+                    total_results=len(raw_results),
+                    social_media_ratio=social_ratio,
+                )
+                
+                # Count passing sources
+                passing_scores = [s for s in scores if s.final_score >= threshold]
+                
+                # Create scoring result
+                scoring_result = ScoringResult(
+                    scores=scores,
+                    adaptive_threshold=threshold,
+                    passing_count=len(passing_scores),
+                    total_count=len(scores),
+                    social_media_ratio=social_ratio,
+                )
+                
+                # Sort by final score and take top 5
+                top_sources = sorted(scores, key=lambda x: x.final_score, reverse=True)[:5]
+                
+                step += 1
+                if callback:
+                    await callback.on_thought(
+                        step=step,
+                        thought_type="reasoning",
+                        content=f"Source scoring complete: {len(passing_scores)}/{len(scores)} sources passed quality gate (threshold: {threshold:.2f})",
+                        phase=PHASE_NAME,
+                    )
+
+        # Perform heuristic assessment (legacy but still useful for tech/req counts)
         heuristics = assess_quality_heuristically(phase_2)
+        
+        # Update heuristics with AI scoring data if available
+        if scoring_result:
+            if scoring_result.passing_count >= 3:
+                heuristics["preliminary_tier"] = "HIGH"
+            elif scoring_result.passing_count >= 1:
+                heuristics["preliminary_tier"] = "MEDIUM"
+            else:
+                heuristics["preliminary_tier"] = "LOW"
+            
+            heuristics["quality_flags"].append(f"AI_SCORING_PASSED_{scoring_result.passing_count}")
         
         # Attempt industry inference if tech stack is sparse
         inferred_industry = None
@@ -879,7 +954,9 @@ async def research_reranker_node(
         
         # Invoke LLM
         messages = [HumanMessage(content=prompt)]
-        response = await llm.ainvoke(messages)
+        
+        async with llm_breaker.call():
+            response = await llm.ainvoke(messages)
         
         # Extract and validate response
         response_text = get_response_text(response)
@@ -917,21 +994,45 @@ async def research_reranker_node(
         data_tier = validated_output.get("data_quality_tier", "PARTIAL")
         action = validated_output["recommended_action"]
         
+        # NEW: Integrate AI scoring into routing decision
+        is_sufficient = False
+        if scoring_result:
+            is_sufficient = scoring_result.passing_count >= 3
+            
+            # If no sources passed AI scoring, force ENHANCE_SEARCH or EARLY_EXIT
+            if scoring_result.passing_count == 0:
+                if search_attempt < 3:
+                    action = "ENHANCE_SEARCH"
+                else:
+                    action = "EARLY_EXIT"
+                    validated_output["early_exit_reason"] = "No high-quality sources found after 3 search attempts."
+            
+            # If very few sources passed, ensure we flag it
+            elif scoring_result.passing_count < 3 and action == "CONTINUE":
+                action = "ENHANCE_SEARCH" if search_attempt < 3 else "CONTINUE_WITH_FLAGS"
+                if "LOW_SOURCE_COUNT" not in validated_output["quality_flags"]:
+                    validated_output["quality_flags"].append("LOW_SOURCE_COUNT")
+        
         # CRITICAL: Early exit for garbage/suspicious data
         if action == "EARLY_EXIT" or data_tier == "GARBAGE":
             next_phase = "generate_results"  # Skip to final with early exit message
             low_data_flag = True
             early_exit = True
-        elif tier in ["HIGH", "MEDIUM"] and action in ["CONTINUE", "CONTINUE_WITH_FLAGS"]:
-            next_phase = "skeptical_comparison"
+        elif is_sufficient and action in ["CONTINUE", "CONTINUE_WITH_FLAGS"]:
+            next_phase = "content_enrich"
             low_data_flag = action == "CONTINUE_WITH_FLAGS"
             early_exit = False
-        elif action == "ENHANCE_SEARCH" and search_attempt < 2:
+        elif action == "ENHANCE_SEARCH" and search_attempt < 3:
             next_phase = "deep_research"  # Will be handled by conditional routing
             low_data_flag = False
             early_exit = False
             # INCREMENT search_attempt to prevent infinite loop
             search_attempt += 1
+        elif action in ["CONTINUE", "CONTINUE_WITH_FLAGS"]:
+            # Proceed to enrichment even if not fully sufficient if we've exhausted retries
+            next_phase = "content_enrich" if top_sources else "skeptical_comparison"
+            low_data_flag = True
+            early_exit = False
         else:
             # INSUFFICIENT or exhausted retries - continue but flagged
             next_phase = "skeptical_comparison"
@@ -939,7 +1040,8 @@ async def research_reranker_node(
             early_exit = False
         
         # Build completion summary
-        summary = f"Data: {data_tier} | Quality: {tier} | Confidence: {validated_output['data_confidence_score']}% | Action: {action}"
+        scoring_summary = f" | AI Scores: {scoring_result.passing_count}/{scoring_result.total_count}" if scoring_result else ""
+        summary = f"Data: {data_tier} | Quality: {tier} | Confidence: {validated_output['data_confidence_score']}% | Action: {action}{scoring_summary}"
         
         # Emit phase complete event
         if callback and hasattr(callback, 'on_phase_complete'):
@@ -954,6 +1056,8 @@ async def research_reranker_node(
             "low_data_flag": low_data_flag,
             "early_exit": early_exit,
             "search_attempt": search_attempt,  # Pass updated attempt count to state
+            "scoring_result": scoring_result,
+            "top_sources": top_sources,
         }
         
     except Exception as e:
@@ -998,4 +1102,6 @@ async def research_reranker_node(
             "early_exit": is_garbage or is_critical_risk,
             "search_attempt": search_attempt + 1,  # Increment to prevent retry loops on errors
             "processing_errors": state.get("processing_errors", []) + [f"Phase 2B error: {str(e)}"],
+            "scoring_result": None,
+            "top_sources": [],
         }

@@ -36,6 +36,7 @@ from services.tools.skill_matcher import analyze_skill_match
 from services.tools.experience_matcher import analyze_experience_relevance
 from services.utils import get_response_text
 from services.prompt_loader import load_prompt, PHASE_SKILLS_MATCHING
+from services.utils.circuit_breaker import llm_breaker, CircuitOpenError
 
 logger = logging.getLogger(__name__)
 
@@ -533,7 +534,9 @@ async def skills_matching_node(
         )
         
         messages = [HumanMessage(content=prompt)]
-        response = await llm.ainvoke(messages)
+        
+        async with llm_breaker.call():
+            response = await llm.ainvoke(messages)
         
         # Extract and parse response (handles Gemini's structured format)
         response_text = get_response_text(response)

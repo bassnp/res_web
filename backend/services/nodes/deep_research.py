@@ -29,9 +29,11 @@ from langchain_core.messages import HumanMessage
 from config.llm import get_llm
 from services.pipeline_state import FitCheckPipelineState, Phase2Output
 from services.callbacks import ThoughtCallback
-from services.tools.web_search import web_search
+from services.tools.web_search import web_search, web_search_structured
 from services.utils import get_response_text
+from services.utils.query_expander import expand_queries, QueryExpansionResult
 from services.prompt_loader import load_prompt, PHASE_DEEP_RESEARCH
+from services.utils.circuit_breaker import llm_breaker, CircuitOpenError
 
 logger = logging.getLogger(__name__)
 
@@ -50,66 +52,12 @@ SYNTHESIS_TEMPERATURE = 0.3
 MAX_RESULT_LENGTH = 1500
 
 # Maximum number of search queries to execute
-MAX_SEARCH_QUERIES = 2
+MAX_SEARCH_QUERIES = 5
 
 
 # =============================================================================
-# Search Query Construction
+# Search Result Formatting
 # =============================================================================
-
-def construct_search_queries(phase_1: Dict[str, Any], original_query: str) -> List[str]:
-    """
-    Construct optimized search queries based on Phase 1 classification.
-    
-    Different strategies are applied based on whether the input is a company
-    name or a job description, optimizing for relevant employer intelligence.
-    
-    Args:
-        phase_1: Output from the Connecting phase containing classification.
-        original_query: Raw user input for fallback.
-    
-    Returns:
-        List of search queries to execute (max 2 for latency control).
-    """
-    queries = []
-    
-    query_type = phase_1.get("query_type", "job_description")
-    company_name = phase_1.get("company_name")
-    job_title = phase_1.get("job_title")
-    extracted_skills = phase_1.get("extracted_skills") or []
-    
-    if query_type == "company":
-        # Company-focused research strategy
-        company = company_name or original_query.strip()
-        
-        # Primary: Company + engineering culture and tech stack
-        queries.append(f"{company} software engineer tech stack engineering culture")
-        
-        # Secondary: Company + careers and job requirements
-        queries.append(f"{company} careers jobs software developer requirements")
-        
-    else:
-        # Job description research strategy
-        title = job_title or "software engineer"
-        skills = extracted_skills[:3] if extracted_skills else []
-        
-        # Primary: Role + skills + company (if known)
-        skill_str = " ".join(skills) if skills else ""
-        company_str = company_name if company_name else ""
-        primary_query = f"{title} {skill_str} {company_str} requirements tech stack".strip()
-        # Clean up multiple spaces
-        primary_query = " ".join(primary_query.split())
-        queries.append(primary_query)
-        
-        # Secondary: Industry context if company unknown, or company deep-dive if known
-        if company_name:
-            queries.append(f"{company_name} engineering team culture values")
-        elif skills:
-            # Focus on the primary skill's ecosystem
-            queries.append(f"{skills[0]} engineer job requirements industry trends")
-    
-    # Ensure we don't exceed max queries
-    return queries[:MAX_SEARCH_QUERIES]
 
 
 def format_search_results(results: List[Dict[str, str]]) -> str:
@@ -358,6 +306,7 @@ async def deep_research_node(
     step = state.get("step_count", 0)
     phase_1 = state.get("phase_1_output") or {}
     queries_executed = []
+    expansion_result = None
     
     # Emit phase start event
     if callback and hasattr(callback, 'on_phase'):
@@ -373,11 +322,17 @@ async def deep_research_node(
     
     try:
         # Construct search queries based on Phase 1 classification
-        queries = construct_search_queries(phase_1, state["query"])
+        expansion_result = expand_queries(
+            phase_1_output=phase_1,
+            original_query=state.get("query", ""),
+            iteration=state.get("search_attempt", 1),
+        )
         search_results = []
         
         # Execute web searches
-        for query in queries:
+        all_raw_results = []
+        for expanded_query in expansion_result.queries:
+            query = expanded_query.query
             step += 1
             
             # Emit tool call thought
@@ -385,7 +340,7 @@ async def deep_research_node(
                 await callback.on_thought(
                     step=step,
                     thought_type="tool_call",
-                    content=f"Searching for employer intelligence...",
+                    content=f"Searching: {expanded_query.purpose}",
                     tool="web_search",
                     tool_input=query,
                     phase=PHASE_NAME,
@@ -393,23 +348,26 @@ async def deep_research_node(
             
             # Execute search
             try:
-                result = web_search.invoke(query)
+                # Get structured results for scoring (async function)
+                raw_results = await web_search_structured(query)
+                all_raw_results.extend(raw_results)
+                
+                # Get formatted string for synthesis (async tool call)
+                result = await web_search.ainvoke(query)
                 queries_executed.append(query)
                 search_results.append({
                     "query": query,
+                    "purpose": expanded_query.purpose,
                     "result": result,
                 })
                 
                 step += 1
                 # Emit observation thought
                 if callback:
-                    # Create a brief preview of findings
-                    preview_length = 150
-                    preview = result[:preview_length] + "..." if len(result) > preview_length else result
                     await callback.on_thought(
                         step=step,
                         thought_type="observation",
-                        content=f"Found relevant employer information.",
+                        content=f"Found info for: {expanded_query.purpose}",
                         tool=None,
                         tool_input=None,
                         phase=PHASE_NAME,
@@ -420,6 +378,7 @@ async def deep_research_node(
                 queries_executed.append(query)
                 search_results.append({
                     "query": query,
+                    "purpose": expanded_query.purpose,
                     "result": f"Search unavailable: {str(e)[:100]}",
                 })
         
@@ -463,7 +422,9 @@ async def deep_research_node(
         
         # Invoke LLM with XML-structured prompt
         messages = [HumanMessage(content=prompt)]
-        response = await llm.ainvoke(messages)
+        
+        async with llm_breaker.call():
+            response = await llm.ainvoke(messages)
         
         # Extract response text (handles Gemini's structured format)
         response_text = get_response_text(response)
@@ -489,6 +450,12 @@ async def deep_research_node(
             "phase_2_output": validated_output,
             "current_phase": "skeptical_comparison",
             "step_count": step,
+            "raw_search_results": all_raw_results,
+            "expanded_queries": [
+                {"query": q.query, "purpose": q.purpose} 
+                for q in expansion_result.queries
+            ],
+            "query_expansion_strategy": expansion_result.expansion_strategy,
         }
         
     except Exception as e:
@@ -515,5 +482,11 @@ async def deep_research_node(
             "phase_2_output": fallback_output,
             "current_phase": "skeptical_comparison",
             "step_count": step,
+            "raw_search_results": [],
             "processing_errors": state.get("processing_errors", []) + [f"Phase 2 error: {str(e)}"],
+            "expanded_queries": [
+                {"query": q.query, "purpose": q.purpose} 
+                for q in expansion_result.queries
+            ] if expansion_result else None,
+            "query_expansion_strategy": expansion_result.expansion_strategy if expansion_result else None,
         }

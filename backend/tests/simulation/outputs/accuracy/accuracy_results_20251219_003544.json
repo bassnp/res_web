@@ -1,0 +1,2193 @@
+{
+  "timestamp": "2025-12-19T00:35:44.606416",
+  "results": [
+    {
+      "test_id": "A1",
+      "test_name": "Vercel (Frontend-Focused Company)",
+      "query": "Vercel",
+      "expected_score_min": 75,
+      "expected_score_max": 90,
+      "actual_score": 45.0,
+      "expected_tier": "HIGH",
+      "actual_tier": null,
+      "score_accuracy": "INACCURATE",
+      "tier_accuracy": "INACCURATE",
+      "gap_accuracy": false,
+      "actual_gap_count": 7,
+      "overall_status": "FAIL",
+      "warnings": [
+        "No confidence tier returned from pipeline"
+      ]
+    },
+    {
+      "test_id": "A2",
+      "test_name": "OpenAI (AI Engineering Company)",
+      "query": "OpenAI",
+      "expected_score_min": 55,
+      "expected_score_max": 75,
+      "actual_score": 68.0,
+      "expected_tier": "MEDIUM_HIGH",
+      "actual_tier": null,
+      "score_accuracy": "ACCURATE",
+      "tier_accuracy": "INACCURATE",
+      "gap_accuracy": false,
+      "actual_gap_count": 8,
+      "overall_status": "FAIL",
+      "warnings": [
+        "No confidence tier returned from pipeline"
+      ]
+    },
+    {
+      "test_id": "A3",
+      "test_name": "Stripe (Backend/API Company)",
+      "query": "Stripe",
+      "expected_score_min": 60,
+      "expected_score_max": 75,
+      "actual_score": 35.0,
+      "expected_tier": "MEDIUM_HIGH",
+      "actual_tier": null,
+      "score_accuracy": "ACCEPTABLE",
+      "tier_accuracy": "INACCURATE",
+      "gap_accuracy": false,
+      "actual_gap_count": 9,
+      "overall_status": "FAIL",
+      "warnings": [
+        "No confidence tier returned from pipeline"
+      ]
+    },
+    {
+      "test_id": "A4",
+      "test_name": "Full-Stack Python/React Startup",
+      "query": "Full-stack engineer position using Python, React, and PostgreSQL for a SaaS startup",
+      "expected_score_min": 85,
+      "expected_score_max": 95,
+      "actual_score": 68.0,
+      "expected_tier": "HIGH",
+      "actual_tier": null,
+      "score_accuracy": "ACCEPTABLE",
+      "tier_accuracy": "INACCURATE",
+      "gap_accuracy": false,
+      "actual_gap_count": 7,
+      "overall_status": "FAIL",
+      "warnings": [
+        "No confidence tier returned from pipeline"
+      ]
+    },
+    {
+      "test_id": "A5",
+      "test_name": "Anthropic (AI Safety Company)",
+      "query": "Anthropic",
+      "expected_score_min": 50,
+      "expected_score_max": 70,
+      "actual_score": 45.0,
+      "expected_tier": "MEDIUM",
+      "actual_tier": null,
+      "score_accuracy": "ACCURATE",
+      "tier_accuracy": "INACCURATE",
+      "gap_accuracy": false,
+      "actual_gap_count": 6,
+      "overall_status": "FAIL",
+      "warnings": [
+        "No confidence tier returned from pipeline"
+      ]
+    }
+  ],
+  "failures": [
+    {
+      "test_id": "A1",
+      "root_cause": "HARSH_SCORING",
+      "root_cause_confidence": 0.9,
+      "impact_severity": "CRITICAL",
+      "recommended_fixes": [
+        "Review skill matching logic in Phase 4",
+        "Check if transferable skills are being recognized",
+        "Verify confidence calibration in Phase 5b"
+      ]
+    },
+    {
+      "test_id": "A2",
+      "root_cause": "UNKNOWN",
+      "root_cause_confidence": 0.0,
+      "impact_severity": "HIGH",
+      "recommended_fixes": [
+        "Manual investigation required"
+      ]
+    },
+    {
+      "test_id": "A3",
+      "root_cause": "HARSH_SCORING",
+      "root_cause_confidence": 0.9,
+      "impact_severity": "HIGH",
+      "recommended_fixes": [
+        "Review skill matching logic in Phase 4",
+        "Check if transferable skills are being recognized",
+        "Verify confidence calibration in Phase 5b"
+      ]
+    },
+    {
+      "test_id": "A4",
+      "root_cause": "HARSH_SCORING",
+      "root_cause_confidence": 0.9,
+      "impact_severity": "HIGH",
+      "recommended_fixes": [
+        "Review skill matching logic in Phase 4",
+        "Check if transferable skills are being recognized",
+        "Verify confidence calibration in Phase 5b"
+      ]
+    },
+    {
+      "test_id": "A5",
+      "root_cause": "HARSH_SCORING",
+      "root_cause_confidence": 0.5,
+      "impact_severity": "HIGH",
+      "recommended_fixes": [
+        "Review skill matching logic in Phase 4",
+        "Check if transferable skills are being recognized",
+        "Verify confidence calibration in Phase 5b"
+      ]
+    }
+  ],
+  "raw_responses": {
+    "A1": {
+      "query": "Vercel",
+      "response_text": "## Fit Summary\n45% (MEDIUM): The candidate demonstrates strong product-level AI implementation but lacks alignment with Vercel's core Node.js/TypeScript infrastructure requirements.\n\n## Key Strengths\n- **Next.js & React**: Deep framework experience aligns directly with Vercel\u2019s flagship technology and primary developer ecosystem.\n- **AI Agent Orchestration**: Proven usage of LangChain and LangGraph for production agents matches Vercel\u2019s current AI-first product trajectory.\n- **High Agency**: Evidence of building end-to-end tools like a Portfolio Assistant reflects the company's culture of self-driven execution.\n\n## Areas to Address  \n- **Backend Misalignment**: Python/FastAPI focus deviates from Vercel\u2019s TypeScript-centric serverless model; transition via structural logic patterns is required.\n- **Platform Infrastructure**: Minimal experience with Edge Runtime or v0-style developer tools; bridge via transferable AWS and RAG knowledge.\n- **Vercel Ecosystem**: No documented use of internal infrastructure; bridge through existing full-stack deployment and real-time streaming proficiency.\n\n## Bottom Line\nThe candidate is a capable AI builder with high agency, though their technical stack currently favors Python over Vercel's TypeScript-native architecture. They offer strong potential for product-facing AI roles if they can quickly adapt to Node.js serverless constraints.",
+      "events": [
+        {
+          "event_type": "status",
+          "data": {
+            "status": "connecting",
+            "message": "Initializing AI agent..."
+          }
+        },
+        {
+          "event_type": "phase",
+          "data": {
+            "phase": "connecting",
+            "message": "Classifying query and extracting entities..."
+          }
+        },
+        {
+          "event_type": "thought",
+          "data": {
+            "step": 1,
+            "type": "reasoning",
+            "phase": "connecting",
+            "content": "Analyzing query structure to determine if this is a company lookup or job description analysis..."
+          }
+        },
+        {
+          "event_type": "phase_complete",
+          "data": {
+            "phase": "connecting",
+            "summary": "Query classified as 'company', company: Vercel"
+          }
+        },
+        {
+          "event_type": "phase",
+          "data": {
+            "phase": "deep_research",
+            "message": "Researching for info..."
+          }
+        },
+        {
+          "event_type": "thought",
+          "data": {
+            "step": 2,
+            "type": "tool_call",
+            "phase": "deep_research",
+            "tool": "web_search",
+            "input": "\"Vercel\" software engineer tech stack engineering -site:pinterest.com -site:facebook.com -site:instagram.com"
+          }
+        },
+        {
+          "event_type": "thought",
+          "data": {
+            "step": 3,
+            "type": "observation",
+            "phase": "deep_research",
+            "content": "Found info for: Core tech stack and engineering culture"
+          }
+        },
+        {
+          "event_type": "thought",
+          "data": {
+            "step": 4,
+            "type": "tool_call",
+            "phase": "deep_research",
+            "tool": "web_search",
+            "input": "intitle:\"Vercel\" careers jobs software developer requirements"
+          }
+        },
+        {
+          "event_type": "thought",
+          "data": {
+            "step": 5,
+            "type": "observation",
+            "phase": "deep_research",
+            "content": "Found info for: Job requirements from careers page"
+          }
+        },
+        {
+          "event_type": "thought",
+          "data": {
+            "step": 6,
+            "type": "tool_call",
+            "phase": "deep_research",
+            "tool": "web_search",
+            "input": "Vercel engineering blog OR tech OR culture values -site:pinterest.com -site:facebook.com -site:instagram.com"
+          }
+        },
+        {
+          "event_type": "thought",
+          "data": {
+            "step": 7,
+            "type": "observation",
+            "phase": "deep_research",
+            "content": "Found info for: Engineering culture and values"
+          }
+        },
+        {
+          "event_type": "thought",
+          "data": {
+            "step": 8,
+            "type": "reasoning",
+            "phase": "deep_research",
+            "content": "Synthesizing search results into structured employer profile..."
+          }
+        },
+        {
+          "event_type": "phase_complete",
+          "data": {
+            "phase": "deep_research",
+            "summary": "Identified 5 technologies, 4 requirements, 5 culture signals"
+          }
+        },
+        {
+          "event_type": "phase",
+          "data": {
+            "phase": "research_reranker",
+            "message": "Validating research quality..."
+          }
+        },
+        {
+          "event_type": "thought",
+          "data": {
+            "step": 9,
+            "type": "reasoning",
+            "phase": "research_reranker",
+            "content": "Scoring 15 sources with multi-dimensional AI evaluation..."
+          }
+        },
+        {
+          "event_type": "thought",
+          "data": {
+            "step": 9,
+            "type": "reasoning",
+            "phase": "research_reranker",
+            "content": "Source scoring complete: 4/7 sources passed quality gate (threshold: 0.55)"
+          }
+        },
+        {
+          "event_type": "thought",
+          "data": {
+            "step": 10,
+            "type": "reasoning",
+            "phase": "research_reranker",
+            "content": "Assessing research quality: HIGH tier detected"
+          }
+        },
+        {
+          "event_type": "phase_complete",
+          "data": {
+            "phase": "research_reranker",
+            "summary": "Data: PARTIAL | Quality: HIGH | Confidence: 90% | Action: CONTINUE | AI Scores: 4/7"
+          }
+        },
+        {
+          "event_type": "phase",
+          "data": {
+            "phase": "content_enrich",
+            "message": "Enriching top 5 sources..."
+          }
+        },
+        {
+          "event_type": "thought",
+          "data": {
+            "step": 11,
+            "type": "reasoning",
+            "phase": "content_enrich",
+            "content": "Fetching full content for 5 high-quality sources to deepen analysis..."
+          }
+        },
+        {
+          "event_type": "phase_complete",
+          "data": {
+            "phase": "content_enrich",
+            "summary": "Enriched 5/5 sources with full content"
+          }
+        },
+        {
+          "event_type": "phase",
+          "data": {
+            "phase": "skeptical_comparison",
+            "message": "Performing critical fit analysis from skeptical perspective..."
+          }
+        },
+        {
+          "event_type": "thought",
+          "data": {
+            "step": 12,
+            "type": "reasoning",
+            "phase": "skeptical_comparison",
+            "content": "Analyzing fit from a skeptical hiring manager's perspective - identifying genuine gaps and potential concerns..."
+          }
+        },
+        {
+          "event_type": "thought",
+          "data": {
+            "step": 13,
+            "type": "reasoning",
+            "phase": "skeptical_comparison",
+            "content": "Critical review complete: Identified 4 strengths, 3 gaps. Risk assessment: \ud83d\udfe1 medium"
+          }
+        },
+        {
+          "event_type": "phase_complete",
+          "data": {
+            "phase": "skeptical_comparison",
+            "summary": "Found 3 gaps, 4 strengths. Risk level: medium"
+          }
+        },
+        {
+          "event_type": "phase",
+          "data": {
+            "phase": "skills_matching",
+            "message": "Mapping skills to requirements..."
+          }
+        },
+        {
+          "event_type": "thought",
+          "data": {
+            "step": 14,
+            "type": "tool_call",
+            "phase": "skills_matching",
+            "tool": "analyze_skill_match",
+            "input": "Experience with frontend development, Ability to work in a remote or hybrid environment, Aptitude for building and securing cloud infrastructure, Alignment with v0, Next.js, and AI development tracks, Next.js, v0, AI tools, Git-based workflow, Cloud infrastructure"
+          }
+        },
+        {
+          "event_type": "thought",
+          "data": {
+            "step": 15,
+            "type": "observation",
+            "phase": "skills_matching",
+            "content": "Skill analysis complete - identified matching skills and gaps."
+          }
+        },
+        {
+          "event_type": "thought",
+          "data": {
+            "step": 16,
+            "type": "tool_call",
+            "phase": "skills_matching",
+            "tool": "analyze_experience_relevance",
+            "input": "Vercel provides developer tools and cloud infrastructure designed to build, scale, and secure high-performance web applications. As the creators of Next.js and v0, the company emphasizes a seamless git-based workflow and an exceptional frontend developer experience."
+          }
+        },
+        {
+          "event_type": "thought",
+          "data": {
+            "step": 17,
+            "type": "observation",
+            "phase": "skills_matching",
+            "content": "Experience analysis complete - identified relevant background."
+          }
+        },
+        {
+          "event_type": "thought",
+          "data": {
+            "step": 18,
+            "type": "reasoning",
+            "phase": "skills_matching",
+            "content": "Synthesizing skill matches with quantified confidence scores..."
+          }
+        },
+        {
+          "event_type": "phase_complete",
+          "data": {
+            "phase": "skills_matching",
+            "summary": "Skill matching completed with limited data"
+          }
+        },
+        {
+          "event_type": "phase",
+          "data": {
+            "phase": "confidence_reranker",
+            "message": "Calibrating confidence with LLM-as-a-Judge..."
+          }
+        },
+        {
+          "event_type": "thought",
+          "data": {
+            "step": 19,
+            "type": "reasoning",
+            "phase": "confidence_reranker",
+            "content": "Evaluating analysis quality and calibrating confidence score..."
+          }
+        },
+        {
+          "event_type": "thought",
+          "data": {
+            "step": 20,
+            "type": "reasoning",
+            "phase": "confidence_reranker",
+            "content": "Confidence calibrated: 45% (MEDIUM) - While the candidate meets technical count thresholds, significant architectural alignment gaps regarding backend language preferences and specific Vercel-native infrastructure experience necessitate a cautious score."
+          }
+        },
+        {
+          "event_type": "phase_complete",
+          "data": {
+            "phase": "confidence_reranker",
+            "summary": "Calibrated confidence: 45% (MEDIUM)"
+          }
+        },
+        {
+          "event_type": "phase",
+          "data": {
+            "phase": "generate_results",
+            "message": "Generating personalized fit analysis..."
+          }
+        },
+        {
+          "event_type": "thought",
+          "data": {
+            "step": 21,
+            "type": "reasoning",
+            "phase": "generate_results",
+            "content": "Synthesizing 45% match (MEDIUM) into personalized narrative for Vercel..."
+          }
+        },
+        {
+          "event_type": "response",
+          "data": {
+            "chunk": "## Fit Summary\n45% (MEDIUM): The candidate demonstrates strong product-"
+          }
+        },
+        {
+          "event_type": "response",
+          "data": {
+            "chunk": "level AI implementation but lacks alignment with Vercel's core Node.js/TypeScript infrastructure requirements.\n\n## Key"
+          }
+        },
+        {
+          "event_type": "response",
+          "data": {
+            "chunk": " Strengths\n- **Next.js & React**: Deep framework experience aligns directly with Vercel\u2019s flagship technology"
+          }
+        },
+        {
+          "event_type": "response",
+          "data": {
+            "chunk": " and primary developer ecosystem.\n- **AI Agent Orchestration**: Proven usage of LangChain and LangGraph for production agents"
+          }
+        },
+        {
+          "event_type": "response",
+          "data": {
+            "chunk": " matches Vercel\u2019s current AI-first product trajectory.\n- **High Agency**: Evidence of building end-"
+          }
+        },
+        {
+          "event_type": "response",
+          "data": {
+            "chunk": "to-end tools like a Portfolio Assistant reflects the company's culture of self-driven execution.\n\n## Areas to Address  "
+          }
+        },
+        {
+          "event_type": "response",
+          "data": {
+            "chunk": "\n- **Backend Misalignment**: Python/FastAPI focus deviates from Vercel\u2019s TypeScript-centric serverless"
+          }
+        },
+        {
+          "event_type": "response",
+          "data": {
+            "chunk": " model; transition via structural logic patterns is required.\n- **Platform Infrastructure**: Minimal experience with Edge Runtime or v0-"
+          }
+        },
+        {
+          "event_type": "response",
+          "data": {
+            "chunk": "style developer tools; bridge via transferable AWS and RAG knowledge.\n- **Vercel Ecosystem**: No documented use"
+          }
+        },
+        {
+          "event_type": "response",
+          "data": {
+            "chunk": " of internal infrastructure; bridge through existing full-stack deployment and real-time streaming proficiency.\n\n## Bottom Line\nThe"
+          }
+        },
+        {
+          "event_type": "response",
+          "data": {
+            "chunk": " candidate is a capable AI builder with high agency, though their technical stack currently favors Python over Vercel's TypeScript"
+          }
+        },
+        {
+          "event_type": "response",
+          "data": {
+            "chunk": "-native architecture. They offer strong potential for product-facing AI roles if they can quickly adapt to Node.js server"
+          }
+        },
+        {
+          "event_type": "response",
+          "data": {
+            "chunk": "less constraints."
+          }
+        },
+        {
+          "event_type": "phase_complete",
+          "data": {
+            "phase": "generate_results",
+            "summary": "Generated 179 word response"
+          }
+        },
+        {
+          "event_type": "complete",
+          "data": {
+            "duration_ms": 30471
+          }
+        }
+      ],
+      "error": null
+    },
+    "A2": {
+      "query": "OpenAI",
+      "response_text": "## Fit Summary\n68% (MEDIUM): The candidate demonstrates strong product-facing AI application skills, though significant gaps exist in large-scale infrastructure and security compliance.\n\n## Key Strengths\n- **AI Orchestration**: Proven implementation of LangChain and LangGraph for developing production-grade autonomous agents.\n- **AI-Native Stack**: Full-stack proficiency in Next.js, FastAPI, and SSE streaming for real-time AI interfaces.\n- **RAG Architecture**: Hands-on experience integrating vector databases to enhance model retrieval and context window management.\n- **Containerization**: Practical ability to deploy and manage microservices using Docker and AWS cloud environments.\n\n## Areas to Address  \n- **Infrastructure Scaling**: Lacks experience in massive-scale distributed systems; focus on learning high-traffic backend optimization and orchestration.\n- **Security Compliance**: Missing SOC2 or FedRAMP experience; requires bridging via rigorous data governance and security training.\n- **Systems Engineering**: Limited low-level programming or core ML research; transition focus toward product-engineering and application-layer roles.\n\n## Bottom Line\nThe candidate is a strong fit for product-focused engineering roles involving LLM integration and real-time streaming. However, their lack of large-scale infrastructure and security background limits suitability for core modeling or systems operations teams.",
+      "events": [
+        {
+          "event_type": "status",
+          "data": {
+            "status": "connecting",
+            "message": "Initializing AI agent..."
+          }
+        },
+        {
+          "event_type": "phase",
+          "data": {
+            "phase": "connecting",
+            "message": "Classifying query and extracting entities..."
+          }
+        },
+        {
+          "event_type": "thought",
+          "data": {
+            "step": 1,
+            "type": "reasoning",
+            "phase": "connecting",
+            "content": "Analyzing query structure to determine if this is a company lookup or job description analysis..."
+          }
+        },
+        {
+          "event_type": "phase_complete",
+          "data": {
+            "phase": "connecting",
+            "summary": "Query classified as 'company', company: OpenAI"
+          }
+        },
+        {
+          "event_type": "phase",
+          "data": {
+            "phase": "deep_research",
+            "message": "Researching for info..."
+          }
+        },
+        {
+          "event_type": "thought",
+          "data": {
+            "step": 2,
+            "type": "tool_call",
+            "phase": "deep_research",
+            "tool": "web_search",
+            "input": "\"OpenAI\" software engineer tech stack engineering -site:pinterest.com -site:facebook.com -site:instagram.com"
+          }
+        },
+        {
+          "event_type": "thought",
+          "data": {
+            "step": 3,
+            "type": "observation",
+            "phase": "deep_research",
+            "content": "Found info for: Core tech stack and engineering culture"
+          }
+        },
+        {
+          "event_type": "thought",
+          "data": {
+            "step": 4,
+            "type": "tool_call",
+            "phase": "deep_research",
+            "tool": "web_search",
+            "input": "intitle:\"OpenAI\" careers jobs software developer requirements"
+          }
+        },
+        {
+          "event_type": "thought",
+          "data": {
+            "step": 5,
+            "type": "observation",
+            "phase": "deep_research",
+            "content": "Found info for: Job requirements from careers page"
+          }
+        },
+        {
+          "event_type": "thought",
+          "data": {
+            "step": 6,
+            "type": "tool_call",
+            "phase": "deep_research",
+            "tool": "web_search",
+            "input": "OpenAI engineering blog OR tech OR culture values -site:pinterest.com -site:facebook.com -site:instagram.com"
+          }
+        },
+        {
+          "event_type": "thought",
+          "data": {
+            "step": 7,
+            "type": "observation",
+            "phase": "deep_research",
+            "content": "Found info for: Engineering culture and values"
+          }
+        },
+        {
+          "event_type": "thought",
+          "data": {
+            "step": 8,
+            "type": "reasoning",
+            "phase": "deep_research",
+            "content": "Synthesizing search results into structured employer profile..."
+          }
+        },
+        {
+          "event_type": "phase_complete",
+          "data": {
+            "phase": "deep_research",
+            "summary": "Identified 5 technologies, 5 requirements, 6 culture signals"
+          }
+        },
+        {
+          "event_type": "phase",
+          "data": {
+            "phase": "research_reranker",
+            "message": "Validating research quality..."
+          }
+        },
+        {
+          "event_type": "thought",
+          "data": {
+            "step": 9,
+            "type": "reasoning",
+            "phase": "research_reranker",
+            "content": "Scoring 15 sources with multi-dimensional AI evaluation..."
+          }
+        },
+        {
+          "event_type": "thought",
+          "data": {
+            "step": 9,
+            "type": "reasoning",
+            "phase": "research_reranker",
+            "content": "Source scoring complete: 4/6 sources passed quality gate (threshold: 0.55)"
+          }
+        },
+        {
+          "event_type": "thought",
+          "data": {
+            "step": 10,
+            "type": "reasoning",
+            "phase": "research_reranker",
+            "content": "Assessing research quality: HIGH tier detected"
+          }
+        },
+        {
+          "event_type": "phase_complete",
+          "data": {
+            "phase": "research_reranker",
+            "summary": "Data: PARTIAL | Quality: HIGH | Confidence: 90% | Action: CONTINUE | AI Scores: 4/6"
+          }
+        },
+        {
+          "event_type": "phase",
+          "data": {
+            "phase": "content_enrich",
+            "message": "Enriching top 5 sources..."
+          }
+        },
+        {
+          "event_type": "thought",
+          "data": {
+            "step": 11,
+            "type": "reasoning",
+            "phase": "content_enrich",
+            "content": "Fetching full content for 5 high-quality sources to deepen analysis..."
+          }
+        },
+        {
+          "event_type": "phase_complete",
+          "data": {
+            "phase": "content_enrich",
+            "summary": "Enriched 2/5 sources with full content"
+          }
+        },
+        {
+          "event_type": "phase",
+          "data": {
+            "phase": "skeptical_comparison",
+            "message": "Performing critical fit analysis from skeptical perspective..."
+          }
+        },
+        {
+          "event_type": "thought",
+          "data": {
+            "step": 12,
+            "type": "reasoning",
+            "phase": "skeptical_comparison",
+            "content": "Analyzing fit from a skeptical hiring manager's perspective - identifying genuine gaps and potential concerns..."
+          }
+        },
+        {
+          "event_type": "thought",
+          "data": {
+            "step": 13,
+            "type": "reasoning",
+            "phase": "skeptical_comparison",
+            "content": "Critical review complete: Identified 4 strengths, 3 gaps. Risk assessment: \ud83d\udfe1 medium"
+          }
+        },
+        {
+          "event_type": "phase_complete",
+          "data": {
+            "phase": "skeptical_comparison",
+            "summary": "Found 3 gaps, 4 strengths. Risk level: medium"
+          }
+        },
+        {
+          "event_type": "phase",
+          "data": {
+            "phase": "skills_matching",
+            "message": "Mapping skills to requirements..."
+          }
+        },
+        {
+          "event_type": "thought",
+          "data": {
+            "step": 14,
+            "type": "tool_call",
+            "phase": "skills_matching",
+            "tool": "analyze_skill_match",
+            "input": "Ability to build systems using OpenAI technologies, Experience in product engineering, infrastructure, or safety, Ability to work with secure and protected information technology systems, Data security compliance, Experience in full-stack or developer productivity domains, ChatGPT, OpenAI API, GPT models, Reasoning models, AI-native application frameworks"
+          }
+        },
+        {
+          "event_type": "thought",
+          "data": {
+            "step": 15,
+            "type": "observation",
+            "phase": "skills_matching",
+            "content": "Skill analysis complete - identified matching skills and gaps."
+          }
+        },
+        {
+          "event_type": "thought",
+          "data": {
+            "step": 16,
+            "type": "tool_call",
+            "phase": "skills_matching",
+            "tool": "analyze_experience_relevance",
+            "input": "OpenAI is an AI research and deployment company known for products like ChatGPT and the OpenAI API. Software engineering roles span product engineering, infrastructure, and safety, focusing on scaling AI-native applications and distributing the benefits of AI to the world."
+          }
+        },
+        {
+          "event_type": "thought",
+          "data": {
+            "step": 17,
+            "type": "observation",
+            "phase": "skills_matching",
+            "content": "Experience analysis complete - identified relevant background."
+          }
+        },
+        {
+          "event_type": "thought",
+          "data": {
+            "step": 18,
+            "type": "reasoning",
+            "phase": "skills_matching",
+            "content": "Synthesizing skill matches with quantified confidence scores..."
+          }
+        },
+        {
+          "event_type": "phase_complete",
+          "data": {
+            "phase": "skills_matching",
+            "summary": "Skill matching completed with limited data"
+          }
+        },
+        {
+          "event_type": "phase",
+          "data": {
+            "phase": "confidence_reranker",
+            "message": "Calibrating confidence with LLM-as-a-Judge..."
+          }
+        },
+        {
+          "event_type": "thought",
+          "data": {
+            "step": 19,
+            "type": "reasoning",
+            "phase": "confidence_reranker",
+            "content": "Evaluating analysis quality and calibrating confidence score..."
+          }
+        },
+        {
+          "event_type": "thought",
+          "data": {
+            "step": 20,
+            "type": "reasoning",
+            "phase": "confidence_reranker",
+            "content": "Confidence calibrated: 68% (MEDIUM) - While the tech stack and requirements are well-defined, the significant gaps in large-scale infrastructure and security compliance limit the confidence to the upper-medium tier."
+          }
+        },
+        {
+          "event_type": "phase_complete",
+          "data": {
+            "phase": "confidence_reranker",
+            "summary": "Calibrated confidence: 68% (MEDIUM)"
+          }
+        },
+        {
+          "event_type": "phase",
+          "data": {
+            "phase": "generate_results",
+            "message": "Generating personalized fit analysis..."
+          }
+        },
+        {
+          "event_type": "thought",
+          "data": {
+            "step": 21,
+            "type": "reasoning",
+            "phase": "generate_results",
+            "content": "Synthesizing 68% match (MEDIUM) into personalized narrative for OpenAI..."
+          }
+        },
+        {
+          "event_type": "response",
+          "data": {
+            "chunk": "## Fit Summary\n68% (MEDIUM): The candidate demonstrates strong product-facing AI application"
+          }
+        },
+        {
+          "event_type": "response",
+          "data": {
+            "chunk": " skills, though significant gaps exist in large-scale infrastructure and security compliance.\n\n## Key Strengths\n- **AI Orchestration"
+          }
+        },
+        {
+          "event_type": "response",
+          "data": {
+            "chunk": "**: Proven implementation of LangChain and LangGraph for developing production-grade autonomous agents.\n- **AI-Native Stack**: Full-"
+          }
+        },
+        {
+          "event_type": "response",
+          "data": {
+            "chunk": "stack proficiency in Next.js, FastAPI, and SSE streaming for real-time AI interfaces.\n- **RAG Architecture"
+          }
+        },
+        {
+          "event_type": "response",
+          "data": {
+            "chunk": "**: Hands-on experience integrating vector databases to enhance model retrieval and context window management.\n- **Containerization**: Practical"
+          }
+        },
+        {
+          "event_type": "response",
+          "data": {
+            "chunk": " ability to deploy and manage microservices using Docker and AWS cloud environments.\n\n## Areas to Address  \n- **Infrastructure"
+          }
+        },
+        {
+          "event_type": "response",
+          "data": {
+            "chunk": " Scaling**: Lacks experience in massive-scale distributed systems; focus on learning high-traffic backend optimization and orchestration.\n- **"
+          }
+        },
+        {
+          "event_type": "response",
+          "data": {
+            "chunk": "Security Compliance**: Missing SOC2 or FedRAMP experience; requires bridging via rigorous data governance and security training.\n- **"
+          }
+        },
+        {
+          "event_type": "response",
+          "data": {
+            "chunk": "Systems Engineering**: Limited low-level programming or core ML research; transition focus toward product-engineering and application-layer roles.\n\n"
+          }
+        },
+        {
+          "event_type": "response",
+          "data": {
+            "chunk": "## Bottom Line\nThe candidate is a strong fit for product-focused engineering roles involving LLM integration and real-time streaming"
+          }
+        },
+        {
+          "event_type": "response",
+          "data": {
+            "chunk": ". However, their lack of large-scale infrastructure and security background limits suitability for core modeling or systems operations teams."
+          }
+        },
+        {
+          "event_type": "phase_complete",
+          "data": {
+            "phase": "generate_results",
+            "summary": "Generated 178 word response"
+          }
+        },
+        {
+          "event_type": "complete",
+          "data": {
+            "duration_ms": 27401
+          }
+        }
+      ],
+      "error": null
+    },
+    "A3": {
+      "query": "Stripe",
+      "response_text": "## Fit Summary\n35% (LOW) - The profile shows strong general engineering principles but lacks the specific Ruby/Sorbet ecosystem and financial scale required for Stripe.\n\n## Key Strengths\n- **Developer Productivity**: Built AI-driven research agents, aligning with Stripe\u2019s emphasis on enhancing the inner-dev loop and engineering tooling.\n- **Modern Full-Stack**: Proficient in React, FastAPI, and Next.js, providing a solid foundation for Stripe's web-heavy financial infrastructure.\n- **Microservices**: Proven experience deploying containerized services on AWS, mapping well to Stripe's service-oriented architecture and global deployments.\n- **Real-time Systems**: Implemented WebSockets and SSE, relevant for high-concurrency dashboards and live financial data monitoring.\n\n## Areas to Address  \n- **Language Gap**: No Ruby or Sorbet experience; requires pivoting from a Python-heavy stack to Stripe\u2019s primary backend ecosystem.\n- **Scale Constraints**: Projects appear small-scale; needs to demonstrate ability to debug systems supporting thousands of engineers and millions of transactions.\n- **Domain Expertise**: Missing background in financial systems or high-compliance infrastructure; must bridge via transferable microservices and security knowledge.\n\n## Bottom Line\nThe candidate is a technically capable full-stack engineer but lacks the specific language proficiency and high-scale experience Stripe demands. Significant upskilling in Ruby and large-scale system debugging would be necessary to bridge the gap.",
+      "events": [
+        {
+          "event_type": "status",
+          "data": {
+            "status": "connecting",
+            "message": "Initializing AI agent..."
+          }
+        },
+        {
+          "event_type": "phase",
+          "data": {
+            "phase": "connecting",
+            "message": "Classifying query and extracting entities..."
+          }
+        },
+        {
+          "event_type": "thought",
+          "data": {
+            "step": 1,
+            "type": "reasoning",
+            "phase": "connecting",
+            "content": "Analyzing query structure to determine if this is a company lookup or job description analysis..."
+          }
+        },
+        {
+          "event_type": "phase_complete",
+          "data": {
+            "phase": "connecting",
+            "summary": "Query classified as 'company', company: Stripe"
+          }
+        },
+        {
+          "event_type": "phase",
+          "data": {
+            "phase": "deep_research",
+            "message": "Researching for info..."
+          }
+        },
+        {
+          "event_type": "thought",
+          "data": {
+            "step": 2,
+            "type": "tool_call",
+            "phase": "deep_research",
+            "tool": "web_search",
+            "input": "\"Stripe\" software engineer tech stack engineering -site:pinterest.com -site:facebook.com -site:instagram.com"
+          }
+        },
+        {
+          "event_type": "thought",
+          "data": {
+            "step": 3,
+            "type": "observation",
+            "phase": "deep_research",
+            "content": "Found info for: Core tech stack and engineering culture"
+          }
+        },
+        {
+          "event_type": "thought",
+          "data": {
+            "step": 4,
+            "type": "tool_call",
+            "phase": "deep_research",
+            "tool": "web_search",
+            "input": "intitle:\"Stripe\" careers jobs software developer requirements"
+          }
+        },
+        {
+          "event_type": "thought",
+          "data": {
+            "step": 5,
+            "type": "observation",
+            "phase": "deep_research",
+            "content": "Found info for: Job requirements from careers page"
+          }
+        },
+        {
+          "event_type": "thought",
+          "data": {
+            "step": 6,
+            "type": "tool_call",
+            "phase": "deep_research",
+            "tool": "web_search",
+            "input": "Stripe engineering blog OR tech OR culture values -site:pinterest.com -site:facebook.com -site:instagram.com"
+          }
+        },
+        {
+          "event_type": "thought",
+          "data": {
+            "step": 7,
+            "type": "observation",
+            "phase": "deep_research",
+            "content": "Found info for: Engineering culture and values"
+          }
+        },
+        {
+          "event_type": "thought",
+          "data": {
+            "step": 8,
+            "type": "reasoning",
+            "phase": "deep_research",
+            "content": "Synthesizing search results into structured employer profile..."
+          }
+        },
+        {
+          "event_type": "phase_complete",
+          "data": {
+            "phase": "deep_research",
+            "summary": "Identified 1 technologies, 4 requirements, 4 culture signals"
+          }
+        },
+        {
+          "event_type": "phase",
+          "data": {
+            "phase": "research_reranker",
+            "message": "Validating research quality..."
+          }
+        },
+        {
+          "event_type": "thought",
+          "data": {
+            "step": 9,
+            "type": "reasoning",
+            "phase": "research_reranker",
+            "content": "Scoring 15 sources with multi-dimensional AI evaluation..."
+          }
+        },
+        {
+          "event_type": "thought",
+          "data": {
+            "step": 9,
+            "type": "reasoning",
+            "phase": "research_reranker",
+            "content": "Source scoring complete: 8/10 sources passed quality gate (threshold: 0.55)"
+          }
+        },
+        {
+          "event_type": "thought",
+          "data": {
+            "step": 10,
+            "type": "reasoning",
+            "phase": "research_reranker",
+            "content": "Assessing research quality: HIGH tier detected"
+          }
+        },
+        {
+          "event_type": "phase_complete",
+          "data": {
+            "phase": "research_reranker",
+            "summary": "Data: PARTIAL | Quality: MEDIUM | Confidence: 65% | Action: CONTINUE | AI Scores: 8/10"
+          }
+        },
+        {
+          "event_type": "phase",
+          "data": {
+            "phase": "content_enrich",
+            "message": "Enriching top 5 sources..."
+          }
+        },
+        {
+          "event_type": "thought",
+          "data": {
+            "step": 11,
+            "type": "reasoning",
+            "phase": "content_enrich",
+            "content": "Fetching full content for 5 high-quality sources to deepen analysis..."
+          }
+        },
+        {
+          "event_type": "phase_complete",
+          "data": {
+            "phase": "content_enrich",
+            "summary": "Enriched 5/5 sources with full content"
+          }
+        },
+        {
+          "event_type": "phase",
+          "data": {
+            "phase": "skeptical_comparison",
+            "message": "Performing critical fit analysis from skeptical perspective..."
+          }
+        },
+        {
+          "event_type": "thought",
+          "data": {
+            "step": 12,
+            "type": "reasoning",
+            "phase": "skeptical_comparison",
+            "content": "Analyzing fit from a skeptical hiring manager's perspective - identifying genuine gaps and potential concerns..."
+          }
+        },
+        {
+          "event_type": "thought",
+          "data": {
+            "step": 13,
+            "type": "reasoning",
+            "phase": "skeptical_comparison",
+            "content": "Critical review complete: Identified 4 strengths, 3 gaps. Risk assessment: \ud83d\udfe1 medium"
+          }
+        },
+        {
+          "event_type": "phase_complete",
+          "data": {
+            "phase": "skeptical_comparison",
+            "summary": "Found 3 gaps, 4 strengths. Risk level: medium"
+          }
+        },
+        {
+          "event_type": "phase",
+          "data": {
+            "phase": "skills_matching",
+            "message": "Mapping skills to requirements..."
+          }
+        },
+        {
+          "event_type": "thought",
+          "data": {
+            "step": 14,
+            "type": "tool_call",
+            "phase": "skills_matching",
+            "tool": "analyze_skill_match",
+            "input": "2-12+ years of industry software engineering experience, Strong software engineering skills, Experience debugging production issues across services and various levels of the tech stack, Ability to work in a hybrid (70% of staff) or fully remote (30% of staff) setup, Sorbet"
+          }
+        },
+        {
+          "event_type": "thought",
+          "data": {
+            "step": 15,
+            "type": "observation",
+            "phase": "skills_matching",
+            "content": "Skill analysis complete - identified matching skills and gaps."
+          }
+        },
+        {
+          "event_type": "thought",
+          "data": {
+            "step": 16,
+            "type": "tool_call",
+            "phase": "skills_matching",
+            "tool": "analyze_experience_relevance",
+            "input": "Stripe is a global financial infrastructure platform that operates at significant scale with a dual career-track for software engineers and engineering managers. The Software Engineer role involves debugging production issues across the full tech stack and developing reliable inner-dev loops for thousands of fellow engineers."
+          }
+        },
+        {
+          "event_type": "thought",
+          "data": {
+            "step": 17,
+            "type": "observation",
+            "phase": "skills_matching",
+            "content": "Experience analysis complete - identified relevant background."
+          }
+        },
+        {
+          "event_type": "thought",
+          "data": {
+            "step": 18,
+            "type": "reasoning",
+            "phase": "skills_matching",
+            "content": "Synthesizing skill matches with quantified confidence scores..."
+          }
+        },
+        {
+          "event_type": "phase_complete",
+          "data": {
+            "phase": "skills_matching",
+            "summary": "Skill matching completed with limited data"
+          }
+        },
+        {
+          "event_type": "phase",
+          "data": {
+            "phase": "confidence_reranker",
+            "message": "Calibrating confidence with LLM-as-a-Judge..."
+          }
+        },
+        {
+          "event_type": "thought",
+          "data": {
+            "step": 19,
+            "type": "reasoning",
+            "phase": "confidence_reranker",
+            "content": "Evaluating analysis quality and calibrating confidence score..."
+          }
+        },
+        {
+          "event_type": "thought",
+          "data": {
+            "step": 20,
+            "type": "reasoning",
+            "phase": "confidence_reranker",
+            "content": "Confidence calibrated: 35% (LOW) - While requirements are clear, the tech stack is extremely sparse (only 1 match) and significant gaps in domain expertise and scale experience have been identified."
+          }
+        },
+        {
+          "event_type": "phase_complete",
+          "data": {
+            "phase": "confidence_reranker",
+            "summary": "Calibrated confidence: 35% (LOW), 2 quality flags"
+          }
+        },
+        {
+          "event_type": "phase",
+          "data": {
+            "phase": "generate_results",
+            "message": "Generating personalized fit analysis..."
+          }
+        },
+        {
+          "event_type": "thought",
+          "data": {
+            "step": 21,
+            "type": "reasoning",
+            "phase": "generate_results",
+            "content": "Synthesizing 35% match (LOW) into personalized narrative for Stripe..."
+          }
+        },
+        {
+          "event_type": "response",
+          "data": {
+            "chunk": "## Fit Summary\n35% (LOW) - The profile shows strong general engineering principles"
+          }
+        },
+        {
+          "event_type": "response",
+          "data": {
+            "chunk": " but lacks the specific Ruby/Sorbet ecosystem and financial scale required for Stripe.\n\n## Key Strengths\n- **Developer"
+          }
+        },
+        {
+          "event_type": "response",
+          "data": {
+            "chunk": " Productivity**: Built AI-driven research agents, aligning with Stripe\u2019s emphasis on enhancing the inner-dev loop and engineering"
+          }
+        },
+        {
+          "event_type": "response",
+          "data": {
+            "chunk": " tooling.\n- **Modern Full-Stack**: Proficient in React, FastAPI, and Next.js, providing a solid foundation for"
+          }
+        },
+        {
+          "event_type": "response",
+          "data": {
+            "chunk": " Stripe's web-heavy financial infrastructure.\n- **Microservices**: Proven experience deploying containerized services on AWS, mapping"
+          }
+        },
+        {
+          "event_type": "response",
+          "data": {
+            "chunk": " well to Stripe's service-oriented architecture and global deployments.\n- **Real-time Systems**: Implemented Web"
+          }
+        },
+        {
+          "event_type": "response",
+          "data": {
+            "chunk": "Sockets and SSE, relevant for high-concurrency dashboards and live financial data monitoring.\n\n## Areas to Address  \n- **Language"
+          }
+        },
+        {
+          "event_type": "response",
+          "data": {
+            "chunk": " Gap**: No Ruby or Sorbet experience; requires pivoting from a Python-heavy stack to Stripe\u2019s primary backend ecosystem.\n"
+          }
+        },
+        {
+          "event_type": "response",
+          "data": {
+            "chunk": "- **Scale Constraints**: Projects appear small-scale; needs to demonstrate ability to debug systems supporting thousands of engineers and millions of transactions"
+          }
+        },
+        {
+          "event_type": "response",
+          "data": {
+            "chunk": ".\n- **Domain Expertise**: Missing background in financial systems or high-compliance infrastructure; must bridge via transferable microservices and"
+          }
+        },
+        {
+          "event_type": "response",
+          "data": {
+            "chunk": " security knowledge.\n\n## Bottom Line\nThe candidate is a technically capable full-stack engineer but lacks the specific language proficiency"
+          }
+        },
+        {
+          "event_type": "response",
+          "data": {
+            "chunk": " and high-scale experience Stripe demands. Significant upskilling in Ruby and large-scale system debugging would be necessary to bridge the gap"
+          }
+        },
+        {
+          "event_type": "response",
+          "data": {
+            "chunk": "."
+          }
+        },
+        {
+          "event_type": "phase_complete",
+          "data": {
+            "phase": "generate_results",
+            "summary": "Generated 199 word response"
+          }
+        },
+        {
+          "event_type": "complete",
+          "data": {
+            "duration_ms": 27227
+          }
+        }
+      ],
+      "error": null
+    },
+    "A4": {
+      "query": "Full-stack engineer position using Python, React, and PostgreSQL for a SaaS startup",
+      "response_text": "## Fit Summary\n68% (MEDIUM): The technical foundation is strong with 17 stack items, but four significant gaps and data inconsistencies necessitate a cautious evaluation.\n\n## Key Strengths\n- **AI/LLM Orchestration**: Proven experience using LangChain and LangGraph to build and deploy production-grade AI agents.\n- **Modern Full-stack**: Solid alignment with Python/FastAPI backends and React/Next.js frontends for responsive application development.\n- **Real-time Data**: Demonstrated capability implementing Server-Sent Events (SSE) and WebSockets for live data streaming.\n- **DevOps/Deployment**: Experience with containerization and CI/CD pipelines ensures reliable delivery in cloud environments.\n\n## Areas to Address  \n- **Enterprise Frameworks**: Missing Django/Flask experience; leverage FastAPI expertise to accelerate the learning curve for legacy systems.\n- **High-Performance Backend**: Lacks Go/Golang proficiency; rely on Python strengths while upskilling in concurrent programming for performance.\n- **Search Domain**: No evidence of Elasticsearch or MongoDB; apply RAG system knowledge to master complex data indexing.\n- **Architectural Leadership**: Focus on implementation over system design; shift toward high-level strategy to meet 'Architect of Thought' expectations.\n\n## Bottom Line\nThe candidate provides a strong technical base for AI-driven development but lacks specific enterprise framework depth and high-performance language skills. They are a viable mid-tier option if provided with targeted mentorship in system architecture.",
+      "events": [
+        {
+          "event_type": "status",
+          "data": {
+            "status": "connecting",
+            "message": "Initializing AI agent..."
+          }
+        },
+        {
+          "event_type": "phase",
+          "data": {
+            "phase": "connecting",
+            "message": "Classifying query and extracting entities..."
+          }
+        },
+        {
+          "event_type": "thought",
+          "data": {
+            "step": 1,
+            "type": "reasoning",
+            "phase": "connecting",
+            "content": "Analyzing query structure to determine if this is a company lookup or job description analysis..."
+          }
+        },
+        {
+          "event_type": "phase_complete",
+          "data": {
+            "phase": "connecting",
+            "summary": "Query classified as 'job_description', role: Full-stack engineer, skills: 3 extracted"
+          }
+        },
+        {
+          "event_type": "phase",
+          "data": {
+            "phase": "deep_research",
+            "message": "Researching for info..."
+          }
+        },
+        {
+          "event_type": "thought",
+          "data": {
+            "step": 2,
+            "type": "tool_call",
+            "phase": "deep_research",
+            "tool": "web_search",
+            "input": "Full-stack engineer Python React PostgreSQL requirements tech stack -site:pinterest.com -site:facebook.com -site:instagram.com"
+          }
+        },
+        {
+          "event_type": "thought",
+          "data": {
+            "step": 3,
+            "type": "observation",
+            "phase": "deep_research",
+            "content": "Found info for: Core job requirements and tech stack"
+          }
+        },
+        {
+          "event_type": "thought",
+          "data": {
+            "step": 4,
+            "type": "tool_call",
+            "phase": "deep_research",
+            "tool": "web_search",
+            "input": "intitle:\"Full-stack engineer\" Python React PostgreSQL requirements"
+          }
+        },
+        {
+          "event_type": "thought",
+          "data": {
+            "step": 5,
+            "type": "observation",
+            "phase": "deep_research",
+            "content": "Found info for: Job listings with title match"
+          }
+        },
+        {
+          "event_type": "thought",
+          "data": {
+            "step": 6,
+            "type": "tool_call",
+            "phase": "deep_research",
+            "tool": "web_search",
+            "input": "Python engineer career requirements industry 2024"
+          }
+        },
+        {
+          "event_type": "thought",
+          "data": {
+            "step": 7,
+            "type": "observation",
+            "phase": "deep_research",
+            "content": "Found info for: Industry context for skill area"
+          }
+        },
+        {
+          "event_type": "thought",
+          "data": {
+            "step": 8,
+            "type": "reasoning",
+            "phase": "deep_research",
+            "content": "Synthesizing search results into structured employer profile..."
+          }
+        },
+        {
+          "event_type": "phase_complete",
+          "data": {
+            "phase": "deep_research",
+            "summary": "Identified 17 technologies, 6 requirements, 4 culture signals"
+          }
+        },
+        {
+          "event_type": "phase",
+          "data": {
+            "phase": "research_reranker",
+            "message": "Validating research quality..."
+          }
+        },
+        {
+          "event_type": "thought",
+          "data": {
+            "step": 9,
+            "type": "reasoning",
+            "phase": "research_reranker",
+            "content": "Scoring 15 sources with multi-dimensional AI evaluation..."
+          }
+        },
+        {
+          "event_type": "thought",
+          "data": {
+            "step": 9,
+            "type": "reasoning",
+            "phase": "research_reranker",
+            "content": "Source scoring complete: 4/10 sources passed quality gate (threshold: 0.45)"
+          }
+        },
+        {
+          "event_type": "thought",
+          "data": {
+            "step": 10,
+            "type": "reasoning",
+            "phase": "research_reranker",
+            "content": "Assessing research quality: HIGH tier detected"
+          }
+        },
+        {
+          "event_type": "phase_complete",
+          "data": {
+            "phase": "research_reranker",
+            "summary": "Data: PARTIAL | Quality: HIGH | Confidence: 85% | Action: CONTINUE | AI Scores: 4/10"
+          }
+        },
+        {
+          "event_type": "phase",
+          "data": {
+            "phase": "content_enrich",
+            "message": "Enriching top 5 sources..."
+          }
+        },
+        {
+          "event_type": "thought",
+          "data": {
+            "step": 11,
+            "type": "reasoning",
+            "phase": "content_enrich",
+            "content": "Fetching full content for 5 high-quality sources to deepen analysis..."
+          }
+        },
+        {
+          "event_type": "phase_complete",
+          "data": {
+            "phase": "content_enrich",
+            "summary": "Enriched 4/5 sources with full content"
+          }
+        },
+        {
+          "event_type": "phase",
+          "data": {
+            "phase": "skeptical_comparison",
+            "message": "Performing critical fit analysis from skeptical perspective..."
+          }
+        },
+        {
+          "event_type": "thought",
+          "data": {
+            "step": 12,
+            "type": "reasoning",
+            "phase": "skeptical_comparison",
+            "content": "Analyzing fit from a skeptical hiring manager's perspective - identifying genuine gaps and potential concerns..."
+          }
+        },
+        {
+          "event_type": "thought",
+          "data": {
+            "step": 13,
+            "type": "reasoning",
+            "phase": "skeptical_comparison",
+            "content": "Critical review complete: Identified 4 strengths, 4 gaps. Risk assessment: \ud83d\udfe1 medium"
+          }
+        },
+        {
+          "event_type": "phase_complete",
+          "data": {
+            "phase": "skeptical_comparison",
+            "summary": "Found 4 gaps, 4 strengths. Risk level: medium"
+          }
+        },
+        {
+          "event_type": "phase",
+          "data": {
+            "phase": "skills_matching",
+            "message": "Mapping skills to requirements..."
+          }
+        },
+        {
+          "event_type": "thought",
+          "data": {
+            "step": 14,
+            "type": "tool_call",
+            "phase": "skills_matching",
+            "tool": "analyze_skill_match",
+            "input": "Industry experience, Ability to lead features end-to-end (from requirements to deployment), Experience with REST architecture, English level: Upper Intermediate (for specific USA-based criteria), Understanding of resource requirements and Python packaging, Self-paced learning or degree-based background in Computer Science or Data Science, Python, React, PostgreSQL, JavaScript, TypeScript, Node.js, Django, Flask, FastAPI, Redux.js, Go/Golang, AWS, Google Cloud, Docker, TailwindCSS, MongoDB, Elast..."
+          }
+        },
+        {
+          "event_type": "thought",
+          "data": {
+            "step": 15,
+            "type": "observation",
+            "phase": "skills_matching",
+            "content": "Skill analysis complete - identified matching skills and gaps."
+          }
+        },
+        {
+          "event_type": "thought",
+          "data": {
+            "step": 16,
+            "type": "tool_call",
+            "phase": "skills_matching",
+            "tool": "analyze_experience_relevance",
+            "input": "The search results represent general industry standards and various individual profiles for the Full-stack Engineer role rather than a single specific employer. Roles typically involve building enterprise software, AI chatbots, and cloud-deployed applications using a mix of Python-based backends and React frontends."
+          }
+        },
+        {
+          "event_type": "thought",
+          "data": {
+            "step": 17,
+            "type": "observation",
+            "phase": "skills_matching",
+            "content": "Experience analysis complete - identified relevant background."
+          }
+        },
+        {
+          "event_type": "thought",
+          "data": {
+            "step": 18,
+            "type": "reasoning",
+            "phase": "skills_matching",
+            "content": "Synthesizing skill matches with quantified confidence scores..."
+          }
+        },
+        {
+          "event_type": "phase_complete",
+          "data": {
+            "phase": "skills_matching",
+            "summary": "Skill matching completed with limited data"
+          }
+        },
+        {
+          "event_type": "phase",
+          "data": {
+            "phase": "confidence_reranker",
+            "message": "Calibrating confidence with LLM-as-a-Judge..."
+          }
+        },
+        {
+          "event_type": "thought",
+          "data": {
+            "step": 19,
+            "type": "reasoning",
+            "phase": "confidence_reranker",
+            "content": "Evaluating analysis quality and calibrating confidence score..."
+          }
+        },
+        {
+          "event_type": "thought",
+          "data": {
+            "step": 20,
+            "type": "reasoning",
+            "phase": "confidence_reranker",
+            "content": "Confidence calibrated: 68% (MEDIUM) - While the tech stack is robust (17 items), the presence of 4 significant gaps and a mismatch between the 'raw_score' and the reported 'unmatched' status requires a moderate calibration."
+          }
+        },
+        {
+          "event_type": "phase_complete",
+          "data": {
+            "phase": "confidence_reranker",
+            "summary": "Calibrated confidence: 68% (MEDIUM), 1 quality flags"
+          }
+        },
+        {
+          "event_type": "phase",
+          "data": {
+            "phase": "generate_results",
+            "message": "Generating personalized fit analysis..."
+          }
+        },
+        {
+          "event_type": "thought",
+          "data": {
+            "step": 21,
+            "type": "reasoning",
+            "phase": "generate_results",
+            "content": "Synthesizing 68% match (MEDIUM) into personalized narrative for Full-stack engineer..."
+          }
+        },
+        {
+          "event_type": "response",
+          "data": {
+            "chunk": "## Fit Summary\n68% (MEDIUM): The technical foundation is strong with"
+          }
+        },
+        {
+          "event_type": "response",
+          "data": {
+            "chunk": " 17 stack items, but four significant gaps and data inconsistencies necessitate a cautious evaluation.\n\n## Key Strengths\n- **AI"
+          }
+        },
+        {
+          "event_type": "response",
+          "data": {
+            "chunk": "/LLM Orchestration**: Proven experience using LangChain and LangGraph to build and deploy production-grade AI agents."
+          }
+        },
+        {
+          "event_type": "response",
+          "data": {
+            "chunk": "\n- **Modern Full-stack**: Solid alignment with Python/FastAPI backends and React/Next.js front"
+          }
+        },
+        {
+          "event_type": "response",
+          "data": {
+            "chunk": "ends for responsive application development.\n- **Real-time Data**: Demonstrated capability implementing Server-Sent Events (SSE) and"
+          }
+        },
+        {
+          "event_type": "response",
+          "data": {
+            "chunk": " WebSockets for live data streaming.\n- **DevOps/Deployment**: Experience with containerization and CI/CD pipelines ensures"
+          }
+        },
+        {
+          "event_type": "response",
+          "data": {
+            "chunk": " reliable delivery in cloud environments.\n\n## Areas to Address  \n- **Enterprise Frameworks**: Missing Django/Flask experience; leverage"
+          }
+        },
+        {
+          "event_type": "response",
+          "data": {
+            "chunk": " FastAPI expertise to accelerate the learning curve for legacy systems.\n- **High-Performance Backend**: Lacks Go/Gol"
+          }
+        },
+        {
+          "event_type": "response",
+          "data": {
+            "chunk": "ang proficiency; rely on Python strengths while upskilling in concurrent programming for performance.\n- **Search Domain**: No evidence of"
+          }
+        },
+        {
+          "event_type": "response",
+          "data": {
+            "chunk": " Elasticsearch or MongoDB; apply RAG system knowledge to master complex data indexing.\n- **Architectural Leadership**: Focus on implementation over system"
+          }
+        },
+        {
+          "event_type": "response",
+          "data": {
+            "chunk": " design; shift toward high-level strategy to meet 'Architect of Thought' expectations.\n\n## Bottom Line\nThe candidate"
+          }
+        },
+        {
+          "event_type": "response",
+          "data": {
+            "chunk": " provides a strong technical base for AI-driven development but lacks specific enterprise framework depth and high-performance language skills. They"
+          }
+        },
+        {
+          "event_type": "response",
+          "data": {
+            "chunk": " are a viable mid-tier option if provided with targeted mentorship in system architecture."
+          }
+        },
+        {
+          "event_type": "phase_complete",
+          "data": {
+            "phase": "generate_results",
+            "summary": "Generated 200 word response"
+          }
+        },
+        {
+          "event_type": "complete",
+          "data": {
+            "duration_ms": 30421
+          }
+        }
+      ],
+      "error": null
+    },
+    "A5": {
+      "query": "Anthropic",
+      "response_text": "## Fit Summary\n45% (MEDIUM): Solid application-layer skills are offset by significant gaps in core ML networking and research engineering required for Anthropic's infrastructure.\n\n## Key Strengths\n- **AI Agents**: Built production agents using LangChain and LangGraph for real-time task execution and orchestration.\n- **Full-Stack Stack**: Proficient in Next.js and FastAPI, directly supporting Anthropic\u2019s product and developer platform engineering needs.\n- **RAG Systems**: Hands-on experience implementing RAG and vector databases for sophisticated document retrieval applications.\n- **Cloud Deployment**: Demonstrated ability to build and deploy containerized applications using AWS and Docker.\n\n## Areas to Address  \n- **ML Infrastructure**: Missing low-level networking experience; bridge via Python/TypeScript proficiency to support scaling initiatives.\n- **Research Engineering**: Lacks model interpretability or safety evidence; bridge using existing LLM orchestration knowledge for steerable systems.\n- **Anthropic Tooling**: No MCP experience; bridge by leveraging current agentic workflow expertise to quickly adopt internal protocols.\n\n## Bottom Line\nThe candidate is a strong product engineer with relevant agentic experience but lacks the deep infrastructure and research background core to Anthropic's mission. Success depends on transitioning from application development to low-level system reliability and safety-focused engineering.",
+      "events": [
+        {
+          "event_type": "status",
+          "data": {
+            "status": "connecting",
+            "message": "Initializing AI agent..."
+          }
+        },
+        {
+          "event_type": "phase",
+          "data": {
+            "phase": "connecting",
+            "message": "Classifying query and extracting entities..."
+          }
+        },
+        {
+          "event_type": "thought",
+          "data": {
+            "step": 1,
+            "type": "reasoning",
+            "phase": "connecting",
+            "content": "Analyzing query structure to determine if this is a company lookup or job description analysis..."
+          }
+        },
+        {
+          "event_type": "phase_complete",
+          "data": {
+            "phase": "connecting",
+            "summary": "Query classified as 'company', company: Anthropic"
+          }
+        },
+        {
+          "event_type": "phase",
+          "data": {
+            "phase": "deep_research",
+            "message": "Researching for info..."
+          }
+        },
+        {
+          "event_type": "thought",
+          "data": {
+            "step": 2,
+            "type": "tool_call",
+            "phase": "deep_research",
+            "tool": "web_search",
+            "input": "\"Anthropic\" software engineer tech stack engineering -site:pinterest.com -site:facebook.com -site:instagram.com"
+          }
+        },
+        {
+          "event_type": "thought",
+          "data": {
+            "step": 3,
+            "type": "observation",
+            "phase": "deep_research",
+            "content": "Found info for: Core tech stack and engineering culture"
+          }
+        },
+        {
+          "event_type": "thought",
+          "data": {
+            "step": 4,
+            "type": "tool_call",
+            "phase": "deep_research",
+            "tool": "web_search",
+            "input": "intitle:\"Anthropic\" careers jobs software developer requirements"
+          }
+        },
+        {
+          "event_type": "thought",
+          "data": {
+            "step": 5,
+            "type": "observation",
+            "phase": "deep_research",
+            "content": "Found info for: Job requirements from careers page"
+          }
+        },
+        {
+          "event_type": "thought",
+          "data": {
+            "step": 6,
+            "type": "tool_call",
+            "phase": "deep_research",
+            "tool": "web_search",
+            "input": "Anthropic engineering blog OR tech OR culture values -site:pinterest.com -site:facebook.com -site:instagram.com"
+          }
+        },
+        {
+          "event_type": "thought",
+          "data": {
+            "step": 7,
+            "type": "observation",
+            "phase": "deep_research",
+            "content": "Found info for: Engineering culture and values"
+          }
+        },
+        {
+          "event_type": "thought",
+          "data": {
+            "step": 8,
+            "type": "reasoning",
+            "phase": "deep_research",
+            "content": "Synthesizing search results into structured employer profile..."
+          }
+        },
+        {
+          "event_type": "phase_complete",
+          "data": {
+            "phase": "deep_research",
+            "summary": "Identified 5 technologies, 5 requirements, 6 culture signals"
+          }
+        },
+        {
+          "event_type": "phase",
+          "data": {
+            "phase": "research_reranker",
+            "message": "Validating research quality..."
+          }
+        },
+        {
+          "event_type": "thought",
+          "data": {
+            "step": 9,
+            "type": "reasoning",
+            "phase": "research_reranker",
+            "content": "Scoring 15 sources with multi-dimensional AI evaluation..."
+          }
+        },
+        {
+          "event_type": "thought",
+          "data": {
+            "step": 9,
+            "type": "reasoning",
+            "phase": "research_reranker",
+            "content": "Source scoring complete: 8/8 sources passed quality gate (threshold: 0.55)"
+          }
+        },
+        {
+          "event_type": "thought",
+          "data": {
+            "step": 10,
+            "type": "reasoning",
+            "phase": "research_reranker",
+            "content": "Assessing research quality: HIGH tier detected"
+          }
+        },
+        {
+          "event_type": "phase_complete",
+          "data": {
+            "phase": "research_reranker",
+            "summary": "Data: PARTIAL | Quality: HIGH | Confidence: 92% | Action: CONTINUE | AI Scores: 8/8"
+          }
+        },
+        {
+          "event_type": "phase",
+          "data": {
+            "phase": "content_enrich",
+            "message": "Enriching top 5 sources..."
+          }
+        },
+        {
+          "event_type": "thought",
+          "data": {
+            "step": 11,
+            "type": "reasoning",
+            "phase": "content_enrich",
+            "content": "Fetching full content for 5 high-quality sources to deepen analysis..."
+          }
+        },
+        {
+          "event_type": "phase_complete",
+          "data": {
+            "phase": "content_enrich",
+            "summary": "Enriched 5/5 sources with full content"
+          }
+        },
+        {
+          "event_type": "phase",
+          "data": {
+            "phase": "skeptical_comparison",
+            "message": "Performing critical fit analysis from skeptical perspective..."
+          }
+        },
+        {
+          "event_type": "thought",
+          "data": {
+            "step": 12,
+            "type": "reasoning",
+            "phase": "skeptical_comparison",
+            "content": "Analyzing fit from a skeptical hiring manager's perspective - identifying genuine gaps and potential concerns..."
+          }
+        },
+        {
+          "event_type": "thought",
+          "data": {
+            "step": 13,
+            "type": "reasoning",
+            "phase": "skeptical_comparison",
+            "content": "Critical review complete: Identified 4 strengths, 3 gaps. Risk assessment: \ud83d\udfe1 medium"
+          }
+        },
+        {
+          "event_type": "phase_complete",
+          "data": {
+            "phase": "skeptical_comparison",
+            "summary": "Found 3 gaps, 4 strengths. Risk level: medium"
+          }
+        },
+        {
+          "event_type": "phase",
+          "data": {
+            "phase": "skills_matching",
+            "message": "Mapping skills to requirements..."
+          }
+        },
+        {
+          "event_type": "thought",
+          "data": {
+            "step": 14,
+            "type": "tool_call",
+            "phase": "skills_matching",
+            "tool": "analyze_skill_match",
+            "input": "Direct evidence of ability, Full stack proficiency (for platform roles), Ability to work in San Francisco or New York City, Experience in product engineering or ML networking, Capacity to engage in both research and engineering tasks, Model Context Protocol, Claude, Full Stack development, ML Networking, Code execution tools"
+          }
+        },
+        {
+          "event_type": "thought",
+          "data": {
+            "step": 15,
+            "type": "observation",
+            "phase": "skills_matching",
+            "content": "Skill analysis complete - identified matching skills and gaps."
+          }
+        },
+        {
+          "event_type": "thought",
+          "data": {
+            "step": 16,
+            "type": "tool_call",
+            "phase": "skills_matching",
+            "tool": "analyze_experience_relevance",
+            "input": "Anthropic is an AI safety and research company focused on building reliable, interpretable, and steerable AI systems like Claude. Software engineering roles span Enterprise Product, Developer Platforms, and ML Networking, often blending traditional engineering with research-heavy initiatives."
+          }
+        },
+        {
+          "event_type": "thought",
+          "data": {
+            "step": 17,
+            "type": "observation",
+            "phase": "skills_matching",
+            "content": "Experience analysis complete - identified relevant background."
+          }
+        },
+        {
+          "event_type": "thought",
+          "data": {
+            "step": 18,
+            "type": "reasoning",
+            "phase": "skills_matching",
+            "content": "Synthesizing skill matches with quantified confidence scores..."
+          }
+        },
+        {
+          "event_type": "phase_complete",
+          "data": {
+            "phase": "skills_matching",
+            "summary": "Skill matching completed with limited data"
+          }
+        },
+        {
+          "event_type": "phase",
+          "data": {
+            "phase": "confidence_reranker",
+            "message": "Calibrating confidence with LLM-as-a-Judge..."
+          }
+        },
+        {
+          "event_type": "thought",
+          "data": {
+            "step": 19,
+            "type": "reasoning",
+            "phase": "confidence_reranker",
+            "content": "Evaluating analysis quality and calibrating confidence score..."
+          }
+        },
+        {
+          "event_type": "thought",
+          "data": {
+            "step": 20,
+            "type": "reasoning",
+            "phase": "confidence_reranker",
+            "content": "Confidence calibrated: 45% (MEDIUM) - While 5 technologies and 5 requirements are identified, significant gaps in core ML networking and research-heavy engineering lower the raw score's reliability for a high-stakes role at Anthropic."
+          }
+        },
+        {
+          "event_type": "phase_complete",
+          "data": {
+            "phase": "confidence_reranker",
+            "summary": "Calibrated confidence: 45% (MEDIUM), 1 quality flags"
+          }
+        },
+        {
+          "event_type": "phase",
+          "data": {
+            "phase": "generate_results",
+            "message": "Generating personalized fit analysis..."
+          }
+        },
+        {
+          "event_type": "thought",
+          "data": {
+            "step": 21,
+            "type": "reasoning",
+            "phase": "generate_results",
+            "content": "Synthesizing 45% match (MEDIUM) into personalized narrative for Anthropic..."
+          }
+        },
+        {
+          "event_type": "response",
+          "data": {
+            "chunk": "## Fit Summary\n45% (MEDIUM): Solid application-layer skills are"
+          }
+        },
+        {
+          "event_type": "response",
+          "data": {
+            "chunk": " offset by significant gaps in core ML networking and research engineering required for Anthropic's infrastructure.\n\n## Key Strengths\n-"
+          }
+        },
+        {
+          "event_type": "response",
+          "data": {
+            "chunk": " **AI Agents**: Built production agents using LangChain and LangGraph for real-time task execution and orchestration.\n- **Full-"
+          }
+        },
+        {
+          "event_type": "response",
+          "data": {
+            "chunk": "Stack Stack**: Proficient in Next.js and FastAPI, directly supporting Anthropic\u2019s product and developer platform engineering needs.\n-"
+          }
+        },
+        {
+          "event_type": "response",
+          "data": {
+            "chunk": " **RAG Systems**: Hands-on experience implementing RAG and vector databases for sophisticated document retrieval applications.\n- **"
+          }
+        },
+        {
+          "event_type": "response",
+          "data": {
+            "chunk": "Cloud Deployment**: Demonstrated ability to build and deploy containerized applications using AWS and Docker.\n\n## Areas to Address  \n- **ML"
+          }
+        },
+        {
+          "event_type": "response",
+          "data": {
+            "chunk": " Infrastructure**: Missing low-level networking experience; bridge via Python/TypeScript proficiency to support scaling initiatives.\n- **Research Engineering"
+          }
+        },
+        {
+          "event_type": "response",
+          "data": {
+            "chunk": "**: Lacks model interpretability or safety evidence; bridge using existing LLM orchestration knowledge for steerable systems.\n- **Anth"
+          }
+        },
+        {
+          "event_type": "response",
+          "data": {
+            "chunk": "ropic Tooling**: No MCP experience; bridge by leveraging current agentic workflow expertise to quickly adopt internal protocols.\n\n## Bottom Line"
+          }
+        },
+        {
+          "event_type": "response",
+          "data": {
+            "chunk": "\nThe candidate is a strong product engineer with relevant agentic experience but lacks the deep infrastructure and research background core to Anthropic'"
+          }
+        },
+        {
+          "event_type": "response",
+          "data": {
+            "chunk": "s mission. Success depends on transitioning from application development to low-level system reliability and safety-focused engineering."
+          }
+        },
+        {
+          "event_type": "phase_complete",
+          "data": {
+            "phase": "generate_results",
+            "summary": "Generated 185 word response"
+          }
+        },
+        {
+          "event_type": "complete",
+          "data": {
+            "duration_ms": 28649
+          }
+        }
+      ],
+      "error": null
+    }
+  }
+}

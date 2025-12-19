@@ -793,6 +793,41 @@ Safely extracts text from LLM response objects.
 
 ---
 
+### services/utils/circuit_breaker.py
+
+**`CircuitBreaker`**
+
+Provides failure isolation for external APIs.
+
+| State | Description |
+|-------|-------------|
+| `CLOSED` | Normal operation |
+| `OPEN` | Failing fast, no calls made |
+| `HALF_OPEN` | Testing if service recovered |
+
+**Pre-configured Breakers:**
+- `search_breaker`: Google CSE (3 failures, 30s reset)
+- `fetch_breaker`: Content fetching (5 failures, 20s reset)
+- `llm_breaker`: LLM API (3 failures, 60s reset)
+
+---
+
+### services/utils/error_handling.py
+
+**`PipelineError` (Base Exception)**
+
+| Category | Description |
+|----------|-------------|
+| `RECOVERABLE` | Retry may succeed |
+| `FATAL` | No point retrying |
+| `EXTERNAL` | External service issue |
+| `VALIDATION` | Bad input |
+
+**Functions:**
+- `handle_node_error(error, phase, state) → dict`: Centralized error handler for pipeline nodes.
+
+---
+
 ## 11. Testing
 
 ### pytest.ini

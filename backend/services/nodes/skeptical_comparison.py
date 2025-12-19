@@ -35,6 +35,7 @@ from services.pipeline_state import FitCheckPipelineState, Phase3Output
 from services.callbacks import ThoughtCallback
 from services.utils import get_response_text
 from services.prompt_loader import load_prompt, PHASE_SKEPTICAL_COMPARISON
+from services.utils.circuit_breaker import llm_breaker, CircuitOpenError
 
 logger = logging.getLogger(__name__)
 
@@ -124,6 +125,9 @@ def _get_fallback_prompt() -> str:
     Tech Stack: {tech_stack}
     Culture: {culture_signals}
   </employer_intel>
+  <enriched_research_content>
+{enriched_content}
+  </enriched_research_content>
   <candidate_profile>{engineer_profile}</candidate_profile>
 </context_data>
 
@@ -313,7 +317,7 @@ def detect_sycophantic_content(output: Phase3Output) -> List[str]:
 # Context Formatting
 # =============================================================================
 
-def format_employer_intel(phase_2: Dict[str, Any]) -> Dict[str, str]:
+def format_employer_intel(phase_2: Dict[str, Any], enriched_content: Optional[List[Dict[str, Any]]] = None) -> Dict[str, str]:
     """
     Format Phase 2 output for prompt injection.
     
@@ -322,11 +326,12 @@ def format_employer_intel(phase_2: Dict[str, Any]) -> Dict[str, str]:
     
     Args:
         phase_2: Output from the Deep Research phase.
+        enriched_content: Optional full content from top sources.
     
     Returns:
         Dict with formatted fields for prompt template.
     """
-    return {
+    formatted = {
         "employer_summary": phase_2.get("employer_summary", "No summary available"),
         "identified_requirements": _format_list(
             phase_2.get("identified_requirements", []),
@@ -341,6 +346,20 @@ def format_employer_intel(phase_2: Dict[str, Any]) -> Dict[str, str]:
             "No culture signals identified"
         ),
     }
+    
+    # Format enriched content if available
+    if enriched_content:
+        enriched_parts = []
+        for i, item in enumerate(enriched_content, 1):
+            title = item.get("title", "Unknown Source")
+            url = item.get("url", "No URL")
+            content = item.get("content", "No content")
+            enriched_parts.append(f"--- Source {i}: {title} ({url}) ---\n{content[:2000]}")
+        formatted["enriched_content"] = "\n\n".join(enriched_parts)
+    else:
+        formatted["enriched_content"] = "No enriched content available. Using snippets only."
+        
+    return formatted
 
 
 def _format_list(items: List[str], empty_message: str) -> str:
@@ -406,7 +425,8 @@ async def skeptical_comparison_node(
     
     try:
         # Format context data for prompt
-        employer_intel = format_employer_intel(phase_2)
+        enriched_content = state.get("enriched_content")
+        employer_intel = format_employer_intel(phase_2, enriched_content)
         engineer_profile = get_formatted_profile()
         
         # Load prompt based on model config type (concise for reasoning models)
@@ -417,6 +437,7 @@ async def skeptical_comparison_node(
             identified_requirements=employer_intel["identified_requirements"],
             tech_stack=employer_intel["tech_stack"],
             culture_signals=employer_intel["culture_signals"],
+            enriched_content=employer_intel["enriched_content"],
             engineer_profile=engineer_profile,
         )
         
@@ -440,7 +461,9 @@ async def skeptical_comparison_node(
         
         # Invoke LLM with formatted prompt
         messages = [HumanMessage(content=prompt)]
-        response = await llm.ainvoke(messages)
+        
+        async with llm_breaker.call():
+            response = await llm.ainvoke(messages)
         
         # Extract response text (handles Gemini's structured format)
         response_text = get_response_text(response)

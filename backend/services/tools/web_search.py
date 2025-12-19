@@ -10,6 +10,7 @@ import logging
 from typing import Optional
 
 from langchain_core.tools import tool
+from services.utils.circuit_breaker import search_breaker, CircuitOpenError
 
 logger = logging.getLogger(__name__)
 
@@ -59,7 +60,7 @@ def _get_search_wrapper():
 # =============================================================================
 
 @tool
-def web_search(query: str) -> str:
+async def web_search(query: str) -> str:
     """
     Search the web for information about companies, job positions, or industry topics.
     
@@ -98,25 +99,58 @@ def web_search(query: str) -> str:
         return _get_fallback_response(query)
     
     try:
-        # Perform the search
-        results = search_wrapper.run(query)
-        
-        if not results or results.strip() == "":
-            logger.info(f"No results found for query: {query}")
-            return f"No search results found for: {query}. Try a different search query."
-        
-        # Truncate results if too long (keep under 1500 chars for context efficiency)
-        if len(results) > 1500:
-            results = results[:1500] + "..."
-            logger.debug("Search results truncated to 1500 characters")
-        
-        logger.info(f"Web search successful, returned {len(results)} characters")
-        return results
-        
+        async with search_breaker.call():
+            # Perform the search
+            results = search_wrapper.run(query)
+            
+            if not results or results.strip() == "":
+                logger.info(f"No results found for query: {query}")
+                return f"No search results found for: {query}. Try a different search query."
+            
+            # Truncate results if too long (keep under 1500 chars for context efficiency)
+            if len(results) > 1500:
+                results = results[:1500] + "..."
+                logger.debug("Search results truncated to 1500 characters")
+            
+            logger.info(f"Web search successful, returned {len(results)} characters")
+            return results
+            
+    except CircuitOpenError:
+        logger.warning(f"Search circuit is OPEN for query: {query}, using fallback")
+        return _get_fallback_response(query)
     except Exception as e:
         error_msg = f"Web search failed: {str(e)}"
         logger.error(error_msg)
         return f"Error performing web search: {str(e)}. Please try a different query."
+
+
+async def web_search_structured(query: str, num_results: int = 5) -> list:
+    """
+    Perform a web search and return structured results.
+    
+    Args:
+        query: The search query.
+        num_results: Number of results to return.
+        
+    Returns:
+        list: List of dicts with 'title', 'link', 'snippet'.
+    """
+    logger.info(f"Structured web search called with query: {query}")
+    
+    search_wrapper = _get_search_wrapper()
+    if search_wrapper is None:
+        return []
+        
+    try:
+        async with search_breaker.call():
+            # GoogleSearchAPIWrapper.results returns a list of dicts
+            return search_wrapper.results(query, num_results)
+    except CircuitOpenError:
+        logger.warning(f"Search circuit is OPEN for structured query: {query}")
+        return []
+    except Exception as e:
+        logger.error(f"Structured web search failed: {e}")
+        return []
 
 
 def _get_fallback_response(query: str) -> str:

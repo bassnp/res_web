@@ -98,3 +98,18 @@ def pytest_configure(config):
     config.addinivalue_line(
         "markers", "unit: marks tests as unit tests"
     )
+    config.addinivalue_line(
+        "markers", "accuracy: marks tests as accuracy validation tests"
+    )
+    config.addinivalue_line(
+        "markers", "accuracy_category_a: Category A (HIGH FIT) accuracy tests"
+    )
+    config.addinivalue_line(
+        "markers", "accuracy_category_b: Category B (MEDIUM FIT) accuracy tests"
+    )
+    config.addinivalue_line(
+        "markers", "accuracy_category_c: Category C (LOW FIT) accuracy tests"
+    )
+    config.addinivalue_line(
+        "markers", "accuracy_category_d: Category D (EDGE CASES) accuracy tests"
+    )

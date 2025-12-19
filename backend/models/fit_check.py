@@ -5,8 +5,53 @@ This module defines the request/response models for the SSE streaming endpoint.
 All models follow the CANONICAL contract specified in PROMPT_TODO_BACKEND_AI_STREAM.md.
 """
 
-from typing import Optional, Literal
+from typing import Optional, Literal, List, Dict
 from pydantic import BaseModel, Field
+from enum import Enum
+
+
+# =============================================================================
+# Scoring Models
+# =============================================================================
+
+class SourceType(str, Enum):
+    """Classification of source type for extractability scoring."""
+    VIDEO = "video"
+    SOCIAL_MEDIA = "social_media"
+    WIKI = "wiki"
+    ACADEMIC = "academic"
+    NEWS = "news"
+    FORUM = "forum"
+    GENERAL = "general"
+
+class DocumentScore(BaseModel):
+    """3-dimension score for a single document."""
+    document_id: str = Field(..., description="Unique identifier")
+    url: str = Field(..., description="Source URL")
+    title: str = Field(..., description="Document title")
+    snippet: Optional[str] = Field(None, description="Original snippet for fallback")
+    
+    # 3-Dimension Scores (0.0 - 1.0)
+    relevance_score: float = Field(..., ge=0.0, le=1.0)
+    quality_score: float = Field(..., ge=0.0, le=1.0)
+    usefulness_score: float = Field(..., ge=0.0, le=1.0)
+    
+    # Composite and adjusted scores
+    raw_composite: float = Field(..., ge=0.0, le=1.0)
+    extractability_multiplier: float = Field(default=1.0, ge=0.0, le=1.5)
+    final_score: float = Field(..., ge=0.0, le=1.5)
+    
+    # Metadata
+    source_type: SourceType = Field(default=SourceType.GENERAL)
+    scoring_rationale: str = Field(..., description="LLM reasoning for scores")
+
+class ScoringResult(BaseModel):
+    """Result of parallel document scoring."""
+    scores: List[DocumentScore]
+    adaptive_threshold: float = Field(..., ge=0.0, le=1.0)
+    passing_count: int
+    total_count: int
+    social_media_ratio: float = Field(..., ge=0.0, le=1.0)
 
 
 # =============================================================================
@@ -35,9 +80,9 @@ class FitCheckRequest(BaseModel):
         description="Whether to include detailed thinking process in the stream",
     )
     model_id: Optional[str] = Field(
-        default="gemini-3-pro-preview",
+        default="gemini-3-flash-preview",
         description="AI model ID to use for analysis",
-        examples=["gemini-3-pro-preview", "gemini-flash-latest"],
+        examples=["gemini-3-flash-preview", "gemini-3-pro-preview", "gemini-flash-latest"],
     )
     config_type: Optional[Literal["reasoning", "standard"]] = Field(
         default="reasoning",
@@ -101,6 +146,24 @@ class ThoughtEvent(BaseModel):
         default=None,
         description="Thought content (for observation and reasoning types)",
     )
+
+
+# =============================================================================
+# Query Expansion Models
+# =============================================================================
+
+class ExpandedQuery(BaseModel):
+    """Single CSE-optimized search query."""
+    query: str = Field(..., description="The search query string")
+    purpose: str = Field(..., description="What this query targets")
+    operators_used: List[str] = Field(default_factory=list)
+
+
+class QueryExpansionResult(BaseModel):
+    """Result of query expansion."""
+    queries: List[ExpandedQuery] = Field(..., min_length=3, max_length=5)
+    expansion_strategy: Literal["company_focus", "job_focus", "hybrid"]
+    iteration: int = Field(default=1, ge=1, le=3)
 
 
 class ResponseEvent(BaseModel):

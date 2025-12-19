@@ -36,6 +36,7 @@ from services.pipeline_state import FitCheckPipelineState
 from services.callbacks import ThoughtCallback
 from services.utils import get_response_text
 from services.prompt_loader import load_prompt, PHASE_CONFIDENCE_RERANKER
+from services.utils.circuit_breaker import llm_breaker, CircuitOpenError
 
 logger = logging.getLogger(__name__)
 
@@ -491,7 +492,9 @@ async def confidence_reranker_node(
             config_type=state.get("config_type"),
         )
         
-        response = await llm.ainvoke([HumanMessage(content=formatted_prompt)])
+        async with llm_breaker.call():
+            response = await llm.ainvoke([HumanMessage(content=formatted_prompt)])
+            
         response_text = get_response_text(response)
         
         # Parse and validate output

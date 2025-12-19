@@ -1,0 +1,1054 @@
+{
+  "timestamp": "2025-12-19T00:16:38.916907",
+  "results": [
+    {
+      "test_id": "A1",
+      "test_name": "Vercel (Frontend-Focused Company)",
+      "query": "Vercel",
+      "expected_score_min": 75,
+      "expected_score_max": 90,
+      "actual_score": null,
+      "expected_tier": "HIGH",
+      "actual_tier": "MEDIUM",
+      "score_accuracy": "INACCURATE",
+      "tier_accuracy": "INACCURATE",
+      "gap_accuracy": true,
+      "actual_gap_count": 2,
+      "overall_status": "FAIL",
+      "warnings": [
+        "No score returned from pipeline"
+      ]
+    },
+    {
+      "test_id": "A2",
+      "test_name": "OpenAI (AI Engineering Company)",
+      "query": "OpenAI",
+      "expected_score_min": 55,
+      "expected_score_max": 75,
+      "actual_score": null,
+      "expected_tier": "MEDIUM_HIGH",
+      "actual_tier": null,
+      "score_accuracy": "INACCURATE",
+      "tier_accuracy": "INACCURATE",
+      "gap_accuracy": false,
+      "actual_gap_count": 1,
+      "overall_status": "FAIL",
+      "warnings": [
+        "No score returned from pipeline",
+        "No confidence tier returned from pipeline"
+      ]
+    },
+    {
+      "test_id": "A3",
+      "test_name": "Stripe (Backend/API Company)",
+      "query": "Stripe",
+      "expected_score_min": 60,
+      "expected_score_max": 75,
+      "actual_score": null,
+      "expected_tier": "MEDIUM_HIGH",
+      "actual_tier": null,
+      "score_accuracy": "INACCURATE",
+      "tier_accuracy": "INACCURATE",
+      "gap_accuracy": true,
+      "actual_gap_count": 2,
+      "overall_status": "FAIL",
+      "warnings": [
+        "No score returned from pipeline",
+        "No confidence tier returned from pipeline"
+      ]
+    },
+    {
+      "test_id": "A4",
+      "test_name": "Full-Stack Python/React Startup",
+      "query": "Full-stack engineer position using Python, React, and PostgreSQL for a SaaS startup",
+      "expected_score_min": 85,
+      "expected_score_max": 95,
+      "actual_score": null,
+      "expected_tier": "HIGH",
+      "actual_tier": null,
+      "score_accuracy": "INACCURATE",
+      "tier_accuracy": "INACCURATE",
+      "gap_accuracy": true,
+      "actual_gap_count": 0,
+      "overall_status": "FAIL",
+      "warnings": [
+        "No score returned from pipeline",
+        "No confidence tier returned from pipeline"
+      ]
+    },
+    {
+      "test_id": "A5",
+      "test_name": "Anthropic (AI Safety Company)",
+      "query": "Anthropic",
+      "expected_score_min": 50,
+      "expected_score_max": 70,
+      "actual_score": null,
+      "expected_tier": "MEDIUM",
+      "actual_tier": null,
+      "score_accuracy": "INACCURATE",
+      "tier_accuracy": "INACCURATE",
+      "gap_accuracy": false,
+      "actual_gap_count": 1,
+      "overall_status": "FAIL",
+      "warnings": [
+        "No score returned from pipeline",
+        "No confidence tier returned from pipeline"
+      ]
+    }
+  ],
+  "failures": [
+    {
+      "test_id": "A1",
+      "root_cause": "UNKNOWN",
+      "root_cause_confidence": 0.0,
+      "impact_severity": "CRITICAL",
+      "recommended_fixes": [
+        "Manual investigation required"
+      ]
+    },
+    {
+      "test_id": "A2",
+      "root_cause": "MISSING_GAP_DETECTION",
+      "root_cause_confidence": 0.5,
+      "impact_severity": "CRITICAL",
+      "recommended_fixes": [
+        "Enhance gap detection prompts in Phase 3",
+        "Add specific skill gap categories for this domain",
+        "Review Phase 4 gap analysis logic"
+      ]
+    },
+    {
+      "test_id": "A3",
+      "root_cause": "UNKNOWN",
+      "root_cause_confidence": 0.0,
+      "impact_severity": "CRITICAL",
+      "recommended_fixes": [
+        "Manual investigation required"
+      ]
+    },
+    {
+      "test_id": "A4",
+      "root_cause": "UNKNOWN",
+      "root_cause_confidence": 0.0,
+      "impact_severity": "CRITICAL",
+      "recommended_fixes": [
+        "Manual investigation required"
+      ]
+    },
+    {
+      "test_id": "A5",
+      "root_cause": "MISSING_GAP_DETECTION",
+      "root_cause_confidence": 0.5,
+      "impact_severity": "CRITICAL",
+      "recommended_fixes": [
+        "Enhance gap detection prompts in Phase 3",
+        "Add specific skill gap categories for this domain",
+        "Review Phase 4 gap analysis logic"
+      ]
+    }
+  ],
+  "raw_responses": {
+    "A1": {
+      "query": "Vercel",
+      "response_text": "## Fit Summary\n50% (MEDIUM) match based on heuristic baseline, though reliability is compromised by data retrieval errors.\n\n## Key Strengths\n- **[Baseline Alignment]**: Preliminary scoring suggests general relevance to the role despite missing specific technical evidence.\n- **[Potential Context]**: Profile attributes likely triggered the medium tier classification pending detailed verification.\n\n## Areas to Address  \n- **[Data Validation]**: System errors prevented specific skill extraction; manual resume review is mandatory to confirm stack fit.\n- **[Technical Verification]**: Specific AI/ML capabilities and experience with Vercel's ecosystem remain unverified due to missing content.\n\n## Bottom Line\nDue to technical retrieval errors, this analysis relies on a heuristic baseline rather than content matching. Direct review is required to accurately assess competency.",
+      "events": [
+        {
+          "event_type": "status",
+          "data": {
+            "status": "connecting",
+            "message": "Initializing AI agent..."
+          }
+        },
+        {
+          "event_type": "phase",
+          "data": {
+            "phase": "connecting",
+            "message": "Classifying query and extracting entities..."
+          }
+        },
+        {
+          "event_type": "thought",
+          "data": {
+            "step": 1,
+            "type": "reasoning",
+            "phase": "connecting",
+            "content": "Analyzing query structure to determine if this is a company lookup or job description analysis..."
+          }
+        },
+        {
+          "event_type": "phase_complete",
+          "data": {
+            "phase": "connecting",
+            "summary": "Query classified as 'company', company: Vercel"
+          }
+        },
+        {
+          "event_type": "phase",
+          "data": {
+            "phase": "deep_research",
+            "message": "Researching for info..."
+          }
+        },
+        {
+          "event_type": "thought",
+          "data": {
+            "step": 2,
+            "type": "tool_call",
+            "phase": "deep_research",
+            "tool": "web_search",
+            "input": "\"Vercel\" software engineer tech stack engineering -site:pinterest.com -site:facebook.com -site:instagram.com"
+          }
+        },
+        {
+          "event_type": "thought",
+          "data": {
+            "step": 3,
+            "type": "tool_call",
+            "phase": "deep_research",
+            "tool": "web_search",
+            "input": "intitle:\"Vercel\" careers jobs software developer requirements"
+          }
+        },
+        {
+          "event_type": "thought",
+          "data": {
+            "step": 4,
+            "type": "tool_call",
+            "phase": "deep_research",
+            "tool": "web_search",
+            "input": "Vercel engineering blog OR tech OR culture values -site:pinterest.com -site:facebook.com -site:instagram.com"
+          }
+        },
+        {
+          "event_type": "thought",
+          "data": {
+            "step": 5,
+            "type": "reasoning",
+            "phase": "deep_research",
+            "content": "Synthesizing search results into structured employer profile..."
+          }
+        },
+        {
+          "event_type": "phase_complete",
+          "data": {
+            "phase": "deep_research",
+            "summary": "Identified 0 technologies, 0 requirements, 0 culture signals"
+          }
+        },
+        {
+          "event_type": "phase",
+          "data": {
+            "phase": "research_reranker",
+            "message": "Validating research quality..."
+          }
+        },
+        {
+          "event_type": "thought",
+          "data": {
+            "step": 6,
+            "type": "reasoning",
+            "phase": "research_reranker",
+            "content": "Assessing research quality: INSUFFICIENT tier detected"
+          }
+        },
+        {
+          "event_type": "phase_complete",
+          "data": {
+            "phase": "research_reranker",
+            "summary": "Data: PARTIAL | Quality: INSUFFICIENT | Confidence: 0% | Action: EARLY_EXIT"
+          }
+        },
+        {
+          "event_type": "phase",
+          "data": {
+            "phase": "generate_results",
+            "message": "Generating personalized fit analysis..."
+          }
+        },
+        {
+          "event_type": "thought",
+          "data": {
+            "step": 7,
+            "type": "reasoning",
+            "phase": "generate_results",
+            "content": "Synthesizing 50% match (MEDIUM) into personalized narrative for Vercel..."
+          }
+        },
+        {
+          "event_type": "response",
+          "data": {
+            "chunk": "## Fit Summary\n50% (MEDIUM) match based on heuristic baseline, though reliability is compromised by data retrieval errors.\n\n## Key Strengths\n"
+          }
+        },
+        {
+          "event_type": "response",
+          "data": {
+            "chunk": "- **[Baseline Alignment]**: Preliminary scoring suggests general relevance to the role despite missing specific technical evidence.\n- **[Potential"
+          }
+        },
+        {
+          "event_type": "response",
+          "data": {
+            "chunk": " Context]**: Profile attributes likely triggered the medium tier classification pending detailed verification.\n\n## Areas to Address  \n- **["
+          }
+        },
+        {
+          "event_type": "response",
+          "data": {
+            "chunk": "Data Validation]**: System errors prevented specific skill extraction; manual resume review is mandatory to confirm stack fit.\n- **"
+          }
+        },
+        {
+          "event_type": "response",
+          "data": {
+            "chunk": "[Technical Verification]**: Specific AI/ML capabilities and experience with Vercel's ecosystem remain unverified due to missing content"
+          }
+        },
+        {
+          "event_type": "response",
+          "data": {
+            "chunk": ".\n\n## Bottom Line\nDue to technical retrieval errors, this analysis relies on a heuristic baseline rather than content matching."
+          }
+        },
+        {
+          "event_type": "response",
+          "data": {
+            "chunk": " Direct review is required to accurately assess competency."
+          }
+        },
+        {
+          "event_type": "phase_complete",
+          "data": {
+            "phase": "generate_results",
+            "summary": "Generated 117 word response"
+          }
+        },
+        {
+          "event_type": "complete",
+          "data": {
+            "duration_ms": 44362
+          }
+        }
+      ],
+      "error": null
+    },
+    "A2": {
+      "query": "OpenAI",
+      "response_text": "## Fit Summary\n50% (MEDIUM) match; however, technical errors prevented data retrieval, rendering this score a default placeholder.\n\n## Key Strengths\n- **[Data Unavailable]**: Technical errors prevented identification of specific technical matches or transferable skills.\n- **[Data Unavailable]**: Cannot confirm alignment with OpenAI's AI/ML stack based on current input.\n\n## Areas to Address\n- **[Assessment Incomplete]**: Automated search failed; unable to identify specific skill gaps or requirements.\n- **[Manual Review Needed]**: Resume details could not be parsed against job description; manual verification required.\n\n## Bottom Line\nThe automated analysis failed to retrieve necessary data, resulting in a default neutral score. Manual review is absolutely required to determine actual fit for this AI/ML role.",
+      "events": [
+        {
+          "event_type": "status",
+          "data": {
+            "status": "connecting",
+            "message": "Initializing AI agent..."
+          }
+        },
+        {
+          "event_type": "phase",
+          "data": {
+            "phase": "connecting",
+            "message": "Classifying query and extracting entities..."
+          }
+        },
+        {
+          "event_type": "thought",
+          "data": {
+            "step": 1,
+            "type": "reasoning",
+            "phase": "connecting",
+            "content": "Analyzing query structure to determine if this is a company lookup or job description analysis..."
+          }
+        },
+        {
+          "event_type": "phase_complete",
+          "data": {
+            "phase": "connecting",
+            "summary": "Query classified as 'company', company: OpenAI"
+          }
+        },
+        {
+          "event_type": "phase",
+          "data": {
+            "phase": "deep_research",
+            "message": "Researching for info..."
+          }
+        },
+        {
+          "event_type": "thought",
+          "data": {
+            "step": 2,
+            "type": "tool_call",
+            "phase": "deep_research",
+            "tool": "web_search",
+            "input": "\"OpenAI\" software engineer tech stack engineering -site:pinterest.com -site:facebook.com -site:instagram.com"
+          }
+        },
+        {
+          "event_type": "thought",
+          "data": {
+            "step": 3,
+            "type": "tool_call",
+            "phase": "deep_research",
+            "tool": "web_search",
+            "input": "intitle:\"OpenAI\" careers jobs software developer requirements"
+          }
+        },
+        {
+          "event_type": "thought",
+          "data": {
+            "step": 4,
+            "type": "tool_call",
+            "phase": "deep_research",
+            "tool": "web_search",
+            "input": "OpenAI engineering blog OR tech OR culture values -site:pinterest.com -site:facebook.com -site:instagram.com"
+          }
+        },
+        {
+          "event_type": "thought",
+          "data": {
+            "step": 5,
+            "type": "reasoning",
+            "phase": "deep_research",
+            "content": "Synthesizing search results into structured employer profile..."
+          }
+        },
+        {
+          "event_type": "phase_complete",
+          "data": {
+            "phase": "deep_research",
+            "summary": "Identified 0 technologies, 0 requirements, 0 culture signals"
+          }
+        },
+        {
+          "event_type": "phase",
+          "data": {
+            "phase": "research_reranker",
+            "message": "Validating research quality..."
+          }
+        },
+        {
+          "event_type": "thought",
+          "data": {
+            "step": 6,
+            "type": "reasoning",
+            "phase": "research_reranker",
+            "content": "Assessing research quality: INSUFFICIENT tier detected"
+          }
+        },
+        {
+          "event_type": "phase_complete",
+          "data": {
+            "phase": "research_reranker",
+            "summary": "Data: PARTIAL | Quality: INSUFFICIENT | Confidence: 0% | Action: EARLY_EXIT"
+          }
+        },
+        {
+          "event_type": "phase",
+          "data": {
+            "phase": "generate_results",
+            "message": "Generating personalized fit analysis..."
+          }
+        },
+        {
+          "event_type": "thought",
+          "data": {
+            "step": 7,
+            "type": "reasoning",
+            "phase": "generate_results",
+            "content": "Synthesizing 50% match (MEDIUM) into personalized narrative for OpenAI..."
+          }
+        },
+        {
+          "event_type": "response",
+          "data": {
+            "chunk": "## Fit Summary\n50% (MEDIUM) match; however, technical errors prevented data retrieval, rendering this score a default placeholder.\n\n## Key"
+          }
+        },
+        {
+          "event_type": "response",
+          "data": {
+            "chunk": " Strengths\n- **[Data Unavailable]**: Technical errors prevented identification of specific technical matches or transferable skills.\n-"
+          }
+        },
+        {
+          "event_type": "response",
+          "data": {
+            "chunk": " **[Data Unavailable]**: Cannot confirm alignment with OpenAI's AI/ML stack based on current input.\n\n##"
+          }
+        },
+        {
+          "event_type": "response",
+          "data": {
+            "chunk": " Areas to Address\n- **[Assessment Incomplete]**: Automated search failed; unable to identify specific skill gaps or requirements"
+          }
+        },
+        {
+          "event_type": "response",
+          "data": {
+            "chunk": ".\n- **[Manual Review Needed]**: Resume details could not be parsed against job description; manual verification required.\n\n"
+          }
+        },
+        {
+          "event_type": "response",
+          "data": {
+            "chunk": "## Bottom Line\nThe automated analysis failed to retrieve necessary data, resulting in a default neutral score. Manual review is absolutely"
+          }
+        },
+        {
+          "event_type": "response",
+          "data": {
+            "chunk": " required to determine actual fit for this AI/ML role."
+          }
+        },
+        {
+          "event_type": "phase_complete",
+          "data": {
+            "phase": "generate_results",
+            "summary": "Generated 113 word response"
+          }
+        },
+        {
+          "event_type": "complete",
+          "data": {
+            "duration_ms": 49049
+          }
+        }
+      ],
+      "error": null
+    },
+    "A3": {
+      "query": "Stripe",
+      "response_text": "## Fit Summary\n50% (MEDIUM) fit score, primarily reflecting a neutral baseline due to critical data retrieval errors.\n\n## Key Strengths\n- **[Data Unavailable]**: Technical strengths could not be verified or matched against specific role requirements.\n- **[Context]**: Candidate evaluation was attempted for an AI/ML context at Stripe.\n\n## Areas to Address\n- **[Analysis Gap]**: Missing job description data prevents identification of specific technical or experience gaps.\n- **[Verification Required]**: Bridge this gap by performing a manual review of the candidate's CV against the job post.\n\n## Bottom Line\nTechnical errors prevented a complete analysis of this profile against Stripe's AI/ML requirements. A manual review is strictly necessary to determine actual eligibility.",
+      "events": [
+        {
+          "event_type": "status",
+          "data": {
+            "status": "connecting",
+            "message": "Initializing AI agent..."
+          }
+        },
+        {
+          "event_type": "phase",
+          "data": {
+            "phase": "connecting",
+            "message": "Classifying query and extracting entities..."
+          }
+        },
+        {
+          "event_type": "thought",
+          "data": {
+            "step": 1,
+            "type": "reasoning",
+            "phase": "connecting",
+            "content": "Analyzing query structure to determine if this is a company lookup or job description analysis..."
+          }
+        },
+        {
+          "event_type": "phase_complete",
+          "data": {
+            "phase": "connecting",
+            "summary": "Query classified as 'company', company: Stripe"
+          }
+        },
+        {
+          "event_type": "phase",
+          "data": {
+            "phase": "deep_research",
+            "message": "Researching for info..."
+          }
+        },
+        {
+          "event_type": "thought",
+          "data": {
+            "step": 2,
+            "type": "tool_call",
+            "phase": "deep_research",
+            "tool": "web_search",
+            "input": "\"Stripe\" software engineer tech stack engineering -site:pinterest.com -site:facebook.com -site:instagram.com"
+          }
+        },
+        {
+          "event_type": "thought",
+          "data": {
+            "step": 3,
+            "type": "tool_call",
+            "phase": "deep_research",
+            "tool": "web_search",
+            "input": "intitle:\"Stripe\" careers jobs software developer requirements"
+          }
+        },
+        {
+          "event_type": "thought",
+          "data": {
+            "step": 4,
+            "type": "tool_call",
+            "phase": "deep_research",
+            "tool": "web_search",
+            "input": "Stripe engineering blog OR tech OR culture values -site:pinterest.com -site:facebook.com -site:instagram.com"
+          }
+        },
+        {
+          "event_type": "thought",
+          "data": {
+            "step": 5,
+            "type": "reasoning",
+            "phase": "deep_research",
+            "content": "Synthesizing search results into structured employer profile..."
+          }
+        },
+        {
+          "event_type": "phase_complete",
+          "data": {
+            "phase": "deep_research",
+            "summary": "Identified 0 technologies, 0 requirements, 0 culture signals"
+          }
+        },
+        {
+          "event_type": "phase",
+          "data": {
+            "phase": "research_reranker",
+            "message": "Validating research quality..."
+          }
+        },
+        {
+          "event_type": "thought",
+          "data": {
+            "step": 6,
+            "type": "reasoning",
+            "phase": "research_reranker",
+            "content": "Assessing research quality: INSUFFICIENT tier detected"
+          }
+        },
+        {
+          "event_type": "phase_complete",
+          "data": {
+            "phase": "research_reranker",
+            "summary": "Data: PARTIAL | Quality: INSUFFICIENT | Confidence: 0% | Action: EARLY_EXIT"
+          }
+        },
+        {
+          "event_type": "phase",
+          "data": {
+            "phase": "generate_results",
+            "message": "Generating personalized fit analysis..."
+          }
+        },
+        {
+          "event_type": "thought",
+          "data": {
+            "step": 7,
+            "type": "reasoning",
+            "phase": "generate_results",
+            "content": "Synthesizing 50% match (MEDIUM) into personalized narrative for Stripe..."
+          }
+        },
+        {
+          "event_type": "response",
+          "data": {
+            "chunk": "## Fit Summary\n50% (MEDIUM) fit score, primarily reflecting a neutral baseline due to critical data retrieval errors.\n\n## Key Strengths\n- **[Data Unavailable]**: Technical"
+          }
+        },
+        {
+          "event_type": "response",
+          "data": {
+            "chunk": " strengths could not be verified or matched against specific role requirements.\n- **[Context]**: Candidate evaluation was attempted for"
+          }
+        },
+        {
+          "event_type": "response",
+          "data": {
+            "chunk": " an AI/ML context at Stripe.\n\n## Areas to Address\n- **[Analysis Gap]**: Missing job description data prevents"
+          }
+        },
+        {
+          "event_type": "response",
+          "data": {
+            "chunk": " identification of specific technical or experience gaps.\n- **[Verification Required]**: Bridge this gap by performing a manual review of"
+          }
+        },
+        {
+          "event_type": "response",
+          "data": {
+            "chunk": " the candidate's CV against the job post.\n\n## Bottom Line\nTechnical errors prevented a complete analysis of this profile against"
+          }
+        },
+        {
+          "event_type": "response",
+          "data": {
+            "chunk": " Stripe's AI/ML requirements. A manual review is strictly necessary to determine actual eligibility."
+          }
+        },
+        {
+          "event_type": "phase_complete",
+          "data": {
+            "phase": "generate_results",
+            "summary": "Generated 112 word response"
+          }
+        },
+        {
+          "event_type": "complete",
+          "data": {
+            "duration_ms": 37439
+          }
+        }
+      ],
+      "error": null
+    },
+    "A4": {
+      "query": "Full-stack engineer position using Python, React, and PostgreSQL for a SaaS startup",
+      "response_text": "## Fit Summary\n50% (MEDIUM) fit score, assigned by default as technical errors prevented retrieval of employer data for analysis.\n\n## Key Strengths\n- **[Assessment Pending]**: Technical matching failed; unable to cite specific evidence or strengths from the provided dataset.\n\n## Areas to Address\n- **[Data Void]**: Search results failed to return specific requirements; manual cross-referencing is necessary.\n- **[Verification]**: Candidate skills (Full-stack/AI) require manual mapping against the actual job description.\n\n## Bottom Line\nThe analysis is inconclusive because the job description data failed to load. The default medium score reflects high uncertainty rather than actual fit; manual review is required.",
+      "events": [
+        {
+          "event_type": "status",
+          "data": {
+            "status": "connecting",
+            "message": "Initializing AI agent..."
+          }
+        },
+        {
+          "event_type": "phase",
+          "data": {
+            "phase": "connecting",
+            "message": "Classifying query and extracting entities..."
+          }
+        },
+        {
+          "event_type": "thought",
+          "data": {
+            "step": 1,
+            "type": "reasoning",
+            "phase": "connecting",
+            "content": "Analyzing query structure to determine if this is a company lookup or job description analysis..."
+          }
+        },
+        {
+          "event_type": "phase_complete",
+          "data": {
+            "phase": "connecting",
+            "summary": "Query classified as 'job_description', role: Full-stack engineer, skills: 3 extracted"
+          }
+        },
+        {
+          "event_type": "phase",
+          "data": {
+            "phase": "deep_research",
+            "message": "Researching for info..."
+          }
+        },
+        {
+          "event_type": "thought",
+          "data": {
+            "step": 2,
+            "type": "tool_call",
+            "phase": "deep_research",
+            "tool": "web_search",
+            "input": "Full-stack engineer Python React PostgreSQL requirements tech stack -site:pinterest.com -site:facebook.com -site:instagram.com"
+          }
+        },
+        {
+          "event_type": "thought",
+          "data": {
+            "step": 3,
+            "type": "tool_call",
+            "phase": "deep_research",
+            "tool": "web_search",
+            "input": "intitle:\"Full-stack engineer\" Python React PostgreSQL requirements"
+          }
+        },
+        {
+          "event_type": "thought",
+          "data": {
+            "step": 4,
+            "type": "tool_call",
+            "phase": "deep_research",
+            "tool": "web_search",
+            "input": "Python engineer career requirements industry 2024"
+          }
+        },
+        {
+          "event_type": "thought",
+          "data": {
+            "step": 5,
+            "type": "reasoning",
+            "phase": "deep_research",
+            "content": "Synthesizing search results into structured employer profile..."
+          }
+        },
+        {
+          "event_type": "phase_complete",
+          "data": {
+            "phase": "deep_research",
+            "summary": "Identified 0 technologies, 0 requirements, 0 culture signals"
+          }
+        },
+        {
+          "event_type": "phase",
+          "data": {
+            "phase": "research_reranker",
+            "message": "Validating research quality..."
+          }
+        },
+        {
+          "event_type": "thought",
+          "data": {
+            "step": 6,
+            "type": "reasoning",
+            "phase": "research_reranker",
+            "content": "Assessing research quality: INSUFFICIENT tier detected"
+          }
+        },
+        {
+          "event_type": "phase_complete",
+          "data": {
+            "phase": "research_reranker",
+            "summary": "Data: PARTIAL | Quality: INSUFFICIENT | Confidence: 0% | Action: EARLY_EXIT"
+          }
+        },
+        {
+          "event_type": "phase",
+          "data": {
+            "phase": "generate_results",
+            "message": "Generating personalized fit analysis..."
+          }
+        },
+        {
+          "event_type": "thought",
+          "data": {
+            "step": 7,
+            "type": "reasoning",
+            "phase": "generate_results",
+            "content": "Synthesizing 50% match (MEDIUM) into personalized narrative for Full-stack engineer..."
+          }
+        },
+        {
+          "event_type": "response",
+          "data": {
+            "chunk": "## Fit Summary\n50% (MEDIUM) fit score, assigned by default as technical errors prevented retrieval of employer data for analysis.\n\n## Key Strengths\n- **[Assessment Pending]**: Technical matching failed; unable"
+          }
+        },
+        {
+          "event_type": "response",
+          "data": {
+            "chunk": " to cite specific evidence or strengths from the provided dataset.\n\n## Areas to Address\n- **[Data Void]**:"
+          }
+        },
+        {
+          "event_type": "response",
+          "data": {
+            "chunk": " Search results failed to return specific requirements; manual cross-referencing is necessary.\n- **[Verification]**: Candidate skills ("
+          }
+        },
+        {
+          "event_type": "response",
+          "data": {
+            "chunk": "Full-stack/AI) require manual mapping against the actual job description.\n\n## Bottom Line\nThe analysis is inconclusive"
+          }
+        },
+        {
+          "event_type": "response",
+          "data": {
+            "chunk": " because the job description data failed to load. The default medium score reflects high uncertainty rather than actual fit; manual review is"
+          }
+        },
+        {
+          "event_type": "response",
+          "data": {
+            "chunk": " required."
+          }
+        },
+        {
+          "event_type": "phase_complete",
+          "data": {
+            "phase": "generate_results",
+            "summary": "Generated 101 word response"
+          }
+        },
+        {
+          "event_type": "complete",
+          "data": {
+            "duration_ms": 49860
+          }
+        }
+      ],
+      "error": null
+    },
+    "A5": {
+      "query": "Anthropic",
+      "response_text": "## Fit Summary\n50% (MEDIUM) score is a placeholder due to significant technical errors preventing specific data retrieval.\n\n## Key Strengths\n- **[Data Missing]**: Automated analysis could not identify strengths due to search result failures.\n- **[Review Required]**: No valid evidence available for automated scoring.\n\n## Areas to Address\n- **[System Error]**: Input data failed to load; resume details remain unverified.\n- **[Validation]**: Manual screening is required to confirm alignment with specific role requirements.\n\n## Bottom Line\nThe analysis tool encountered critical errors retrieving candidate data, resulting in a default risk assessment. Manual review is strictly necessary to determine actual fit.",
+      "events": [
+        {
+          "event_type": "status",
+          "data": {
+            "status": "connecting",
+            "message": "Initializing AI agent..."
+          }
+        },
+        {
+          "event_type": "phase",
+          "data": {
+            "phase": "connecting",
+            "message": "Classifying query and extracting entities..."
+          }
+        },
+        {
+          "event_type": "thought",
+          "data": {
+            "step": 1,
+            "type": "reasoning",
+            "phase": "connecting",
+            "content": "Analyzing query structure to determine if this is a company lookup or job description analysis..."
+          }
+        },
+        {
+          "event_type": "phase_complete",
+          "data": {
+            "phase": "connecting",
+            "summary": "Query classified as 'company', company: Anthropic"
+          }
+        },
+        {
+          "event_type": "phase",
+          "data": {
+            "phase": "deep_research",
+            "message": "Researching for info..."
+          }
+        },
+        {
+          "event_type": "thought",
+          "data": {
+            "step": 2,
+            "type": "tool_call",
+            "phase": "deep_research",
+            "tool": "web_search",
+            "input": "\"Anthropic\" software engineer tech stack engineering -site:pinterest.com -site:facebook.com -site:instagram.com"
+          }
+        },
+        {
+          "event_type": "thought",
+          "data": {
+            "step": 3,
+            "type": "tool_call",
+            "phase": "deep_research",
+            "tool": "web_search",
+            "input": "intitle:\"Anthropic\" careers jobs software developer requirements"
+          }
+        },
+        {
+          "event_type": "thought",
+          "data": {
+            "step": 4,
+            "type": "tool_call",
+            "phase": "deep_research",
+            "tool": "web_search",
+            "input": "Anthropic engineering blog OR tech OR culture values -site:pinterest.com -site:facebook.com -site:instagram.com"
+          }
+        },
+        {
+          "event_type": "thought",
+          "data": {
+            "step": 5,
+            "type": "reasoning",
+            "phase": "deep_research",
+            "content": "Synthesizing search results into structured employer profile..."
+          }
+        },
+        {
+          "event_type": "phase_complete",
+          "data": {
+            "phase": "deep_research",
+            "summary": "Identified 0 technologies, 0 requirements, 0 culture signals"
+          }
+        },
+        {
+          "event_type": "phase",
+          "data": {
+            "phase": "research_reranker",
+            "message": "Validating research quality..."
+          }
+        },
+        {
+          "event_type": "thought",
+          "data": {
+            "step": 6,
+            "type": "reasoning",
+            "phase": "research_reranker",
+            "content": "Assessing research quality: INSUFFICIENT tier detected"
+          }
+        },
+        {
+          "event_type": "phase_complete",
+          "data": {
+            "phase": "research_reranker",
+            "summary": "Data: PARTIAL | Quality: INSUFFICIENT | Confidence: 0% | Action: EARLY_EXIT"
+          }
+        },
+        {
+          "event_type": "phase",
+          "data": {
+            "phase": "generate_results",
+            "message": "Generating personalized fit analysis..."
+          }
+        },
+        {
+          "event_type": "thought",
+          "data": {
+            "step": 7,
+            "type": "reasoning",
+            "phase": "generate_results",
+            "content": "Synthesizing 50% match (MEDIUM) into personalized narrative for Anthropic..."
+          }
+        },
+        {
+          "event_type": "response",
+          "data": {
+            "chunk": "## Fit Summary\n50% (MEDIUM) score is a placeholder due to significant technical errors preventing specific data retrieval.\n\n## Key Strengths\n- **["
+          }
+        },
+        {
+          "event_type": "response",
+          "data": {
+            "chunk": "Data Missing]**: Automated analysis could not identify strengths due to search result failures.\n- **[Review Required]**: No valid"
+          }
+        },
+        {
+          "event_type": "response",
+          "data": {
+            "chunk": " evidence available for automated scoring.\n\n## Areas to Address\n- **[System Error]**: Input data failed to load;"
+          }
+        },
+        {
+          "event_type": "response",
+          "data": {
+            "chunk": " resume details remain unverified.\n- **[Validation]**: Manual screening is required to confirm alignment with specific role requirements.\n\n"
+          }
+        },
+        {
+          "event_type": "response",
+          "data": {
+            "chunk": "## Bottom Line\nThe analysis tool encountered critical errors retrieving candidate data, resulting in a default risk assessment. Manual review is"
+          }
+        },
+        {
+          "event_type": "response",
+          "data": {
+            "chunk": " strictly necessary to determine actual fit."
+          }
+        },
+        {
+          "event_type": "phase_complete",
+          "data": {
+            "phase": "generate_results",
+            "summary": "Generated 101 word response"
+          }
+        },
+        {
+          "event_type": "complete",
+          "data": {
+            "duration_ms": 46457
+          }
+        }
+      ],
+      "error": null
+    }
+  }
+}

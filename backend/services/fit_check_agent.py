@@ -36,6 +36,7 @@ from services.nodes import (
     connecting_node,
     deep_research_node,
     research_reranker_node,
+    content_enrich_node,
     skeptical_comparison_node,
     skills_matching_node,
     confidence_reranker_node,
@@ -50,23 +51,28 @@ logger = logging.getLogger(__name__)
 # Pipeline Node Wrappers (for LangGraph compatibility)
 # =============================================================================
 
-def create_node_wrapper(node_func, callback_holder):
+def create_node_wrapper(node_func, callback_holder, phase_name: str):
     """
-    Create a LangGraph-compatible node wrapper.
+    Create a LangGraph-compatible node wrapper with error handling.
     
     LangGraph nodes are sync functions by default. This wrapper
-    enables async node functions with callbacks.
+    enables async node functions with callbacks and centralized error handling.
     
     Args:
         node_func: Async node function.
         callback_holder: Dict holding the callback reference.
+        phase_name: Name of the phase for error reporting.
     
     Returns:
         Sync wrapper function for LangGraph.
     """
     async def async_wrapper(state: FitCheckPipelineState) -> Dict[str, Any]:
         callback = callback_holder.get("callback")
-        return await node_func(state, callback)
+        try:
+            return await node_func(state, callback)
+        except Exception as e:
+            from services.utils.error_handling import handle_node_error
+            return handle_node_error(e, phase_name, state)
     return async_wrapper
 
 
@@ -107,13 +113,14 @@ def build_fit_check_pipeline(callback_holder: Dict = None):
     workflow = StateGraph(FitCheckPipelineState)
     
     # Add phase nodes
-    workflow.add_node("connecting", create_node_wrapper(connecting_node, callback_holder))
-    workflow.add_node("deep_research", create_node_wrapper(deep_research_node, callback_holder))
-    workflow.add_node("research_reranker", create_node_wrapper(research_reranker_node, callback_holder))
-    workflow.add_node("skeptical_comparison", create_node_wrapper(skeptical_comparison_node, callback_holder))
-    workflow.add_node("skills_matching", create_node_wrapper(skills_matching_node, callback_holder))
-    workflow.add_node("confidence_reranker", create_node_wrapper(confidence_reranker_node, callback_holder))
-    workflow.add_node("generate_results", create_node_wrapper(generate_results_node, callback_holder))
+    workflow.add_node("connecting", create_node_wrapper(connecting_node, callback_holder, "connecting"))
+    workflow.add_node("deep_research", create_node_wrapper(deep_research_node, callback_holder, "deep_research"))
+    workflow.add_node("research_reranker", create_node_wrapper(research_reranker_node, callback_holder, "research_reranker"))
+    workflow.add_node("content_enrich", create_node_wrapper(content_enrich_node, callback_holder, "content_enrich"))
+    workflow.add_node("skeptical_comparison", create_node_wrapper(skeptical_comparison_node, callback_holder, "skeptical_comparison"))
+    workflow.add_node("skills_matching", create_node_wrapper(skills_matching_node, callback_holder, "skills_matching"))
+    workflow.add_node("confidence_reranker", create_node_wrapper(confidence_reranker_node, callback_holder, "confidence_reranker"))
+    workflow.add_node("generate_results", create_node_wrapper(generate_results_node, callback_holder, "generate_results"))
     
     # Set entry point
     workflow.set_entry_point("connecting")
@@ -128,6 +135,10 @@ def build_fit_check_pipeline(callback_holder: Dict = None):
         Returns:
             Next node name or END.
         """
+        # Check for fatal errors
+        if state.get("should_abort"):
+            return "generate_results"
+            
         current_phase = state.get("current_phase", "deep_research")
         
         # Check if query was rejected (irrelevant or malicious)
@@ -157,31 +168,47 @@ def build_fit_check_pipeline(callback_holder: Dict = None):
         Returns:
             Next node name based on data quality.
         """
-        reranker_output = state.get("research_reranker_output") or {}
-        search_attempt = state.get("search_attempt", 1)
-        early_exit = state.get("early_exit", False)
-        
-        # Get quality assessment
-        data_tier = reranker_output.get("data_quality_tier", "PARTIAL")
-        action = reranker_output.get("recommended_action", "CONTINUE")
-        
-        # CRITICAL: Early exit for garbage/suspicious data
-        if early_exit or action == "EARLY_EXIT" or data_tier == "GARBAGE":
-            logger.info(f"[ROUTER] Early exit triggered: data_tier={data_tier}, action={action}")
+        # Check for fatal errors
+        if state.get("should_abort"):
             return "generate_results"
+            
+        # Use the next phase determined by the node itself
+        next_phase = state.get("current_phase")
         
-        # ENHANCE: Retry search for sparse data (first attempt only)
-        if action == "ENHANCE_SEARCH" and search_attempt < 2:
-            logger.info(f"[ROUTER] Enhanced search triggered: attempt={search_attempt}")
-            return "deep_research"
+        # Fallback logic if current_phase is not set correctly
+        if not next_phase or next_phase == "research_reranker":
+            reranker_output = state.get("research_reranker_output") or {}
+            search_attempt = state.get("search_attempt", 1)
+            early_exit = state.get("early_exit", False)
+            
+            # Get quality assessment
+            data_tier = reranker_output.get("data_quality_tier", "PARTIAL")
+            action = reranker_output.get("recommended_action", "CONTINUE")
+            
+            # CRITICAL: Early exit for garbage/suspicious data
+            if early_exit or action == "EARLY_EXIT" or data_tier == "GARBAGE":
+                return "generate_results"
+            
+            # ENHANCE: Retry search for sparse data (up to 3 attempts)
+            if action == "ENHANCE_SEARCH" and search_attempt < 3:
+                return "deep_research"
+            
+            # CONTINUE: Good or acceptable data proceeds to enrichment
+            return "content_enrich"
         
-        # CONTINUE: Good or acceptable data proceeds to skeptical analysis
-        if action in ["CONTINUE", "CONTINUE_WITH_FLAGS"]:
-            return "skeptical_comparison"
-        
-        # Default: proceed with caution
-        return "skeptical_comparison"
+        return next_phase
     
+    # -------------------------------------------------------------------------
+    # Routing Function: Generic (for sequential nodes)
+    # -------------------------------------------------------------------------
+    def route_generic(state: FitCheckPipelineState) -> str:
+        """
+        Generic routing that checks for abort flags.
+        """
+        if state.get("should_abort"):
+            return "generate_results"
+        return "CONTINUE"
+
     # -------------------------------------------------------------------------
     # Add Conditional Edges
     # -------------------------------------------------------------------------
@@ -199,21 +226,56 @@ def build_fit_check_pipeline(callback_holder: Dict = None):
     # After deep_research: always go to research_reranker for quality check
     workflow.add_edge("deep_research", "research_reranker")
     
-    # After research_reranker: conditional routing based on data quality
+    # After research_reranker: route to deep_research (retry), content_enrich, or generate_results
     workflow.add_conditional_edges(
         "research_reranker",
         route_after_research_reranker,
         {
+            "deep_research": "deep_research",
+            "content_enrich": "content_enrich",
             "skeptical_comparison": "skeptical_comparison",
-            "deep_research": "deep_research",  # Enhanced search retry
-            "generate_results": "generate_results",  # Early exit
+            "generate_results": "generate_results",
+        }
+    )
+    
+    # After content_enrich: route to skeptical_comparison or generate_results (if error)
+    workflow.add_conditional_edges(
+        "content_enrich",
+        route_generic,
+        {
+            "CONTINUE": "skeptical_comparison",
+            "generate_results": "generate_results",
         }
     )
     
     # Remaining sequential edges (normal flow)
-    workflow.add_edge("skeptical_comparison", "skills_matching")
-    workflow.add_edge("skills_matching", "confidence_reranker")
-    workflow.add_edge("confidence_reranker", "generate_results")
+    workflow.add_conditional_edges(
+        "skeptical_comparison",
+        route_generic,
+        {
+            "CONTINUE": "skills_matching",
+            "generate_results": "generate_results",
+        }
+    )
+    
+    workflow.add_conditional_edges(
+        "skills_matching",
+        route_generic,
+        {
+            "CONTINUE": "confidence_reranker",
+            "generate_results": "generate_results",
+        }
+    )
+    
+    workflow.add_conditional_edges(
+        "confidence_reranker",
+        route_generic,
+        {
+            "CONTINUE": "generate_results",
+            "generate_results": "generate_results",
+        }
+    )
+    
     workflow.add_edge("generate_results", END)
     
     # Compile the graph

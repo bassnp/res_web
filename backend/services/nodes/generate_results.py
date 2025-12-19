@@ -36,6 +36,7 @@ from services.pipeline_state import FitCheckPipelineState
 from services.callbacks import ThoughtCallback
 from services.utils import extract_text_from_content
 from services.prompt_loader import load_prompt, PHASE_GENERATE_RESULTS
+from services.utils.circuit_breaker import llm_breaker, CircuitOpenError
 
 logger = logging.getLogger(__name__)
 
@@ -447,6 +448,25 @@ async def generate_results_node(
     
     # Initialize from state
     step = state.get("step_count", 0) + 1
+
+    # Check for abort flag from prior phases
+    if state.get("should_abort"):
+        abort_reason = state.get("abort_reason", "An unexpected error occurred.")
+        logger.warning(f"[GENERATE_RESULTS] Aborting due to prior error: {abort_reason}")
+        
+        # Stream error message as response
+        error_response = f"### Analysis Interrupted\n\nI'm sorry, but I encountered an issue that prevents me from completing the full analysis.\n\n**Reason:** {abort_reason}\n\nPlease try again later or with a different query."
+        
+        if callback:
+            await callback.on_response_chunk(error_response)
+            if hasattr(callback, 'on_phase_complete'):
+                await callback.on_phase_complete(PHASE_NAME, "Aborted due to error")
+        
+        return {
+            "final_response": error_response,
+            "step_count": step,
+        }
+
     phase_1 = state.get("phase_1_output") or {}
     phase_2 = state.get("phase_2_output") or {}
     phase_3 = state.get("phase_3_output") or {}
@@ -541,17 +561,18 @@ async def generate_results_node(
         
         full_response = ""
         
-        async for chunk in llm.astream(messages):
-            # Extract text content from chunk (handles Gemini's structured format)
-            chunk_content = chunk.content if hasattr(chunk, 'content') else chunk
-            chunk_text = extract_text_from_content(chunk_content)
-            
-            if chunk_text:
-                full_response += chunk_text
+        async with llm_breaker.call():
+            async for chunk in llm.astream(messages):
+                # Extract text content from chunk (handles Gemini's structured format)
+                chunk_content = chunk.content if hasattr(chunk, 'content') else chunk
+                chunk_text = extract_text_from_content(chunk_content)
                 
-                # Stream chunk to frontend
-                if callback:
-                    await callback.on_response_chunk(chunk_text)
+                if chunk_text:
+                    full_response += chunk_text
+                    
+                    # Stream chunk to frontend
+                    if callback:
+                        await callback.on_response_chunk(chunk_text)
         
         # =====================================================================
         # Validate response quality

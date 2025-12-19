@@ -28,16 +28,20 @@ SUPPORTED_MODELS = {
         "config_type": "reasoning",
         "description": "Advanced reasoning with deep analysis",
     },
+    "gemini-3-flash-preview": {
+        "config_type": "reasoning",
+        "description": "Fast reasoning with good accuracy",
+    },
     "gemini-flash-latest": {
         "config_type": "standard", 
         "description": "Fast responses with balanced accuracy",
     },
 }
 
-# Default model - Using Gemini 3 Pro for enhanced reasoning capabilities
+# Default model - Using Gemini 3 Flash for faster responses
 # Native reasoning model - no need for "think step-by-step" instructions
-# Supports criteria-based prompting and higher accuracy for complex analysis
-DEFAULT_MODEL = "gemini-3-pro-preview"
+# Supports criteria-based prompting and good accuracy for complex analysis
+DEFAULT_MODEL = "gemini-3-flash-preview"
 
 # Get model from environment or use default
 MODEL_NAME = os.getenv("GEMINI_MODEL", DEFAULT_MODEL)

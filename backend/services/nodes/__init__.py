@@ -19,6 +19,7 @@ Each node follows the pattern:
 from services.nodes.connecting import connecting_node
 from services.nodes.deep_research import deep_research_node
 from services.nodes.research_reranker import research_reranker_node
+from services.nodes.content_enrich import content_enrich_node
 from services.nodes.skeptical_comparison import skeptical_comparison_node
 from services.nodes.skills_matching import skills_matching_node
 from services.nodes.confidence_reranker import confidence_reranker_node
@@ -28,6 +29,7 @@ __all__ = [
     "connecting_node",
     "deep_research_node",
     "research_reranker_node",
+    "content_enrich_node",
     "skeptical_comparison_node",
     "skills_matching_node",
     "confidence_reranker_node",
