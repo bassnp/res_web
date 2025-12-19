@@ -25,61 +25,7 @@ import {
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
-
-/**
- * Phase configuration for styling
- */
-const PHASE_CONFIG = {
-  connecting: {
-    label: 'Query Classification',
-    icon: Wifi,
-    description: 'Classifies queries and extracts entities',
-    bgColor: 'bg-blue-400',
-    textColor: 'text-blue-400',
-  },
-  deep_research: {
-    label: 'Deep Research',
-    icon: Search,
-    description: 'Gathers employer intelligence',
-    bgColor: 'bg-purple-400',
-    textColor: 'text-purple-400',
-  },
-  research_reranker: {
-    label: 'Research Quality Gate',
-    icon: CheckCircle2,
-    description: 'Validates research quality',
-    bgColor: 'bg-violet-400',
-    textColor: 'text-violet-400',
-  },
-  skeptical_comparison: {
-    label: 'Skeptical Comparison',
-    icon: Scale,
-    description: 'Critical gap analysis',
-    bgColor: 'bg-amber-400',
-    textColor: 'text-amber-400',
-  },
-  skills_matching: {
-    label: 'Skills Matching',
-    icon: Briefcase,
-    description: 'Maps skills to requirements',
-    bgColor: 'bg-muted-teal',
-    textColor: 'text-muted-teal',
-  },
-  confidence_reranker: {
-    label: 'Confidence Calibration',
-    icon: CheckCircle2,
-    description: 'LLM-as-Judge calibration',
-    bgColor: 'bg-emerald-400',
-    textColor: 'text-emerald-400',
-  },
-  generate_results: {
-    label: 'Response Generation',
-    icon: FileCheck2,
-    description: 'Synthesizes final response',
-    bgColor: 'bg-burnt-peach',
-    textColor: 'text-burnt-peach',
-  },
-};
+import { PHASE_CONFIG } from '@/lib/phaseConfig';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
 

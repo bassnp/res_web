@@ -45,14 +45,14 @@ Before modifying any frontend component, review the corresponding backend implem
 
 After completing Tasks 1.1 and 1.2:
 
-- [ ] **READ** [pipeline_state.py](backend/services/pipeline_state.py) and confirm `PHASE_ORDER` matches frontend
-- [ ] **VERIFY** `content_enrich` phase exists in ALL 4 frontend PHASE_CONFIG locations:
-  - [ ] [ChainOfThought.jsx](frontend/components/fit-check/ChainOfThought.jsx)
-  - [ ] [ComparisonChain.jsx](frontend/components/fit-check/ComparisonChain.jsx)
-  - [ ] [ReasoningDialog.jsx](frontend/components/fit-check/ReasoningDialog.jsx)
-  - [ ] [WorkflowPipelinePreview.jsx](frontend/components/fit-check/WorkflowPipelinePreview.jsx)
-- [ ] **VALIDATE** shared `phaseConfig.js` imports correctly in all consuming components
-- [ ] **TEST** Run frontend with backend and confirm 8 phases appear in ComparisonChain
+- [x] **READ** [pipeline_state.py](backend/services/pipeline_state.py) and confirm `PHASE_ORDER` matches frontend
+- [x] **VERIFY** `content_enrich` phase exists in ALL 4 frontend PHASE_CONFIG locations:
+  - [x] [ChainOfThought.jsx](frontend/components/fit-check/ChainOfThought.jsx)
+  - [x] [ComparisonChain.jsx](frontend/components/fit-check/ComparisonChain.jsx)
+  - [x] [ReasoningDialog.jsx](frontend/components/fit-check/ReasoningDialog.jsx)
+  - [x] [WorkflowPipelinePreview.jsx](frontend/components/fit-check/WorkflowPipelinePreview.jsx)
+- [x] **VALIDATE** shared `phaseConfig.js` imports correctly in all consuming components
+- [x] **TEST** Run frontend with backend and confirm 8 phases appear in ComparisonChain
 
 ### Phase 2: Visual Enhancements Validation
 

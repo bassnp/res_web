@@ -4,59 +4,7 @@ import { Link2, Wifi, Search, Scale, Briefcase, FileCheck2, CheckCircle2, AlertC
 import { cn } from '@/lib/utils';
 import { extractPhaseInsights } from '@/lib/phaseInsights';
 import { useMemo } from 'react';
-
-/**
- * Phase configuration with display metadata.
- * Maps backend phase names to UI display properties.
- */
-const PHASE_CONFIG = {
-  connecting: {
-    label: 'Connecting',
-    icon: Wifi,
-    description: 'Classifying query and extracting entities',
-  },
-  deep_research: {
-    label: 'Deep Research',
-    icon: Search,
-    description: 'Gathering employer intelligence',
-  },
-  research_reranker: {
-    label: 'Research Quality Gate',
-    icon: CheckCircle2,
-    description: 'Validating research completeness',
-  },
-  skeptical_comparison: {
-    label: 'Skeptical Comparison',
-    icon: Scale,
-    description: 'Critical gap analysis',
-  },
-  skills_matching: {
-    label: 'Skills Matching',
-    icon: Briefcase,
-    description: 'Mapping skills to requirements',
-  },
-  confidence_reranker: {
-    label: 'Confidence Calibration',
-    icon: CheckCircle2,
-    description: 'LLM-as-Judge quality assessment',
-  },
-  generate_results: {
-    label: 'Generating Results',
-    icon: FileCheck2,
-    description: 'Synthesizing final response',
-  },
-};
-
-/** Ordered list of pipeline phases */
-const PHASE_ORDER = [
-  'connecting',
-  'deep_research',
-  'research_reranker',
-  'skeptical_comparison',
-  'skills_matching',
-  'confidence_reranker',
-  'generate_results',
-];
+import { PHASE_CONFIG, PHASE_ORDER } from '@/lib/phaseConfig';
 
 /**
  * StepInsightSummary Component
@@ -157,6 +105,17 @@ function StepInsightSummary({ phase, summary }) {
               "bg-red-500/10 text-red-500"
             )}>
               {insights.matchStrength}
+            </span>
+          )}
+        </div>
+      );
+      
+    case 'content_enrich':
+      return (
+        <div className="flex items-center gap-1.5 flex-wrap">
+          {insights.enrichedCount !== undefined && (
+            <span className="text-[10px] text-twilight/50 dark:text-eggshell/50">
+              {insights.enrichedCount}/{insights.totalCount} sources enriched
             </span>
           )}
         </div>

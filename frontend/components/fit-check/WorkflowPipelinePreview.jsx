@@ -12,54 +12,17 @@ import {
   Brain
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { PHASE_CONFIG, PHASE_ORDER } from '@/lib/phaseConfig';
 
 /**
  * Pipeline phases with metadata for the animated preview.
  */
-const PIPELINE_PHASES = [
-  {
-    id: 'connecting',
-    label: 'Connecting',
-    icon: Wifi,
-    color: 'from-blue-400 to-blue-500',
-    borderColor: 'border-blue-400/50',
-  },
-  {
-    id: 'deep_research',
-    label: 'Deep Research',
-    icon: Search,
-    color: 'from-purple-400 to-purple-500',
-    borderColor: 'border-purple-400/50',
-  },
-  {
-    id: 'research_reranker',
-    label: 'Quality Gate',
-    icon: CheckCircle2,
-    color: 'from-violet-400 to-violet-500',
-    borderColor: 'border-violet-400/50',
-  },
-  {
-    id: 'skeptical_comparison',
-    label: 'Gap Analysis',
-    icon: Scale,
-    color: 'from-amber-400 to-amber-500',
-    borderColor: 'border-amber-400/50',
-  },
-  {
-    id: 'skills_matching',
-    label: 'Skills Match',
-    icon: Briefcase,
-    color: 'from-muted-teal to-muted-teal/80',
-    borderColor: 'border-muted-teal/50',
-  },
-  {
-    id: 'generate_results',
-    label: 'Generate Results',
-    icon: FileCheck2,
-    color: 'from-burnt-peach to-burnt-peach/80',
-    borderColor: 'border-burnt-peach/50',
-  },
-];
+const PIPELINE_PHASES = PHASE_ORDER.map(id => ({
+  id,
+  ...PHASE_CONFIG[id],
+  color: PHASE_CONFIG[id].gradient,
+  borderColor: PHASE_CONFIG[id].previewBorder,
+}));
 
 /**
  * WorkflowPipelinePreview Component

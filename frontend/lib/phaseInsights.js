@@ -25,6 +25,8 @@ export function extractPhaseInsights(phase, summary) {
       return extractResearchInsights(summary);
     case 'research_reranker':
       return extractRerankerInsights(summary);
+    case 'content_enrich':
+      return extractContentEnrichInsights(summary);
     case 'skeptical_comparison':
       return extractSkepticalInsights(summary);
     case 'skills_matching':
@@ -135,6 +137,26 @@ function extractRerankerInsights(summary) {
     } else if (key?.toLowerCase() === 'action') {
       insights.action = value;
     }
+  }
+  
+  return insights;
+}
+
+/**
+ * Extract content enrichment insights
+ * Example: "Enriched 3/5 sources with full content"
+ */
+function extractContentEnrichInsights(summary) {
+  const insights = {
+    type: 'enrichment',
+    enrichedCount: 0,
+    totalCount: 0,
+  };
+  
+  const match = summary.match(/Enriched (\d+)\/(\d+)/i);
+  if (match) {
+    insights.enrichedCount = parseInt(match[1], 10);
+    insights.totalCount = parseInt(match[2], 10);
   }
   
   return insights;
@@ -418,6 +440,13 @@ export function getPhaseDisplayMeta(phase, insights) {
         { label: 'Culture', value: insights.cultureCount, icon: 'users' },
       ];
       meta.summary = `Found ${insights.techCount} technologies, ${insights.requirementsCount} requirements`;
+      break;
+      
+    case 'enrichment':
+      meta.metrics = [
+        { label: 'Enriched', value: `${insights.enrichedCount}/${insights.totalCount}`, icon: 'database' },
+      ];
+      meta.summary = `Extracted full content for ${insights.enrichedCount} sources`;
       break;
       
     case 'quality_gate':
