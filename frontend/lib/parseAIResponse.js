@@ -34,8 +34,43 @@ export function parseAIResponse(rawResponse) {
     strengths: [],
     valueProposition: '',
     growthAreas: [],
-    rawContent: rawResponse
+    rawContent: rawResponse,
+    hasFundamentalMismatch: false,
+    mismatchReason: null,
+    calibratedScore: null,
+    confidenceTier: null,
   };
+
+  // Detect fundamental mismatch warning
+  result.hasFundamentalMismatch = 
+    rawResponse.toLowerCase().includes('fundamental mismatch') ||
+    rawResponse.toLowerCase().includes('primarily requires') ||
+    rawResponse.toLowerCase().includes('significant misalignment');
+  
+  // Extract mismatch reason if present
+  const mismatchMatch = rawResponse.match(/(?:fundamental(?:ly)?\s+(?:mismatch|different|misaligned|misalignment)|primarily requires)[^.]*\./i);
+  if (mismatchMatch) {
+    result.mismatchReason = mismatchMatch[0];
+  }
+
+  // Extract calibrated score and tier
+  // Pattern: 85% (HIGH) or 85% confidence (HIGH)
+  const scoreTierMatch = rawResponse.match(/(\d+)%\s*(?:confidence)?\s*\((\w+)\)/i);
+  if (scoreTierMatch) {
+    result.calibratedScore = parseInt(scoreTierMatch[1], 10);
+    result.confidenceTier = scoreTierMatch[2].toUpperCase();
+  } else {
+    // Fallback: just look for percentage
+    const scoreMatch = rawResponse.match(/(\d+)%/);
+    if (scoreMatch) {
+      result.calibratedScore = parseInt(scoreMatch[1], 10);
+    }
+    // Fallback: just look for tier
+    const tierMatch = rawResponse.match(/\b(HIGH|MEDIUM|LOW|INSUFFICIENT_DATA)\b/i);
+    if (tierMatch) {
+      result.confidenceTier = tierMatch[1].toUpperCase();
+    }
+  }
 
   // Split content into lines
   const lines = rawResponse.split('\n').map(line => line.trim()).filter(Boolean);

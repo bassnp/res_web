@@ -52,6 +52,7 @@ PHASE_ORDER = [
     "connecting",
     "deep_research",
     "research_reranker",  # Phase 2B - Research Quality Validation
+    "content_enrich",     # Phase 2C - Content Enrichment
     "skeptical_comparison",
     "skills_matching",
     "confidence_reranker",

@@ -575,7 +575,16 @@ async def confidence_reranker_node(
     
     # Emit phase complete
     if callback:
-        await callback.on_phase_complete(PHASE_NAME, summary)
+        await callback.on_phase_complete(
+            PHASE_NAME, 
+            summary,
+            data={
+                "calibrated_score": reranker_output.calibrated_score,
+                "tier": reranker_output.tier,
+                "quality_flags": reranker_output.quality_flags,
+                "adjustment_rationale": reranker_output.adjustment_rationale,
+            }
+        )
     
     return {
         "reranker_output": reranker_output.to_dict(),

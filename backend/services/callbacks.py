@@ -23,7 +23,7 @@ class ThoughtCallback:
         """Called when a pipeline phase starts."""
         pass
     
-    async def on_phase_complete(self, phase: str, summary: str) -> None:
+    async def on_phase_complete(self, phase: str, summary: str, data: Optional[dict] = None) -> None:
         """Called when a pipeline phase completes."""
         pass
     

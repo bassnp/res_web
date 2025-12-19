@@ -23,6 +23,7 @@ import { useAISettings } from './use-ai-settings';
  * - connecting: Query classification and entity extraction
  * - deep_research: Web search and intelligence gathering
  * - research_reranker: Research quality gate and data validation
+ * - content_enrich: Full content extraction from top sources
  * - skeptical_comparison: Critical gap analysis
  * - skills_matching: Skill-to-requirement mapping
  * - confidence_reranker: LLM-as-Judge confidence calibration
@@ -91,6 +92,24 @@ export function useFitCheck() {
     }
     return parseAIResponse(state.response);
   }, [state.response, state.status]);
+  
+  // Add derived state for final confidence results
+  const finalConfidence = useMemo(() => {
+    if (state.status !== 'complete') return null;
+    
+    const confidencePhase = state.phaseHistory.find(
+      p => p.phase === 'confidence_reranker' && p.status === 'complete'
+    );
+    
+    if (!confidencePhase?.data) return null;
+    
+    return {
+      score: confidencePhase.data.calibrated_score,
+      tier: confidencePhase.data.tier,
+      flags: confidencePhase.data.quality_flags || [],
+      adjustment: confidencePhase.data.adjustment_rationale,
+    };
+  }, [state.status, state.phaseHistory]);
   
   const abortControllerRef = useRef(null);
   const startTimeRef = useRef(null);
@@ -213,6 +232,7 @@ export function useFitCheck() {
     ...state,
     uiPhase,
     parsedResponse,
+    finalConfidence,
     submitQuery,
     reset,
     isLoading: ['connecting', 'thinking', 'responding'].includes(state.status),
@@ -339,6 +359,7 @@ function processEvent(event, setState, startTime) {
             ? {
                 ...entry,
                 summary: event.data.summary,
+                data: event.data.data || null, // Store structured data
                 endTime: Date.now(),
                 status: 'complete',
               }

@@ -459,8 +459,12 @@ async def generate_results_node(
         
         if callback:
             await callback.on_response_chunk(error_response)
-            if hasattr(callback, 'on_phase_complete'):
-                await callback.on_phase_complete(PHASE_NAME, "Aborted due to error")
+        if hasattr(callback, 'on_phase_complete'):
+            await callback.on_phase_complete(
+                PHASE_NAME, 
+                "Aborted due to error",
+                data={"error": str(e), "is_fallback": True}
+            )
         
         return {
             "final_response": error_response,
@@ -593,7 +597,12 @@ async def generate_results_node(
         if callback and hasattr(callback, 'on_phase_complete'):
             await callback.on_phase_complete(
                 PHASE_NAME,
-                f"Generated {word_count} word response"
+                f"Generated {word_count} word response",
+                data={
+                    "word_count": word_count,
+                    "char_count": len(full_response),
+                    "quality_warnings": validation_warnings
+                }
             )
         
         logger.info(
@@ -625,7 +634,8 @@ async def generate_results_node(
             if hasattr(callback, 'on_phase_complete'):
                 await callback.on_phase_complete(
                     PHASE_NAME,
-                    "Generated fallback response due to error"
+                    "Generated fallback response due to error",
+                    data={"is_fallback": True, "error": str(e)}
                 )
         
         errors.append(f"Phase 5 error: {str(e)}")

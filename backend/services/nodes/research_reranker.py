@@ -1045,7 +1045,18 @@ async def research_reranker_node(
         
         # Emit phase complete event
         if callback and hasattr(callback, 'on_phase_complete'):
-            await callback.on_phase_complete(PHASE_NAME, summary)
+            await callback.on_phase_complete(
+                PHASE_NAME, 
+                summary,
+                data={
+                    "data_quality_tier": data_tier,
+                    "research_quality_tier": tier,
+                    "confidence_score": validated_output['data_confidence_score'],
+                    "recommended_action": action,
+                    "passing_count": scoring_result.passing_count if scoring_result else 0,
+                    "total_count": scoring_result.total_count if scoring_result else 0,
+                }
+            )
         
         logger.info(f"[RESEARCH_RERANKER] Phase 2B complete: {summary}")
         
@@ -1091,7 +1102,14 @@ async def research_reranker_node(
         if callback and hasattr(callback, 'on_phase_complete'):
             await callback.on_phase_complete(
                 PHASE_NAME,
-                f"Data: {fallback_output['data_quality_tier']} | Quality: {fallback_output['research_quality_tier']} (fallback)"
+                f"Data: {fallback_output['data_quality_tier']} | Quality: {fallback_output['research_quality_tier']} (fallback)",
+                data={
+                    "data_quality_tier": fallback_output['data_quality_tier'],
+                    "research_quality_tier": fallback_output['research_quality_tier'],
+                    "confidence_score": 0,
+                    "recommended_action": fallback_output['recommended_action'],
+                    "is_fallback": True
+                }
             )
         
         return {

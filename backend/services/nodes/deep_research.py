@@ -442,7 +442,16 @@ async def deep_research_node(
         
         # Emit phase complete event
         if callback and hasattr(callback, 'on_phase_complete'):
-            await callback.on_phase_complete(PHASE_NAME, summary)
+            await callback.on_phase_complete(
+                PHASE_NAME, 
+                summary,
+                data={
+                    "tech_count": tech_count,
+                    "requirements_count": req_count,
+                    "culture_count": culture_count,
+                    "search_count": len(search_results)
+                }
+            )
         
         logger.info(f"[DEEP_RESEARCH] Phase 2 complete: {len(search_results)} searches, {summary}")
         

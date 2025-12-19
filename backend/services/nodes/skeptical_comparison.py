@@ -506,7 +506,15 @@ async def skeptical_comparison_node(
                 f"{len(validated_output['genuine_strengths'])} strengths. "
                 f"Risk level: {validated_output['risk_assessment']}"
             )
-            await callback.on_phase_complete(PHASE_NAME, summary)
+            await callback.on_phase_complete(
+                PHASE_NAME, 
+                summary,
+                data={
+                    "gap_count": len(validated_output['genuine_gaps']),
+                    "strength_count": len(validated_output['genuine_strengths']),
+                    "risk_level": validated_output['risk_assessment']
+                }
+            )
         
         logger.info(
             f"[SKEPTICAL_COMPARISON] Phase 3 complete: "

@@ -119,6 +119,8 @@ function extractRerankerInsights(summary) {
     qualityTier: null,
     confidence: null,
     action: null,
+    flags: [],
+    verifiability: null,
   };
   
   // Parse pipe-separated format
@@ -127,15 +129,23 @@ function extractRerankerInsights(summary) {
   for (const part of parts) {
     const [key, value] = part.split(':').map(s => s.trim());
     
-    if (key?.toLowerCase() === 'data') {
+    if (!key || !value) continue;
+
+    const lowerKey = key.toLowerCase();
+    
+    if (lowerKey === 'data' || lowerKey === 'data_quality_tier') {
       insights.dataLevel = value;
-    } else if (key?.toLowerCase() === 'quality') {
+    } else if (lowerKey === 'quality' || lowerKey === 'research_quality_tier') {
       insights.qualityTier = value;
-    } else if (key?.toLowerCase() === 'confidence') {
-      const match = value?.match(/(\d+)/);
+    } else if (lowerKey === 'confidence' || lowerKey === 'data_confidence_score') {
+      const match = value.match(/(\d+)/);
       if (match) insights.confidence = parseInt(match[1], 10);
-    } else if (key?.toLowerCase() === 'action') {
+    } else if (lowerKey === 'action' || lowerKey === 'recommended_action') {
       insights.action = value;
+    } else if (lowerKey === 'flags' || lowerKey === 'quality_flags') {
+      insights.flags = value.split(',').map(f => f.trim()).filter(Boolean);
+    } else if (lowerKey === 'verifiability' || lowerKey === 'company_verifiability') {
+      insights.verifiability = value;
     }
   }
   
@@ -144,20 +154,22 @@ function extractRerankerInsights(summary) {
 
 /**
  * Extract content enrichment insights
- * Example: "Enriched 3/5 sources with full content"
+ * Example: "Extracted 3 pages, 45.2 KB content"
  */
 function extractContentEnrichInsights(summary) {
   const insights = {
     type: 'enrichment',
-    enrichedCount: 0,
-    totalCount: 0,
+    pagesExtracted: 0,
+    contentSize: null,
+    topSources: [],
   };
   
-  const match = summary.match(/Enriched (\d+)\/(\d+)/i);
-  if (match) {
-    insights.enrichedCount = parseInt(match[1], 10);
-    insights.totalCount = parseInt(match[2], 10);
-  }
+  // Parse "Extracted X pages, Y KB content" or "Enriched X/Y sources"
+  const pagesMatch = summary.match(/(\d+)\s*page/i) || summary.match(/Enriched (\d+)/i);
+  const sizeMatch = summary.match(/(\d+(?:\.\d+)?)\s*(?:KB|MB)/i);
+  
+  if (pagesMatch) insights.pagesExtracted = parseInt(pagesMatch[1], 10);
+  if (sizeMatch) insights.contentSize = sizeMatch[0];
   
   return insights;
 }
@@ -235,33 +247,29 @@ function extractSkillsInsights(summary) {
 
 /**
  * Extract confidence reranker insights
- * Example: "Calibrated confidence: 70% (MEDIUM)"
+ * Example: "Calibrated: 78% (HIGH) | Flags: sparse_tech_stack | Adj: -5%"
  */
 function extractConfidenceInsights(summary) {
   const insights = {
     type: 'confidence',
-    confidence: null,
+    calibratedScore: null,
     tier: null,
-    reasoning: null,
+    qualityFlags: [],
+    adjustment: null,
   };
   
-  // Extract confidence percentage
+  // Parse "Calibrated: 78% (HIGH) | Flags: sparse_tech_stack | Adj: -5%"
   const scoreMatch = summary.match(/(\d+)%/);
-  if (scoreMatch) {
-    insights.confidence = parseInt(scoreMatch[1], 10);
-  }
+  const tierMatch = summary.match(/\((HIGH|MEDIUM|LOW|INSUFFICIENT_DATA)\)/i);
+  const flagsMatch = summary.match(/Flags?:\s*([^|]+)/i);
+  const adjMatch = summary.match(/Adj(?:ustment)?:\s*([+-]?\d+%?)/i);
   
-  // Extract tier in parentheses
-  const tierMatch = summary.match(/\((\w+)\)/);
-  if (tierMatch) {
-    insights.tier = tierMatch[1].toUpperCase();
+  if (scoreMatch) insights.calibratedScore = parseInt(scoreMatch[1], 10);
+  if (tierMatch) insights.tier = tierMatch[1].toUpperCase();
+  if (flagsMatch) {
+    insights.qualityFlags = flagsMatch[1].split(',').map(f => f.trim()).filter(Boolean);
   }
-  
-  // Extract reasoning after the dash if present
-  const dashIndex = summary.indexOf('-');
-  if (dashIndex !== -1) {
-    insights.reasoning = summary.substring(dashIndex + 1).trim();
-  }
+  if (adjMatch) insights.adjustment = adjMatch[1];
   
   return insights;
 }
@@ -449,6 +457,15 @@ export function getPhaseDisplayMeta(phase, insights) {
       meta.summary = `Extracted full content for ${insights.enrichedCount} sources`;
       break;
       
+    case 'gap_analysis':
+      meta.metrics = [
+        { label: 'Gaps', value: insights.gapCount, icon: 'target' },
+      ];
+      meta.summary = insights.riskLevel 
+        ? `Risk Level: ${insights.riskLevel.toUpperCase()}` 
+        : 'Gap analysis completed';
+      break;
+      
     case 'quality_gate':
       meta.color = getQualityColor(insights.qualityTier);
       meta.summary = insights.action === 'CONTINUE' 
@@ -456,6 +473,12 @@ export function getPhaseDisplayMeta(phase, insights) {
         : `Action: ${insights.action}`;
       if (insights.confidence) {
         meta.metrics.push({ label: 'Confidence', value: `${insights.confidence}%` });
+      }
+      if (insights.dataLevel) {
+        meta.dataLevel = insights.dataLevel;
+      }
+      if (insights.flags && insights.flags.length > 0) {
+        meta.flags = insights.flags;
       }
       break;
       
@@ -471,6 +494,9 @@ export function getPhaseDisplayMeta(phase, insights) {
       meta.summary = insights.confidence 
         ? `${insights.confidence}% ${insights.tier || ''}`.trim()
         : null;
+      if (insights.flags && insights.flags.length > 0) {
+        meta.flags = insights.flags;
+      }
       break;
       
     case 'results':

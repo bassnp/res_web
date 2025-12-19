@@ -393,6 +393,43 @@ function PhaseSection({
 }
 
 /**
+ * QualityFlagsPills Component
+ * Displays quality flags as small pills.
+ */
+function QualityFlagsPills({ flags }) {
+  if (!flags || flags.length === 0) return null;
+  
+  const flagConfig = {
+    'sparse_tech_stack': { icon: Code2, label: 'Limited Tech Info' },
+    'no_culture_data': { icon: Users, label: 'No Culture Data' },
+    'few_gaps_identified': { icon: AlertTriangle, label: 'Few Gaps Found' },
+    'high_score_low_data': { icon: TrendingUp, label: 'Score vs Data Mismatch' },
+    'insufficient_requirements': { icon: FileText, label: 'Few Requirements' },
+  };
+  
+  return (
+    <div className="flex flex-wrap gap-1 mt-2 pl-6">
+      {flags.map((flag, i) => {
+        const cfg = flagConfig[flag] || { icon: AlertTriangle, label: flag.replace(/_/g, ' ') };
+        return (
+          <span
+            key={i}
+            className={cn(
+              "inline-flex items-center gap-1 px-1.5 py-0.5 rounded-sm",
+              "bg-amber-500/10 text-amber-600 dark:text-amber-400",
+              "text-[10px] font-medium border border-amber-500/20"
+            )}
+          >
+            <cfg.icon className="w-2.5 h-2.5" />
+            {cfg.label}
+          </span>
+        );
+      })}
+    </div>
+  );
+}
+
+/**
  * PhaseInsightsSummary - Renders structured insights for a phase
  */
 function PhaseInsightsSummary({ phase, summary, insights, displayMeta, config }) {
@@ -402,7 +439,9 @@ function PhaseInsightsSummary({ phase, summary, insights, displayMeta, config })
     <div className={cn(
       "px-4 py-3 border-b border-twilight/5 dark:border-eggshell/5",
       "bg-gradient-to-r",
-      `from-${config.color}-500/5 to-transparent`
+      config.color === 'burnt-peach' 
+        ? "from-burnt-peach/5 to-transparent"
+        : `from-${config.color}-500/5 to-transparent`
     )}>
       {/* Metrics row for phases that have them */}
       {displayMeta?.metrics && displayMeta.metrics.length > 0 && (
@@ -417,6 +456,7 @@ function PhaseInsightsSummary({ phase, summary, insights, displayMeta, config })
               {metric.icon === 'code' && <Code2 className="w-3.5 h-3.5 text-purple-500" />}
               {metric.icon === 'target' && <Target className="w-3.5 h-3.5 text-amber-500" />}
               {metric.icon === 'users' && <Users className="w-3.5 h-3.5 text-blue-500" />}
+              {metric.icon === 'database' && <Database className="w-3.5 h-3.5 text-cyan-500" />}
               <span className="text-twilight/70 dark:text-eggshell/70">
                 {metric.label}: <span className="font-bold">{metric.value}</span>
               </span>
@@ -495,6 +535,11 @@ function PhaseInsightsSummary({ phase, summary, insights, displayMeta, config })
           {displayMeta?.summary || summary}
         </p>
       </div>
+
+      {/* Quality Flags */}
+      {displayMeta?.flags && displayMeta.flags.length > 0 && (
+        <QualityFlagsPills flags={displayMeta.flags} />
+      )}
       
       {/* Reasoning excerpt for confidence reranker */}
       {insights?.reasoning && (

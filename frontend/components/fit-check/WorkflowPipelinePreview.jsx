@@ -130,7 +130,7 @@ export function WorkflowPipelinePreview({ compact = false }) {
                   "flex items-center gap-1 px-2 py-1 rounded-full transition-all duration-300",
                   "border text-[9px] font-medium whitespace-nowrap cursor-default hover:scale-110 hover:-translate-y-0.5",
                   isComplete && "bg-muted-teal/20 border-muted-teal/50 text-muted-teal",
-                  isActive && "bg-burnt-peach/15 border-burnt-peach/50 text-burnt-peach pipeline-phase-active",
+                  isActive && `${phase.bgColorMuted} ${phase.previewBorder} ${phase.textColor} pipeline-phase-active`,
                   !isComplete && !isActive && "bg-twilight/5 dark:bg-eggshell/5 border-twilight/15 dark:border-eggshell/15 text-twilight/40 dark:text-eggshell/40"
                 )}
               >
@@ -151,7 +151,7 @@ export function WorkflowPipelinePreview({ compact = false }) {
           })}
           {/* Active spinner */}
           {activePhaseIndex >= 0 && isAnimating && (
-            <Loader2 className="w-3.5 h-3.5 text-burnt-peach animate-spin flex-shrink-0" />
+            <Loader2 className={cn("w-3.5 h-3.5 animate-spin flex-shrink-0", PIPELINE_PHASES[activePhaseIndex].textColor)} />
           )}
         </div>
       ) : (
@@ -175,14 +175,14 @@ export function WorkflowPipelinePreview({ compact = false }) {
                         "flex items-center gap-2 px-2.5 py-2 rounded-sm transition-all duration-300",
                         "border cursor-default hover:scale-110 hover:-translate-y-1 relative",
                         isComplete && "bg-muted-teal/15 border-muted-teal/40",
-                        isActive && "bg-burnt-peach/10 border-burnt-peach/30 pipeline-phase-active",
+                        isActive && `${phase.bgColorMuted} ${phase.previewBorder} pipeline-phase-active`,
                         isPending && "bg-twilight/5 dark:bg-eggshell/5 border-twilight/10 dark:border-eggshell/10"
                       )}
                     >
                       {/* Active Spinner - Surgical addition to ensure perfect alignment with card transforms */}
                       {isActive && isAnimating && (
                         <div className="absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none">
-                          <Loader2 className="w-3.5 h-3.5 text-burnt-peach animate-spin" />
+                          <Loader2 className={cn("w-3.5 h-3.5 animate-spin", phase.textColor)} />
                         </div>
                       )}
 

@@ -28,8 +28,11 @@ sys.path.insert(0, str(Path(__file__).parent.parent.parent))
 EXPECTED_PHASE_ORDER = [
     "connecting",
     "deep_research",
+    "research_reranker",
+    "content_enrich",
     "skeptical_comparison",
     "skills_matching",
+    "confidence_reranker",
     "generate_results",
 ]
 

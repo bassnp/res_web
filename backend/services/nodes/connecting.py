@@ -421,7 +421,8 @@ async def connecting_node(
         if callback and hasattr(callback, 'on_phase_complete'):
             await callback.on_phase_complete(
                 PHASE_NAME,
-                f"Query rejected: {rejection_reason}"
+                f"Query rejected: {rejection_reason}",
+                data={"is_rejected": True, "reason": rejection_reason}
             )
         
         return {
@@ -479,7 +480,8 @@ async def connecting_node(
             if callback and hasattr(callback, 'on_phase_complete'):
                 await callback.on_phase_complete(
                     PHASE_NAME,
-                    f"Query rejected: not related to employment"
+                    f"Query rejected: not related to employment",
+                    data={"is_rejected": True, "reason": validated_output["reasoning_trace"]}
                 )
             
             return {
@@ -501,7 +503,16 @@ async def connecting_node(
         
         # Emit phase complete event
         if callback and hasattr(callback, 'on_phase_complete'):
-            await callback.on_phase_complete(PHASE_NAME, summary)
+            await callback.on_phase_complete(
+                PHASE_NAME, 
+                summary,
+                data={
+                    "query_type": validated_output["query_type"],
+                    "company_name": validated_output["company_name"],
+                    "job_title": validated_output["job_title"],
+                    "skills_count": len(validated_output["extracted_skills"])
+                }
+            )
         
         logger.info(f"[CONNECTING] Phase 1 complete: {validated_output['query_type']}")
         logger.debug(f"[CONNECTING] Reasoning: {validated_output['reasoning_trace']}")
@@ -529,7 +540,8 @@ async def connecting_node(
         if callback and hasattr(callback, 'on_phase_complete'):
             await callback.on_phase_complete(
                 PHASE_NAME,
-                f"Classification completed with fallback (error occurred)"
+                f"Classification completed with fallback (error occurred)",
+                data={"is_fallback": True, "error": str(e)}
             )
         elif callback:
             await callback.on_status(

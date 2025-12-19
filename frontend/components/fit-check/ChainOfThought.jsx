@@ -22,6 +22,8 @@ import {
   Gauge,
   FileText,
   Lightbulb,
+  TrendingUp,
+  AlertTriangle,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { extractPhaseInsights, parseThoughtContent, getPhaseDisplayMeta } from '@/lib/phaseInsights';
@@ -199,9 +201,9 @@ function ActiveNodeHeader({ currentPhase, isThinking, statusMessage }) {
             </h3>
             {isThinking && (
               <div className="flex gap-1">
-                <span className="w-1.5 h-1.5 rounded-full bg-burnt-peach animate-bounce" style={{ animationDelay: '0ms' }} />
-                <span className="w-1.5 h-1.5 rounded-full bg-burnt-peach animate-bounce" style={{ animationDelay: '150ms' }} />
-                <span className="w-1.5 h-1.5 rounded-full bg-burnt-peach animate-bounce" style={{ animationDelay: '300ms' }} />
+                <span className={cn("w-1.5 h-1.5 rounded-full animate-bounce", config?.bgColor || "bg-burnt-peach")} style={{ animationDelay: '0ms' }} />
+                <span className={cn("w-1.5 h-1.5 rounded-full animate-bounce", config?.bgColor || "bg-burnt-peach")} style={{ animationDelay: '150ms' }} />
+                <span className={cn("w-1.5 h-1.5 rounded-full animate-bounce", config?.bgColor || "bg-burnt-peach")} style={{ animationDelay: '300ms' }} />
               </div>
             )}
           </div>
@@ -578,6 +580,43 @@ function ThoughtEntry({ entry, config, isLatest, animationDelay }) {
 /**
  * Phase Insight Reveal Component - Shows structured insights instead of raw JSON
  */
+/**
+ * QualityFlagsPills Component
+ * Displays quality flags as small pills.
+ */
+function QualityFlagsPills({ flags }) {
+  if (!flags || flags.length === 0) return null;
+  
+  const flagConfig = {
+    'sparse_tech_stack': { icon: Code2, label: 'Limited Tech Info' },
+    'no_culture_data': { icon: Users, label: 'No Culture Data' },
+    'few_gaps_identified': { icon: AlertTriangle, label: 'Few Gaps Found' },
+    'high_score_low_data': { icon: TrendingUp, label: 'Score vs Data Mismatch' },
+    'insufficient_requirements': { icon: FileText, label: 'Few Requirements' },
+  };
+  
+  return (
+    <div className="flex flex-wrap gap-1 mt-1.5">
+      {flags.map((flag, i) => {
+        const cfg = flagConfig[flag] || { icon: AlertCircle, label: flag.replace(/_/g, ' ') };
+        return (
+          <span
+            key={i}
+            className={cn(
+              "inline-flex items-center gap-1 px-1.5 py-0.5 rounded-sm",
+              "bg-amber-500/10 text-amber-600 dark:text-amber-400",
+              "text-[9px] font-medium border border-amber-500/20"
+            )}
+          >
+            <cfg.icon className="w-2 h-2" />
+            {cfg.label}
+          </span>
+        );
+      })}
+    </div>
+  );
+}
+
 function PhaseInsightReveal({ data, phase, summary, compact = false }) {
   const [isExpanded, setIsExpanded] = useState(false);
   
@@ -607,6 +646,7 @@ function PhaseInsightReveal({ data, phase, summary, compact = false }) {
           "bg-gradient-to-r",
           phase === 'deep_research' ? "from-purple-500/5 to-transparent" :
           phase === 'research_reranker' ? "from-violet-500/5 to-transparent" :
+          phase === 'content_enrich' ? "from-cyan-500/5 to-transparent" :
           phase === 'skeptical_comparison' ? "from-amber-500/5 to-transparent" :
           phase === 'skills_matching' ? "from-muted-teal/5 to-transparent" :
           phase === 'confidence_reranker' ? "from-emerald-500/5 to-transparent" :
@@ -642,6 +682,11 @@ function PhaseInsightReveal({ data, phase, summary, compact = false }) {
               <Lightbulb className="w-3 h-3 inline-block mr-1 text-burnt-peach" />
               {displayMeta.summary}
             </p>
+          )}
+
+          {/* Quality Flags */}
+          {displayMeta.flags && displayMeta.flags.length > 0 && (
+            <QualityFlagsPills flags={displayMeta.flags} />
           )}
         </div>
       )}
@@ -787,6 +832,9 @@ function getToolIcon(tool) {
     case 'analyze_skill_match':
     case 'analyze_experience_relevance':
       return Briefcase;
+    case 'fetch_full_content':
+    case 'content_enrichment':
+      return Database;
     default:
       return Search;
   }

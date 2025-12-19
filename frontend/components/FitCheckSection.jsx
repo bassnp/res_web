@@ -37,6 +37,7 @@ export function FitCheckSection() {
     durationMs,
     uiPhase,
     parsedResponse,
+    finalConfidence,
     submitQuery,
     reset,
     isLoading,
@@ -227,6 +228,7 @@ export function FitCheckSection() {
           {/* Results Section - Two cards below main container */}
           <ResultsSection
             parsedResponse={parsedResponse}
+            finalConfidence={finalConfidence}
             durationMs={durationMs}
             isVisible={uiPhase === 'results'}
           />

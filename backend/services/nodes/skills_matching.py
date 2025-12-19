@@ -577,7 +577,16 @@ async def skills_matching_node(
             matched_count = len(validated_output["matched_requirements"])
             unmatched_count = len(validated_output["unmatched_requirements"])
             summary = f"Match score: {score_pct}% ({matched_count} matched, {unmatched_count} gaps)"
-            await callback.on_phase_complete(PHASE_NAME, summary)
+            await callback.on_phase_complete(
+                PHASE_NAME, 
+                summary,
+                data={
+                    "match_score": validated_output["overall_match_score"],
+                    "matched_count": matched_count,
+                    "unmatched_count": unmatched_count,
+                    "has_fundamental_mismatch": validated_output.get("has_fundamental_mismatch", False)
+                }
+            )
         
         logger.info(
             f"[SKILLS_MATCHING] Phase 4 complete: "
@@ -607,7 +616,13 @@ async def skills_matching_node(
         if callback and hasattr(callback, 'on_phase_complete'):
             await callback.on_phase_complete(
                 PHASE_NAME,
-                "Skill matching completed with limited data"
+                "Skill matching completed with limited data",
+                data={
+                    "match_score": 0.5,
+                    "matched_count": 0,
+                    "unmatched_count": 0,
+                    "is_fallback": True
+                }
             )
         
         errors.append(f"Phase 4 error: {str(e)}")

@@ -28,6 +28,11 @@ module.exports = {
       'group-hover:text-burnt-peach', 'group-hover:text-muted-teal', 'group-hover:text-apricot',
       'hover:border-burnt-peach/50', 'hover:border-muted-teal/50', 'hover:border-apricot/50',
       'border-burnt-peach/20', 'border-muted-teal/20', 'border-apricot/20',
+      // Fit Check Pipeline colors
+      'bg-blue-400/10', 'bg-purple-400/10', 'bg-violet-400/10', 'bg-cyan-400/10', 'bg-amber-400/10', 'bg-emerald-400/10',
+      'border-blue-400/30', 'border-purple-400/30', 'border-violet-400/30', 'border-cyan-400/30', 'border-amber-400/30', 'border-emerald-400/30',
+      'border-blue-400/40', 'border-purple-400/40', 'border-violet-400/40', 'border-cyan-400/40', 'border-amber-400/40', 'border-emerald-400/40',
+      'text-blue-400', 'text-purple-400', 'text-violet-400', 'text-cyan-400', 'text-amber-400', 'text-emerald-400',
     ],
     prefix: "",
     theme: {

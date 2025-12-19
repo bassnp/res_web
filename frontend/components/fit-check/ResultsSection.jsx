@@ -1,9 +1,10 @@
 'use client';
 
-import { Clock, CheckCircle2 } from 'lucide-react';
+import { Clock, CheckCircle2, Shield } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import StrengthsCard from './StrengthsCard';
 import GrowthAreasCard from './GrowthAreasCard';
+import { ConfidenceGauge } from './ConfidenceGauge';
 
 /**
  * ResultsSection Component
@@ -18,6 +19,7 @@ import GrowthAreasCard from './GrowthAreasCard';
  */
 export function ResultsSection({ 
   parsedResponse = null,
+  finalConfidence = null,
   durationMs = null,
   isVisible = false 
 }) {
@@ -29,8 +31,17 @@ export function ResultsSection({
     strengths = [],
     valueProposition = '',
     growthAreas = [],
-    rawContent = ''
+    rawContent = '',
+    hasFundamentalMismatch = false,
+    mismatchReason = ''
   } = parsedResponse;
+
+  // Use finalConfidence from hook if available, otherwise fallback to parsedResponse
+  // Ensure score is a valid number before passing to ConfidenceGauge
+  const rawScore = finalConfidence?.score ?? parsedResponse?.calibratedScore;
+  const confidenceScore = typeof rawScore === 'number' && !isNaN(rawScore) ? rawScore : null;
+  const confidenceTier = finalConfidence?.tier || parsedResponse?.confidenceTier;
+  const isMismatch = hasFundamentalMismatch || finalConfidence?.flags?.includes('fundamental_mismatch');
 
   // Show if we have any content at all (parsed or raw)
   const hasContent = strengths.length > 0 || valueProposition || growthAreas.length > 0 || rawContent;
@@ -59,6 +70,36 @@ export function ResultsSection({
           </div>
         )}
       </div>
+
+      {/* Fundamental Mismatch Warning */}
+      {isMismatch && (
+        <div className={cn(
+          "flex items-center gap-3 p-4 rounded-sm mismatch-warning",
+          "bg-amber-500/10 border border-amber-500/30"
+        )}>
+          <Shield className="w-5 h-5 text-amber-500 flex-shrink-0" />
+          <div>
+            <p className="text-sm font-medium text-amber-700 dark:text-amber-300">
+              Domain Mismatch Detected
+            </p>
+            <p className="text-xs text-amber-600/80 dark:text-amber-400/80">
+              {mismatchReason || 
+               finalConfidence?.adjustment ||
+               "This role's primary requirements differ significantly from the candidate's core expertise."}
+            </p>
+          </div>
+        </div>
+      )}
+
+      {/* Confidence Gauge - only render when score is a valid number */}
+      {confidenceScore !== null && (
+        <div className="flex justify-center py-2">
+          <ConfidenceGauge 
+            score={confidenceScore}
+            tier={confidenceTier}
+          />
+        </div>
+      )}
 
       {/* Two-column card layout */}
       <div className={cn(

@@ -106,17 +106,19 @@ class StreamingCallbackHandler(ThoughtCallback):
             "message": message,
         })
     
-    async def on_phase_complete(self, phase: str, summary: str) -> None:
+    async def on_phase_complete(self, phase: str, summary: str, data: dict = None) -> None:
         """
-        Emit a phase completion event.
+        Emit a phase completion event with optional structured data.
         
         Args:
             phase: Phase name that completed.
             summary: Brief summary of phase output.
+            data: Optional structured data for frontend display.
         """
         await self._emit("phase_complete", {
             "phase": phase,
             "summary": summary,
+            "data": data or {},
         })
     
     async def on_thought(

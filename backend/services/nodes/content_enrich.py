@@ -180,11 +180,24 @@ async def content_enrich_node(
         enriched_results = await asyncio.gather(*tasks)
 
     enriched_count = sum(1 for r in enriched_results if r.get("is_enriched"))
-    summary = f"Enriched {enriched_count}/{len(enriched_results)} sources with full content"
+    total_kb = sum(len(r.get("content", "")) for r in enriched_results) / 1024
+    summary = f"Enriched {enriched_count}/{len(enriched_results)} sources with full content ({total_kb:.1f} KB)"
     
     # Emit phase complete event
     if callback and hasattr(callback, 'on_phase_complete'):
-        await callback.on_phase_complete(PHASE_NAME, summary)
+        await callback.on_phase_complete(
+            PHASE_NAME, 
+            summary,
+            data={
+                "enriched_count": enriched_count,
+                "total_count": len(enriched_results),
+                "total_kb": round(total_kb, 1),
+                "sources": [
+                    {"title": r.get("title"), "url": r.get("url"), "size_kb": round(len(r.get("content", "")) / 1024, 1)}
+                    for r in enriched_results if r.get("is_enriched")
+                ]
+            }
+        )
     
     logger.info(f"[CONTENT_ENRICH] Phase 2C complete: {summary}")
     
