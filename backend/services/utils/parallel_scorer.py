@@ -101,7 +101,16 @@ async def score_single_document(
         async with llm_breaker.call():
             response = await llm.ainvoke([HumanMessage(content=prompt)])
         
-        response_text = response.content.strip()
+        # Handle Gemini's response format - content can be string or list of parts
+        raw_content = response.content
+        if isinstance(raw_content, list):
+            # Gemini returns list of content parts
+            response_text = "".join(
+                part.text if hasattr(part, 'text') else str(part)
+                for part in raw_content
+            ).strip()
+        else:
+            response_text = str(raw_content).strip()
         
         # Parse JSON response
         scores = _parse_score_response(response_text)
