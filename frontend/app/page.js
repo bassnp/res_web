@@ -734,7 +734,7 @@ const HeroAboutSection = () => {
               {/* Bio */}
               <div className="opacity-0 animate-fade-in-right delay-200">
                 <p className="text-twilight/80 dark:text-eggshell/80 leading-relaxed mb-4 text-sm">
-                  <span className="font-bold text-muted-teal">TLDR; I am Jaden Bruha, I'm a 22 year old new-grad, and I'm a very nerdy engineer with big aspirations.</span> <br></br> I have a passion for building anything and everything from software, computers to serve my software, AI agents, and motorcycles. My journey started at a young age as a hobbyist, and I've grown into a full stack developer striving for elegant solutions. My current fixations include learning about quantum philosophy, parallelized programming, and AI agent harnesses. <br></br>
+                  <span className="font-bold text-muted-teal">TLDR; I am Jaden Bruha, I'm a 22 year old new-grad, and I'm a very nerdy engineer with big aspirations.</span> <br></br> I have a passion for building anything and everything from software, computers to serve my software, AI agents, and motorcycles. My journey started at a young age as a hobbyist, and I've grown into a full stack developer striving for elegant solutions. My current fixations include learning about quantum philosophy, parallelized programming, and artificial (general) intelligence. <br></br>
                 </p>
               </div>
 
