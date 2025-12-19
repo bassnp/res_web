@@ -1,0 +1,437 @@
+{
+  "timestamp": "2025-12-19T01:59:15.137839",
+  "results": [
+    {
+      "test_id": "D3",
+      "test_name": "Mixed Signal Query (Partial Match)",
+      "query": "Full-stack developer with Java, Python, and React experience for fintech",
+      "expected_score_min": 55,
+      "expected_score_max": 70,
+      "actual_score": 78.0,
+      "expected_tier": "MEDIUM",
+      "actual_tier": "HIGH",
+      "score_accuracy": "ACCURATE",
+      "tier_accuracy": "INACCURATE",
+      "gap_accuracy": false,
+      "actual_gap_count": 7,
+      "overall_status": "FAIL",
+      "warnings": []
+    }
+  ],
+  "failures": [
+    {
+      "test_id": "D3",
+      "root_cause": "SYCOPHANCY",
+      "root_cause_confidence": 0.5,
+      "impact_severity": "MEDIUM",
+      "recommended_fixes": [
+        "Review anti-sycophancy prompts in Phase 3 (skeptical_comparison)",
+        "Strengthen gap detection in Phase 4 (skills_matching)",
+        "Add calibration examples for this query type"
+      ]
+    }
+  ],
+  "raw_responses": {
+    "D3": {
+      "query": "Full-stack developer with Java, Python, and React experience for fintech",
+      "response_text": "## Fit Summary\n78% (HIGH): High proficiency in core requirements like Python and React, though significant gaps exist in enterprise Java/Spring frameworks.\n\n## Key Strengths\n- **Python & AI**: Expert-level FastAPI, LangChain, and LangGraph integration for RAG and agentic workflow development.\n- **Frontend Ecosystem**: Deep expertise in modern React and Next.js frameworks coupled with TypeScript/Node.js proficiency.\n- **Data Architecture**: Strong ability to differentiate and implement SQL vs NoSQL, specifically with PostgreSQL and Vector databases.\n\n## Areas to Address  \n- **Enterprise Java**: Lacks Java/Spring Boot experience; requires leveraging FastAPI/Node.js backend principles to accelerate learning curve.\n- **Infrastructure Depth**: No specific AWS ECS or MERN stack experience; bridge via existing Docker and general AWS knowledge.\n- **Backend Diversity**: Missing PHP, Go, and C# skills; mitigated by strong polyglot foundation and rapid tool adoption capabilities.\n\n## Bottom Line\nThe candidate provides expert-level competency in modern web frameworks and AI integration. While lacking the specific Java/Spring background requested, their strong architectural foundations and Python proficiency make them a viable technical lead for modern stacks.",
+      "events": [
+        {
+          "event_type": "status",
+          "data": {
+            "status": "connecting",
+            "message": "Initializing AI agent..."
+          }
+        },
+        {
+          "event_type": "phase",
+          "data": {
+            "phase": "connecting",
+            "message": "Classifying query and extracting entities..."
+          }
+        },
+        {
+          "event_type": "thought",
+          "data": {
+            "step": 1,
+            "type": "reasoning",
+            "phase": "connecting",
+            "content": "Analyzing query structure to determine if this is a company lookup or job description analysis..."
+          }
+        },
+        {
+          "event_type": "phase_complete",
+          "data": {
+            "phase": "connecting",
+            "summary": "Query classified as 'job_description', role: Full-stack developer, skills: 5 extracted"
+          }
+        },
+        {
+          "event_type": "phase",
+          "data": {
+            "phase": "deep_research",
+            "message": "Researching for info..."
+          }
+        },
+        {
+          "event_type": "thought",
+          "data": {
+            "step": 2,
+            "type": "tool_call",
+            "phase": "deep_research",
+            "tool": "web_search",
+            "input": "Full-stack developer Full-stack Java Python requirements tech stack -site:pinterest.com -site:facebook.com -site:instagram.com"
+          }
+        },
+        {
+          "event_type": "thought",
+          "data": {
+            "step": 3,
+            "type": "observation",
+            "phase": "deep_research",
+            "content": "Found info for: Core job requirements and tech stack"
+          }
+        },
+        {
+          "event_type": "thought",
+          "data": {
+            "step": 4,
+            "type": "tool_call",
+            "phase": "deep_research",
+            "tool": "web_search",
+            "input": "intitle:\"Full-stack developer\" Full-stack Java Python requirements"
+          }
+        },
+        {
+          "event_type": "thought",
+          "data": {
+            "step": 5,
+            "type": "observation",
+            "phase": "deep_research",
+            "content": "Found info for: Job listings with title match"
+          }
+        },
+        {
+          "event_type": "thought",
+          "data": {
+            "step": 6,
+            "type": "tool_call",
+            "phase": "deep_research",
+            "tool": "web_search",
+            "input": "Full-stack engineer career requirements industry 2024"
+          }
+        },
+        {
+          "event_type": "thought",
+          "data": {
+            "step": 7,
+            "type": "observation",
+            "phase": "deep_research",
+            "content": "Found info for: Industry context for skill area"
+          }
+        },
+        {
+          "event_type": "thought",
+          "data": {
+            "step": 8,
+            "type": "reasoning",
+            "phase": "deep_research",
+            "content": "Synthesizing search results into structured employer profile..."
+          }
+        },
+        {
+          "event_type": "phase_complete",
+          "data": {
+            "phase": "deep_research",
+            "summary": "Identified 17 technologies, 6 requirements, 4 culture signals"
+          }
+        },
+        {
+          "event_type": "phase",
+          "data": {
+            "phase": "research_reranker",
+            "message": "Validating research quality..."
+          }
+        },
+        {
+          "event_type": "thought",
+          "data": {
+            "step": 9,
+            "type": "reasoning",
+            "phase": "research_reranker",
+            "content": "Scoring 15 sources with multi-dimensional AI evaluation..."
+          }
+        },
+        {
+          "event_type": "thought",
+          "data": {
+            "step": 9,
+            "type": "reasoning",
+            "phase": "research_reranker",
+            "content": "Source scoring complete: 1/11 sources passed quality gate (threshold: 0.45)"
+          }
+        },
+        {
+          "event_type": "thought",
+          "data": {
+            "step": 10,
+            "type": "reasoning",
+            "phase": "research_reranker",
+            "content": "Assessing research quality: MEDIUM tier detected"
+          }
+        },
+        {
+          "event_type": "phase_complete",
+          "data": {
+            "phase": "research_reranker",
+            "summary": "Data: PARTIAL | Quality: HIGH | Confidence: 85% | Action: ENHANCE_SEARCH | AI Scores: 1/11"
+          }
+        },
+        {
+          "event_type": "phase",
+          "data": {
+            "phase": "content_enrich",
+            "message": "Enriching top 5 sources..."
+          }
+        },
+        {
+          "event_type": "thought",
+          "data": {
+            "step": 11,
+            "type": "reasoning",
+            "phase": "content_enrich",
+            "content": "Fetching full content for 5 high-quality sources to deepen analysis..."
+          }
+        },
+        {
+          "event_type": "phase_complete",
+          "data": {
+            "phase": "content_enrich",
+            "summary": "Enriched 2/5 sources with full content"
+          }
+        },
+        {
+          "event_type": "phase",
+          "data": {
+            "phase": "skeptical_comparison",
+            "message": "Performing critical fit analysis from skeptical perspective..."
+          }
+        },
+        {
+          "event_type": "thought",
+          "data": {
+            "step": 12,
+            "type": "reasoning",
+            "phase": "skeptical_comparison",
+            "content": "Analyzing fit from a skeptical hiring manager's perspective - identifying genuine gaps and potential concerns..."
+          }
+        },
+        {
+          "event_type": "thought",
+          "data": {
+            "step": 13,
+            "type": "reasoning",
+            "phase": "skeptical_comparison",
+            "content": "Critical review complete: Identified 4 strengths, 4 gaps. Risk assessment: \ud83d\udfe1 medium"
+          }
+        },
+        {
+          "event_type": "phase_complete",
+          "data": {
+            "phase": "skeptical_comparison",
+            "summary": "Found 4 gaps, 4 strengths. Risk level: medium"
+          }
+        },
+        {
+          "event_type": "phase",
+          "data": {
+            "phase": "skills_matching",
+            "message": "Mapping skills to requirements..."
+          }
+        },
+        {
+          "event_type": "thought",
+          "data": {
+            "step": 14,
+            "type": "tool_call",
+            "phase": "skills_matching",
+            "tool": "analyze_skill_match",
+            "input": "Full-stack, Java, Python, React, fintech, 2.5+ years experience in specific backends (Java/Spring), Professional certificates (optional but mentioned), Version control proficiency, Ability to pick the right tool for the job (SQL vs NoSQL), Continuous learning of industry trends"
+          }
+        },
+        {
+          "event_type": "thought",
+          "data": {
+            "step": 15,
+            "type": "observation",
+            "phase": "skills_matching",
+            "content": "Skill analysis complete - identified matching skills and gaps."
+          }
+        },
+        {
+          "event_type": "thought",
+          "data": {
+            "step": 16,
+            "type": "tool_call",
+            "phase": "skills_matching",
+            "tool": "analyze_experience_relevance",
+            "input": "The search results do not identify a specific company, as the input was for a generic 'Full-stack developer' role. The findings describe industry-wide expectations for the role, emphasizing a transition from frontend or backend specialization into multi-language proficiency and infrastructure management."
+          }
+        },
+        {
+          "event_type": "thought",
+          "data": {
+            "step": 17,
+            "type": "observation",
+            "phase": "skills_matching",
+            "content": "Experience analysis complete - identified relevant background."
+          }
+        },
+        {
+          "event_type": "thought",
+          "data": {
+            "step": 18,
+            "type": "reasoning",
+            "phase": "skills_matching",
+            "content": "Synthesizing skill matches with quantified confidence scores..."
+          }
+        },
+        {
+          "event_type": "phase_complete",
+          "data": {
+            "phase": "skills_matching",
+            "summary": "Match score: 67% (7 matched, 3 gaps)"
+          }
+        },
+        {
+          "event_type": "phase",
+          "data": {
+            "phase": "confidence_reranker",
+            "message": "Calibrating confidence with LLM-as-a-Judge..."
+          }
+        },
+        {
+          "event_type": "thought",
+          "data": {
+            "step": 19,
+            "type": "reasoning",
+            "phase": "confidence_reranker",
+            "content": "Evaluating analysis quality and calibrating confidence score..."
+          }
+        },
+        {
+          "event_type": "thought",
+          "data": {
+            "step": 20,
+            "type": "reasoning",
+            "phase": "confidence_reranker",
+            "content": "Confidence calibrated: 78% (HIGH) - While significant technical gaps exist regarding Java/Spring, the query match logic dictates a HIGH tier because 3 out of 5 core extracted skills were matched and tech stack data is robust."
+          }
+        },
+        {
+          "event_type": "phase_complete",
+          "data": {
+            "phase": "confidence_reranker",
+            "summary": "Calibrated confidence: 78% (HIGH), 1 quality flags"
+          }
+        },
+        {
+          "event_type": "phase",
+          "data": {
+            "phase": "generate_results",
+            "message": "Generating personalized fit analysis..."
+          }
+        },
+        {
+          "event_type": "thought",
+          "data": {
+            "step": 21,
+            "type": "reasoning",
+            "phase": "generate_results",
+            "content": "Synthesizing 78% match (HIGH) into personalized narrative for Full-stack developer..."
+          }
+        },
+        {
+          "event_type": "response",
+          "data": {
+            "chunk": "## Fit Summary\n78% (HIGH): High proficiency in core requirements like"
+          }
+        },
+        {
+          "event_type": "response",
+          "data": {
+            "chunk": " Python and React, though significant gaps exist in enterprise Java/Spring frameworks.\n\n## Key Strengths\n- **Python"
+          }
+        },
+        {
+          "event_type": "response",
+          "data": {
+            "chunk": " & AI**: Expert-level FastAPI, LangChain, and LangGraph integration for RAG and agentic workflow development.\n-"
+          }
+        },
+        {
+          "event_type": "response",
+          "data": {
+            "chunk": " **Frontend Ecosystem**: Deep expertise in modern React and Next.js frameworks coupled with TypeScript/Node.js proficiency.\n- **Data"
+          }
+        },
+        {
+          "event_type": "response",
+          "data": {
+            "chunk": " Architecture**: Strong ability to differentiate and implement SQL vs NoSQL, specifically with PostgreSQL and Vector databases.\n\n## Areas to Address  "
+          }
+        },
+        {
+          "event_type": "response",
+          "data": {
+            "chunk": "\n- **Enterprise Java**: Lacks Java/Spring Boot experience; requires leveraging FastAPI/Node.js backend principles to accelerate"
+          }
+        },
+        {
+          "event_type": "response",
+          "data": {
+            "chunk": " learning curve.\n- **Infrastructure Depth**: No specific AWS ECS or MERN stack experience; bridge via existing Docker and general"
+          }
+        },
+        {
+          "event_type": "response",
+          "data": {
+            "chunk": " AWS knowledge.\n- **Backend Diversity**: Missing PHP, Go, and C# skills; mitigated by strong polyglot foundation"
+          }
+        },
+        {
+          "event_type": "response",
+          "data": {
+            "chunk": " and rapid tool adoption capabilities.\n\n## Bottom Line\nThe candidate provides expert-level competency in modern web frameworks and AI integration."
+          }
+        },
+        {
+          "event_type": "response",
+          "data": {
+            "chunk": " While lacking the specific Java/Spring background requested, their strong architectural foundations and Python proficiency make them a viable technical lead for"
+          }
+        },
+        {
+          "event_type": "response",
+          "data": {
+            "chunk": " modern stacks."
+          }
+        },
+        {
+          "event_type": "phase_complete",
+          "data": {
+            "phase": "generate_results",
+            "summary": "Generated 170 word response"
+          }
+        },
+        {
+          "event_type": "complete",
+          "data": {
+            "duration_ms": 36910
+          }
+        }
+      ],
+      "error": null
+    }
+  }
+}

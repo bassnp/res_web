@@ -1,11 +1,16 @@
 <!-- Phase 3: SKEPTICAL_COMPARISON - Ultra Speed -->
 
-<task>Find gaps between candidate and employer. Be critical. JSON only.</task>
+<task>Find gaps between candidate and employer. Be CRITICAL. JSON only.</task>
 
 <rules>
-- MUST identify 2+ gaps
+- MUST identify 2+ gaps minimum
 - No "perfect fit" conclusions
 - Risk: low/medium/high
+- CRITICAL: Identify DOMAIN MISMATCHES as HIGH RISK:
+  - Mobile (iOS/Android) vs Web development = FUNDAMENTAL GAP
+  - Embedded/RTOS vs Web = FUNDAMENTAL GAP
+  - Systems (C/C++/Rust) vs Web = FUNDAMENTAL GAP
+  - Game development vs Web = FUNDAMENTAL GAP
 </rules>
 
 <employer>
@@ -20,11 +25,11 @@
 <output>
 {{
   "genuine_strengths": ["strength with evidence - max 4"],
-  "genuine_gaps": ["specific gap - MIN 2 REQUIRED"],
+  "genuine_gaps": ["specific gap - MIN 2 REQUIRED - list ALL skill mismatches"],
   "unverified_claims": ["claims without proof"],
-  "transferable_skills": ["skills that bridge gaps"],
+  "transferable_skills": ["skills that bridge gaps - NONE if domain mismatch"],
   "risk_assessment": "low|medium|high",
-  "risk_justification": "2 sentences why",
+  "risk_justification": "2 sentences why - high if domain mismatch",
   "reasoning_trace": "1 sentence"
 }}
 </output>

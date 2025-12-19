@@ -165,12 +165,31 @@ def build_fit_check_pipeline(callback_holder: Dict = None):
         - Triggers enhanced search for sparse data
         - Forces early exit for garbage/unreliable data
         
+        IMPORTANT: For job_description queries, we ALWAYS proceed to skills_matching
+        because the requirements come FROM THE QUERY ITSELF, not from web research.
+        Early exit only makes sense for company queries where we need external data.
+        
         Returns:
             Next node name based on data quality.
         """
         # Check for fatal errors
         if state.get("should_abort"):
             return "generate_results"
+        
+        # Check if this is a job_description query - these should ALWAYS proceed
+        # to skills matching because the requirements are in the query itself.
+        phase_1_output = state.get("phase_1_output") or {}
+        query_type = phase_1_output.get("query_type", "company")
+        extracted_skills = phase_1_output.get("extracted_skills") or []
+        
+        # Job descriptions with extracted skills should NEVER early exit
+        # because we can match candidate skills against query requirements
+        if query_type == "job_description" and len(extracted_skills) > 0:
+            logger.info(
+                f"[ROUTING] Job description with {len(extracted_skills)} extracted skills - "
+                "proceeding to skills matching regardless of web research quality"
+            )
+            return "content_enrich"
             
         # Use the next phase determined by the node itself
         next_phase = state.get("current_phase")
@@ -185,7 +204,7 @@ def build_fit_check_pipeline(callback_holder: Dict = None):
             data_tier = reranker_output.get("data_quality_tier", "PARTIAL")
             action = reranker_output.get("recommended_action", "CONTINUE")
             
-            # CRITICAL: Early exit for garbage/suspicious data
+            # CRITICAL: Early exit for garbage/suspicious data (company queries only)
             if early_exit or action == "EARLY_EXIT" or data_tier == "GARBAGE":
                 return "generate_results"
             

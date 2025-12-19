@@ -1,0 +1,413 @@
+{
+  "timestamp": "2025-12-19T01:57:29.176373",
+  "results": [
+    {
+      "test_id": "C2",
+      "test_name": "Embedded Systems IoT Role",
+      "query": "Embedded software engineer for IoT devices using C and RTOS",
+      "expected_score_min": 5,
+      "expected_score_max": 15,
+      "actual_score": 28.0,
+      "expected_tier": "INSUFFICIENT",
+      "actual_tier": "LOW",
+      "score_accuracy": "ACCURATE",
+      "tier_accuracy": "ACCEPTABLE",
+      "gap_accuracy": true,
+      "actual_gap_count": 6,
+      "overall_status": "PASS",
+      "warnings": []
+    }
+  ],
+  "failures": [],
+  "raw_responses": {
+    "C2": {
+      "query": "Embedded software engineer for IoT devices using C and RTOS",
+      "response_text": "## Fit Summary\n28% (LOW): The profile presents a fundamental domain mismatch between high-level SaaS development and required low-level silicon/firmware engineering.\n\n## Key Strengths\n- **Python**: Proficient in Python for backend development and API construction, though focused on web frameworks like FastAPI.\n- **SDLC**: Experience defining software requirements and designing solutions within a full-stack web development lifecycle.\n\n## Areas to Address  \n- **Hardware/Firmware**: Lacks C, C++, and microcontroller experience; requires significant retraining in low-level programming and silicon-level mastery.\n- **Embedded Systems**: No evidence of RTOS, device drivers, or FPGA knowledge; bridge would require foundational hardware-software integration study.\n\n## Bottom Line\nThe candidate is unsuitable for this role due to a complete lack of embedded systems, firmware, or hardware experience. Their expertise lies in high-level web abstractions and AI integration, which do not translate to low-level engineering.",
+      "events": [
+        {
+          "event_type": "status",
+          "data": {
+            "status": "connecting",
+            "message": "Initializing AI agent..."
+          }
+        },
+        {
+          "event_type": "phase",
+          "data": {
+            "phase": "connecting",
+            "message": "Classifying query and extracting entities..."
+          }
+        },
+        {
+          "event_type": "thought",
+          "data": {
+            "step": 1,
+            "type": "reasoning",
+            "phase": "connecting",
+            "content": "Analyzing query structure to determine if this is a company lookup or job description analysis..."
+          }
+        },
+        {
+          "event_type": "phase_complete",
+          "data": {
+            "phase": "connecting",
+            "summary": "Query classified as 'job_description', role: Embedded software engineer, skills: 4 extracted"
+          }
+        },
+        {
+          "event_type": "phase",
+          "data": {
+            "phase": "deep_research",
+            "message": "Researching for info..."
+          }
+        },
+        {
+          "event_type": "thought",
+          "data": {
+            "step": 2,
+            "type": "tool_call",
+            "phase": "deep_research",
+            "tool": "web_search",
+            "input": "Embedded software engineer Embedded software engineer IoT devices C requirements tech stack -site:pinterest.com -site:facebook.com -site:instagram.com"
+          }
+        },
+        {
+          "event_type": "thought",
+          "data": {
+            "step": 3,
+            "type": "observation",
+            "phase": "deep_research",
+            "content": "Found info for: Core job requirements and tech stack"
+          }
+        },
+        {
+          "event_type": "thought",
+          "data": {
+            "step": 4,
+            "type": "tool_call",
+            "phase": "deep_research",
+            "tool": "web_search",
+            "input": "intitle:\"Embedded software engineer\" Embedded software engineer IoT devices C requirements"
+          }
+        },
+        {
+          "event_type": "thought",
+          "data": {
+            "step": 5,
+            "type": "observation",
+            "phase": "deep_research",
+            "content": "Found info for: Job listings with title match"
+          }
+        },
+        {
+          "event_type": "thought",
+          "data": {
+            "step": 6,
+            "type": "tool_call",
+            "phase": "deep_research",
+            "tool": "web_search",
+            "input": "Embedded software engineer engineer career requirements industry 2024"
+          }
+        },
+        {
+          "event_type": "thought",
+          "data": {
+            "step": 7,
+            "type": "observation",
+            "phase": "deep_research",
+            "content": "Found info for: Industry context for skill area"
+          }
+        },
+        {
+          "event_type": "thought",
+          "data": {
+            "step": 8,
+            "type": "reasoning",
+            "phase": "deep_research",
+            "content": "Synthesizing search results into structured employer profile..."
+          }
+        },
+        {
+          "event_type": "phase_complete",
+          "data": {
+            "phase": "deep_research",
+            "summary": "Identified 11 technologies, 5 requirements, 3 culture signals"
+          }
+        },
+        {
+          "event_type": "phase",
+          "data": {
+            "phase": "research_reranker",
+            "message": "Validating research quality..."
+          }
+        },
+        {
+          "event_type": "thought",
+          "data": {
+            "step": 9,
+            "type": "reasoning",
+            "phase": "research_reranker",
+            "content": "Scoring 15 sources with multi-dimensional AI evaluation..."
+          }
+        },
+        {
+          "event_type": "thought",
+          "data": {
+            "step": 9,
+            "type": "reasoning",
+            "phase": "research_reranker",
+            "content": "Source scoring complete: 2/6 sources passed quality gate (threshold: 0.45)"
+          }
+        },
+        {
+          "event_type": "thought",
+          "data": {
+            "step": 10,
+            "type": "reasoning",
+            "phase": "research_reranker",
+            "content": "Assessing research quality: MEDIUM tier detected"
+          }
+        },
+        {
+          "event_type": "phase_complete",
+          "data": {
+            "phase": "research_reranker",
+            "summary": "Data: PARTIAL | Quality: HIGH | Confidence: 85% | Action: ENHANCE_SEARCH | AI Scores: 2/6"
+          }
+        },
+        {
+          "event_type": "phase",
+          "data": {
+            "phase": "content_enrich",
+            "message": "Enriching top 5 sources..."
+          }
+        },
+        {
+          "event_type": "thought",
+          "data": {
+            "step": 11,
+            "type": "reasoning",
+            "phase": "content_enrich",
+            "content": "Fetching full content for 5 high-quality sources to deepen analysis..."
+          }
+        },
+        {
+          "event_type": "phase_complete",
+          "data": {
+            "phase": "content_enrich",
+            "summary": "Enriched 3/5 sources with full content"
+          }
+        },
+        {
+          "event_type": "phase",
+          "data": {
+            "phase": "skeptical_comparison",
+            "message": "Performing critical fit analysis from skeptical perspective..."
+          }
+        },
+        {
+          "event_type": "thought",
+          "data": {
+            "step": 12,
+            "type": "reasoning",
+            "phase": "skeptical_comparison",
+            "content": "Analyzing fit from a skeptical hiring manager's perspective - identifying genuine gaps and potential concerns..."
+          }
+        },
+        {
+          "event_type": "thought",
+          "data": {
+            "step": 13,
+            "type": "reasoning",
+            "phase": "skeptical_comparison",
+            "content": "Critical review complete: Identified 4 strengths, 5 gaps. Risk assessment: \ud83d\udd34 high"
+          }
+        },
+        {
+          "event_type": "phase_complete",
+          "data": {
+            "phase": "skeptical_comparison",
+            "summary": "Found 5 gaps, 4 strengths. Risk level: high"
+          }
+        },
+        {
+          "event_type": "phase",
+          "data": {
+            "phase": "skills_matching",
+            "message": "Mapping skills to requirements..."
+          }
+        },
+        {
+          "event_type": "thought",
+          "data": {
+            "step": 14,
+            "type": "tool_call",
+            "phase": "skills_matching",
+            "tool": "analyze_skill_match",
+            "input": "Embedded software engineer, IoT devices, C, RTOS, Defining software requirements and designing solutions, Developing and maintaining firmware for IoT devices, Experience with microcontrollers and embedded appliances, Bachelor's degree in computer and information technology, engineering, or related field, Ability to work on hardware/software integration (DFM, VLSI bias, or device drivers)"
+          }
+        },
+        {
+          "event_type": "thought",
+          "data": {
+            "step": 15,
+            "type": "observation",
+            "phase": "skills_matching",
+            "content": "Skill analysis complete - identified matching skills and gaps."
+          }
+        },
+        {
+          "event_type": "thought",
+          "data": {
+            "step": 16,
+            "type": "tool_call",
+            "phase": "skills_matching",
+            "tool": "analyze_experience_relevance",
+            "input": "The search results do not identify a specific hiring company, as the input company is 'Not specified' and the results discuss the general profession across various sectors including home automation, medical devices, automotive, and aerospace. The role focuses on developing intelligent systems, firmware, and device drivers for internet-connected appliances and microcontrollers."
+          }
+        },
+        {
+          "event_type": "thought",
+          "data": {
+            "step": 17,
+            "type": "observation",
+            "phase": "skills_matching",
+            "content": "Experience analysis complete - identified relevant background."
+          }
+        },
+        {
+          "event_type": "thought",
+          "data": {
+            "step": 18,
+            "type": "reasoning",
+            "phase": "skills_matching",
+            "content": "Synthesizing skill matches with quantified confidence scores..."
+          }
+        },
+        {
+          "event_type": "phase_complete",
+          "data": {
+            "phase": "skills_matching",
+            "summary": "Match score: 33% (3 matched, 4 gaps)"
+          }
+        },
+        {
+          "event_type": "phase",
+          "data": {
+            "phase": "confidence_reranker",
+            "message": "Calibrating confidence with LLM-as-a-Judge..."
+          }
+        },
+        {
+          "event_type": "thought",
+          "data": {
+            "step": 19,
+            "type": "reasoning",
+            "phase": "confidence_reranker",
+            "content": "Evaluating analysis quality and calibrating confidence score..."
+          }
+        },
+        {
+          "event_type": "thought",
+          "data": {
+            "step": 20,
+            "type": "reasoning",
+            "phase": "confidence_reranker",
+            "content": "Confidence calibrated: 28% (LOW) - Despite the query matching one skill, the profile exhibits a fundamental domain mismatch between the candidate's high-level SaaS/Web background and the required low-level silicon/firmware expertise."
+          }
+        },
+        {
+          "event_type": "phase_complete",
+          "data": {
+            "phase": "confidence_reranker",
+            "summary": "Calibrated confidence: 28% (LOW), 2 quality flags"
+          }
+        },
+        {
+          "event_type": "phase",
+          "data": {
+            "phase": "generate_results",
+            "message": "Generating personalized fit analysis..."
+          }
+        },
+        {
+          "event_type": "thought",
+          "data": {
+            "step": 21,
+            "type": "reasoning",
+            "phase": "generate_results",
+            "content": "Synthesizing 28% match (LOW) into personalized narrative for Embedded software engineer..."
+          }
+        },
+        {
+          "event_type": "response",
+          "data": {
+            "chunk": "## Fit Summary\n28% (LOW): The profile presents a fundamental domain mismatch between"
+          }
+        },
+        {
+          "event_type": "response",
+          "data": {
+            "chunk": " high-level SaaS development and required low-level silicon/firmware engineering.\n\n## Key Strengths\n- **Python**: Prof"
+          }
+        },
+        {
+          "event_type": "response",
+          "data": {
+            "chunk": "icient in Python for backend development and API construction, though focused on web frameworks like FastAPI.\n- **SDLC**:"
+          }
+        },
+        {
+          "event_type": "response",
+          "data": {
+            "chunk": " Experience defining software requirements and designing solutions within a full-stack web development lifecycle.\n\n## Areas to Address  \n- **Hardware"
+          }
+        },
+        {
+          "event_type": "response",
+          "data": {
+            "chunk": "/Firmware**: Lacks C, C++, and microcontroller experience; requires significant retraining in low-level programming and silicon"
+          }
+        },
+        {
+          "event_type": "response",
+          "data": {
+            "chunk": "-level mastery.\n- **Embedded Systems**: No evidence of RTOS, device drivers, or FPGA knowledge; bridge would"
+          }
+        },
+        {
+          "event_type": "response",
+          "data": {
+            "chunk": " require foundational hardware-software integration study.\n\n## Bottom Line\nThe candidate is unsuitable for this role due to a complete"
+          }
+        },
+        {
+          "event_type": "response",
+          "data": {
+            "chunk": " lack of embedded systems, firmware, or hardware experience. Their expertise lies in high-level web abstractions and AI integration, which do not"
+          }
+        },
+        {
+          "event_type": "response",
+          "data": {
+            "chunk": " translate to low-level engineering."
+          }
+        },
+        {
+          "event_type": "phase_complete",
+          "data": {
+            "phase": "generate_results",
+            "summary": "Generated 136 word response"
+          }
+        },
+        {
+          "event_type": "complete",
+          "data": {
+            "duration_ms": 33129
+          }
+        }
+      ],
+      "error": null
+    }
+  }
+}

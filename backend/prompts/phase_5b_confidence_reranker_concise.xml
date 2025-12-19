@@ -1,17 +1,27 @@
 <!-- Phase 5B: CONFIDENCE_RERANKER - Ultra Speed -->
 
-<task>Calibrate final confidence score 0-100. Penalize sparse data. JSON only.</task>
+<task>Calibrate final confidence score 0-100. JSON only.</task>
 
 <tiers>
-HIGH (75-100): 3+ tech, 3+ requirements, gaps addressable
-MEDIUM (40-74): 1-2 tech, mixed confidence, some gaps
-LOW (15-39): sparse data, significant gaps
-INSUFFICIENT (0-14): cannot assess fit
+HIGH (75-100): Strong skill alignment, gaps addressable, query requirements matched
+MEDIUM (40-74): Partial alignment, mixed confidence, some significant gaps
+LOW (15-39): Weak alignment, sparse data, significant gaps
+INSUFFICIENT (0-14): Cannot assess fit
 </tiers>
 
-<flags>sparse_tech_stack, no_requirements, default_score_suspected, high_risk_unaddressed</flags>
+<query_type_logic>
+- job_description: For job descriptions, prioritize query_skills_matched over web research data.
+  If extracted_skills from query are matched (query_skills_matched >= 2), consider HIGH tier.
+- company: For company queries, rely on research quality.
+</query_type_logic>
+
+<flags>sparse_tech_stack, no_requirements, default_score_suspected, high_risk_unaddressed, strong_query_skill_match</flags>
 
 <data>
+<query_type>{query_type}</query_type>
+<extracted_skills_count>{extracted_skills_count}</extracted_skills_count>
+<extracted_skills>{extracted_skills_items}</extracted_skills>
+<query_skills_matched>{query_skills_matched}</query_skills_matched>
 <tech_count>{tech_stack_count}</tech_count>
 <tech>{tech_stack_items}</tech>
 <req_count>{requirements_count}</req_count>
@@ -36,4 +46,3 @@ INSUFFICIENT (0-14): cannot assess fit
   "reasoning_trace": "1 sentence"
 }}
 </output>
-</output_contract>

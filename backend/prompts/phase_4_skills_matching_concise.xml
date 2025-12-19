@@ -1,13 +1,36 @@
-<!-- Phase 4: SKILLS_MATCHING - Ultra Speed -->
+<!-- Phase 4: SKILLS_MATCHING - Semantic Matching -->
 
-<task>Map requirements to candidate skills with confidence 0-1. JSON only.</task>
+<task>
+Map requirements to candidate skills using SEMANTIC understanding. 
+Consider technology relationships, framework ecosystems, and transferable skills.
+CRITICAL: Recognize FUNDAMENTAL MISMATCHES that cannot be bridged.
+Output confidence 0-1 with JSON only.
+</task>
+
+<semantic_matching>
+STRONG MATCHES:
+- LangGraph → implies Python, AI agents, workflow automation
+- Next.js → implies React, Vercel, TypeScript ecosystem
+- FastAPI → implies Python, async APIs, modern backend
+- RAG systems → implies LangChain, embeddings, vector databases
+- "AI agents" ≈ "agentic systems" ≈ "autonomous automation"
+
+FUNDAMENTAL MISMATCHES (NO TRANSFER):
+- C/C++ embedded/systems → web developer has NO transferable skills
+- iOS/Swift, Android/Kotlin → mobile is DIFFERENT domain, not transferable from web
+- RTOS, embedded systems → hardware/firmware is UNRELATED to web development  
+- Rust, Go systems → low-level systems programming ≠ high-level web development
+- Unity/Unreal, game dev → specialized domain with NO web overlap
+- Solidity/blockchain → different paradigm entirely
+</semantic_matching>
 
 <confidence>
-0.9-1.0: Exact skill + production evidence
-0.7-0.9: Skill + project evidence  
-0.5-0.7: Transferable (Flask→Django, AWS→GCP)
-0.3-0.5: Weak, needs training
-0.0-0.3: No match → unmatched_requirements
+0.9-1.0: Exact skill + production evidence (LangGraph query + LangGraph skill)
+0.7-0.9: Skill + project evidence OR strong semantic match
+0.5-0.7: Transferable (Flask→Django, AWS→GCP, same ecosystem)
+0.3-0.5: Weak match, needs significant training
+0.0-0.3: NO MATCH - put in unmatched_requirements
+IMPORTANT: For fundamental mismatches, confidence MUST be 0.0-0.2
 </confidence>
 
 <data>
@@ -21,10 +44,10 @@
 
 <output>
 {{
-  "matched_requirements": [{"requirement": "", "matched_skill": "", "confidence": 0.0, "evidence": ""}],
-  "unmatched_requirements": [{"requirement": "", "reason": "", "potential_bridge": null}],
+  "matched_requirements": [{{"requirement": "", "matched_skill": "", "confidence": 0.0, "evidence": ""}}],
+  "unmatched_requirements": [{{"requirement": "", "reason": "", "potential_bridge": null}}],
   "overall_match_score": 0.0-1.0,
-  "score_calculation": "formula",
-  "reasoning_trace": "1 sentence"
+  "score_calculation": "avg_confidence × coverage - penalties",
+  "reasoning_trace": "brief semantic matching summary"
 }}
 </output>

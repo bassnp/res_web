@@ -421,12 +421,35 @@ async def skills_matching_node(
     try:
         # =====================================================================
         # Step 1: Gather requirements for tool input
+        # IMPORTANT: For job_description queries, prioritize extracted_skills
+        # from Phase 1 (the query itself) over web-researched requirements.
+        # This prevents false gaps from unrelated web content.
         # =====================================================================
+        phase_1 = state.get("phase_1_output") or {}
+        query_type = phase_1.get("query_type", "company")
+        extracted_skills = phase_1.get("extracted_skills") or []
+        
         requirements = phase_2.get("identified_requirements") or []
         tech_stack = phase_2.get("tech_stack") or []
         
-        # Combine and deduplicate requirements
-        all_requirements = list(dict.fromkeys(requirements + tech_stack))
+        # For job descriptions, prioritize query-extracted skills
+        if query_type == "job_description" and extracted_skills:
+            # Use extracted skills as PRIMARY requirements, then supplement
+            # with web research (but mark them as secondary)
+            primary_requirements = extracted_skills
+            secondary_requirements = [
+                r for r in (requirements + tech_stack) 
+                if r.lower() not in [s.lower() for s in extracted_skills]
+            ][:5]  # Limit secondary to prevent noise
+            all_requirements = primary_requirements + secondary_requirements
+            logger.info(
+                f"[SKILLS_MATCHING] Job description mode: {len(primary_requirements)} "
+                f"primary skills from query, {len(secondary_requirements)} secondary from research"
+            )
+        else:
+            # Standard mode: combine requirements and tech stack
+            all_requirements = list(dict.fromkeys(requirements + tech_stack))
+        
         requirements_str = (
             ", ".join(all_requirements)
             if all_requirements

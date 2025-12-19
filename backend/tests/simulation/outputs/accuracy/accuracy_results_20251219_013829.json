@@ -1,0 +1,437 @@
+{
+  "timestamp": "2025-12-19T01:38:29.763617",
+  "results": [
+    {
+      "test_id": "D5",
+      "test_name": "Emerging Tech Company",
+      "query": "Startup using AI agents with LangGraph for enterprise automation",
+      "expected_score_min": 80,
+      "expected_score_max": 95,
+      "actual_score": 72.0,
+      "expected_tier": "HIGH",
+      "actual_tier": "MEDIUM",
+      "score_accuracy": "ACCURATE",
+      "tier_accuracy": "INACCURATE",
+      "gap_accuracy": false,
+      "actual_gap_count": 10,
+      "overall_status": "FAIL",
+      "warnings": []
+    }
+  ],
+  "failures": [
+    {
+      "test_id": "D5",
+      "root_cause": "HARSH_SCORING",
+      "root_cause_confidence": 0.5,
+      "impact_severity": "MEDIUM",
+      "recommended_fixes": [
+        "Review skill matching logic in Phase 4",
+        "Check if transferable skills are being recognized",
+        "Verify confidence calibration in Phase 5b"
+      ]
+    }
+  ],
+  "raw_responses": {
+    "D5": {
+      "query": "Startup using AI agents with LangGraph for enterprise automation",
+      "response_text": "## Fit Summary\n72% (MEDIUM): The technical stack is robust across core AI frameworks, though specific orchestration tool gaps and cloud provider differences cap the score.\n\n## Key Strengths\n- **AI Orchestration**: Proven experience building production-level agents using LangGraph, LangChain, and Python-based RAG systems.\n- **Full-Stack AI**: Capable of delivering end-to-end agentic interfaces using React, FastAPI, and Docker containerization.\n\n## Areas to Address  \n- **Specific Frameworks**: Lacks AutoGen and CrewAI experience; requires leveraging Python foundations for rapid framework adoption.\n- **Cloud Infrastructure**: AWS-centric background; needs to transfer cloud governance and deployment skills to the required Azure environment.\n- **Observability Tools**: No evidence of LangSmith or LangTrace; requires applying general CI/CD and monitoring knowledge to these platforms.\n- **Protocol Standards**: Missing MCP and n8n experience; bridge via existing REST API and GraphQL integration expertise.\n\n## Bottom Line\nThe candidate is a strong technical architect with direct LangGraph experience but lacks specific familiarity with the employer's preferred orchestration and observability tools. They are a viable hire if the team prioritizes core AI engineering logic over immediate platform-specific mastery.",
+      "events": [
+        {
+          "event_type": "status",
+          "data": {
+            "status": "connecting",
+            "message": "Initializing AI agent..."
+          }
+        },
+        {
+          "event_type": "phase",
+          "data": {
+            "phase": "connecting",
+            "message": "Classifying query and extracting entities..."
+          }
+        },
+        {
+          "event_type": "thought",
+          "data": {
+            "step": 1,
+            "type": "reasoning",
+            "phase": "connecting",
+            "content": "Analyzing query structure to determine if this is a company lookup or job description analysis..."
+          }
+        },
+        {
+          "event_type": "phase_complete",
+          "data": {
+            "phase": "connecting",
+            "summary": "Query classified as 'job_description', skills: 4 extracted"
+          }
+        },
+        {
+          "event_type": "phase",
+          "data": {
+            "phase": "deep_research",
+            "message": "Researching for info..."
+          }
+        },
+        {
+          "event_type": "thought",
+          "data": {
+            "step": 2,
+            "type": "tool_call",
+            "phase": "deep_research",
+            "tool": "web_search",
+            "input": "software engineer AI agents LangGraph enterprise automation requirements tech stack -site:pinterest.com -site:facebook.com -site:instagram.com"
+          }
+        },
+        {
+          "event_type": "thought",
+          "data": {
+            "step": 3,
+            "type": "observation",
+            "phase": "deep_research",
+            "content": "Found info for: Core job requirements and tech stack"
+          }
+        },
+        {
+          "event_type": "thought",
+          "data": {
+            "step": 4,
+            "type": "tool_call",
+            "phase": "deep_research",
+            "tool": "web_search",
+            "input": "intitle:\"software engineer\" AI agents LangGraph enterprise automation requirements"
+          }
+        },
+        {
+          "event_type": "thought",
+          "data": {
+            "step": 5,
+            "type": "observation",
+            "phase": "deep_research",
+            "content": "Found info for: Job listings with title match"
+          }
+        },
+        {
+          "event_type": "thought",
+          "data": {
+            "step": 6,
+            "type": "tool_call",
+            "phase": "deep_research",
+            "tool": "web_search",
+            "input": "AI agents engineer career requirements industry 2024"
+          }
+        },
+        {
+          "event_type": "thought",
+          "data": {
+            "step": 7,
+            "type": "observation",
+            "phase": "deep_research",
+            "content": "Found info for: Industry context for skill area"
+          }
+        },
+        {
+          "event_type": "thought",
+          "data": {
+            "step": 8,
+            "type": "reasoning",
+            "phase": "deep_research",
+            "content": "Synthesizing search results into structured employer profile..."
+          }
+        },
+        {
+          "event_type": "phase_complete",
+          "data": {
+            "phase": "deep_research",
+            "summary": "Identified 13 technologies, 5 requirements, 4 culture signals"
+          }
+        },
+        {
+          "event_type": "phase",
+          "data": {
+            "phase": "research_reranker",
+            "message": "Validating research quality..."
+          }
+        },
+        {
+          "event_type": "thought",
+          "data": {
+            "step": 9,
+            "type": "reasoning",
+            "phase": "research_reranker",
+            "content": "Scoring 15 sources with multi-dimensional AI evaluation..."
+          }
+        },
+        {
+          "event_type": "thought",
+          "data": {
+            "step": 9,
+            "type": "reasoning",
+            "phase": "research_reranker",
+            "content": "Source scoring complete: 2/6 sources passed quality gate (threshold: 0.45)"
+          }
+        },
+        {
+          "event_type": "thought",
+          "data": {
+            "step": 10,
+            "type": "reasoning",
+            "phase": "research_reranker",
+            "content": "Assessing research quality: MEDIUM tier detected"
+          }
+        },
+        {
+          "event_type": "phase_complete",
+          "data": {
+            "phase": "research_reranker",
+            "summary": "Data: PARTIAL | Quality: HIGH | Confidence: 92% | Action: ENHANCE_SEARCH | AI Scores: 2/6"
+          }
+        },
+        {
+          "event_type": "phase",
+          "data": {
+            "phase": "content_enrich",
+            "message": "Enriching top 5 sources..."
+          }
+        },
+        {
+          "event_type": "thought",
+          "data": {
+            "step": 11,
+            "type": "reasoning",
+            "phase": "content_enrich",
+            "content": "Fetching full content for 5 high-quality sources to deepen analysis..."
+          }
+        },
+        {
+          "event_type": "phase_complete",
+          "data": {
+            "phase": "content_enrich",
+            "summary": "Enriched 3/5 sources with full content"
+          }
+        },
+        {
+          "event_type": "phase",
+          "data": {
+            "phase": "skeptical_comparison",
+            "message": "Performing critical fit analysis from skeptical perspective..."
+          }
+        },
+        {
+          "event_type": "thought",
+          "data": {
+            "step": 12,
+            "type": "reasoning",
+            "phase": "skeptical_comparison",
+            "content": "Analyzing fit from a skeptical hiring manager's perspective - identifying genuine gaps and potential concerns..."
+          }
+        },
+        {
+          "event_type": "thought",
+          "data": {
+            "step": 13,
+            "type": "reasoning",
+            "phase": "skeptical_comparison",
+            "content": "Critical review complete: Identified 4 strengths, 4 gaps. Risk assessment: \ud83d\udfe1 medium"
+          }
+        },
+        {
+          "event_type": "phase_complete",
+          "data": {
+            "phase": "skeptical_comparison",
+            "summary": "Found 4 gaps, 4 strengths. Risk level: medium"
+          }
+        },
+        {
+          "event_type": "phase",
+          "data": {
+            "phase": "skills_matching",
+            "message": "Mapping skills to requirements..."
+          }
+        },
+        {
+          "event_type": "thought",
+          "data": {
+            "step": 14,
+            "type": "tool_call",
+            "phase": "skills_matching",
+            "tool": "analyze_skill_match",
+            "input": "Building and orchestrating AI agents and multi-agent workflows, Integrating Large Language Models (LLMs) into enterprise infrastructure, Designing and delivering AI training and automation solutions, Deployment and governance of enterprise-grade agents, Experience in cross-functional system automation, LangGraph, LangChain, Python, JavaScript, Autogen, CrewAI, LlamaIndex, GPT, Azure Infra, n8n, LangSmith, LangTrace, MCP"
+          }
+        },
+        {
+          "event_type": "thought",
+          "data": {
+            "step": 15,
+            "type": "observation",
+            "phase": "skills_matching",
+            "content": "Skill analysis complete - identified matching skills and gaps."
+          }
+        },
+        {
+          "event_type": "thought",
+          "data": {
+            "step": 16,
+            "type": "tool_call",
+            "phase": "skills_matching",
+            "tool": "analyze_experience_relevance",
+            "input": "Visa is identified as a primary employer seeking Software Engineers to integrate AI agents into enterprise infrastructure. The role focuses on building, orchestrating, and scaling multi-agent workflows and automated systems for enterprise-grade deployment."
+          }
+        },
+        {
+          "event_type": "thought",
+          "data": {
+            "step": 17,
+            "type": "observation",
+            "phase": "skills_matching",
+            "content": "Experience analysis complete - identified relevant background."
+          }
+        },
+        {
+          "event_type": "thought",
+          "data": {
+            "step": 18,
+            "type": "reasoning",
+            "phase": "skills_matching",
+            "content": "Synthesizing skill matches with quantified confidence scores..."
+          }
+        },
+        {
+          "event_type": "phase_complete",
+          "data": {
+            "phase": "skills_matching",
+            "summary": "Match score: 56% (7 matched, 3 gaps)"
+          }
+        },
+        {
+          "event_type": "phase",
+          "data": {
+            "phase": "confidence_reranker",
+            "message": "Calibrating confidence with LLM-as-a-Judge..."
+          }
+        },
+        {
+          "event_type": "thought",
+          "data": {
+            "step": 19,
+            "type": "reasoning",
+            "phase": "confidence_reranker",
+            "content": "Evaluating analysis quality and calibrating confidence score..."
+          }
+        },
+        {
+          "event_type": "thought",
+          "data": {
+            "step": 20,
+            "type": "reasoning",
+            "phase": "confidence_reranker",
+            "content": "Confidence calibrated: 72% (MEDIUM) - While the technical stack is robust with 13 identified tools, the score is capped in the high-medium range due to critical gaps in specific enterprise infrastructure (Azure) and the candidate's lack of experience with the exact orchestration frameworks (AutoGen, CrewAI) required by the employer."
+          }
+        },
+        {
+          "event_type": "phase_complete",
+          "data": {
+            "phase": "confidence_reranker",
+            "summary": "Calibrated confidence: 72% (MEDIUM)"
+          }
+        },
+        {
+          "event_type": "phase",
+          "data": {
+            "phase": "generate_results",
+            "message": "Generating personalized fit analysis..."
+          }
+        },
+        {
+          "event_type": "thought",
+          "data": {
+            "step": 21,
+            "type": "reasoning",
+            "phase": "generate_results",
+            "content": "Synthesizing 72% match (MEDIUM) into personalized narrative for Startup using AI agents with LangGraph for enterpr..."
+          }
+        },
+        {
+          "event_type": "response",
+          "data": {
+            "chunk": "## Fit Summary\n72% (MEDIUM): The technical stack is robust across"
+          }
+        },
+        {
+          "event_type": "response",
+          "data": {
+            "chunk": " core AI frameworks, though specific orchestration tool gaps and cloud provider differences cap the score.\n\n## Key Strengths\n-"
+          }
+        },
+        {
+          "event_type": "response",
+          "data": {
+            "chunk": " **AI Orchestration**: Proven experience building production-level agents using LangGraph, LangChain, and Python-based RAG systems"
+          }
+        },
+        {
+          "event_type": "response",
+          "data": {
+            "chunk": ".\n- **Full-Stack AI**: Capable of delivering end-to-end agentic interfaces using React, FastAPI,"
+          }
+        },
+        {
+          "event_type": "response",
+          "data": {
+            "chunk": " and Docker containerization.\n\n## Areas to Address  \n- **Specific Frameworks**: Lacks AutoGen and CrewAI experience;"
+          }
+        },
+        {
+          "event_type": "response",
+          "data": {
+            "chunk": " requires leveraging Python foundations for rapid framework adoption.\n- **Cloud Infrastructure**: AWS-centric background; needs to transfer cloud governance"
+          }
+        },
+        {
+          "event_type": "response",
+          "data": {
+            "chunk": " and deployment skills to the required Azure environment.\n- **Observability Tools**: No evidence of LangSmith or LangTrace; requires"
+          }
+        },
+        {
+          "event_type": "response",
+          "data": {
+            "chunk": " applying general CI/CD and monitoring knowledge to these platforms.\n- **Protocol Standards**: Missing MCP and n8n experience"
+          }
+        },
+        {
+          "event_type": "response",
+          "data": {
+            "chunk": "; bridge via existing REST API and GraphQL integration expertise.\n\n## Bottom Line\nThe candidate is a strong technical architect with direct"
+          }
+        },
+        {
+          "event_type": "response",
+          "data": {
+            "chunk": " LangGraph experience but lacks specific familiarity with the employer's preferred orchestration and observability tools. They are a viable hire if"
+          }
+        },
+        {
+          "event_type": "response",
+          "data": {
+            "chunk": " the team prioritizes core AI engineering logic over immediate platform-specific mastery."
+          }
+        },
+        {
+          "event_type": "phase_complete",
+          "data": {
+            "phase": "generate_results",
+            "summary": "Generated 176 word response"
+          }
+        },
+        {
+          "event_type": "complete",
+          "data": {
+            "duration_ms": 35635
+          }
+        }
+      ],
+      "error": null
+    }
+  }
+}

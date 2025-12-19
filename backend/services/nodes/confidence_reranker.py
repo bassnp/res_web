@@ -229,6 +229,10 @@ def prepare_context_data(state: FitCheckPipelineState) -> Dict[str, Any]:
     phase_3 = state.get("phase_3_output") or {}
     phase_4 = state.get("phase_4_output") or {}
     
+    # Phase 1 metrics
+    query_type = phase_1.get("query_type", "company")
+    extracted_skills = phase_1.get("extracted_skills") or []
+    
     # Phase 2 metrics
     tech_stack = phase_2.get("tech_stack") or []
     requirements = phase_2.get("identified_requirements") or []
@@ -254,7 +258,25 @@ def prepare_context_data(state: FitCheckPipelineState) -> Dict[str, Any]:
     else:
         avg_confidence = 0.0
     
+    # For job descriptions, calculate how many query skills were matched
+    query_skills_matched = 0
+    if query_type == "job_description" and extracted_skills:
+        for skill in extracted_skills:
+            skill_lower = skill.lower()
+            for m in matched:
+                matched_skill = m.get("matched_skill", "").lower()
+                requirement = m.get("requirement", "").lower()
+                if skill_lower in matched_skill or skill_lower in requirement:
+                    query_skills_matched += 1
+                    break
+    
     return {
+        # Phase 1
+        "query_type": query_type,
+        "extracted_skills_count": len(extracted_skills),
+        "extracted_skills_items": ", ".join(extracted_skills) if extracted_skills else "None",
+        "query_skills_matched": query_skills_matched,
+        
         # Phase 2
         "tech_stack_count": len(tech_stack),
         "tech_stack_items": ", ".join(tech_stack) if tech_stack else "None extracted",
@@ -279,7 +301,6 @@ def prepare_context_data(state: FitCheckPipelineState) -> Dict[str, Any]:
         
         # Company context
         "company_name": phase_1.get("company_name", "Unknown"),
-        "query_type": phase_1.get("query_type", "unknown"),
         "employer_summary": phase_2.get("employer_summary", "")[:300],
     }
 
@@ -365,10 +386,13 @@ def calculate_fallback_confidence(state: FitCheckPipelineState) -> RerankerOutpu
     Returns:
         RerankerOutput with fallback calculation.
     """
+    phase_1 = state.get("phase_1_output") or {}
     phase_2 = state.get("phase_2_output") or {}
     phase_3 = state.get("phase_3_output") or {}
     phase_4 = state.get("phase_4_output") or {}
     
+    query_type = phase_1.get("query_type", "company")
+    extracted_skills = phase_1.get("extracted_skills") or []
     tech_stack = phase_2.get("tech_stack") or []
     requirements = phase_2.get("identified_requirements") or []
     gaps = phase_3.get("genuine_gaps") or []
@@ -380,18 +404,42 @@ def calculate_fallback_confidence(state: FitCheckPipelineState) -> RerankerOutpu
     # Start with raw score
     score = int(raw_score * 100)
     
-    # Penalty for sparse tech stack
-    if len(tech_stack) < 2:
-        score = max(0, score - 15)
-        quality_flags.append("sparse_tech_stack")
-    
-    # Penalty for no requirements
-    if len(requirements) == 0:
-        score = max(0, score - 10)
-        quality_flags.append("no_requirements")
+    # For job descriptions, give a boost if query skills were matched
+    if query_type == "job_description" and extracted_skills:
+        query_skills_matched = 0
+        for skill in extracted_skills:
+            skill_lower = skill.lower()
+            for m in matched:
+                matched_skill = m.get("matched_skill", "").lower()
+                requirement = m.get("requirement", "").lower()
+                if skill_lower in matched_skill or skill_lower in requirement:
+                    query_skills_matched += 1
+                    break
+        
+        # Boost for matching query-specified skills (up to 15 points)
+        match_ratio = query_skills_matched / len(extracted_skills) if extracted_skills else 0
+        skill_boost = int(match_ratio * 15)
+        score = min(100, score + skill_boost)
+        
+        if match_ratio >= 0.8:
+            quality_flags.append("strong_query_skill_match")
+        elif match_ratio < 0.5:
+            quality_flags.append("weak_query_skill_match")
+    else:
+        # Standard company query penalties
+        # Penalty for sparse tech stack
+        if len(tech_stack) < 2:
+            score = max(0, score - 15)
+            quality_flags.append("sparse_tech_stack")
+        
+        # Penalty for no requirements
+        if len(requirements) == 0:
+            score = max(0, score - 10)
+            quality_flags.append("no_requirements")
     
     # Penalty for insufficient gaps (suggests incomplete skeptical analysis)
-    if len(gaps) < 2:
+    # But be more lenient for job descriptions with good matches
+    if len(gaps) < 2 and score < 80:
         score = max(0, score - 10)
         quality_flags.append("insufficient_gaps")
     
