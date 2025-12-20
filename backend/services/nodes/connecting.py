@@ -501,17 +501,21 @@ async def connecting_node(
             summary_parts.append(f"skills: {len(validated_output['extracted_skills'])} extracted")
         summary = ", ".join(summary_parts)
         
-        # Emit phase complete event
+        # Emit phase complete event with enriched metadata
         if callback and hasattr(callback, 'on_phase_complete'):
+            enriched_data = {
+                "query_type": validated_output["query_type"],
+                "company_name": validated_output["company_name"],
+                "job_title": validated_output["job_title"],
+                "skills_count": len(validated_output["extracted_skills"]),
+                # Rich metadata for transparency
+                "extracted_skills": validated_output["extracted_skills"][:5],
+                "classification_reasoning": validated_output["reasoning_trace"][:150] if validated_output["reasoning_trace"] else None,
+            }
             await callback.on_phase_complete(
                 PHASE_NAME, 
                 summary,
-                data={
-                    "query_type": validated_output["query_type"],
-                    "company_name": validated_output["company_name"],
-                    "job_title": validated_output["job_title"],
-                    "skills_count": len(validated_output["extracted_skills"])
-                }
+                data=enriched_data
             )
         
         logger.info(f"[CONNECTING] Phase 1 complete: {validated_output['query_type']}")

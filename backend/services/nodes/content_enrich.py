@@ -183,20 +183,31 @@ async def content_enrich_node(
     total_kb = sum(len(r.get("content", "")) for r in enriched_results) / 1024
     summary = f"Enriched {enriched_count}/{len(enriched_results)} sources with full content ({total_kb:.1f} KB)"
     
-    # Emit phase complete event
+    # Emit phase complete event with enriched metadata
     if callback and hasattr(callback, 'on_phase_complete'):
+        # Build rich source details for frontend transparency
+        source_details = []
+        for r in enriched_results:
+            source_details.append({
+                "title": r.get("title", "Unknown")[:60],
+                "url": r.get("url", ""),
+                "size_kb": round(len(r.get("content", "")) / 1024, 1),
+                "is_enriched": r.get("is_enriched", False),
+                "score": r.get("score", 0),
+            })
+        
+        enriched_data = {
+            "enriched_count": enriched_count,
+            "total_count": len(enriched_results),
+            "total_kb": round(total_kb, 1),
+            # Detailed source breakdown
+            "sources": source_details,
+            "success_rate": f"{int(enriched_count / max(len(enriched_results), 1) * 100)}%",
+        }
         await callback.on_phase_complete(
             PHASE_NAME, 
             summary,
-            data={
-                "enriched_count": enriched_count,
-                "total_count": len(enriched_results),
-                "total_kb": round(total_kb, 1),
-                "sources": [
-                    {"title": r.get("title"), "url": r.get("url"), "size_kb": round(len(r.get("content", "")) / 1024, 1)}
-                    for r in enriched_results if r.get("is_enriched")
-                ]
-            }
+            data=enriched_data
         )
     
     logger.info(f"[CONTENT_ENRICH] Phase 2C complete: {summary}")

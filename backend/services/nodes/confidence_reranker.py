@@ -569,21 +569,26 @@ async def confidence_reranker_node(
             phase=PHASE_NAME,
         )
     
-    # Build summary
+    # Build summary and enriched metadata
     flags_str = f", {len(reranker_output.quality_flags)} quality flags" if reranker_output.quality_flags else ""
     summary = f"Calibrated confidence: {reranker_output.calibrated_score}% ({reranker_output.tier}){flags_str}"
     
-    # Emit phase complete
+    # Emit phase complete with enriched metadata
     if callback:
+        enriched_data = {
+            "calibrated_score": reranker_output.calibrated_score,
+            "tier": reranker_output.tier,
+            "quality_flags": reranker_output.quality_flags,
+            "adjustment_rationale": reranker_output.adjustment_rationale,
+            # Rich metadata for transparency
+            "justification": reranker_output.justification[:200] if reranker_output.justification else None,
+            "data_quality": reranker_output.data_quality,
+            "reasoning_trace": reranker_output.reasoning_trace[:150] if reranker_output.reasoning_trace else None,
+        }
         await callback.on_phase_complete(
             PHASE_NAME, 
             summary,
-            data={
-                "calibrated_score": reranker_output.calibrated_score,
-                "tier": reranker_output.tier,
-                "quality_flags": reranker_output.quality_flags,
-                "adjustment_rationale": reranker_output.adjustment_rationale,
-            }
+            data=enriched_data
         )
     
     return {

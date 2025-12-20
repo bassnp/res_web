@@ -440,17 +440,32 @@ async def deep_research_node(
         culture_count = len(validated_output["culture_signals"])
         summary = f"Identified {tech_count} technologies, {req_count} requirements, {culture_count} culture signals"
         
-        # Emit phase complete event
+        # Emit phase complete event with enriched metadata
         if callback and hasattr(callback, 'on_phase_complete'):
+            # Build rich metadata for frontend transparency
+            enriched_data = {
+                # Counts for quick display
+                "tech_count": tech_count,
+                "requirements_count": req_count,
+                "culture_count": culture_count,
+                "search_count": len(search_results),
+                # Actual items for insight (limit to prevent bloat)
+                "tech_stack": validated_output["tech_stack"][:5],
+                "top_requirements": validated_output["identified_requirements"][:3],
+                "culture_signals": validated_output["culture_signals"][:3],
+                # Search transparency
+                "search_queries": [
+                    {"query": sr["query"], "purpose": sr.get("purpose", "general")}
+                    for sr in search_results[:3]
+                ],
+                "expansion_strategy": expansion_result.expansion_strategy if expansion_result else "default",
+                # Reasoning excerpt for understanding
+                "synthesis_reasoning": validated_output["reasoning_trace"][:200] if validated_output["reasoning_trace"] else None,
+            }
             await callback.on_phase_complete(
                 PHASE_NAME, 
                 summary,
-                data={
-                    "tech_count": tech_count,
-                    "requirements_count": req_count,
-                    "culture_count": culture_count,
-                    "search_count": len(search_results)
-                }
+                data=enriched_data
             )
         
         logger.info(f"[DEEP_RESEARCH] Phase 2 complete: {len(search_results)} searches, {summary}")

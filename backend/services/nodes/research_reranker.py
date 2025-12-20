@@ -1043,19 +1043,39 @@ async def research_reranker_node(
         scoring_summary = f" | AI Scores: {scoring_result.passing_count}/{scoring_result.total_count}" if scoring_result else ""
         summary = f"Data: {data_tier} | Quality: {tier} | Confidence: {validated_output['data_confidence_score']}% | Action: {action}{scoring_summary}"
         
-        # Emit phase complete event
+        # Emit phase complete event with enriched metadata
         if callback and hasattr(callback, 'on_phase_complete'):
+            # Build top sources info for transparency
+            top_sources_info = [
+                {
+                    "title": s.title[:50] if s.title else "Unknown",
+                    "url": s.url,
+                    "score": round(s.final_score, 2),
+                    "source_type": s.source_type if hasattr(s, 'source_type') else "unknown",
+                }
+                for s in (top_sources[:3] if top_sources else [])
+            ]
+            
+            enriched_data = {
+                "data_quality_tier": data_tier,
+                "research_quality_tier": tier,
+                "confidence_score": validated_output['data_confidence_score'],
+                "recommended_action": action,
+                "passing_count": scoring_result.passing_count if scoring_result else 0,
+                "total_count": scoring_result.total_count if scoring_result else 0,
+                # Rich metadata for transparency
+                "quality_flags": validated_output.get("quality_flags", [])[:5],
+                "inferred_industry": heuristics.get("inferred_industry"),
+                "inferred_tech": heuristics.get("inferred_tech", [])[:4],
+                "top_sources": top_sources_info,
+                "company_verifiability": validated_output.get("company_verifiability"),
+                "pruned_count": heuristics.get("pruned_data", {}).get("total_pruned", 0),
+                "search_attempt": search_attempt,
+            }
             await callback.on_phase_complete(
                 PHASE_NAME, 
                 summary,
-                data={
-                    "data_quality_tier": data_tier,
-                    "research_quality_tier": tier,
-                    "confidence_score": validated_output['data_confidence_score'],
-                    "recommended_action": action,
-                    "passing_count": scoring_result.passing_count if scoring_result else 0,
-                    "total_count": scoring_result.total_count if scoring_result else 0,
-                }
+                data=enriched_data
             )
         
         logger.info(f"[RESEARCH_RERANKER] Phase 2B complete: {summary}")

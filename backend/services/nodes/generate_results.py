@@ -590,19 +590,26 @@ async def generate_results_node(
                 errors.append(f"Quality: {warning}")
         
         # =====================================================================
-        # Emit phase complete
+        # Emit phase complete with enriched metadata
         # =====================================================================
         word_count = len(full_response.split())
         
         if callback and hasattr(callback, 'on_phase_complete'):
+            enriched_data = {
+                "word_count": word_count,
+                "char_count": len(full_response),
+                "quality_warnings": validation_warnings,
+                # Rich metadata for transparency
+                "employer_context_type": employer_context,
+                "calibrated_score": match_score_pct,
+                "confidence_tier": confidence_tier,
+                "gaps_acknowledged": len(phase_3.get("genuine_gaps", [])),
+                "response_preview": full_response[:100] + "..." if len(full_response) > 100 else full_response,
+            }
             await callback.on_phase_complete(
                 PHASE_NAME,
                 f"Generated {word_count} word response",
-                data={
-                    "word_count": word_count,
-                    "char_count": len(full_response),
-                    "quality_warnings": validation_warnings
-                }
+                data=enriched_data
             )
         
         logger.info(

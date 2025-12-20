@@ -499,21 +499,29 @@ async def skeptical_comparison_node(
                 phase=PHASE_NAME,
             )
         
-        # Emit phase complete event
+        # Emit phase complete event with enriched metadata
         if callback:
             summary = (
                 f"Found {len(validated_output['genuine_gaps'])} gaps, "
                 f"{len(validated_output['genuine_strengths'])} strengths. "
                 f"Risk level: {validated_output['risk_assessment']}"
             )
+            # Build rich metadata for frontend transparency
+            enriched_data = {
+                "gap_count": len(validated_output['genuine_gaps']),
+                "strength_count": len(validated_output['genuine_strengths']),
+                "risk_level": validated_output['risk_assessment'],
+                # Actual content for insight
+                "genuine_gaps": validated_output['genuine_gaps'][:4],
+                "genuine_strengths": validated_output['genuine_strengths'][:4],
+                "transferable_skills": validated_output.get('transferable_skills', [])[:3],
+                "risk_justification": validated_output.get('risk_justification', '')[:200],
+                "unverified_claims_count": len(validated_output.get('unverified_claims', [])),
+            }
             await callback.on_phase_complete(
                 PHASE_NAME, 
                 summary,
-                data={
-                    "gap_count": len(validated_output['genuine_gaps']),
-                    "strength_count": len(validated_output['genuine_strengths']),
-                    "risk_level": validated_output['risk_assessment']
-                }
+                data=enriched_data
             )
         
         logger.info(

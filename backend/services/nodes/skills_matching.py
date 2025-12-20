@@ -570,22 +570,38 @@ async def skills_matching_node(
         validated_output = validate_phase4_output(parsed_data)
         
         # =====================================================================
-        # Step 6: Emit phase completion
+        # Step 6: Emit phase completion with enriched metadata
         # =====================================================================
         if callback and hasattr(callback, 'on_phase_complete'):
             score_pct = int(validated_output["overall_match_score"] * 100)
             matched_count = len(validated_output["matched_requirements"])
             unmatched_count = len(validated_output["unmatched_requirements"])
             summary = f"Match score: {score_pct}% ({matched_count} matched, {unmatched_count} gaps)"
+            
+            # Build top matches with confidence for transparency
+            top_matches = [
+                {
+                    "requirement": m["requirement"][:50],
+                    "matched_skill": m["matched_skill"][:40],
+                    "confidence": int(m["confidence"] * 100),
+                }
+                for m in validated_output["matched_requirements"][:4]
+            ]
+            
+            enriched_data = {
+                "match_score": validated_output["overall_match_score"],
+                "matched_count": matched_count,
+                "unmatched_count": unmatched_count,
+                "has_fundamental_mismatch": validated_output.get("has_fundamental_mismatch", False),
+                # Rich metadata for transparency
+                "top_matches": top_matches,
+                "unmatched_requirements": validated_output["unmatched_requirements"][:3],
+                "score_breakdown": validated_output["reasoning_trace"][:200] if validated_output["reasoning_trace"] else None,
+            }
             await callback.on_phase_complete(
                 PHASE_NAME, 
                 summary,
-                data={
-                    "match_score": validated_output["overall_match_score"],
-                    "matched_count": matched_count,
-                    "unmatched_count": unmatched_count,
-                    "has_fundamental_mismatch": validated_output.get("has_fundamental_mismatch", False)
-                }
+                data=enriched_data
             )
         
         logger.info(
