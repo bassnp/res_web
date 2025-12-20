@@ -46,11 +46,11 @@ export const SKILLS = {
   display_categories: {
     primary: {
       label: 'Skills & Technologies',
-      skills: ['Python', 'Lua', 'Java', 'JavaScript', 'Dart', 'TypeScript', 'React', 'Next.js', 'FastAPI', 'LangChain', 'LangGraph', 'Flutter', 'Vite', 'Firebase', 'MongoDB', 'Docker', 'AWS', 'PostgreSQL', 'Redis']
+      skills: ['TODO']
     },
     devops: {
       label: 'Dev Ops',
-      skills: ['Jira', 'Slack', 'Git', 'GitHub', 'Figma', 'Excel Sheets', 'CapCut']
+      skills: ['Jira', 'Slack', 'Git', 'Github', 'Figma', 'Excel Sheets', 'CapCut']
     }
   },
   backend_categories: {
@@ -70,47 +70,36 @@ export const PROJECTS = {
   $schema: './schemas/projects.schema.json',
   featured: [
     {
-      id: 'churchlink',
-      title: 'ChurchLink — Team of 6, Graduation Project',
-      description: 'Deployed Web Builder Platform for Churches to customize a Website + App w/ Localization, Admin Dashboards, & Payments',
-      about: 'ChurchLink is a comprehensive platform that empowers churches to create and manage their online presence. The system provides a drag-and-drop web builder, cross-platform mobile app, localization support, admin dashboards for content management, and integrated payment processing. Built as a graduation project with a team of 6, this platform demonstrates full-stack development, team collaboration, and deployment expertise.',
-      learning_outcomes: ['Mastered Flutter cross-platform development for iOS and Android', 'Implemented complex payment integrations with PayPal', 'Designed scalable NoSQL database architecture with MongoDB', 'Coordinated team of 6 using Agile methodologies'],
-      tags: ['Python', 'Flutter', 'TypeScript', 'Vite', 'FastAPI', 'Firebase', 'MongoDB', 'PayPal'],
+      id: 'project-alpha',
+      title: 'Project Alpha',
+      description: 'A full-stack web application built with React and Node.js, featuring real-time updates and modern UI.',
+      about: 'Project Alpha is a comprehensive full-stack application that demonstrates modern web development practices. It features a React frontend with a Node.js backend, utilizing WebSocket connections for real-time updates. The application includes user authentication, data persistence with PostgreSQL, and a responsive design that works seamlessly across all devices.',
+      learning_outcomes: ['Mastered React hooks and state management patterns', 'Implemented WebSocket connections for real-time data synchronization', 'Designed and optimized PostgreSQL database schemas', 'Built RESTful APIs with proper error handling and validation', 'Deployed containerized applications using Docker'],
+      tags: ['React', 'Node.js', 'PostgreSQL'],
       color: 'from-burnt-peach to-apricot',
-      images_folder: 'project-churchlink',
+      images_folder: 'project-alpha',
       link: null
     },
     {
-      id: 'google-cse-agent',
-      title: 'Google CSE Agent — GenUI Web Researcher',
-      description: 'Agentic LangGraph Deep Researcher w/ CSE Web-Research + RAG GenUI Pipeline',
-      about: 'An intelligent research agent powered by Google Custom Search Engine and LangGraph orchestration. The system performs deep web research, extracts relevant information, and generates contextual UI components on-the-fly. Features include agentic reasoning, RAG (Retrieval-Augmented Generation) pipeline, and real-time UI generation based on research findings.',
-      learning_outcomes: ['Built production-grade LangGraph agentic workflows', 'Implemented RAG systems with vector databases', 'Integrated Google Custom Search Engine API', 'Deployed containerized microservices with Docker'],
-      tags: ['Google Gemini', 'LangGraph', 'LangSmith', 'Python', 'FastAPI', 'Firebase', 'Redis', 'Docker'],
+      id: 'project-beta',
+      title: 'Project Beta',
+      description: 'Mobile-first progressive web app with offline capabilities and push notifications.',
+      about: 'Project Beta showcases the power of Progressive Web Apps (PWAs) with a mobile-first approach. The application leverages service workers for offline functionality, implements push notifications for user engagement, and provides a native app-like experience directly in the browser. Built with Next.js and TypeScript for type safety and improved developer experience.',
+      learning_outcomes: ['Implemented service workers for offline-first functionality', 'Configured push notifications with proper permission handling', 'Utilized TypeScript for enhanced code quality and maintainability', 'Optimized performance with Next.js static generation and caching', 'Designed responsive layouts following mobile-first principles'],
+      tags: ['Next.js', 'PWA', 'TypeScript'],
       color: 'from-muted-teal to-twilight',
-      images_folder: 'project-cse-agent',
+      images_folder: 'project-beta',
       link: null
     },
     {
-      id: 'interactive-portfolio',
-      title: 'My Interactive Portfolio — Made for Employers!',
-      description: 'Assess my resume w/ a comparative Deep Researcher that brutally analyzes my resume against job descriptions/positions',
-      about: 'A cutting-edge portfolio website that features an AI-powered Fit Check system. Employers can input a job description or company name, and the system performs deep web research to compare requirements against my skills and experience. The multi-phase pipeline provides transparent reasoning, skill matching, and an honest assessment of fit - demonstrating both technical capability and professional transparency.',
-      learning_outcomes: ['Architected multi-phase LangGraph pipeline with conditional routing', 'Implemented Server-Sent Events (SSE) for real-time streaming', 'Designed component-based UI architecture with Radix UI', 'Deployed full-stack application with Docker orchestration'],
-      tags: ['Radix UI', 'Shadcn/ui', 'Next.js', 'Python', 'FastAPI', 'Docker', 'LangGraph'],
-      color: 'from-twilight to-muted-teal',
-      images_folder: 'project-portfolio',
-      link: 'https://github.com/bassnp/res_web'
-    },
-    {
-      id: 'videogame-agent',
-      title: 'Videogame Agent & MCP — Overwolf Overlay',
-      description: 'RAG workflow + MCP server + In-Game-Overlay = Generative UI HUD w/ Windows & Popups for real-time assistance',
-      about: 'An innovative in-game AI assistant that provides real-time help through an Overwolf overlay. The system combines RAG (Retrieval-Augmented Generation) workflows with Model Context Protocol (MCP) server architecture to deliver contextual assistance directly within the game. Features generative UI with dynamic windows and popups that adapt to gameplay context.',
-      learning_outcomes: ['Integrated Overwolf API for in-game overlay development', 'Implemented Model Context Protocol (MCP) server', 'Built RAG workflow for game-specific knowledge retrieval', 'Optimized performance for real-time in-game operation'],
-      tags: ['OpenAI', 'Overwolf', 'TypeScript', 'Python', 'FastAPI', 'Docker', 'LangChain'],
-      color: 'from-apricot to-burnt-peach',
-      images_folder: 'project-videogame-agent',
+      id: 'project-gamma',
+      title: 'Project Gamma',
+      description: 'Data visualization dashboard with interactive charts and real-time analytics.',
+      about: 'Project Gamma is an advanced data visualization dashboard that transforms complex datasets into intuitive, interactive visualizations. Using D3.js for custom charts and Python for backend data processing, the dashboard provides real-time analytics with filtering, zooming, and drill-down capabilities. The system processes large datasets efficiently and presents insights in a visually compelling manner.',
+      learning_outcomes: ['Created custom D3.js visualizations with interactive features', 'Built efficient data processing pipelines in Python', 'Implemented real-time data streaming and updates', 'Designed intuitive UX for complex data exploration', 'Optimized rendering performance for large datasets'],
+      tags: ['Python', 'D3.js', 'PostgreSQL'],
+      color: 'from-apricot to-muted-teal',
+      images_folder: 'project-gamma',
       link: null
     }
   ],
@@ -234,10 +223,70 @@ export const EXPERIENCE = {
       title: 'Software Engineer',
       company: 'Tech Innovation Corp',
       period: 'December 2025',
-      description: 'Leading full-stack development initiatives with modern web technologies and AI integration.',
+      description: 'Leading full-stack development initiatives, architecting scalable solutions with React, Node.js, and cloud services. Implementing CI/CD pipelines and mentoring junior developers.',
       tags: ['React', 'Node.js', 'AWS', 'TypeScript'],
       color: 'burnt-peach',
       showcase_folder: 'showcase1'
+    },
+    {
+      id: 2,
+      title: 'Full Stack Developer',
+      company: 'Digital Solutions Inc',
+      period: '2024',
+      description: 'Built and deployed production-ready web applications serving thousands of users. Optimized database queries resulting in 40% performance improvement.',
+      tags: ['Next.js', 'PostgreSQL', 'Docker'],
+      color: 'muted-teal',
+      showcase_folder: 'showcase2'
+    },
+    {
+      id: 3,
+      title: 'Software Development Intern',
+      company: 'StartupXYZ',
+      period: '2023',
+      description: 'Developed RESTful APIs and integrated third-party services. Contributed to agile sprints and participated in code reviews with senior engineers.',
+      tags: ['Python', 'FastAPI', 'Git'],
+      color: 'apricot',
+      showcase_folder: 'showcase3'
+    },
+    {
+      id: 4,
+      title: 'Freelance Web Developer',
+      company: 'Self-Employed',
+      period: '2022',
+      description: 'Delivered custom websites and e-commerce solutions for small businesses. Managed client relationships and project timelines independently.',
+      tags: ['JavaScript', 'WordPress', 'CSS'],
+      color: 'burnt-peach',
+      showcase_folder: 'showcase4'
+    },
+    {
+      id: 5,
+      title: 'Research Assistant',
+      company: 'University CS Department',
+      period: '2020',
+      description: 'Assisted in machine learning research projects. Processed datasets, implemented algorithms, and co-authored a conference paper on NLP techniques.',
+      tags: ['Python', 'TensorFlow', 'NLP'],
+      color: 'muted-teal',
+      showcase_folder: 'showcase5'
+    },
+    {
+      id: 6,
+      title: 'IT Support Technician',
+      company: 'Campus Tech Services',
+      period: '2018',
+      description: 'Provided technical support for faculty and students. Troubleshot hardware/software issues and maintained computer lab equipment.',
+      tags: ['Troubleshooting', 'Windows', 'Linux'],
+      color: 'apricot',
+      showcase_folder: 'showcase6'
+    },
+    {
+      id: 7,
+      title: 'Programming Hobbyist',
+      company: 'Self-Taught Journey',
+      period: '2016',
+      description: 'Discovered passion for programming through game development and automation scripts. Built first website and learned fundamentals of coding logic.',
+      tags: ['Java', 'HTML', 'CSS'],
+      color: 'burnt-peach',
+      showcase_folder: 'showcase7'
     }
   ]
 };

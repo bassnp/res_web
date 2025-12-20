@@ -1,0 +1,94 @@
+## BACKEND
+[3/5] Building Docker image...
+[+] Building 2.2s (18/27)
+ => [internal] load local bake defini  0.0s 
+ => => reading from stdin 565B         0.0s 
+ => [internal] load build definition   0.0s 
+ => => transferring dockerfile 4.87kB  0.0s 
+ => [internal] load metadata for dock  1.0s 
+ => [auth] library/python:pull token   0.0s 
+ => [internal] load .dockerignore      0.1s 
+ => => transferring context: 2.74kB    0.0s 
+ => [internal] load build context      0.0s 
+ => => transferring context: 13.33kB   0.0s 
+ => [builder 1/6] FROM docker.io/libr  0.0s 
+ => => resolve docker.io/library/pyth  0.0s 
+ => CACHED [builder 2/6] WORKDIR /bui  0.0s 
+ => CACHED [production  2/16] WORKDIR  0.0s 
+ => CANCELED [builder 3/6] RUN apt-ge  0.6s 
+ => CANCELED [production  3/16] RUN a  0.6s 
+ => CACHED [builder 4/6] COPY require  0.0s 
+ => CACHED [builder 5/6] RUN python -  0.0s 
+ => CACHED [builder 6/6] RUN pip inst  0.0s 
+ => CACHED [production  4/16] COPY --  0.0s 
+ => CACHED [production  5/16] RUN gro  0.0s 
+ => ERROR [production  6/16] COPY --c  0.0s 
+ => ERROR [production  7/16] COPY --c  0.0s 
+------
+ > [production  6/16] COPY --chown=appuser:appgroup ../profile/ ../profile/:
+------
+------
+ > [production  7/16] COPY --chown=appuser:appgroup ../scripts/generate-profile-config.py ../scripts/generate-profile-config.py:    
+------
+Dockerfile:84
+
+--------------------
+
+  82 |     # First copy the profile SPOT directory and generation script
+
+  83 |     COPY --chown=appuser:appgroup ../profile/ ../profile/
+
+  84 | >>> COPY --chown=appuser:appgroup ../scripts/generate-profile-config.py ../scripts/generate-profile-config.py
+
+  85 |
+
+  86 |     # Generate the engineer_profile.py from SPOT before copying other code       
+
+--------------------
+
+failed to solve: failed to compute cache key: failed to calculate checksum of ref f30m87hnf27ojg1ucqii688zo::6qch24l5d4s0tp98lqrrnm7rr: "/scripts/generate-profile-config.py": not found
+
+
+
+View build details: docker-desktop://dashboard/build/default/default/7rqclpxgjzzpmv6ozgjztst4m
+
+
+ERROR: Docker build failed!
+Press any key to continue . . .
+
+## FRONTEND:
+==================================================
+Timeline sync complete!
+==================================================
+   ▲ Next.js 15.5.7
+   - Environments: .env.local
+
+   Creating an optimized production build ...
+Failed to compile.
+
+./components/fit-check/InfoDialog.jsx
+Module parse failed: Identifier 'GITHUB_USERNAME' has already been declared (7:9)       
+File was processed with these loaders:      
+ * ./node_modules/next/dist/build/webpack/loaders/next-flight-client-module-loader.js   
+ * ./node_modules/next/dist/build/webpack/loaders/next-swc-loader.js
+You may need an additional loader to handle 
+the result of these loaders.
+| import { cn } from '@/lib/utils';
+| import { GITHUB_USERNAME, REPO_URL } from 
+'@/lib/profile-data';
+> import { GITHUB_USERNAME, REPO_URL } from 
+'@/lib/profile-data';
+| /**
+|  * InfoDialog Component
+
+Import trace for requested module:
+./components/fit-check/InfoDialog.jsx       
+./app/page.js
+
+
+> Build failed because of webpack errors    
+
+================================================================================        
+ERROR: Build failed!
+================================================================================        
+Press any key to continue . . .

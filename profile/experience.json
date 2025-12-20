@@ -6,7 +6,7 @@
       "title": "Software Engineer",
       "company": "Tech Innovation Corp",
       "period": "December 2025",
-      "description": "Leading full-stack development initiatives with modern web technologies and AI integration.",
+      "description": "Leading full-stack development initiatives, architecting scalable solutions with React, Node.js, and cloud services. Implementing CI/CD pipelines and mentoring junior developers.",
       "tags": [
         "React",
         "Node.js",
@@ -15,6 +15,90 @@
       ],
       "color": "burnt-peach",
       "showcase_folder": "showcase1"
+    },
+    {
+      "id": 2,
+      "title": "Full Stack Developer",
+      "company": "Digital Solutions Inc",
+      "period": "2024",
+      "description": "Built and deployed production-ready web applications serving thousands of users. Optimized database queries resulting in 40% performance improvement.",
+      "tags": [
+        "Next.js",
+        "PostgreSQL",
+        "Docker"
+      ],
+      "color": "muted-teal",
+      "showcase_folder": "showcase2"
+    },
+    {
+      "id": 3,
+      "title": "Software Development Intern",
+      "company": "StartupXYZ",
+      "period": "2023",
+      "description": "Developed RESTful APIs and integrated third-party services. Contributed to agile sprints and participated in code reviews with senior engineers.",
+      "tags": [
+        "Python",
+        "FastAPI",
+        "Git"
+      ],
+      "color": "apricot",
+      "showcase_folder": "showcase3"
+    },
+    {
+      "id": 4,
+      "title": "Freelance Web Developer",
+      "company": "Self-Employed",
+      "period": "2022",
+      "description": "Delivered custom websites and e-commerce solutions for small businesses. Managed client relationships and project timelines independently.",
+      "tags": [
+        "JavaScript",
+        "WordPress",
+        "CSS"
+      ],
+      "color": "burnt-peach",
+      "showcase_folder": "showcase4"
+    },
+    {
+      "id": 5,
+      "title": "Research Assistant",
+      "company": "University CS Department",
+      "period": "2020",
+      "description": "Assisted in machine learning research projects. Processed datasets, implemented algorithms, and co-authored a conference paper on NLP techniques.",
+      "tags": [
+        "Python",
+        "TensorFlow",
+        "NLP"
+      ],
+      "color": "muted-teal",
+      "showcase_folder": "showcase5"
+    },
+    {
+      "id": 6,
+      "title": "IT Support Technician",
+      "company": "Campus Tech Services",
+      "period": "2018",
+      "description": "Provided technical support for faculty and students. Troubleshot hardware/software issues and maintained computer lab equipment.",
+      "tags": [
+        "Troubleshooting",
+        "Windows",
+        "Linux"
+      ],
+      "color": "apricot",
+      "showcase_folder": "showcase6"
+    },
+    {
+      "id": 7,
+      "title": "Programming Hobbyist",
+      "company": "Self-Taught Journey",
+      "period": "2016",
+      "description": "Discovered passion for programming through game development and automation scripts. Built first website and learned fundamentals of coding logic.",
+      "tags": [
+        "Java",
+        "HTML",
+        "CSS"
+      ],
+      "color": "burnt-peach",
+      "showcase_folder": "showcase7"
     }
   ]
 }

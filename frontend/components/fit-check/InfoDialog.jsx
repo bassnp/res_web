@@ -5,7 +5,6 @@ import { Info, Github, ExternalLink, AlertTriangle, Shield, Circle } from 'lucid
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogDescription } from '@/components/ui/dialog';
 import { cn } from '@/lib/utils';
 import { GITHUB_USERNAME, REPO_URL } from '@/lib/profile-data';
-import { GITHUB_USERNAME, REPO_URL } from '@/lib/profile-data';
 
 /**
  * InfoDialog Component

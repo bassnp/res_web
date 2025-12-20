@@ -4,25 +4,7 @@
     "primary": {
       "label": "Skills & Technologies",
       "skills": [
-        "Python",
-        "Lua",
-        "Java",
-        "JavaScript",
-        "Dart",
-        "TypeScript",
-        "React",
-        "Next.js",
-        "FastAPI",
-        "LangChain",
-        "LangGraph",
-        "Flutter",
-        "Vite",
-        "Firebase",
-        "MongoDB",
-        "Docker",
-        "AWS",
-        "PostgreSQL",
-        "Redis"
+        "TODO"
       ]
     },
     "devops": {
@@ -31,7 +13,7 @@
         "Jira",
         "Slack",
         "Git",
-        "GitHub",
+        "Github",
         "Figma",
         "Excel Sheets",
         "CapCut"
