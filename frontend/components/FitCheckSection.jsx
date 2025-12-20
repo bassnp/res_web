@@ -200,6 +200,12 @@ export function FitCheckSection() {
                       <span>Analysis completed in {(durationMs / 1000).toFixed(1)}s</span>
                     </div>
                   )}
+
+                  {/* AI Disclaimer */}
+                  <p className="text-[11px] text-twilight/40 dark:text-eggshell/40 text-center max-w-xs leading-tight">
+                    Powered by Gemini AI<br />
+                    Results may contain hallucinated inaccuracies
+                  </p>
                 </div>
               )}
             </div>

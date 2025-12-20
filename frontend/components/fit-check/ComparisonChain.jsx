@@ -288,7 +288,7 @@ export function ComparisonChain({
         </div>
         <div>
           <h3 className="text-base font-bold text-twilight dark:text-eggshell">
-            Analysis Pipeline
+            Brutal Analysis Pipeline
           </h3>
           <p className="text-xs text-twilight/60 dark:text-eggshell/60 truncate max-w-[180px]">
             {statusMessage || 'Processing your request...'}

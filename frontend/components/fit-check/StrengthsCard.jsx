@@ -25,22 +25,22 @@ export function StrengthsCard({
   if (!isVisible) return null;
 
   return (
-    <div className={cn(
-      "relative overflow-hidden rounded-[5px]",
-      "bg-background/95 backdrop-blur-sm glass-card",
-      "shadow-[0_2px_8px_rgba(61,64,91,0.08)] dark:shadow-[0_2px_12px_rgba(0,0,0,0.3)]",
-      "border border-muted-teal/30 dark:border-muted-teal/20",
-      "strengths-card-glow card-shimmer",
-      "animate-slide-up-card",
-      "transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
-    )}>
-      {/* Gradient border overlay */}
-      <div className="absolute inset-0 gradient-border-strengths opacity-50" />
+    <div className="animate-slide-up-card h-full">
+      <div className={cn(
+        "relative overflow-hidden rounded-[5px] h-full",
+        "bg-background/95 backdrop-blur-sm glass-card",
+        "shadow-[0_2px_8px_rgba(61,64,91,0.08)] dark:shadow-[0_2px_12px_rgba(0,0,0,0.3)]",
+        "border border-muted-teal/30 dark:border-muted-teal/20",
+        "strengths-card-glow card-shimmer",
+        "transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
+      )}>
+        {/* Gradient border overlay */}
+        <div className="absolute inset-0 gradient-border-strengths opacity-50 pointer-events-none" />
       
       {/* Background dots */}
       <InteractiveGridDots />
       
-      <div className="relative z-10 p-6 md:p-8">
+      <div className="relative z-10 p-6 md:p-8 h-full">
         {/* Header */}
         <div className="flex items-center gap-3 mb-4">
           <div className={cn(
@@ -96,6 +96,7 @@ export function StrengthsCard({
         )}
       </div>
     </div>
+  </div>
   );
 }
 
