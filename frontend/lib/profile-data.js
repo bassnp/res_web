@@ -220,23 +220,23 @@ export const EXPERIENCE = {
   timeline: [
     {
       id: 1,
-      title: 'Bachelor of Computer Science Degree',
+      title: 'Bachelor of Science, Computer Science',
       company: 'California State University Sacramento Graduate',
       period: 'December 2025',
-      description: 'Completed a Bachelor of Science in Computer Science at California State University, Sacramento. Starting during the Covid-19 pandemic years, I rigorously pursued my academic passion where I met many friends along the way to help me grow as both a student and individual in this feild.',
+      description: 'Completed a Bachelor of Science Degree in Computer Science at California State University, Sacramento. Starting during the Covid-19 pandemic years, I rigorously pursued my academic passion where I met many friends along the way to help me grow as both a student and individual in this field.',
       tags: ['B.S. Computer Science', 'Winter 2025 New Grad'],
       color: 'burnt-peach',
       showcase_folder: 'showcase-graduation'
     },
     {
       id: 2,
-      title: 'ChurchLink Deployment Handoff',
+      title: 'Graduation Senior Project Handoff',
       company: 'Second Slavic Baptist Church of Sacramento',
       period: 'November 2025',
       description: 'After a year-long upper-division course, my project team \'Init to Winit\' successfully delivered a rich Web & App Builder Platform to our client. The system enables church staff to manage content for many features across multiple platforms, handle multi-language localization, and process donations.',
       tags: ['Flutter', 'TypeScript', 'Python', 'Firebase', 'MongoDB'],
       color: 'muted-teal',
-      showcase_folder: 'showcase-churchlink'
+      showcase_folder: 'showcase-graduation'
     },
     {
       id: 3,
@@ -253,7 +253,7 @@ export const EXPERIENCE = {
       title: 'Zharvis Game Overlay',
       company: 'SaaS WIP Product',
       period: 'October 2025',
-      description: 'Zharvis is n on-going project on the Overwolf Marketplace to host my overlay providing AI-powered in-game assistance. Version 2 upgraded from a v1 vector store RAG knowledge base to a Wiki CSE w/ MCP tooling methodology for faster and accurate query responses enabling a scalable product.',
+      description: 'Zharvis is an on-going project on the Overwolf Marketplace to host my overlay providing AI-powered in-game assistance. Version 2 upgraded from a v1 vector store RAG knowledge base to a Wiki CSE w/ MCP tooling methodology for faster and accurate query responses enabling a scalable product.',
       tags: ['Python', 'Overwolf', 'MCP', 'LangChain'],
       color: 'burnt-peach',
       showcase_folder: 'showcase-zharvis'
@@ -280,10 +280,10 @@ export const EXPERIENCE = {
     },
     {
       id: 7,
-      title: 'First GitHub Commit',
+      title: 'First Git Commit',
       company: 'High School Side Project',
       period: 'July 2019',
-      description: 'July 1st I pushed my first commit to GitHub at age 15, showcasing a Java drawing application I made out of boredom during my sophomore programming Java split-honors class of beginners and advanced students (Mr.McGuinness at THS ur awesome). This minor milestone marked the beginning of my ambitious journey as a software developer.',
+      description: 'July 1st I pushed my first commit to GitHub at age 15, showcasing a Java drawing application I made out of boredom during my sophomore programming Java split-honors class of beginners and advanced students (shout-out Mr.McGuinness ur awesome). This minor milestone marked the beginning of my ambitious journey as a software developer.',
       tags: ['Highschool', 'Honors Class', 'First Git Commit'],
       color: 'burnt-peach',
       showcase_folder: 'showcase-first-commit'
