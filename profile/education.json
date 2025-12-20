@@ -1,0 +1,10 @@
+{
+  "$schema": "./schemas/education.schema.json",
+  "primary": {
+    "degree": "Bachelor of Science Degree in Computer Science",
+    "institution": "California State University, Sacramento",
+    "graduation": "2025 Winter Graduate",
+    "logo_path": "/resources/school_logo.png"
+  },
+  "certifications": []
+}

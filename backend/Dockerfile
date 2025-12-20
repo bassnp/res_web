@@ -79,6 +79,14 @@ RUN groupadd --gid 1000 appgroup && \
     chown -R appuser:appgroup /app
 
 # Copy application code (exclude sensitive files via .dockerignore)
+# First copy the profile SPOT directory and generation script
+COPY --chown=appuser:appgroup ../profile/ ../profile/
+COPY --chown=appuser:appgroup ../scripts/generate-profile-config.py ../scripts/generate-profile-config.py
+
+# Generate the engineer_profile.py from SPOT before copying other code
+RUN python ../scripts/generate-profile-config.py
+
+# Copy application code
 COPY --chown=appuser:appgroup server.py .
 COPY --chown=appuser:appgroup config/ ./config/
 COPY --chown=appuser:appgroup middleware/ ./middleware/

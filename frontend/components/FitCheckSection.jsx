@@ -204,7 +204,7 @@ export function FitCheckSection() {
                   {/* AI Disclaimer */}
                   <p className="text-[11px] text-twilight/40 dark:text-eggshell/40 text-center max-w-xs leading-tight">
                     Powered by Gemini AI<br />
-                    Results may contain hallucinated inaccuracies
+                    Results may contain minor and hallucinated inaccuracies
                   </p>
                 </div>
               )}

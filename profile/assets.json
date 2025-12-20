@@ -1,0 +1,16 @@
+{
+  "$schema": "./schemas/assets.schema.json",
+  "portrait": "/resources/portrait.jpg",
+  "school_logo": "/resources/school_logo.png",
+  "resume_pdf": {
+    "path": "/resources/SSR_TSRPT.pdf",
+    "thumbnail": "/resources/SSR_TSRPT_thumb.jpg",
+    "label": "PDF Formatted Resume"
+  },
+  "personal_collage": {
+    "folder": "/resources/personal_collage/",
+    "manifest": "/resources/collage_manifest.json"
+  },
+  "project_images_base": "/resources/project_images/",
+  "timeline_images_base": "/resources/timeline_images/"
+}

@@ -1,0 +1,23 @@
+{
+  "$schema": "./schemas/ai_models.schema.json",
+  "models": {
+    "gemini-flash-latest": {
+      "id": "gemini-flash-latest",
+      "label": "Gemini Flash",
+      "description": "Fast responses with balanced accuracy",
+      "config_type": "standard",
+      "badge": "Active"
+    }
+  },
+  "default_model": "gemini-flash-latest",
+  "disabled_models": {
+    "gemini-3-pro-preview": {
+      "id": "gemini-3-pro-preview",
+      "label": "Gemini 3 Pro (Preview)",
+      "description": "Advanced reasoning with deep analysis",
+      "config_type": "reasoning",
+      "badge": "Recommended",
+      "disabled_reason": "Temporarily disabled due to API issues"
+    }
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "$schema": "./schemas/contact.schema.json",
+  "email": "hello@example.com",
+  "social": {
+    "github": {
+      "url": "https://github.com/bassnp",
+      "display": "bassnp"
+    },
+    "mail": {
+      "url": "mailto:hello@example.com",
+      "display": "Email"
+    }
+  },
+  "repo": {
+    "url": "https://github.com/bassnp/res_web",
+    "display": "View Source Code"
+  }
+}

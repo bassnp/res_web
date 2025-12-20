@@ -1,0 +1,49 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Skills Configuration",
+  "description": "Technical skills organized by category",
+  "type": "object",
+  "required": ["display_categories", "backend_categories"],
+  "properties": {
+    "display_categories": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "required": ["label", "skills"],
+        "properties": {
+          "label": { "type": "string" },
+          "skills": {
+            "type": "array",
+            "items": { "type": "string" }
+          }
+        }
+      }
+    },
+    "backend_categories": {
+      "type": "object",
+      "required": ["languages", "frameworks", "cloud_devops", "ai_ml", "tools"],
+      "properties": {
+        "languages": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "frameworks": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "cloud_devops": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "ai_ml": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "tools": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    }
+  }
+}

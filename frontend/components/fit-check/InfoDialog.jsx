@@ -4,6 +4,8 @@ import { useState } from 'react';
 import { Info, Github, ExternalLink, AlertTriangle, Shield, Circle } from 'lucide-react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogDescription } from '@/components/ui/dialog';
 import { cn } from '@/lib/utils';
+import { GITHUB_USERNAME, REPO_URL } from '@/lib/profile-data';
+import { GITHUB_USERNAME, REPO_URL } from '@/lib/profile-data';
 
 /**
  * InfoDialog Component
@@ -43,7 +45,7 @@ export function InfoDialog({
         <div className="py-4 space-y-4">
           {/* GitHub Repo Card - Visual Style */}
           <a
-            href="https://github.com/bassnp/res_web"
+            href={REPO_URL}
             target="_blank"
             rel="noopener noreferrer"
             className={cn(
@@ -58,7 +60,7 @@ export function InfoDialog({
             {/* Header row */}
             <div className="flex items-center gap-2 mb-2">
               <Github className="w-4 h-4 text-twilight/70 dark:text-eggshell/70" />
-              <span className="text-xs text-twilight/60 dark:text-eggshell/60">bassnp</span>
+              <span className="text-xs text-twilight/60 dark:text-eggshell/60">{GITHUB_USERNAME}</span>
               <span className="text-twilight/40 dark:text-eggshell/40">/</span>
               <span className="text-sm font-semibold text-emerald-600 dark:text-emerald-400 group-hover:underline">
                 res_web

@@ -1,0 +1,88 @@
+{
+  "$schema": "./schemas/pipeline_phases.schema.json",
+  "phases": {
+    "connecting": {
+      "id": "connecting",
+      "label": "Connecting",
+      "icon": "Wifi",
+      "description": "Classifying query and extracting entities",
+      "color": "blue",
+      "color_intensity": 400,
+      "glow_rgb": "96, 165, 250"
+    },
+    "deep_research": {
+      "id": "deep_research",
+      "label": "Deep Research",
+      "icon": "Search",
+      "description": "Gathering employer intelligence via web search",
+      "color": "purple",
+      "color_intensity": 400,
+      "glow_rgb": "192, 132, 252"
+    },
+    "research_reranker": {
+      "id": "research_reranker",
+      "label": "Research Quality Gate",
+      "icon": "ShieldCheck",
+      "description": "Validating research completeness and quality",
+      "color": "violet",
+      "color_intensity": 400,
+      "glow_rgb": "167, 139, 250"
+    },
+    "content_enrich": {
+      "id": "content_enrich",
+      "label": "Content Enrichment",
+      "icon": "Database",
+      "description": "Extracting full page content from top sources",
+      "color": "cyan",
+      "color_intensity": 400,
+      "glow_rgb": "34, 211, 238"
+    },
+    "skeptical_comparison": {
+      "id": "skeptical_comparison",
+      "label": "Skeptical Comparison",
+      "icon": "Scale",
+      "description": "Critical gap analysis between candidate and requirements",
+      "color": "amber",
+      "color_intensity": 400,
+      "glow_rgb": "251, 191, 36"
+    },
+    "skills_matching": {
+      "id": "skills_matching",
+      "label": "Skills Matching",
+      "icon": "Briefcase",
+      "description": "Mapping skills to job requirements",
+      "color": "emerald",
+      "color_intensity": 400,
+      "glow_rgb": "52, 211, 153"
+    },
+    "confidence_reranker": {
+      "id": "confidence_reranker",
+      "label": "Confidence Calibration",
+      "icon": "Zap",
+      "description": "LLM-as-Judge quality assessment and calibration",
+      "color": "emerald",
+      "color_intensity": 400,
+      "glow_rgb": "52, 211, 153"
+    },
+    "generate_results": {
+      "id": "generate_results",
+      "label": "Generating Results",
+      "icon": "FileCheck2",
+      "description": "Synthesizing final response with insights",
+      "color": "burnt-peach",
+      "color_intensity": 400,
+      "glow_rgb": "224, 122, 95",
+      "custom_color": true
+    }
+  },
+  "phase_order": [
+    "connecting",
+    "deep_research",
+    "research_reranker",
+    "content_enrich",
+    "skeptical_comparison",
+    "skills_matching",
+    "confidence_reranker",
+    "generate_results"
+  ]
+}

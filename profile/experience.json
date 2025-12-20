@@ -1,0 +1,20 @@
+{
+  "$schema": "./schemas/experience.schema.json",
+  "timeline": [
+    {
+      "id": 1,
+      "title": "Software Engineer",
+      "company": "Tech Innovation Corp",
+      "period": "December 2025",
+      "description": "Leading full-stack development initiatives with modern web technologies and AI integration.",
+      "tags": [
+        "React",
+        "Node.js",
+        "AWS",
+        "TypeScript"
+      ],
+      "color": "burnt-peach",
+      "showcase_folder": "showcase1"
+    }
+  ]
+}

@@ -1,0 +1,30 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Assets Configuration",
+  "description": "Static asset paths and references",
+  "type": "object",
+  "required": ["portrait", "school_logo", "resume_pdf", "personal_collage"],
+  "properties": {
+    "portrait": { "type": "string" },
+    "school_logo": { "type": "string" },
+    "resume_pdf": {
+      "type": "object",
+      "required": ["path", "thumbnail", "label"],
+      "properties": {
+        "path": { "type": "string" },
+        "thumbnail": { "type": "string" },
+        "label": { "type": "string" }
+      }
+    },
+    "personal_collage": {
+      "type": "object",
+      "required": ["folder", "manifest"],
+      "properties": {
+        "folder": { "type": "string" },
+        "manifest": { "type": "string" }
+      }
+    },
+    "project_images_base": { "type": "string" },
+    "timeline_images_base": { "type": "string" }
+  }
+}

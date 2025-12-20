@@ -1,0 +1,52 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Identity Configuration",
+  "description": "Personal identity and biographical information",
+  "type": "object",
+  "required": ["name", "portrait", "hero", "bio", "experience_summary", "strengths", "career_interests"],
+  "properties": {
+    "name": {
+      "type": "object",
+      "required": ["full", "display", "title", "professional_title"],
+      "properties": {
+        "full": { "type": "string" },
+        "display": { "type": "string" },
+        "title": { "type": "string" },
+        "professional_title": { "type": "string" }
+      }
+    },
+    "portrait": {
+      "type": "object",
+      "required": ["path", "alt"],
+      "properties": {
+        "path": { "type": "string" },
+        "alt": { "type": "string" }
+      }
+    },
+    "hero": {
+      "type": "object",
+      "required": ["animation_left", "animation_right"],
+      "properties": {
+        "animation_left": { "type": "string" },
+        "animation_right": { "type": "string" }
+      }
+    },
+    "bio": {
+      "type": "object",
+      "required": ["tldr", "full"],
+      "properties": {
+        "tldr": { "type": "string" },
+        "full": { "type": "string" }
+      }
+    },
+    "experience_summary": { "type": "string" },
+    "strengths": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "career_interests": {
+      "type": "array",
+      "items": { "type": "string" }
+    }
+  }
+}

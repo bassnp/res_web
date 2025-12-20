@@ -5,6 +5,19 @@ echo res_web Backend - Clean Rebuild
 echo ========================================
 echo.
 
+echo [0/5] Generating profile configuration from SPOT...
+cd ..
+python scripts\generate-profile-config.py
+if errorlevel 1 (
+    echo.
+    echo ERROR: Profile generation failed!
+    pause
+    exit /b 1
+)
+cd backend
+echo Done.
+
+echo.
 echo [1/5] Stopping and removing existing containers...
 docker compose down --remove-orphans 2>nul
 docker stop res_web-backend 2>nul

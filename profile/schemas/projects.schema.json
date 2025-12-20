@@ -1,0 +1,48 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Projects Configuration",
+  "description": "Featured projects and notable work",
+  "type": "object",
+  "required": ["featured", "backend_projects"],
+  "properties": {
+    "featured": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "title", "description", "about", "learning_outcomes", "tags", "color", "images_folder"],
+        "properties": {
+          "id": { "type": "string" },
+          "title": { "type": "string" },
+          "description": { "type": "string" },
+          "about": { "type": "string" },
+          "learning_outcomes": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "tags": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "color": { "type": "string" },
+          "images_folder": { "type": "string" },
+          "link": { "type": ["string", "null"] }
+        }
+      }
+    },
+    "backend_projects": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name", "description", "tech"],
+        "properties": {
+          "name": { "type": "string" },
+          "description": { "type": "string" },
+          "tech": {
+            "type": "array",
+            "items": { "type": "string" }
+          }
+        }
+      }
+    }
+  }
+}

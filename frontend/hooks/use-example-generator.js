@@ -1,12 +1,13 @@
 'use client';
 
 import { useState, useCallback } from 'react';
+import { API_BASE_URL } from '@/lib/profile-data';
 
 /**
  * API URL for backend requests.
- * Falls back to localhost for development.
+ * Falls back to SPOT configuration for development.
  */
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+const API_URL = process.env.NEXT_PUBLIC_API_URL || API_BASE_URL;
 
 /**
  * Custom hook for generating example job queries.

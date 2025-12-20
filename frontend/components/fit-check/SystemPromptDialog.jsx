@@ -26,8 +26,9 @@ import {
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { PHASE_CONFIG } from '@/lib/phaseConfig';
+import { API_BASE_URL } from '@/lib/profile-data';
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+const API_URL = process.env.NEXT_PUBLIC_API_URL || API_BASE_URL;
 
 /**
  * SystemPromptDialog Component

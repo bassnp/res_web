@@ -12,6 +12,22 @@ import InteractiveGridDots from '@/components/InteractiveGridDots';
 import CardGridDots from '@/components/CardGridDots';
 import HeroGridDots from '@/components/HeroGridDots';
 import FitCheckSection from '@/components/FitCheckSection';
+import { 
+  HERO_TEXT, 
+  PRIMARY_SKILLS, 
+  DEVOPS_SKILLS, 
+  FEATURED_PROJECTS, 
+  PRIMARY_EDUCATION,
+  EMAIL,
+  GITHUB_URL,
+  GITHUB_USERNAME,
+  REPO_URL,
+  PORTRAIT_PATH,
+  PORTRAIT_ALT,
+  BIO_TLDR,
+  BIO_FULL,
+  EXPERIENCE 
+} from '@/lib/profile-data';
 
 // ============================================
 // PERSONAL COLLAGE IMAGE PATHS
@@ -287,8 +303,8 @@ const Footer = () => {
   ];
 
   const socialLinks = [
-    { icon: Github, href: '#', label: 'GitHub' },
-    { icon: Mail, href: '#', label: 'Email' },
+    { icon: Github, href: GITHUB_URL, label: 'GitHub' },
+    { icon: Mail, href: `mailto:${EMAIL}`, label: 'Email' },
   ];
 
   return (
@@ -322,7 +338,7 @@ const Footer = () => {
                   ))}
                 </div>
                 <p className="text-twilight/70 dark:text-eggshell/70 text-sm">
-                  hello@example.com
+                  {EMAIL}
                 </p>
               </div>
             </div>
@@ -384,10 +400,11 @@ const ANIMATION_STATES = {
 
 /**
  * Text content for each animation position.
+ * Loaded from SPOT (Single Point of Truth) profile data.
  */
 const ANIMATION_TEXTS = {
-  left: 'I\'m Jaden Bruha',
-  right: 'A Technical Engineer',
+  left: HERO_TEXT.left,
+  right: HERO_TEXT.right,
 };
 
 /**
@@ -429,13 +446,10 @@ const HeroAboutSection = () => {
     ANIMATION_STATES.RIGHT_PAUSED,
   ].includes(animationState);
 
-  const skills = [
-    'TODO'
-  ];
+  // Skills loaded from SPOT (Single Point of Truth) profile data
+  const skills = PRIMARY_SKILLS;
 
-  const devOps = [
-    'Jira', 'Slack', 'Git', 'Github', 'Figma', 'Excel Sheets', 'CapCut'
-  ];
+  const devOps = DEVOPS_SKILLS;
 
   /**
    * Cursor blinking effect during pause and translation states.
@@ -661,8 +675,8 @@ const HeroAboutSection = () => {
                   style={{ aspectRatio: '3/4' }}
                 >
                   <img 
-                    src="/resources/portrait.jpg" 
-                    alt="Jaden Bruha Portrait" 
+                    src={PORTRAIT_PATH} 
+                    alt={PORTRAIT_ALT} 
                     className="w-full h-full object-cover transition-all duration-300 group-hover:scale-105"
                   />
                 </div>
@@ -731,23 +745,23 @@ const HeroAboutSection = () => {
               <div className="flex items-center gap-4 mb-4 opacity-0 animate-fade-in-left delay-100">
                 <div className="w-16 h-16 rounded-[5px] overflow-hidden shadow-lg flex-shrink-0 bg-eggshell dark:bg-twilight/50">
                   <img
-                    src="/resources/school_logo.png"
-                    alt="California State University, Sacramento Logo"
+                    src={PRIMARY_EDUCATION.logo_path}
+                    alt={`${PRIMARY_EDUCATION.institution} Logo`}
                     className="w-full h-full object-contain p-1"
                   />
                 </div>
                 <div>
                   <h3 className="text-lg font-bold text-muted-teal">
-                    Bachelor of Science Degree in Computer Science
+                    {PRIMARY_EDUCATION.degree}
                   </h3>
-                  <p className="text-twilight/60 dark:text-eggshell/60 text-sm">California State University, Sacramento • 2025 Winter Graduate</p>
+                  <p className="text-twilight/60 dark:text-eggshell/60 text-sm">{PRIMARY_EDUCATION.institution} • {PRIMARY_EDUCATION.graduation}</p>
                 </div>
               </div>
 
               {/* Bio */}
               <div className="opacity-0 animate-fade-in-right delay-200">
                 <p className="text-twilight/80 dark:text-eggshell/80 leading-relaxed mb-4 text-sm">
-                  <span className="font-bold text-muted-teal">TLDR; I am Jaden Bruha, I'm a 22 year old new-grad, and I'm a very nerdy engineer with big aspirations.</span> <br></br> I have a passion for building anything and everything from software, computers to serve my software, AI agents, and motorcycles. My journey started at a young age as a hobbyist, and I've grown into a full stack developer striving for elegant solutions. My current fixations include learning about quantum philosophy, parallelized programming, and artificial (general) intelligence. <br></br>
+                  <span className="font-bold text-muted-teal">{BIO_TLDR}</span> <br></br> {BIO_FULL} <br></br>
                 </p>
               </div>
 
@@ -835,66 +849,21 @@ const HeroAboutSection = () => {
 
 /**
  * Project data with extended properties for modal display.
+ * Loaded from SPOT (Single Point of Truth) profile data.
  * Each project includes:
  * - id: Unique identifier matching the image folder name
  * - title: Display name
  * - description: Brief card description
  * - about: Extended description for modal
- * - learningOutcomes: Array of key takeaways
+ * - learningOutcomes: Array of key takeaways (renamed from learning_outcomes)
  * - tags: Technology stack
  * - color: Gradient class for visual theming
  * - link: Optional external project URL
  */
-const PROJECTS_DATA = [
-  {
-    id: 'project-alpha',
-    title: 'Project Alpha',
-    description: 'A full-stack web application built with React and Node.js, featuring real-time updates and modern UI.',
-    about: 'Project Alpha is a comprehensive full-stack application that demonstrates modern web development practices. It features a React frontend with a Node.js backend, utilizing WebSocket connections for real-time updates. The application includes user authentication, data persistence with PostgreSQL, and a responsive design that works seamlessly across all devices.',
-    learningOutcomes: [
-      'Mastered React hooks and state management patterns',
-      'Implemented WebSocket connections for real-time data synchronization',
-      'Designed and optimized PostgreSQL database schemas',
-      'Built RESTful APIs with proper error handling and validation',
-      'Deployed containerized applications using Docker'
-    ],
-    tags: ['React', 'Node.js', 'PostgreSQL'],
-    color: 'from-burnt-peach to-apricot',
-    link: null,
-  },
-  {
-    id: 'project-beta',
-    title: 'Project Beta',
-    description: 'Mobile-first progressive web app with offline capabilities and push notifications.',
-    about: 'Project Beta showcases the power of Progressive Web Apps (PWAs) with a mobile-first approach. The application leverages service workers for offline functionality, implements push notifications for user engagement, and provides a native app-like experience directly in the browser. Built with Next.js and TypeScript for type safety and improved developer experience.',
-    learningOutcomes: [
-      'Implemented service workers for offline-first functionality',
-      'Configured push notifications with proper permission handling',
-      'Utilized TypeScript for enhanced code quality and maintainability',
-      'Optimized performance with Next.js static generation and caching',
-      'Designed responsive layouts following mobile-first principles'
-    ],
-    tags: ['Next.js', 'PWA', 'TypeScript'],
-    color: 'from-muted-teal to-twilight',
-    link: null,
-  },
-  {
-    id: 'project-gamma',
-    title: 'Project Gamma',
-    description: 'Data visualization dashboard with interactive charts and real-time analytics.',
-    about: 'Project Gamma is an advanced data visualization dashboard that transforms complex datasets into intuitive, interactive visualizations. Using D3.js for custom charts and Python for backend data processing, the dashboard provides real-time analytics with filtering, zooming, and drill-down capabilities. The system processes large datasets efficiently and presents insights in a visually compelling manner.',
-    learningOutcomes: [
-      'Created custom D3.js visualizations with interactive features',
-      'Built efficient data processing pipelines in Python',
-      'Implemented real-time data streaming and updates',
-      'Designed intuitive UX for complex data exploration',
-      'Optimized rendering performance for large datasets'
-    ],
-    tags: ['Python', 'D3.js', 'PostgreSQL'],
-    color: 'from-apricot to-muted-teal',
-    link: null,
-  },
-];
+const PROJECTS_DATA = FEATURED_PROJECTS.map(project => ({
+  ...project,
+  learningOutcomes: project.learning_outcomes, // Map to camelCase for consistency
+}));
 
 const ProjectsSection = () => {
   // Track which project modal is open (null = none open)
@@ -1138,74 +1107,10 @@ const TimelineShowcaseCarousel = ({ showcaseId, interval = CAROUSEL_INTERVAL, co
 // ============================================
 const ExperienceSection = () => {
   /**
-   * Timeline experience data - 7 entries from Dec 2025 to 2016
-   * Each entry alternates between left and right positioning
+   * Timeline experience data loaded from SPOT (Single Point of Truth).
+   * Each entry alternates between left and right positioning.
    */
-  const experiences = [
-    {
-      id: 1,
-      title: 'Software Engineer',
-      company: 'Tech Innovation Corp',
-      period: 'December 2025',
-      description: 'Leading full-stack development initiatives, architecting scalable solutions with React, Node.js, and cloud services. Implementing CI/CD pipelines and mentoring junior developers.',
-      tags: ['React', 'Node.js', 'AWS', 'TypeScript'],
-      color: 'burnt-peach',
-    },
-    {
-      id: 2,
-      title: 'Full Stack Developer',
-      company: 'Digital Solutions Inc',
-      period: '2024',
-      description: 'Built and deployed production-ready web applications serving thousands of users. Optimized database queries resulting in 40% performance improvement.',
-      tags: ['Next.js', 'PostgreSQL', 'Docker'],
-      color: 'muted-teal',
-    },
-    {
-      id: 3,
-      title: 'Software Development Intern',
-      company: 'StartupXYZ',
-      period: '2023',
-      description: 'Developed RESTful APIs and integrated third-party services. Contributed to agile sprints and participated in code reviews with senior engineers.',
-      tags: ['Python', 'FastAPI', 'Git'],
-      color: 'apricot',
-    },
-    {
-      id: 4,
-      title: 'Freelance Web Developer',
-      company: 'Self-Employed',
-      period: '2022',
-      description: 'Delivered custom websites and e-commerce solutions for small businesses. Managed client relationships and project timelines independently.',
-      tags: ['JavaScript', 'WordPress', 'CSS'],
-      color: 'burnt-peach',
-    },
-    {
-      id: 5,
-      title: 'Research Assistant',
-      company: 'University CS Department',
-      period: '2020',
-      description: 'Assisted in machine learning research projects. Processed datasets, implemented algorithms, and co-authored a conference paper on NLP techniques.',
-      tags: ['Python', 'TensorFlow', 'NLP'],
-      color: 'muted-teal',
-    },
-    {
-      id: 6,
-      title: 'IT Support Technician',
-      company: 'Campus Tech Services',
-      period: '2018',
-      description: 'Provided technical support for faculty and students. Troubleshot hardware/software issues and maintained computer lab equipment.',
-      tags: ['Troubleshooting', 'Windows', 'Linux'],
-      color: 'apricot',
-    },
-    {
-      id: 7,
-      title: 'Programming Hobbyist',
-      company: 'Self-Taught Journey',
-      period: '2016',
-      description: 'Discovered passion for programming through game development and automation scripts. Built first website and learned fundamentals of coding logic.',
-      tags: ['Java', 'HTML', 'CSS'],
-      color: 'burnt-peach',
-    },
-  ];
+  const experiences = EXPERIENCE.timeline;
 
   return (
     <section id="experience" className="py-6 relative">
@@ -1467,7 +1372,7 @@ const ContactSection = () => {
             asChild
             className="bg-burnt-peach hover:bg-burnt-peach/90 text-eggshell px-7 py-5 text-base rounded-sm animate-pulse-glow hover:scale-105 transition-transform relative z-10"
           >
-            <a href="mailto:hello@example.com" className="flex items-center gap-2">
+            <a href={`mailto:${EMAIL}`} className="flex items-center gap-2">
               <Mail className="w-5 h-5" />
               Say Hello
             </a>

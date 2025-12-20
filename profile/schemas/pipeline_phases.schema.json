@@ -1,0 +1,30 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Pipeline Phases Configuration",
+  "description": "AI pipeline phase definitions and ordering",
+  "type": "object",
+  "required": ["phases", "phase_order"],
+  "properties": {
+    "phases": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "required": ["id", "label", "icon", "description", "color", "color_intensity", "glow_rgb"],
+        "properties": {
+          "id": { "type": "string" },
+          "label": { "type": "string" },
+          "icon": { "type": "string" },
+          "description": { "type": "string" },
+          "color": { "type": "string" },
+          "color_intensity": { "type": "integer" },
+          "glow_rgb": { "type": "string" },
+          "custom_color": { "type": "boolean" }
+        }
+      }
+    },
+    "phase_order": {
+      "type": "array",
+      "items": { "type": "string" }
+    }
+  }
+}

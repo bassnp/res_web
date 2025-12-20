@@ -1,0 +1,32 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Education Configuration",
+  "description": "Academic credentials and certifications",
+  "type": "object",
+  "required": ["primary", "certifications"],
+  "properties": {
+    "primary": {
+      "type": "object",
+      "required": ["degree", "institution", "graduation", "logo_path"],
+      "properties": {
+        "degree": { "type": "string" },
+        "institution": { "type": "string" },
+        "graduation": { "type": "string" },
+        "logo_path": { "type": "string" }
+      }
+    },
+    "certifications": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name", "issuer", "date"],
+        "properties": {
+          "name": { "type": "string" },
+          "issuer": { "type": "string" },
+          "date": { "type": "string" },
+          "credential_url": { "type": "string" }
+        }
+      }
+    }
+  }
+}

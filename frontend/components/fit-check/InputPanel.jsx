@@ -142,6 +142,14 @@ export const InputPanel = forwardRef(function InputPanel({
         </h2>
       </div>
 
+      {/* AI Disclaimer */}
+      <div className="flex justify-center mb-4">
+        <p className="text-[11px] text-twilight/40 dark:text-eggshell/40 text-center max-w-xs leading-tight">
+          Powered by Gemini AI<br />
+          Results may contain minor and hallucinated inaccuracies
+        </p>
+      </div>
+
       {/* Feature Highlights Bubbles */}
       <div className="flex flex-row gap-3 justify-center mb-6">
         <div className="flex-1 max-w-[240px] px-4 py-2 bg-emerald-500/20 dark:bg-emerald-500/15 backdrop-blur-sm border border-emerald-500/40 rounded-2xl shadow-sm text-center flex items-center justify-center transition-[transform,background-color,border-color] duration-300 hover:scale-105 hover:-translate-y-1 hover:bg-emerald-500/30 hover:border-emerald-500/60 cursor-default">

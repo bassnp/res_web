@@ -1,0 +1,79 @@
+{
+  "$schema": "./schemas/skills.schema.json",
+  "display_categories": {
+    "primary": {
+      "label": "Skills & Technologies",
+      "skills": [
+        "Python",
+        "Lua",
+        "Java",
+        "JavaScript",
+        "Dart",
+        "TypeScript",
+        "React",
+        "Next.js",
+        "FastAPI",
+        "LangChain",
+        "LangGraph",
+        "Flutter",
+        "Vite",
+        "Firebase",
+        "MongoDB",
+        "Docker",
+        "AWS",
+        "PostgreSQL",
+        "Redis"
+      ]
+    },
+    "devops": {
+      "label": "Dev Ops",
+      "skills": [
+        "Jira",
+        "Slack",
+        "Git",
+        "GitHub",
+        "Figma",
+        "Excel Sheets",
+        "CapCut"
+      ]
+    }
+  },
+  "backend_categories": {
+    "languages": [
+      "Python",
+      "JavaScript",
+      "TypeScript",
+      "SQL",
+      "HTML/CSS"
+    ],
+    "frameworks": [
+      "React",
+      "Next.js",
+      "FastAPI",
+      "Node.js",
+      "TailwindCSS"
+    ],
+    "cloud_devops": [
+      "Docker",
+      "AWS",
+      "PostgreSQL",
+      "Redis",
+      "CI/CD"
+    ],
+    "ai_ml": [
+      "LangChain",
+      "LangGraph",
+      "OpenAI API",
+      "Google Gemini",
+      "RAG Systems",
+      "Prompt Engineering"
+    ],
+    "tools": [
+      "Git",
+      "VS Code",
+      "Linux",
+      "REST APIs",
+      "GraphQL"
+    ]
+  }
+}

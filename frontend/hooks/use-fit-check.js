@@ -30,7 +30,9 @@ import { useAISettings } from './use-ai-settings';
  * - generate_results: Final response synthesis
  */
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+import { API_BASE_URL } from '@/lib/profile-data';
+
+const API_URL = process.env.NEXT_PUBLIC_API_URL || API_BASE_URL;
 
 /**
  * Phase entry structure for tracking pipeline progress.
