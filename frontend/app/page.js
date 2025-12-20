@@ -791,7 +791,7 @@ const HeroAboutSection = () => {
                   <div className="p-2">
                     <div className="flex items-center gap-1.5 mb-2">
                       <FileText className="w-3.5 h-3.5 text-burnt-peach" />
-                      <h4 className="text-xs font-semibold text-twilight dark:text-eggshell">PDF Formatted Resume</h4>
+                      <h4 className="text-xs font-semibold text-twilight dark:text-eggshell">PDF Resume</h4>
                     </div>
                     {/* PDF Thumbnail Preview */}
                     <div className="relative aspect-[4/5] bg-white dark:bg-twilight/30 rounded-[3px] border border-twilight/10 dark:border-eggshell/10 overflow-hidden">

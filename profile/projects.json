@@ -3,15 +3,14 @@
   "featured": [
     {
       "id": "churchlink",
-      "title": "ChurchLink — Web & App Builder Platform",
-      "description": "A deployed platform enabling churches to build and customize their own websites and mobile apps with multi-language support, admin dashboards, and payment processing.",
-      "about": "ChurchLink is a comprehensive church management solution developed as a senior graduation project with a team of 6 engineers. The platform provides an intuitive builder for churches to create and customize their digital presence across web and mobile platforms. Key features include localization for multi-language congregations, administrative dashboards for content management, and integrated PayPal payment processing for donations and events. The solution was successfully handed off to our client at Second Slavic Baptist Church.",
+      "title": "ChurchLink - Web & App Builder Platform",
+      "description": "As part of my Senior Graduation Project, I teamed up with 6 other computer science engineers to develop and deploy a platform to build website and mobile pages to dynamiclly customize features for a client.",
+      "about": "ChurchLink is a comprehensive church management platofrm developed for senior project graduation requirement with a team of 6 other students to from a strong bond as a team to offer a robust and user-friendly software deliverable. The platform provides an intuitive web and app features for churches to create and customize their digital presence across multiple platforms. Key features include localization for multi-language congregations, administrative dashboards for content management, and integrated PayPal payment processing for donations and events. The solution was successfully handed off to our client at Second Slavic Baptist Church as of December 2025.",
       "learning_outcomes": [
-        "Led cross-platform development with Flutter for mobile and Vite for web interfaces",
-        "Architected backend services using FastAPI with Firebase and MongoDB integration",
-        "Implemented multi-language localization system for diverse congregations",
-        "Integrated PayPal payment processing for secure transaction handling",
-        "Collaborated in a 6-person agile team through full development lifecycle"
+        "Collaborated in a 6-person agile team through full development lifecycle utilzing Jira and GitHub Projects for sprint management and version control",
+        "Each team member's role was to have no role - everyone contributed to all aspects of the project to learn every aspect of the modern software development lifecycle",
+        "Architected backend services using FastAPI with Firebase and MongoDB integration to sync across web and mobile clients",
+        "Implemented client desireables offering multi-language localizations per-feature for diverse congregations"
       ],
       "tags": [
         "Python",
@@ -29,20 +28,18 @@
     },
     {
       "id": "cse-agent",
-      "title": "Google CSE Deep Researcher Agent",
-      "description": "An agentic research system using LangGraph and Google Custom Search Engine to compile structured GenUI reports with images, tables, and sourced web content.",
-      "about": "This project implements a sophisticated web research agent powered by LangGraph's graph-theory based orchestration. The system leverages Google Custom Search Engine (CSE) integration to perform deep web research, automatically compiling findings into structured Generative UI reports. The pipeline intelligently processes search results to extract and present images, tables, text snippets, and source citations in a visually coherent format. The architecture demonstrates advanced agentic workflows with RAG integration for contextual synthesis.",
+      "title": "Google Gemini GenUI & CSE Deep Researcher Agent",
+      "description": "To learn the fundemtnals of building modern AI Agents, I built this agentic research system using LangGraph and Google Custom Search Engine to generate structured UI reports with images, tables, and sourced web content.",
+      "about": "In this project I set out to create a sophisticated web research agent powered by LangGraph's graph-theory based orchestration to leverage Google's Custom Search Engine (CSE) to perform deep web analysis and research, systematically compiling accurate context into structured Generative UI reports. The architecture demonstrates my passion for building agents and workflows with Retreival Augmented Generation (RAG) for accurate and nuanced web searching capabilities.",
       "learning_outcomes": [
-        "Designed graph-based agent orchestration using LangGraph workflows",
-        "Integrated Google CSE API for programmatic web research capabilities",
-        "Built Generative UI pipeline for dynamic report generation",
-        "Implemented LangSmith tracing for debugging and observability",
-        "Deployed containerized services with Redis caching and Docker"
+        "Designed graph-based agent orchestration using LangGraph for web analysis",
+        "Integrated Google CSE API for web research and context retrieval",
+        "Learned cutting edge Generative UI mechanisms for dynamic and visually appealing report generation",
+        "Deployed containerized services with Docker, Redis for caching, and Firebase for user auth"
       ],
       "tags": [
         "Google Gemini",
         "LangGraph",
-        "LangSmith",
         "Python",
         "FastAPI",
         "Firebase",
@@ -55,18 +52,18 @@
     },
     {
       "id": "zharvis",
-      "title": "Zharvis — Videogame AI Overlay Agent",
-      "description": "A SaaS Overwolf overlay providing real-time in-game AI assistance through Wiki-powered search and MCP tools for instant query responses.",
-      "about": "Zharvis is a next-generation gaming companion built as an Overwolf overlay application. Version 2 utilizes Wiki Custom Search Engines and Model Context Protocol (MCP) tools to deliver fast, contextual in-game query assistance through a Generative UI HUD with interactive windows and popups. The first iteration pioneered a demo RAG workflow processing 15,000+ scraped wiki documents through vector stores with embedding and indexing for efficient retrieval. The system enables gamers to access game knowledge without leaving their session.",
+      "title": "Zharvis - Videogame AI Overlay Agent",
+      "description": "(WIP) A SaaS Overwolf overlay providing real-time in-game AI assistance through Wiki-powered deep research and interactive HUD using Windows-like popups and components.",
+      "about": "Zharvis is a next-gen gaming companion built on the Overwolf SDK to serve an overlay for any videogame. The current Version 2 utilizes dockerized pods for horizontal scaling to provide a LangChain pipeline with Custom Search Engines for videogame Wikis and Model Context Protocol (MCP) tools to have Gemini AI models build a Generative UI HUD with interactive windows and popups. The first iteration pioneered an archaic demo RAG workflow processing 15,000+ scraped wiki documents through vector stores with embedding and indexing for fast and efficient retrieval - however at the downside of accuracy. Now, the system enables gamers to access game knowledge without leaving their session or tab out of their game.",
       "learning_outcomes": [
-        "Developed Overwolf overlay application with TypeScript integration",
-        "Implemented MCP server architecture for extensible tool capabilities",
-        "Built RAG pipeline processing 15k+ documents with vector embeddings",
+        "Overwolf SDK overlay application with TypeScript integration",
+        "MCP server architecture for extensible tool capabilities",
+        "Built multiple RAG pipeline interations to accurately process large domains of data",
         "Created real-time Generative UI components for in-game HUD display",
-        "Integrated OpenAI and LangChain for natural language query processing"
+        "Integrated Gemini and LangChain for natural language query processing"
       ],
       "tags": [
-        "OpenAI API",
+        "Gemini",
         "Overwolf",
         "TypeScript",
         "Python",
@@ -81,38 +78,42 @@
   ],
   "backend_projects": [
     {
-      "name": "Interactive Portfolio with Deep Researcher",
-      "description": "AI-powered portfolio that analyzes employer fit through comparative research against job descriptions",
+      "name": "Google Gemini GenUI & CSE Deep Researcher Agent",
+      "description": "Agentic research system using LangGraph and Google Custom Search Engine to generate structured UI reports",
       "tech": [
-        "Next.js",
-        "Shadcn UI",
+        "Google Gemini",
+        "LangGraph",
         "Python",
         "FastAPI",
-        "LangGraph",
+        "Firebase",
+        "Redis",
         "Docker"
       ]
     },
     {
-      "name": "ChurchLink Platform",
-      "description": "Full-stack church management system with cross-platform apps, localization, and payment integration",
+      "name": "ChurchLink - Web & App Builder Platform",
+      "description": "Full-stack church management system with cross-platform apps, multilingual localization, and payment integration",
       "tech": [
-        "Flutter",
-        "TypeScript",
+        "Python",
         "FastAPI",
         "Firebase",
         "MongoDB",
+        "Flutter",
+        "TypeScript",
         "PayPal"
       ]
     },
     {
-      "name": "Zharvis Gaming Assistant",
-      "description": "Overwolf overlay providing AI-powered in-game assistance with RAG document retrieval",
+      "name": "Zharvis - Videogame AI Overlay Agent",
+      "description": "SaaS Overwolf overlay providing real-time in-game AI assistance through Wiki-powered deep research and interactive HUD",
       "tech": [
-        "Overwolf SDK",
+        "Gemini",
+        "Python",
+        "FastAPI",
         "LangChain",
         "MCP",
-        "Vector Stores",
-        "Python"
+        "Docker",
+        "Overwolf SDK"
       ]
     }
   ]

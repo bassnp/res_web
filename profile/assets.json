@@ -5,7 +5,7 @@
   "resume_pdf": {
     "path": "/resources/SSR_TSRPT.pdf",
     "thumbnail": "/resources/SSR_TSRPT_thumb.jpg",
-    "label": "PDF Formatted Resume"
+    "label": "PDF Resume"
   },
   "personal_collage": {
     "folder": "/resources/personal_collage/",

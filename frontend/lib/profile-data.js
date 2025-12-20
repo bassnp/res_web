@@ -50,7 +50,7 @@ export const SKILLS = {
     },
     devops: {
       label: 'DevOps & Tools',
-      skills: ['Docker', 'Firebase', 'MongoDB', 'Redis', 'Git', 'GitHub', 'Jira', 'Slack', 'Figma', 'CapCut']
+      skills: ['Docker', 'Firebase', 'MongoDB', 'Git', 'GitHub', 'Jira', 'Slack', 'Figma', 'CapCut']
     }
   },
   backend_categories: {
@@ -71,10 +71,10 @@ export const PROJECTS = {
   featured: [
     {
       id: 'churchlink',
-      title: 'ChurchLink — Web & App Builder Platform',
-      description: 'A deployed platform enabling churches to build and customize their own websites and mobile apps with multi-language support, admin dashboards, and payment processing.',
-      about: 'ChurchLink is a comprehensive church management solution developed as a senior graduation project with a team of 6 engineers. The platform provides an intuitive builder for churches to create and customize their digital presence across web and mobile platforms. Key features include localization for multi-language congregations, administrative dashboards for content management, and integrated PayPal payment processing for donations and events. The solution was successfully handed off to our client at Second Slavic Baptist Church.',
-      learning_outcomes: ['Led cross-platform development with Flutter for mobile and Vite for web interfaces', 'Architected backend services using FastAPI with Firebase and MongoDB integration', 'Implemented multi-language localization system for diverse congregations', 'Integrated PayPal payment processing for secure transaction handling', 'Collaborated in a 6-person agile team through full development lifecycle'],
+      title: 'ChurchLink - Web & App Builder Platform',
+      description: 'As part of my Senior Graduation Project, I teamed up with 6 other computer science engineers to develop and deploy a platform to build website and mobile pages to dynamiclly customize features for a client.',
+      about: 'ChurchLink is a comprehensive church management platofrm developed for senior project graduation requirement with a team of 6 other students to from a strong bond as a team to offer a robust and user-friendly software deliverable. The platform provides an intuitive web and app features for churches to create and customize their digital presence across multiple platforms. Key features include localization for multi-language congregations, administrative dashboards for content management, and integrated PayPal payment processing for donations and events. The solution was successfully handed off to our client at Second Slavic Baptist Church as of December 2025.',
+      learning_outcomes: ['Collaborated in a 6-person agile team through full development lifecycle utilzing Jira and GitHub Projects for sprint management and version control', 'Each team member\'s role was to have no role - everyone contributed to all aspects of the project to learn every aspect of the modern software development lifecycle', 'Architected backend services using FastAPI with Firebase and MongoDB integration to sync across web and mobile clients', 'Implemented client desireables offering multi-language localizations per-feature for diverse congregations'],
       tags: ['Python', 'Flutter', 'TypeScript', 'Vite', 'FastAPI', 'Firebase', 'MongoDB', 'PayPal'],
       color: 'from-burnt-peach to-apricot',
       images_folder: 'project-churchlink',
@@ -82,22 +82,22 @@ export const PROJECTS = {
     },
     {
       id: 'cse-agent',
-      title: 'Google CSE Deep Researcher Agent',
-      description: 'An agentic research system using LangGraph and Google Custom Search Engine to compile structured GenUI reports with images, tables, and sourced web content.',
-      about: 'This project implements a sophisticated web research agent powered by LangGraph\'s graph-theory based orchestration. The system leverages Google Custom Search Engine (CSE) integration to perform deep web research, automatically compiling findings into structured Generative UI reports. The pipeline intelligently processes search results to extract and present images, tables, text snippets, and source citations in a visually coherent format. The architecture demonstrates advanced agentic workflows with RAG integration for contextual synthesis.',
-      learning_outcomes: ['Designed graph-based agent orchestration using LangGraph workflows', 'Integrated Google CSE API for programmatic web research capabilities', 'Built Generative UI pipeline for dynamic report generation', 'Implemented LangSmith tracing for debugging and observability', 'Deployed containerized services with Redis caching and Docker'],
-      tags: ['Google Gemini', 'LangGraph', 'LangSmith', 'Python', 'FastAPI', 'Firebase', 'Redis', 'Docker'],
+      title: 'Google Gemini GenUI & CSE Deep Researcher Agent',
+      description: 'To learn the fundemtnals of building modern AI Agents, I built this agentic research system using LangGraph and Google Custom Search Engine to generate structured UI reports with images, tables, and sourced web content.',
+      about: 'In this project I set out to create a sophisticated web research agent powered by LangGraph\'s graph-theory based orchestration to leverage Google\'s Custom Search Engine (CSE) to perform deep web analysis and research, systematically compiling accurate context into structured Generative UI reports. The architecture demonstrates my passion for building agents and workflows with Retreival Augmented Generation (RAG) for accurate and nuanced web searching capabilities.',
+      learning_outcomes: ['Designed graph-based agent orchestration using LangGraph for web analysis', 'Integrated Google CSE API for web research and context retrieval', 'Learned cutting edge Generative UI mechanisms for dynamic and visually appealing report generation', 'Deployed containerized services with Docker, Redis for caching, and Firebase for user auth'],
+      tags: ['Google Gemini', 'LangGraph', 'Python', 'FastAPI', 'Firebase', 'Redis', 'Docker'],
       color: 'from-muted-teal to-twilight',
       images_folder: 'project-cse-agent',
       link: null
     },
     {
       id: 'zharvis',
-      title: 'Zharvis — Videogame AI Overlay Agent',
-      description: 'A SaaS Overwolf overlay providing real-time in-game AI assistance through Wiki-powered search and MCP tools for instant query responses.',
-      about: 'Zharvis is a next-generation gaming companion built as an Overwolf overlay application. Version 2 utilizes Wiki Custom Search Engines and Model Context Protocol (MCP) tools to deliver fast, contextual in-game query assistance through a Generative UI HUD with interactive windows and popups. The first iteration pioneered a demo RAG workflow processing 15,000+ scraped wiki documents through vector stores with embedding and indexing for efficient retrieval. The system enables gamers to access game knowledge without leaving their session.',
-      learning_outcomes: ['Developed Overwolf overlay application with TypeScript integration', 'Implemented MCP server architecture for extensible tool capabilities', 'Built RAG pipeline processing 15k+ documents with vector embeddings', 'Created real-time Generative UI components for in-game HUD display', 'Integrated OpenAI and LangChain for natural language query processing'],
-      tags: ['OpenAI API', 'Overwolf', 'TypeScript', 'Python', 'FastAPI', 'Docker', 'LangChain'],
+      title: 'Zharvis - Videogame AI Overlay Agent',
+      description: '(WIP) A SaaS Overwolf overlay providing real-time in-game AI assistance through Wiki-powered deep research and interactive HUD using Windows-like popups and components.',
+      about: 'Zharvis is a next-gen gaming companion built on the Overwolf SDK to serve an overlay for any videogame. The current Version 2 utilizes dockerized pods for horizontal scaling to provide a LangChain pipeline with Custom Search Engines for videogame Wikis and Model Context Protocol (MCP) tools to have Gemini AI models build a Generative UI HUD with interactive windows and popups. The first iteration pioneered an archaic demo RAG workflow processing 15,000+ scraped wiki documents through vector stores with embedding and indexing for fast and efficient retrieval - however at the downside of accuracy. Now, the system enables gamers to access game knowledge without leaving their session or tab out of their game.',
+      learning_outcomes: ['Overwolf SDK overlay application with TypeScript integration', 'MCP server architecture for extensible tool capabilities', 'Built multiple RAG pipeline interations to accurately process large domains of data', 'Created real-time Generative UI components for in-game HUD display', 'Integrated Gemini and LangChain for natural language query processing'],
+      tags: ['Gemini', 'Overwolf', 'TypeScript', 'Python', 'FastAPI', 'Docker', 'LangChain'],
       color: 'from-apricot to-muted-teal',
       images_folder: 'project-zharvis',
       link: null
@@ -105,19 +105,19 @@ export const PROJECTS = {
   ],
   backend_projects: [
     {
-      name: 'Interactive Portfolio with Deep Researcher',
-      description: 'AI-powered portfolio that analyzes employer fit through comparative research against job descriptions',
-      tech: ['Next.js', 'Shadcn UI', 'Python', 'FastAPI', 'LangGraph', 'Docker']
+      name: 'Google Gemini GenUI & CSE Deep Researcher Agent',
+      description: 'Agentic research system using LangGraph and Google Custom Search Engine to generate structured UI reports',
+      tech: ['Google Gemini', 'LangGraph', 'Python', 'FastAPI', 'Firebase', 'Redis', 'Docker']
     },
     {
-      name: 'ChurchLink Platform',
-      description: 'Full-stack church management system with cross-platform apps, localization, and payment integration',
-      tech: ['Flutter', 'TypeScript', 'FastAPI', 'Firebase', 'MongoDB', 'PayPal']
+      name: 'ChurchLink - Web & App Builder Platform',
+      description: 'Full-stack church management system with cross-platform apps, multilingual localization, and payment integration',
+      tech: ['Python', 'FastAPI', 'Firebase', 'MongoDB', 'Flutter', 'TypeScript', 'PayPal']
     },
     {
-      name: 'Zharvis Gaming Assistant',
-      description: 'Overwolf overlay providing AI-powered in-game assistance with RAG document retrieval',
-      tech: ['Overwolf SDK', 'LangChain', 'MCP', 'Vector Stores', 'Python']
+      name: 'Zharvis - Videogame AI Overlay Agent',
+      description: 'SaaS Overwolf overlay providing real-time in-game AI assistance through Wiki-powered deep research and interactive HUD',
+      tech: ['Gemini', 'Python', 'FastAPI', 'LangChain', 'MCP', 'Docker', 'Overwolf SDK']
     }
   ]
 };
@@ -143,14 +143,14 @@ export const EDUCATION = {
 
 export const CONTACT = {
   $schema: './schemas/contact.schema.json',
-  email: 'hello@example.com',
+  email: 'jbruha@csus.edu',
   social: {
     github: {
       url: 'https://github.com/bassnp',
       display: 'bassnp'
     },
     mail: {
-      url: 'mailto:hello@example.com',
+      url: 'mailto:jbruha@csus.edu',
       display: 'Email'
     }
   },
@@ -171,7 +171,7 @@ export const ASSETS = {
   resume_pdf: {
     path: '/resources/SSR_TSRPT.pdf',
     thumbnail: '/resources/SSR_TSRPT_thumb.jpg',
-    label: 'PDF Formatted Resume'
+    label: 'PDF Resume'
   },
   personal_collage: {
     folder: '/resources/personal_collage/',
@@ -189,7 +189,7 @@ export const SITE_METADATA = {
   $schema: './schemas/site_metadata.schema.json',
   site: {
     title: 'Jaden Bruha | Software Engineer',
-    description: 'Interactive portfolio of Jaden Bruha — a full-stack engineer specializing in AI agents, LangGraph workflows, and production web platforms. Features a Deep Researcher that analyzes employer fit.',
+    description: 'Jaden Bruha\'s Interactive portfolio with AI powered integrations.',
     og_image: '/resources/og-image.png'
   },
   theme: {
@@ -220,71 +220,71 @@ export const EXPERIENCE = {
   timeline: [
     {
       id: 1,
-      title: 'Computer Science Degree',
-      company: 'CSU Sacramento Graduate',
+      title: 'Bachelor of Computer Science Degree',
+      company: 'California State University Sacramento Graduate',
       period: 'December 2025',
-      description: 'Completed a Bachelor of Science in Computer Science at California State University, Sacramento, culminating years of academic study with hands-on project experience.',
-      tags: ['B.S. Computer Science', 'New Grad', '2025'],
+      description: 'Completed a Bachelor of Science in Computer Science at California State University, Sacramento. Starting during the Covid-19 pandemic years, I rigorously pursued my academic passion where I met many friends along the way to help me grow as both a student and individual in this feild.',
+      tags: ['B.S. Computer Science', 'Winter 2025 New Grad'],
       color: 'burnt-peach',
       showcase_folder: 'showcase-graduation'
     },
     {
       id: 2,
-      title: 'ChurchLink Platform Handoff',
-      company: 'Second Slavic Baptist Church',
+      title: 'ChurchLink Deployment Handoff',
+      company: 'Second Slavic Baptist Church of Sacramento',
       period: 'November 2025',
-      description: 'Successfully delivered a complete Web & App Builder Platform to our client. The system enables church staff to manage content, handle multi-language localization, and process donations.',
-      tags: ['Flutter', 'FastAPI', 'Firebase'],
+      description: 'After a year-long upper-division course, my project team \'Init to Winit\' successfully delivered a rich Web & App Builder Platform to our client. The system enables church staff to manage content for many features across multiple platforms, handle multi-language localization, and process donations.',
+      tags: ['Flutter', 'TypeScript', 'Python', 'Firebase', 'MongoDB'],
       color: 'muted-teal',
       showcase_folder: 'showcase-churchlink'
     },
     {
       id: 3,
-      title: 'GenUI Deep Researcher Agent',
+      title: 'Deep Researcher Agent w/ Generative UI',
       company: 'Personal Project',
       period: 'November 2025',
-      description: 'Built a working Deep Researcher Agent integrating Google Custom Search Engine with LangGraph. The system uses graph-theory orchestration to compile structured reports featuring images, tables, and source citations.',
+      description: 'Built a GenUI Deep Researcher Agent integrating Google\'s Custom Search Engine API with a LangGraph agent framework. The system uses graph-theory orchestration to scrape the web and compile structured reports featuring images, tables, and source citations.',
       tags: ['LangGraph', 'Google CSE', 'GenUI'],
       color: 'apricot',
       showcase_folder: 'showcase-cse-agent'
     },
     {
       id: 4,
-      title: 'Zharvis v2 Game Overlay',
-      company: 'SaaS Product',
+      title: 'Zharvis Game Overlay',
+      company: 'SaaS WIP Product',
       period: 'October 2025',
-      description: 'Launched version two of Zharvis, an Overwolf overlay providing AI-powered in-game assistance. Upgraded from RAG-based retrieval (15k+ docs) to Wiki CSE and MCP tools for faster query responses.',
-      tags: ['Overwolf', 'MCP', 'LangChain'],
+      description: 'Zharvis is n on-going project on the Overwolf Marketplace to host my overlay providing AI-powered in-game assistance. Version 2 upgraded from a v1 vector store RAG knowledge base to a Wiki CSE w/ MCP tooling methodology for faster and accurate query responses enabling a scalable product.',
+      tags: ['Python', 'Overwolf', 'MCP', 'LangChain'],
       color: 'burnt-peach',
       showcase_folder: 'showcase-zharvis'
     },
     {
       id: 5,
       title: 'First SaaS Success',
-      company: 'CS:GO Mod Team',
+      company: 'CS:GO Modding Team',
       period: 'January 2023',
-      description: 'Collaborated with a team of 3 developers to build and sell videogame modifications for CS:GO. Generated $6k in revenue over a year of active development and community engagement.',
-      tags: ['SaaS', 'Team of 3', '$6k Revenue'],
+      description: 'With a team of 3 friends and developers, we set out to build and sell videogame mods for CS:GO. Over the course of a year we generated $6k in revenue through active development and community engagement.',
+      tags: ['SAAS', 'Team Project', 'Game Modding'],
       color: 'muted-teal',
       showcase_folder: 'showcase-csgo'
     },
     {
       id: 6,
-      title: 'GPU Mining Operation',
-      company: 'Self-Employed',
+      title: 'GPU Mining Rig',
+      company: 'Personal Project',
       period: 'April 2022',
-      description: 'Assembled a 7-GPU Ethereum mining rig using Nvidia and AMD cards, achieving ~210 MH/s. Generated $170 monthly passive income before the Ethereum Merge ended PoW mining.',
-      tags: ['Ethereum', '7 GPUs', '210 MH/s'],
+      description: 'To help fund my early college years, I assembled a 7-GPU Ethereum mining rig using affordable Nvidia and AMD cards, achieving ~210 MH/s. It generated ~$170 as monthly passive income before the Ethereum Merge ended Proof of Work mining.',
+      tags: ['Ethereum', 'GPU Parrallelism', 'Rig Building'],
       color: 'apricot',
       showcase_folder: 'showcase-mining'
     },
     {
       id: 7,
       title: 'First GitHub Commit',
-      company: 'High School Project',
+      company: 'High School Side Project',
       period: 'July 2019',
-      description: 'Pushed my first commit to GitHub at age 15, showcasing a Java drawing application from my sophomore year. This milestone marked the beginning of my journey as a software developer.',
-      tags: ['Java', 'GitHub', 'Age 15'],
+      description: 'July 1st I pushed my first commit to GitHub at age 15, showcasing a Java drawing application I made out of boredom during my sophomore programming Java split-honors class of beginners and advanced students (Mr.McGuinness at THS ur awesome). This minor milestone marked the beginning of my ambitious journey as a software developer.',
+      tags: ['Highschool', 'Honors Class', 'First Git Commit'],
       color: 'burnt-peach',
       showcase_folder: 'showcase-first-commit'
     }
