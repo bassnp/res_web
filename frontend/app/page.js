@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useTheme } from 'next-themes';
-import { Briefcase, Mail, Github, ChevronDown, ExternalLink, Sun, Moon, Code, FileText, Camera, Eye, Clock, Menu, X } from 'lucide-react';
+import { Briefcase, Mail, Github, ChevronDown, ExternalLink, Sun, Moon, Code, FileText, Camera, Eye, Clock, Menu, X, Brain } from 'lucide-react';
 import { useHeaderVisibility } from '@/hooks/use-header-visibility';
 import { InfoDialog, InfoButton } from '@/components/fit-check/InfoDialog';
 import { ProjectModal, ReadSummaryButton } from '@/components/ProjectModal';
@@ -698,6 +698,19 @@ const HeroAboutSection = () => {
                     </span>
                   ))}
                 </div>
+              </div>
+              
+              {/* Analyze Qualifications CTA Button */}
+              <div className="mt-6 opacity-0 animate-fade-in delay-500">
+                <Button
+                  asChild
+                  className="w-full max-w-xs mx-auto bg-emerald-600 hover:bg-emerald-500 text-eggshell px-6 py-3 text-sm rounded-sm hover:scale-[1.02] transition-all duration-200 flex items-center justify-center gap-2"
+                >
+                  <a href="#fit-check">
+                    <Brain className="w-4 h-4" />
+                    Analyze Qualifications
+                  </a>
+                </Button>
               </div>
             </div>
             {/* Scroll indicator - docked to bottom independently */}

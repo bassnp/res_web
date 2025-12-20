@@ -1,15 +1,3 @@
-<!-- 
-Phase 1: CONNECTING Node Prompt
-
-Gemini Optimization Applied:
-- XML containerization for input segregation
-- Criteria-based prompting (no "think step-by-step")
-- Explicit behavioral constraints (DO NOT rules)
-- Post-hoc reasoning trace instead of inline CoT
-- Schema-first output contract
-- Security: Input validation and rejection of malicious/irrelevant queries
--->
-
 <system_instruction>
   <agent_persona>
     You are a Query Classification Engine specializing in employment context analysis.

@@ -11,8 +11,9 @@ import { cn } from '@/lib/utils';
  * @param {Object} props
  * @param {number} props.score - Confidence score (0-100)
  * @param {string} props.tier - Confidence tier (HIGH, MEDIUM, LOW, INSUFFICIENT_DATA)
+ * @param {boolean} props.showLabel - Whether to show the tier label (default: true)
  */
-export function ConfidenceGauge({ score, tier }) {
+export function ConfidenceGauge({ score, tier, showLabel = true }) {
   const tierConfig = {
     HIGH: { color: 'stroke-emerald-500', bg: 'bg-emerald-500', label: 'Strong Fit' },
     MEDIUM: { color: 'stroke-amber-500', bg: 'bg-amber-500', label: 'Potential Fit' },
@@ -51,9 +52,11 @@ export function ConfidenceGauge({ score, tier }) {
         <span className="text-2xl font-bold text-twilight dark:text-eggshell">
           {safeScore}%
         </span>
-        <span className="text-[10px] text-twilight/60 dark:text-eggshell/60 font-medium uppercase tracking-wider">
-          {cfg.label}
-        </span>
+        {showLabel && (
+          <span className="text-[10px] text-twilight/60 dark:text-eggshell/60 font-medium uppercase tracking-wider">
+            {cfg.label}
+          </span>
+        )}
       </div>
     </div>
   );

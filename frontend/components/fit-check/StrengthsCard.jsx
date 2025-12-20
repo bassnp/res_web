@@ -74,7 +74,8 @@ export function StrengthsCard({
               key={index}
               className={cn(
                 "flex items-start gap-3 stagger-item",
-                "group"
+                "group cursor-default",
+                "transition-transform duration-200 hover:-translate-y-0.5"
               )}
             >
               <div className="flex-shrink-0 mt-0.5">
@@ -99,13 +100,19 @@ export function StrengthsCard({
 }
 
 /**
- * Format strength text - handles bold markers and arrows
+ * Format strength text - handles bold markers and strips unwanted characters
  */
 function formatStrengthText(text) {
   if (!text) return '';
   
+  // Clean up text: strip leading bullets, dashes, checkmarks and trailing bullets
+  let cleaned = text
+    .replace(/^[\s•●○◦▪▸►✓✔☑→\-–—]+/, '') // Strip leading markers
+    .replace(/[\s•●○◦▪]+$/, '')              // Strip trailing bullets
+    .trim();
+  
   // Handle **bold** markers
-  const parts = text.split(/(\*\*[^*]+\*\*)/g);
+  const parts = cleaned.split(/(\*\*[^*]+\*\*)/g);
   
   return parts.map((part, i) => {
     if (part.startsWith('**') && part.endsWith('**')) {

@@ -139,7 +139,7 @@ export function SystemPromptDialog({
         <DialogHeader className={cn(
           "p-6 pb-4",
           "bg-gradient-to-r",
-          config?.bgColor ? `from-${config.bgColor.split('-')[1]}-400/10` : 'from-burnt-peach/10',
+          config?.gradientFrom || 'from-burnt-peach/10',
           "via-transparent to-transparent",
           "border-b border-twilight/10 dark:border-eggshell/10"
         )}>

@@ -7,12 +7,17 @@ import {
   CheckCircle2, 
   Database,
   Gauge,
-  Brain
+  Brain,
+  ShieldCheck,
+  Zap
 } from 'lucide-react';
 
 /**
  * Centralized Phase Configuration for the Fit Check Pipeline.
  * Maps backend phase names to UI display properties and styling.
+ * 
+ * IMPORTANT: All class names must be complete static strings for Tailwind to compile them.
+ * Dynamic template literals like `from-${color}-400/10` will NOT work.
  */
 export const PHASE_CONFIG = {
   connecting: {
@@ -26,7 +31,10 @@ export const PHASE_CONFIG = {
     textColor: 'text-blue-400',
     ringColor: 'ring-blue-400/30',
     gradient: 'from-blue-400 to-blue-500',
+    gradientFrom: 'from-blue-400/10',
+    gradientFromLight: 'from-blue-500/5',
     previewBorder: 'border-blue-400/50',
+    glowRGB: '96, 165, 250',
   },
   deep_research: {
     label: 'Deep Research',
@@ -39,11 +47,14 @@ export const PHASE_CONFIG = {
     textColor: 'text-purple-400',
     ringColor: 'ring-purple-400/30',
     gradient: 'from-purple-400 to-purple-500',
+    gradientFrom: 'from-purple-400/10',
+    gradientFromLight: 'from-purple-500/5',
     previewBorder: 'border-purple-400/50',
+    glowRGB: '192, 132, 252',
   },
   research_reranker: {
     label: 'Research Quality Gate',
-    icon: CheckCircle2,
+    icon: ShieldCheck,
     description: 'Validating research completeness and quality',
     color: 'violet',
     borderColor: 'border-l-violet-400',
@@ -52,7 +63,10 @@ export const PHASE_CONFIG = {
     textColor: 'text-violet-400',
     ringColor: 'ring-violet-400/30',
     gradient: 'from-violet-400 to-violet-500',
+    gradientFrom: 'from-violet-400/10',
+    gradientFromLight: 'from-violet-500/5',
     previewBorder: 'border-violet-400/50',
+    glowRGB: '167, 139, 250',
   },
   content_enrich: {
     label: 'Content Enrichment',
@@ -65,7 +79,10 @@ export const PHASE_CONFIG = {
     textColor: 'text-cyan-400',
     ringColor: 'ring-cyan-400/30',
     gradient: 'from-cyan-400 to-cyan-500',
+    gradientFrom: 'from-cyan-400/10',
+    gradientFromLight: 'from-cyan-500/5',
     previewBorder: 'border-cyan-400/50',
+    glowRGB: '34, 211, 238',
   },
   skeptical_comparison: {
     label: 'Skeptical Comparison',
@@ -78,7 +95,10 @@ export const PHASE_CONFIG = {
     textColor: 'text-amber-400',
     ringColor: 'ring-amber-400/30',
     gradient: 'from-amber-400 to-amber-500',
+    gradientFrom: 'from-amber-400/10',
+    gradientFromLight: 'from-amber-500/5',
     previewBorder: 'border-amber-400/50',
+    glowRGB: '251, 191, 36',
   },
   skills_matching: {
     label: 'Skills Matching',
@@ -91,11 +111,14 @@ export const PHASE_CONFIG = {
     textColor: 'text-emerald-400',
     ringColor: 'ring-emerald-400/30',
     gradient: 'from-emerald-400 to-emerald-500',
+    gradientFrom: 'from-emerald-400/10',
+    gradientFromLight: 'from-emerald-500/5',
     previewBorder: 'border-emerald-400/50',
+    glowRGB: '52, 211, 153',
   },
   confidence_reranker: {
     label: 'Confidence Calibration',
-    icon: CheckCircle2,
+    icon: Zap,
     description: 'LLM-as-Judge quality assessment and calibration',
     color: 'emerald',
     borderColor: 'border-l-emerald-400',
@@ -104,7 +127,10 @@ export const PHASE_CONFIG = {
     textColor: 'text-emerald-400',
     ringColor: 'ring-emerald-400/30',
     gradient: 'from-emerald-400 to-emerald-500',
+    gradientFrom: 'from-emerald-400/10',
+    gradientFromLight: 'from-emerald-500/5',
     previewBorder: 'border-emerald-400/50',
+    glowRGB: '52, 211, 153',
   },
   generate_results: {
     label: 'Generating Results',
@@ -117,7 +143,10 @@ export const PHASE_CONFIG = {
     textColor: 'text-burnt-peach',
     ringColor: 'ring-burnt-peach/30',
     gradient: 'from-burnt-peach to-burnt-peach/80',
+    gradientFrom: 'from-burnt-peach/10',
+    gradientFromLight: 'from-burnt-peach/5',
     previewBorder: 'border-burnt-peach/50',
+    glowRGB: '224, 122, 95',
   },
 };
 

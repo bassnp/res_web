@@ -263,12 +263,21 @@ function PhaseSection({
         : "shadow-sm hover:shadow-md"
     )}>
       {/* Phase Header */}
-      <button
+      <div
         onClick={onToggle}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            onToggle();
+          }
+        }}
+        role="button"
+        tabIndex={0}
+        aria-expanded={isExpanded}
         className={cn(
           "w-full flex items-center gap-3 p-4",
           "hover:bg-twilight/5 dark:hover:bg-eggshell/5",
-          "transition-all duration-200",
+          "transition-all duration-200 cursor-pointer",
           "border-l-4",
           config.borderColor,
           isExpanded && "bg-twilight/[0.02] dark:bg-eggshell/[0.02]"
@@ -302,7 +311,10 @@ function PhaseSection({
         <div className="flex items-center gap-2">
           {/* View Prompt Button */}
           <button
-            onClick={onViewPrompt}
+            onClick={(e) => {
+              e.stopPropagation();
+              onViewPrompt(e);
+            }}
             className={cn(
               "flex items-center gap-1.5 px-2.5 py-1.5 rounded-sm",
               "hover:bg-twilight/10 dark:hover:bg-eggshell/10",
@@ -326,7 +338,7 @@ function PhaseSection({
             <ChevronRight className="w-5 h-5" />
           </div>
         </div>
-      </button>
+      </div>
       
       {/* Expanded Content - Smooth accordion animation */}
       <div 
@@ -352,6 +364,7 @@ function PhaseSection({
                   insights={insights}
                   displayMeta={displayMeta}
                   config={config}
+                  data={phaseEntry.data}
                 />
               </div>
             )}
@@ -405,6 +418,14 @@ function QualityFlagsPills({ flags }) {
     'few_gaps_identified': { icon: AlertTriangle, label: 'Few Gaps Found' },
     'high_score_low_data': { icon: TrendingUp, label: 'Score vs Data Mismatch' },
     'insufficient_requirements': { icon: FileText, label: 'Few Requirements' },
+    'SPARSE_TECH_STACK': { icon: Code2, label: 'Limited Tech' },
+    'NO_REQUIREMENTS': { icon: Target, label: 'No Requirements' },
+    'NO_CULTURE_SIGNALS': { icon: Users, label: 'No Culture Data' },
+    'INFERRED_INDUSTRY': { icon: Lightbulb, label: 'Industry Inferred' },
+    'LOW_SOURCE_COUNT': { icon: Database, label: 'Few Sources' },
+    'default_score_suspected': { icon: AlertTriangle, label: 'Default Score' },
+    'insufficient_gaps': { icon: Scale, label: 'Few Gaps' },
+    'fundamental_mismatch': { icon: AlertTriangle, label: 'Mismatch Detected' },
   };
   
   return (
@@ -430,18 +451,264 @@ function QualityFlagsPills({ flags }) {
 }
 
 /**
- * PhaseInsightsSummary - Renders structured insights for a phase
+ * EnrichedInsightCard - Phase-specific insight display for ReasoningDialog
+ * Renders structured data as meaningful visual elements instead of raw JSON
  */
-function PhaseInsightsSummary({ phase, summary, insights, displayMeta, config }) {
+function EnrichedInsightCard({ data, phase }) {
+  if (!data) return null;
+  
+  // Phase-specific rendering logic
+  switch (phase) {
+    case 'connecting':
+      return (
+        <div className="mt-3 space-y-1.5 pl-6 text-sm">
+          {data.extracted_skills?.length > 0 && (
+            <div className="flex flex-wrap gap-1.5">
+              <span className="text-twilight/50 dark:text-eggshell/50 text-xs">Extracted skills:</span>
+              {data.extracted_skills.map((skill, i) => (
+                <span key={i} className="px-2 py-0.5 rounded bg-blue-500/10 text-blue-600 dark:text-blue-400 font-medium text-xs">
+                  {skill}
+                </span>
+              ))}
+            </div>
+          )}
+          {data.classification_reasoning && (
+            <p className="text-twilight/50 dark:text-eggshell/50 italic text-xs">
+              "{data.classification_reasoning}"
+            </p>
+          )}
+        </div>
+      );
+      
+    case 'deep_research':
+      return (
+        <div className="mt-3 space-y-2 pl-6 text-sm">
+          {data.tech_stack?.length > 0 && (
+            <div className="flex flex-wrap gap-1.5 items-center">
+              <Code2 className="w-4 h-4 text-purple-500 shrink-0" />
+              {data.tech_stack.map((tech, i) => (
+                <span key={i} className="px-2 py-0.5 rounded bg-purple-500/10 text-purple-600 dark:text-purple-400 font-medium text-xs">
+                  {tech}
+                </span>
+              ))}
+            </div>
+          )}
+          {data.top_requirements?.length > 0 && (
+            <div className="flex flex-wrap gap-1.5 items-start">
+              <Target className="w-4 h-4 text-amber-500 shrink-0 mt-0.5" />
+              <div className="flex-1">
+                {data.top_requirements.map((req, i) => (
+                  <span key={i} className="text-twilight/60 dark:text-eggshell/60 text-xs">
+                    {req}{i < data.top_requirements.length - 1 && ' • '}
+                  </span>
+                ))}
+              </div>
+            </div>
+          )}
+          {data.search_queries?.length > 0 && (
+            <details className="group">
+              <summary className="cursor-pointer text-twilight/40 dark:text-eggshell/40 hover:text-twilight/60 flex items-center gap-1.5 text-xs">
+                <Search className="w-3 h-3" />
+                <span>{data.search_queries.length} search queries executed</span>
+              </summary>
+              <ul className="mt-1.5 ml-5 text-twilight/50 dark:text-eggshell/50 list-disc list-inside text-xs space-y-0.5">
+                {data.search_queries.map((q, i) => (
+                  <li key={i} className="truncate" title={q.query}>{q.purpose || q.query}</li>
+                ))}
+              </ul>
+            </details>
+          )}
+        </div>
+      );
+      
+    case 'research_reranker':
+      return (
+        <div className="mt-3 space-y-2 pl-6 text-sm">
+          {data.top_sources?.length > 0 && (
+            <details className="group" open>
+              <summary className="cursor-pointer text-twilight/50 dark:text-eggshell/50 hover:text-twilight/70 flex items-center gap-1.5 text-xs">
+                <Database className="w-3 h-3" />
+                <span>{data.passing_count}/{data.total_count} sources passed quality gate</span>
+              </summary>
+              <ul className="mt-1.5 space-y-1">
+                {data.top_sources.map((src, i) => (
+                  <li key={i} className="flex items-center gap-2 text-xs">
+                    <span className={cn(
+                      "px-1.5 py-0.5 rounded text-[10px] font-medium shrink-0",
+                      src.score >= 0.7 ? "bg-emerald-500/20 text-emerald-600" :
+                      src.score >= 0.4 ? "bg-amber-500/20 text-amber-600" :
+                      "bg-red-500/20 text-red-600"
+                    )}>
+                      {Math.round(src.score * 100)}%
+                    </span>
+                    <a href={src.url} target="_blank" rel="noopener noreferrer" 
+                       className="truncate hover:text-burnt-peach transition-colors text-twilight/60 dark:text-eggshell/60" title={src.title}>
+                      {src.title}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </details>
+          )}
+          {data.inferred_industry && (
+            <div className="flex items-center gap-1.5 text-xs text-twilight/50 dark:text-eggshell/50">
+              <Lightbulb className="w-3 h-3 text-amber-500" />
+              <span>Inferred industry: <strong className="text-amber-600 dark:text-amber-400">{data.inferred_industry}</strong></span>
+              {data.inferred_tech?.length > 0 && (
+                <span className="text-twilight/40">({data.inferred_tech.join(', ')})</span>
+              )}
+            </div>
+          )}
+        </div>
+      );
+      
+    case 'skeptical_comparison':
+      return (
+        <div className="mt-3 space-y-2 pl-6 text-sm">
+          {data.genuine_gaps?.length > 0 && (
+            <div>
+              <div className="flex items-center gap-1.5 text-red-500 dark:text-red-400 font-medium mb-1 text-xs">
+                <AlertTriangle className="w-3.5 h-3.5" />
+                <span>Gaps Identified:</span>
+              </div>
+              <ul className="ml-5 text-twilight/60 dark:text-eggshell/60 list-disc list-inside text-xs space-y-0.5">
+                {data.genuine_gaps.map((gap, i) => (
+                  <li key={i}>{gap}</li>
+                ))}
+              </ul>
+            </div>
+          )}
+          {data.genuine_strengths?.length > 0 && (
+            <div>
+              <div className="flex items-center gap-1.5 text-emerald-500 dark:text-emerald-400 font-medium mb-1 text-xs">
+                <CheckCircle2 className="w-3.5 h-3.5" />
+                <span>Strengths:</span>
+              </div>
+              <ul className="ml-5 text-twilight/60 dark:text-eggshell/60 list-disc list-inside text-xs space-y-0.5">
+                {data.genuine_strengths.map((s, i) => (
+                  <li key={i}>{s}</li>
+                ))}
+              </ul>
+            </div>
+          )}
+          {data.risk_justification && (
+            <p className="text-twilight/50 dark:text-eggshell/50 italic text-xs">
+              "{data.risk_justification}"
+            </p>
+          )}
+        </div>
+      );
+      
+    case 'skills_matching':
+      return (
+        <div className="mt-3 space-y-2 pl-6 text-sm">
+          {data.top_matches?.length > 0 && (
+            <div className="space-y-1">
+              {data.top_matches.map((match, i) => (
+                <div key={i} className="flex items-center gap-2 text-xs">
+                  <span className={cn(
+                    "px-1.5 py-0.5 rounded text-[10px] font-medium shrink-0",
+                    match.confidence >= 70 ? "bg-emerald-500/20 text-emerald-600" :
+                    match.confidence >= 40 ? "bg-amber-500/20 text-amber-600" :
+                    "bg-red-500/20 text-red-600"
+                  )}>
+                    {match.confidence}%
+                  </span>
+                  <span className="text-twilight/60 dark:text-eggshell/60 truncate">
+                    {match.requirement} → <strong>{match.matched_skill}</strong>
+                  </span>
+                </div>
+              ))}
+            </div>
+          )}
+          {data.unmatched_requirements?.length > 0 && (
+            <div className="flex flex-wrap gap-1.5 items-center text-xs">
+              <span className="text-red-500 dark:text-red-400">Unmatched:</span>
+              {data.unmatched_requirements.map((req, i) => (
+                <span key={i} className="px-1.5 py-0.5 rounded bg-red-500/10 text-red-600 dark:text-red-400 text-[10px]">
+                  {req}
+                </span>
+              ))}
+            </div>
+          )}
+        </div>
+      );
+      
+    case 'confidence_reranker':
+      return (
+        <div className="mt-3 space-y-2 pl-6 text-sm">
+          {data.adjustment_rationale && (
+            <p className="text-twilight/60 dark:text-eggshell/60 text-xs">
+              <strong>Adjustment:</strong> {data.adjustment_rationale}
+            </p>
+          )}
+          {data.data_quality && Object.keys(data.data_quality).length > 0 && (
+            <div className="flex flex-wrap gap-1.5">
+              {Object.entries(data.data_quality).map(([key, value]) => (
+                <span key={key} className={cn(
+                  "px-2 py-0.5 rounded text-[10px] font-medium",
+                  value === 'adequate' ? "bg-emerald-500/10 text-emerald-600" :
+                  value === 'moderate' ? "bg-amber-500/10 text-amber-600" :
+                  "bg-red-500/10 text-red-600"
+                )}>
+                  {key.replace(/_/g, ' ')}: {value}
+                </span>
+              ))}
+            </div>
+          )}
+        </div>
+      );
+      
+    case 'generate_results':
+      return (
+        <div className="mt-3 space-y-1 pl-6 text-sm">
+          <div className="flex items-center gap-2 text-twilight/60 dark:text-eggshell/60 text-xs">
+            <span>Context: <strong className="text-burnt-peach">{data.employer_context_type || 'default'}</strong></span>
+            <span>•</span>
+            <span>Score: <strong>{data.calibrated_score}%</strong> ({data.confidence_tier})</span>
+          </div>
+          {data.quality_warnings?.length > 0 && (
+            <div className="flex flex-wrap gap-1.5">
+              {data.quality_warnings.map((w, i) => (
+                <span key={i} className="px-2 py-0.5 rounded bg-amber-500/10 text-amber-600 text-[10px]">
+                  {w}
+                </span>
+              ))}
+            </div>
+          )}
+        </div>
+      );
+      
+    default:
+      return null;
+  }
+}
+
+/**
+ * PhaseInsightsSummary - Renders structured insights for a phase
+ * Now includes EnrichedInsightCard for meaningful data visualization
+ */
+function PhaseInsightsSummary({ phase, summary, insights, displayMeta, config, data }) {
   if (!summary) return null;
+  
+  // Determine if we have enriched data to show
+  const hasEnrichedData = data && (
+    data.tech_stack?.length > 0 ||
+    data.extracted_skills?.length > 0 ||
+    data.top_sources?.length > 0 ||
+    data.genuine_gaps?.length > 0 ||
+    data.top_matches?.length > 0 ||
+    data.sources?.length > 0 ||
+    data.adjustment_rationale ||
+    data.search_queries?.length > 0
+  );
   
   return (
     <div className={cn(
       "px-4 py-3 border-b border-twilight/5 dark:border-eggshell/5",
       "bg-gradient-to-r",
-      config.color === 'burnt-peach' 
-        ? "from-burnt-peach/5 to-transparent"
-        : `from-${config.color}-500/5 to-transparent`
+      config.gradientFromLight || "from-burnt-peach/5",
+      "to-transparent"
     )}>
       {/* Metrics row for phases that have them */}
       {displayMeta?.metrics && displayMeta.metrics.length > 0 && (
@@ -541,6 +808,11 @@ function PhaseInsightsSummary({ phase, summary, insights, displayMeta, config })
         <QualityFlagsPills flags={displayMeta.flags} />
       )}
       
+      {/* Enriched Data Visualization */}
+      {hasEnrichedData && (
+        <EnrichedInsightCard data={data} phase={phase} />
+      )}
+      
       {/* Reasoning excerpt for confidence reranker */}
       {insights?.reasoning && (
         <p className="text-xs text-twilight/50 dark:text-eggshell/50 mt-2 pl-6 italic line-clamp-3">
@@ -555,8 +827,6 @@ function PhaseInsightsSummary({ phase, summary, insights, displayMeta, config })
  * ThoughtItem Component - Renders a single thought entry with enhanced insights
  */
 function ThoughtItem({ thought, config, phase }) {
-  const [isDataExpanded, setIsDataExpanded] = useState(false);
-  
   const thoughtConfig = getThoughtConfig(thought.type, thought.tool);
   const ThoughtIcon = thoughtConfig.icon;
   
@@ -584,7 +854,7 @@ function ThoughtItem({ thought, config, phase }) {
           "w-7 h-7 rounded-full flex items-center justify-center flex-shrink-0",
           thoughtConfig.dotBg
         )}>
-          <ThoughtIcon className="w-3.5 h-3.5 text-white" />
+          <ThoughtIcon className={cn("w-3.5 h-3.5", thoughtConfig.iconColor)} />
         </div>
         
         {/* Content */}
@@ -675,44 +945,6 @@ function ThoughtItem({ thought, config, phase }) {
               )}
             </div>
           )}
-          
-          {/* Data reveal toggle - smaller and less prominent */}
-          {(thought.input || thought.content) && (
-            <button
-              onClick={() => setIsDataExpanded(!isDataExpanded)}
-              className={cn(
-                "flex items-center gap-1 mt-2",
-                "text-[10px] text-twilight/40 dark:text-eggshell/40",
-                "hover:text-twilight/60 dark:hover:text-eggshell/60",
-                "transition-colors duration-200"
-              )}
-            >
-              <Database className="w-2.5 h-2.5" />
-              <span>Raw data</span>
-              <ChevronDown className={cn(
-                "w-2.5 h-2.5 transition-transform",
-                isDataExpanded && "rotate-180"
-              )} />
-            </button>
-          )}
-          
-          {/* Expanded data */}
-          {isDataExpanded && (
-            <div className={cn(
-              "mt-2 p-2 rounded-sm",
-              "bg-twilight/5 dark:bg-eggshell/5",
-              "border border-twilight/10 dark:border-eggshell/10",
-              "font-mono text-[10px] overflow-x-auto"
-            )}>
-              <pre className="whitespace-pre-wrap text-twilight/60 dark:text-eggshell/60">
-                {JSON.stringify({
-                  tool: thought.tool,
-                  input: thought.input,
-                  content: thought.content,
-                }, null, 2)}
-              </pre>
-            </div>
-          )}
         </div>
       </div>
     </div>
@@ -725,6 +957,10 @@ function ThoughtItem({ thought, config, phase }) {
 
 /**
  * Get configuration for thought type styling
+ * 
+ * IMPORTANT: Icon colors must contrast with dotBg in both light and dark mode.
+ * - dotBg provides the background color for the icon circle
+ * - iconColor provides the icon's fill/stroke color
  */
 function getThoughtConfig(type, tool) {
   switch (type) {
@@ -733,6 +969,7 @@ function getThoughtConfig(type, tool) {
         icon: getToolIcon(tool),
         label: 'Tool Call',
         dotBg: 'bg-burnt-peach',
+        iconColor: 'text-white',
         labelColor: 'text-burnt-peach',
       };
     case 'observation':
@@ -740,21 +977,25 @@ function getThoughtConfig(type, tool) {
         icon: Eye,
         label: 'Observation',
         dotBg: 'bg-muted-teal',
+        iconColor: 'text-white',
         labelColor: 'text-muted-teal',
       };
     case 'reasoning':
       return {
         icon: Brain,
         label: 'Reasoning',
-        dotBg: 'bg-twilight dark:bg-apricot',
-        labelColor: 'text-twilight dark:text-apricot',
+        // Use purple-500 for consistent visibility in both modes
+        dotBg: 'bg-purple-500',
+        iconColor: 'text-white',
+        labelColor: 'text-purple-500 dark:text-purple-400',
       };
     default:
       return {
         icon: Brain,
         label: 'Thought',
-        dotBg: 'bg-twilight',
-        labelColor: 'text-twilight',
+        dotBg: 'bg-twilight dark:bg-slate-600',
+        iconColor: 'text-white dark:text-eggshell',
+        labelColor: 'text-twilight dark:text-eggshell',
       };
   }
 }

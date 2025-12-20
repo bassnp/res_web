@@ -49,28 +49,6 @@ export function ResultsSection({
 
   return (
     <div className="mt-6 space-y-4 animate-results-entry">
-      {/* Results header with title and duration */}
-      <div className="flex items-center justify-between px-2">
-        <div className="flex items-center gap-2">
-          <CheckCircle2 className="w-4 h-4 text-emerald-500" />
-          {title ? (
-            <h3 className="text-lg font-semibold text-twilight dark:text-eggshell text-glow">
-              {title}
-            </h3>
-          ) : (
-            <h3 className="text-lg font-semibold text-twilight dark:text-eggshell">
-              Your Fit Analysis
-            </h3>
-          )}
-        </div>
-        {durationMs && (
-          <div className="flex items-center gap-1 text-xs text-twilight/50 dark:text-eggshell/50">
-            <Clock className="w-3 h-3" />
-            <span>Analyzed in {(durationMs / 1000).toFixed(1)}s</span>
-          </div>
-        )}
-      </div>
-
       {/* Fundamental Mismatch Warning */}
       {isMismatch && (
         <div className={cn(
@@ -91,39 +69,25 @@ export function ResultsSection({
         </div>
       )}
 
-      {/* Confidence Gauge - only render when score is a valid number */}
-      {confidenceScore !== null && (
-        <div className="flex justify-center py-2">
-          <ConfidenceGauge 
-            score={confidenceScore}
-            tier={confidenceTier}
-          />
-        </div>
-      )}
-
       {/* Two-column card layout */}
       <div className={cn(
         "grid gap-4",
-        "grid-cols-1 lg:grid-cols-3"
+        "grid-cols-1 lg:grid-cols-2"
       )}>
-        {/* Strengths Card - Left (1/3) */}
-        <div className="lg:col-span-1">
-          <StrengthsCard
+        {/* Strengths Card - Left (50%) */}
+        <StrengthsCard
             title="Key Strengths"
             strengths={strengths}
             valueProposition={valueProposition}
             isVisible={true}
           />
-        </div>
 
-        {/* Growth Areas Card - Right (2/3) */}
-        <div className="lg:col-span-2">
-          <GrowthAreasCard
+        {/* Growth Areas Card - Right (50%) */}
+        <GrowthAreasCard
             title="Growth Opportunities"
             growthAreas={growthAreas}
             isVisible={true}
           />
-        </div>
       </div>
     </div>
   );

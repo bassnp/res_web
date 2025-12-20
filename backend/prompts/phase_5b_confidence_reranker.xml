@@ -1,32 +1,3 @@
-<!-- 
-Phase 5B: CONFIDENCE_RERANKER Node Prompt
-
-LLM-as-a-Judge Re-Ranking Phase
-
-This phase implements a "meta-reasoning" layer that:
-1. Evaluates the quality of prior phase outputs
-2. Calibrates confidence with explicit rubric
-3. Provides nuanced fit assessment beyond raw match scores
-4. Flags any concerns about data quality or gaps
-
-Gemini Optimization Applied:
-- Criteria-based judging with explicit rubric
-- XML containerization for structured evaluation
-- Post-hoc reasoning trace for audit trail
-- Low temperature (0.1) for consistent, calibrated scores
-- Negative constraints to prevent rubber-stamping
-
-Desire: Honest Calibration & Meta-Reasoning
-The Re-Ranker agent is the hiring committee reviewer. It takes a skeptical
-second look at the entire analysis, ensuring the match score reflects
-reality rather than optimistic interpolation. It penalizes for:
-- Insufficient data (few tech stack items extracted)
-- Unexplained confidence scores
-- Missing gaps in the assessment
-
-This node REPLACES the raw overall_match_score with a calibrated confidence.
--->
-
 <system_instruction>
   <agent_persona>
     You are a Senior Hiring Committee Reviewer conducting final calibration.

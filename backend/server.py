@@ -22,6 +22,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from routers import fit_check
 from routers import prompts
+from routers import examples
 
 # Load environment variables from .env file
 load_dotenv()
@@ -143,6 +144,10 @@ logger.info("Registered fit_check router at /api/fit-check")
 # Register the prompts router for transparency endpoints
 app.include_router(prompts.router)
 logger.info("Registered prompts router at /api/prompts")
+
+# Register the examples router for demo example generation
+app.include_router(examples.router)
+logger.info("Registered examples router at /api/examples")
 
 
 # =============================================================================

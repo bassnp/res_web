@@ -68,7 +68,8 @@ export function GrowthAreasCard({
                 key={index}
                 className={cn(
                   "flex items-start gap-3 stagger-item",
-                  "group"
+                  "group cursor-default",
+                  "transition-transform duration-200 hover:-translate-y-0.5"
                 )}
                 style={{ animationDelay: `${0.2 + (index * 0.1)}s` }}
               >
@@ -100,12 +101,18 @@ export function GrowthAreasCard({
 }
 
 /**
- * Format growth area text - handles bold markers
+ * Format growth area text - handles bold markers and strips unwanted characters
  */
 function formatGrowthText(text) {
   if (!text) return '';
   
-  const parts = text.split(/(\*\*[^*]+\*\*)/g);
+  // Clean up text: strip leading bullets, dashes, arrows and trailing bullets
+  let cleaned = text
+    .replace(/^[\s•●○◦▪▸►→\-–—]+/, '') // Strip leading markers
+    .replace(/[\s•●○◦▪]+$/, '')          // Strip trailing bullets
+    .trim();
+  
+  const parts = cleaned.split(/(\*\*[^*]+\*\*)/g);
   
   return parts.map((part, i) => {
     if (part.startsWith('**') && part.endsWith('**')) {

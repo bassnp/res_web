@@ -1,34 +1,3 @@
-<!-- 
-Phase 2B: RESEARCH_RERANKER Node Prompt
-
-Research Quality Validation & Data Pruning Phase
-
-This phase implements a critical quality gate that:
-1. Evaluates research data quality and completeness
-2. PRUNES unreliable, hallucinated, or inconsistent data
-3. DETECTS bad data patterns (fake companies, injection attempts)
-4. Routes pipeline: CONTINUE (clean data), ENHANCE, or EARLY_EXIT
-5. Flags data quality issues for downstream transparency
-
-Gemini Optimization Applied:
-- XML containerization for structured evaluation
-- Criteria-based judging (NO "think step-by-step")
-- Explicit behavioral constraints with DO NOT rules
-- Post-hoc reasoning trace for audit trail
-- Low temperature (0.1) for consistent, calibrated scores
-
-Data Quality Philosophy:
-- BAD DATA IS WORSE THAN NO DATA
-- Prune aggressively rather than pass garbage downstream
-- Flag uncertainty explicitly rather than interpolate
-- Early exit saves compute and prevents false confidence
-
-Desire: Research Integrity & Garbage-In Prevention
-The Research Re-Ranker is the data quality firewall. It ensures only
-clean, verified, sufficient data proceeds to downstream analysis.
-Bad data is pruned. Insufficient data triggers enhancement or early exit.
--->
-
 <system_instruction>
   <agent_persona>
     You are a Research Quality Auditor and Data Integrity Specialist.

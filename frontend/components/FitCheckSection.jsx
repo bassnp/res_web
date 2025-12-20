@@ -9,6 +9,7 @@ import { ThinkingPanel } from '@/components/fit-check/ThinkingPanel';
 import { ResultsSection } from '@/components/fit-check/ResultsSection';
 import { ComparisonChain } from '@/components/fit-check/ComparisonChain';
 import { ReasoningDialog } from '@/components/fit-check/ReasoningDialog';
+import { ConfidenceGauge } from '@/components/fit-check/ConfidenceGauge';
 import { WorkflowPipelinePreview } from '@/components/fit-check/WorkflowPipelinePreview';
 import HeroGridDots from '@/components/HeroGridDots';
 import { useFitCheck } from '@/hooks/use-fit-check';
@@ -104,8 +105,23 @@ export function FitCheckSection() {
                 </div>
               ) : (
                 <div className="p-6 flex flex-col items-center justify-center h-full text-center">
-                  <CheckCircle2 className="w-12 h-12 text-emerald-500 mb-4 animate-bounce-slow" />
-                  <p className="text-sm font-medium text-twilight/60 dark:text-eggshell/60">Analysis Complete</p>
+                  {/* Show Confidence Gauge */}
+                  {parsedResponse && finalConfidence?.score !== null && (
+                    <div className="mb-4">
+                      <ConfidenceGauge 
+                        score={finalConfidence?.score ?? parsedResponse?.calibratedScore}
+                        tier={finalConfidence?.tier || parsedResponse?.confidenceTier}
+                        showLabel={false}
+                      />
+                    </div>
+                  )}
+                  {/* Show fit analysis title with checkmark below the gauge */}
+                  <div className="flex items-center gap-2 justify-center">
+                    <CheckCircle2 className="w-4 h-4 text-emerald-500" />
+                    <p className="text-sm font-medium text-twilight dark:text-eggshell">
+                      {parsedResponse?.title || 'Analysis Complete'}
+                    </p>
+                  </div>
                 </div>
               )}
             </div>
@@ -148,22 +164,8 @@ export function FitCheckSection() {
                   />
                 </div>
               ) : (
-                <div className="p-4 md:p-6 flex items-center justify-between gap-4 h-full">
-                  <div className="flex items-center gap-2">
-                    <CheckCircle2 className="w-5 h-5 text-emerald-500" />
-                    <h2 className="text-lg md:text-xl font-bold text-twilight dark:text-eggshell">
-                      Analysis Complete
-                    </h2>
-                    {durationMs && (
-                      <span className="flex items-center gap-1 text-xs text-twilight/50 dark:text-eggshell/50 ml-2">
-                        <Clock className="w-3 h-3" />
-                        {(durationMs / 1000).toFixed(1)}s
-                      </span>
-                    )}
-                  </div>
-                  
-                  {/* Action buttons */}
-                  <div className="flex items-center gap-2">
+                <div className="p-4 md:p-6 flex flex-col items-center justify-center gap-4 h-full">
+                  <div className="flex items-center gap-3">
                     {/* Read the Reasoning button */}
                     <Button
                       type="button"
@@ -191,6 +193,13 @@ export function FitCheckSection() {
                       Try Another
                     </Button>
                   </div>
+
+                  {durationMs && (
+                    <div className="flex items-center gap-1.5 text-xs text-twilight/50 dark:text-eggshell/50">
+                      <Clock className="w-3.5 h-3.5" />
+                      <span>Analysis completed in {(durationMs / 1000).toFixed(1)}s</span>
+                    </div>
+                  )}
                 </div>
               )}
             </div>

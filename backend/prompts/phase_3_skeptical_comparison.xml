@@ -1,30 +1,3 @@
-<!-- 
-Phase 3: SKEPTICAL_COMPARISON Node Prompt
-
-CRITICAL PHASE - Anti-Sycophancy Defense
-
-Gemini Optimization Applied:
-- XML containerization for context isolation
-- Criteria-based prompting with explicit success metrics
-- Negative constraints to prevent agreeable/sycophantic patterns
-- Step-Back prompting ("What would a critical evaluator notice?")
-- Post-hoc reasoning trace (not inline CoT - Gemini 2.5 anti-pattern)
-- Mandatory gap requirement encoded in output contract
-- Role framing as skeptical evaluator, not supportive advisor
-
-Desire: Veracity & Risk Assessment (Adversarial Defense)
-The Skeptical Comparison agent is the devil's advocate. It operates under the
-assumption that previous phases may have overstated alignment. Its purpose is to
-identify genuine gaps, distinguish transferable from missing skills, and provide
-an honest risk assessment that prevents the final output from being sycophantic.
-
-Per AI Agent Workflow Upgrade Plan - This agent must:
-1. Detect adversarial prompt manipulation attempts
-2. Cross-reference claims against evidence (Hallucination Check)
-3. Verify temporal consistency in experience claims
-4. Flag AI-generated resume fluff vs. specific metric-driven claims
--->
-
 <system_instruction>
   <agent_persona>
     You are a Skeptical Hiring Manager with 15 years of experience evaluating

@@ -1,11 +1,12 @@
 'use client';
 
 import { forwardRef, useState } from 'react';
-import { Send, Loader2, Zap, Brain } from 'lucide-react';
+import { Send, Loader2, Zap, Brain, Sparkles, ThumbsUp, ThumbsDown } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { cn } from '@/lib/utils';
 import { useAISettings, AI_MODELS } from '@/hooks/use-ai-settings';
+import { useExampleGenerator } from '@/hooks/use-example-generator';
 import { InfoDialog, InfoTriggerLink } from './InfoDialog';
 
 /**
@@ -81,6 +82,12 @@ export const InputPanel = forwardRef(function InputPanel({
   uiPhase,
 }, ref) {
   const [infoOpen, setInfoOpen] = useState(false);
+  const {
+    isLoading: isGenerating,
+    generateGoodExample,
+    generateBadExample,
+  } = useExampleGenerator();
+  
   const isValidInput = value.trim().length >= 3;
   const isSubmitDisabled = !isValidInput || isLoading;
 
@@ -98,6 +105,28 @@ export const InputPanel = forwardRef(function InputPanel({
       if (!isSubmitDisabled) {
         onSubmit(value.trim());
       }
+    }
+  };
+
+  /**
+   * Handle generating a good example.
+   * Populates the textarea with the generated example.
+   */
+  const handleGenerateGoodExample = async () => {
+    const example = await generateGoodExample();
+    if (example) {
+      onChange(example);
+    }
+  };
+
+  /**
+   * Handle generating a bad example.
+   * Populates the textarea with the generated example.
+   */
+  const handleGenerateBadExample = async () => {
+    const example = await generateBadExample();
+    if (example) {
+      onChange(example);
     }
   };
 
@@ -201,6 +230,68 @@ export const InputPanel = forwardRef(function InputPanel({
               </>
             )}
           </Button>
+          
+          {/* Generate Examples Section */}
+          <div className="w-full max-w-md pt-4 border-t border-twilight/10 dark:border-eggshell/10">
+            {/* Section Title */}
+            <div className="flex items-center justify-center gap-2 mb-3">
+              <Sparkles className="w-4 h-4 text-muted-teal" />
+              <span className="text-sm font-medium text-twilight/70 dark:text-eggshell/70">
+                Generate Examples
+              </span>
+            </div>
+            
+            {/* Example Generator Buttons */}
+            <div className="flex items-center justify-center gap-3">
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={handleGenerateGoodExample}
+                disabled={isLoading || isGenerating}
+                className={cn(
+                  "group gap-2 px-4 py-2 rounded-sm",
+                  "border-emerald-500/30 hover:border-emerald-500",
+                  "text-emerald-600 dark:text-emerald-400 hover:bg-emerald-500/10",
+                  "transition-all duration-200 hover:scale-[1.02]",
+                  isGenerating && "opacity-60 cursor-not-allowed"
+                )}
+                title="Generate a job query that would be a good fit"
+              >
+                {isGenerating ? (
+                  <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                ) : (
+                  <ThumbsUp className="w-3.5 h-3.5 group-hover:animate-pulse" />
+                )}
+                <span className="text-xs font-medium">Good Example</span>
+              </Button>
+              
+              <span className="text-xs text-twilight/40 dark:text-eggshell/40 font-medium">or</span>
+              
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={handleGenerateBadExample}
+                disabled={isLoading || isGenerating}
+                className={cn(
+                  "group gap-2 px-4 py-2 rounded-sm",
+                  "border-red-500/30 hover:border-red-500",
+                  "text-red-500 dark:text-red-400 hover:bg-red-500/10",
+                  "transition-all duration-200 hover:scale-[1.02]",
+                  isGenerating && "opacity-60 cursor-not-allowed"
+                )}
+                title="Generate a job query that would be a poor fit"
+              >
+                {isGenerating ? (
+                  <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                ) : (
+                  <ThumbsDown className="w-3.5 h-3.5 group-hover:animate-pulse" />
+                )}
+                <span className="text-xs font-medium">Bad Example</span>
+              </Button>
+            </div>
+          </div>
           
           {/* AI Model Selection Buttons - temporarily hidden */}
           {/* <ModelSelector /> */}

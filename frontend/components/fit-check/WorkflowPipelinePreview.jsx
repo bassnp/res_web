@@ -103,7 +103,7 @@ export function WorkflowPipelinePreview({ compact = false }) {
       )}>
         <div className="flex items-center justify-center gap-2">
           <div className="w-6 h-6 rounded-full bg-gradient-to-br from-burnt-peach to-burnt-peach/60 flex items-center justify-center pipeline-icon-glow">
-            <Brain className="w-3 h-3 text-eggshell" />
+            <Brain className="w-3 h-3 text-twilight dark:text-eggshell" />
           </div>
           <span className={cn(
             "font-semibold text-twilight/80 dark:text-eggshell/80 uppercase tracking-wide",
@@ -133,11 +133,12 @@ export function WorkflowPipelinePreview({ compact = false }) {
                   isActive && `${phase.bgColorMuted} ${phase.previewBorder} ${phase.textColor} pipeline-phase-active`,
                   !isComplete && !isActive && "bg-twilight/5 dark:bg-eggshell/5 border-twilight/15 dark:border-eggshell/15 text-twilight/40 dark:text-eggshell/40"
                 )}
+                style={isActive ? { '--glow-color': phase.glowRGB } : {}}
               >
                 <div className={cn(
                   "w-3.5 h-3.5 rounded-full flex items-center justify-center flex-shrink-0",
-                  isComplete && "bg-muted-teal text-eggshell",
-                  isActive && `bg-gradient-to-br ${phase.color} text-eggshell`,
+                  isComplete && "bg-muted-teal text-twilight dark:text-eggshell",
+                  isActive && `${phase.bgColor} text-white`,
                   !isComplete && !isActive && "bg-twilight/10 dark:bg-eggshell/10"
                 )}>
                   {isComplete ? (
@@ -178,6 +179,7 @@ export function WorkflowPipelinePreview({ compact = false }) {
                         isActive && `${phase.bgColorMuted} ${phase.previewBorder} pipeline-phase-active`,
                         isPending && "bg-twilight/5 dark:bg-eggshell/5 border-twilight/10 dark:border-eggshell/10"
                       )}
+                      style={isActive ? { '--glow-color': phase.glowRGB } : {}}
                     >
                       {/* Active Spinner - Surgical addition to ensure perfect alignment with card transforms */}
                       {isActive && isAnimating && (
@@ -190,8 +192,8 @@ export function WorkflowPipelinePreview({ compact = false }) {
                       <div
                         className={cn(
                           "w-5 h-5 rounded-sm flex items-center justify-center flex-shrink-0 transition-all duration-300",
-                          isComplete && "bg-muted-teal text-eggshell",
-                          isActive && `bg-gradient-to-br ${phase.color} text-eggshell`,
+                          isComplete && "bg-muted-teal text-twilight dark:text-eggshell",
+                          isActive && `${phase.bgColor} text-white`,
                           isPending && "bg-twilight/10 dark:bg-eggshell/10 text-twilight/30 dark:text-eggshell/30"
                         )}
                       >

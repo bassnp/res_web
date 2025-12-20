@@ -28,11 +28,25 @@ module.exports = {
       'group-hover:text-burnt-peach', 'group-hover:text-muted-teal', 'group-hover:text-apricot',
       'hover:border-burnt-peach/50', 'hover:border-muted-teal/50', 'hover:border-apricot/50',
       'border-burnt-peach/20', 'border-muted-teal/20', 'border-apricot/20',
-      // Fit Check Pipeline colors
+      // Fit Check Pipeline phase colors - backgrounds
+      'bg-blue-400', 'bg-purple-400', 'bg-violet-400', 'bg-cyan-400', 'bg-amber-400', 'bg-emerald-400',
       'bg-blue-400/10', 'bg-purple-400/10', 'bg-violet-400/10', 'bg-cyan-400/10', 'bg-amber-400/10', 'bg-emerald-400/10',
+      // Fit Check Pipeline phase colors - borders
+      'border-l-blue-400', 'border-l-purple-400', 'border-l-violet-400', 'border-l-cyan-400', 'border-l-amber-400', 'border-l-emerald-400',
+      'border-l-burnt-peach',
       'border-blue-400/30', 'border-purple-400/30', 'border-violet-400/30', 'border-cyan-400/30', 'border-amber-400/30', 'border-emerald-400/30',
       'border-blue-400/40', 'border-purple-400/40', 'border-violet-400/40', 'border-cyan-400/40', 'border-amber-400/40', 'border-emerald-400/40',
+      // Fit Check Pipeline phase colors - text
       'text-blue-400', 'text-purple-400', 'text-violet-400', 'text-cyan-400', 'text-amber-400', 'text-emerald-400',
+      // Fit Check Pipeline phase colors - rings
+      'ring-blue-400/30', 'ring-purple-400/30', 'ring-violet-400/30', 'ring-cyan-400/30', 'ring-amber-400/30', 'ring-emerald-400/30',
+      // Fit Check Pipeline phase colors - gradients (for ActiveNodeHeader and PhaseInsightsSummary)
+      'from-blue-400/10', 'from-purple-400/10', 'from-violet-400/10', 'from-cyan-400/10', 'from-amber-400/10', 'from-emerald-400/10',
+      'from-blue-500/5', 'from-purple-500/5', 'from-violet-500/5', 'from-cyan-500/5', 'from-amber-500/5', 'from-emerald-500/5',
+      'from-muted-teal/5', 'from-burnt-peach/5',
+      // Chain of Thought - thought type icons (reasoning, observation, tool_call)
+      'bg-purple-500', 'text-purple-500', 'text-purple-400', 'dark:text-purple-400',
+      'dark:bg-slate-600', 'dark:text-eggshell',
     ],
     prefix: "",
     theme: {

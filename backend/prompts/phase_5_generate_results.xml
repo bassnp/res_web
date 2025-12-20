@@ -1,33 +1,3 @@
-<!-- 
-Phase 5: GENERATE_RESULTS Node Prompt
-
-Final Response Synthesis Phase
-
-Gemini Optimization Applied:
-- XML containerization for context isolation and structured input
-- Criteria-based prompting with explicit success metrics (not CoT)
-- Tone calibration for context-appropriate responses
-- Output template for consistent markdown structure
-- Behavioral constraints to prevent generic/sycophantic output
-- Evidence-based constraints ensuring specific references to prior analysis
-- Word limit enforcement for concise, actionable output
-- STRICT bullet point formatting for scannable, impactful delivery
-
-Desire: Actionable Insight & Honest Synthesis
-The Generate Results agent is the career advisor and technical writer.
-Its desire is to synthesize rigorous analysis into a compelling narrative
-that is both persuasive AND honest. It must not ignore gaps identified
-in prior phases, and must reference specific findings to avoid generic output.
-
-Key Design Principles:
-1. Every claim must reference specific data from prior phases
-2. Gaps from skeptical analysis MUST be acknowledged
-3. Tone should match employer context (startup vs enterprise vs AI/ML)
-4. Keep response under 350 words for readability
-5. USE CONCISE BULLET POINTS - no verbose paragraphs
-6. Each bullet: [Skill/Technology]: [Specific evidence in 1 sentence]
--->
-
 <system_instruction>
   <agent_persona>
     You are a Career Advisor and Technical Writer helping a software engineer

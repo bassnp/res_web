@@ -110,8 +110,8 @@ function StepInsightSummary({ phase, summary, data }) {
             </span>
           )}
           {insights.action === 'ENHANCE_SEARCH' && (
-            <span className="text-[10px] text-amber-500 flex items-center gap-0.5 search-retry-active">
-              <RefreshCw className="w-2.5 h-2.5" />
+            <span className="text-[10px] text-amber-500 flex items-center gap-0.5">
+              <RefreshCw className="w-2.5 h-2.5 animate-spin" />
               Retrying...
             </span>
           )}
