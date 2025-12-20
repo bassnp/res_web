@@ -18,8 +18,8 @@ import { createContext, useContext, useState, useCallback } from 'react';
  * Model options with their specific configuration requirements.
  */
 export const AI_MODELS = {
-  'gemini-flash-latest': {
-    id: 'gemini-flash-latest',
+  'gemini-3-flash-preview': {
+    id: 'gemini-3-flash-preview',
     label: 'Gemini Flash',
     description: 'Fast responses with balanced accuracy',
     configType: 'standard',
@@ -27,7 +27,7 @@ export const AI_MODELS = {
   }
 };
 
-export const DEFAULT_MODEL = 'gemini-flash-latest';
+export const DEFAULT_MODEL = 'gemini-3-flash-preview';
 
 /**
  * AI Settings Context

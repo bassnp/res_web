@@ -26,96 +26,112 @@ ENGINEER_PROFILE: Dict[str, Any] = {
             "Python",
             "JavaScript",
             "TypeScript",
+            "Dart",
+            "Lua",
+            "Java",
             "SQL",
             "HTML/CSS",
         ],
         "frameworks": [
+            "Flutter",
             "React",
             "Next.js",
+            "Vite",
             "FastAPI",
             "Node.js",
             "TailwindCSS",
+            "Radix UI",
+            "Shadcn UI",
         ],
         "cloud_devops": [
             "Docker",
-            "AWS",
+            "Firebase",
+            "MongoDB",
             "PostgreSQL",
             "Redis",
+            "PayPal Integration",
             "CI/CD",
         ],
         "ai_ml": [
             "LangChain",
             "LangGraph",
+            "LangSmith",
             "OpenAI API",
             "Google Gemini",
             "RAG Systems",
+            "MCP Servers",
             "Prompt Engineering",
+            "Vector Stores",
         ],
         "tools": [
             "Git",
+            "GitHub",
             "VS Code",
+            "Overwolf SDK",
             "Linux",
             "REST APIs",
-            "GraphQL",
         ],
     },
     "experience_summary": """
-Full-stack software engineer with experience building modern web applications and AI-powered systems. Proficient in developing scalable backend services, responsive frontend interfaces, and integrating cutting-edge AI/ML capabilities.
+Full-stack software engineer and December 2025 CSU Sacramento graduate specializing in AI-powered applications and agentic systems. Experienced in building production platforms from concept to client delivery.
 
 Key accomplishments:
-- Built production AI agents using LangChain and LangGraph
-- Developed full-stack applications with React/Next.js and FastAPI
-- Implemented real-time streaming features using SSE and WebSockets
-- Designed and deployed containerized microservices architecture
-- Created RAG systems for intelligent document processing
+- Delivered ChurchLink platform to production—a Web & App Builder with localization and payment processing for a real church client
+- Built a Deep Researcher Agent using LangGraph and Google CSE for graph-based web research orchestration
+- Created Zharvis, an Overwolf gaming overlay SaaS with RAG pipelines processing 15k+ wiki documents
+- First profitable SaaS at age 19, generating $6k revenue with a team of 3 developers
+- Self-taught foundation starting with first GitHub commit at age 15
     """,
     "notable_projects": [
         {
-            "name": "AI Portfolio Assistant",
-            "description": "Real-time AI agent that analyzes employer fit using web research and skill matching",
+            "name": "Interactive Portfolio with Deep Researcher",
+            "description": "AI-powered portfolio that analyzes employer fit through comparative research against job descriptions",
             "tech": [
+                "Next.js",
+                "Shadcn UI",
                 "Python",
                 "FastAPI",
                 "LangGraph",
-                "React",
-                "SSE Streaming",
-            ],
-        },
-        {
-            "name": "Full-Stack Web Platform",
-            "description": "Production web application with authentication, real-time features, and cloud deployment",
-            "tech": [
-                "Next.js",
-                "FastAPI",
-                "PostgreSQL",
                 "Docker",
-                "AWS",
             ],
         },
         {
-            "name": "RAG Document System",
-            "description": "Intelligent document retrieval and question-answering system",
+            "name": "ChurchLink Platform",
+            "description": "Full-stack church management system with cross-platform apps, localization, and payment integration",
             "tech": [
+                "Flutter",
+                "TypeScript",
+                "FastAPI",
+                "Firebase",
+                "MongoDB",
+                "PayPal",
+            ],
+        },
+        {
+            "name": "Zharvis Gaming Assistant",
+            "description": "Overwolf overlay providing AI-powered in-game assistance with RAG document retrieval",
+            "tech": [
+                "Overwolf SDK",
                 "LangChain",
-                "Vector Databases",
-                "OpenAI",
+                "MCP",
+                "Vector Stores",
                 "Python",
             ],
         },
     ],
     "strengths": [
-        "Fast learner who quickly adapts to new technologies",
-        "Strong problem-solving and debugging skills",
-        "Experience with end-to-end software development lifecycle",
-        "Excellent communication and collaboration abilities",
-        "Passionate about building AI-powered applications",
+        "Rapid learner who quickly adapts to new technologies and frameworks",
+        "Hands-on experience shipping production software to real clients",
+        "Deep expertise in AI/ML tooling including LangChain, LangGraph, and RAG systems",
+        "Full-stack capabilities spanning Flutter, React, FastAPI, and cloud infrastructure",
+        "Entrepreneurial mindset with proven ability to generate revenue from software products",
     ],
     "career_interests": [
+        "AI/ML Engineering & Agentic Systems",
         "Full-Stack Development",
-        "AI/ML Engineering",
-        "Backend Systems",
-        "Cloud Architecture",
-        "Developer Tools",
+        "Backend Systems & APIs",
+        "Developer Tools & Productivity",
+        "Gaming & Interactive Applications",
     ],
 }
 

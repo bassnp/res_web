@@ -2,99 +2,116 @@
   "$schema": "./schemas/projects.schema.json",
   "featured": [
     {
-      "id": "project-alpha",
-      "title": "Project Alpha",
-      "description": "A full-stack web application built with React and Node.js, featuring real-time updates and modern UI.",
-      "about": "Project Alpha is a comprehensive full-stack application that demonstrates modern web development practices. It features a React frontend with a Node.js backend, utilizing WebSocket connections for real-time updates. The application includes user authentication, data persistence with PostgreSQL, and a responsive design that works seamlessly across all devices.",
+      "id": "churchlink",
+      "title": "ChurchLink — Web & App Builder Platform",
+      "description": "A deployed platform enabling churches to build and customize their own websites and mobile apps with multi-language support, admin dashboards, and payment processing.",
+      "about": "ChurchLink is a comprehensive church management solution developed as a senior graduation project with a team of 6 engineers. The platform provides an intuitive builder for churches to create and customize their digital presence across web and mobile platforms. Key features include localization for multi-language congregations, administrative dashboards for content management, and integrated PayPal payment processing for donations and events. The solution was successfully handed off to our client at Second Slavic Baptist Church.",
       "learning_outcomes": [
-        "Mastered React hooks and state management patterns",
-        "Implemented WebSocket connections for real-time data synchronization",
-        "Designed and optimized PostgreSQL database schemas",
-        "Built RESTful APIs with proper error handling and validation",
-        "Deployed containerized applications using Docker"
-      ],
-      "tags": [
-        "React",
-        "Node.js",
-        "PostgreSQL"
-      ],
-      "color": "from-burnt-peach to-apricot",
-      "images_folder": "project-alpha",
-      "link": null
-    },
-    {
-      "id": "project-beta",
-      "title": "Project Beta",
-      "description": "Mobile-first progressive web app with offline capabilities and push notifications.",
-      "about": "Project Beta showcases the power of Progressive Web Apps (PWAs) with a mobile-first approach. The application leverages service workers for offline functionality, implements push notifications for user engagement, and provides a native app-like experience directly in the browser. Built with Next.js and TypeScript for type safety and improved developer experience.",
-      "learning_outcomes": [
-        "Implemented service workers for offline-first functionality",
-        "Configured push notifications with proper permission handling",
-        "Utilized TypeScript for enhanced code quality and maintainability",
-        "Optimized performance with Next.js static generation and caching",
-        "Designed responsive layouts following mobile-first principles"
-      ],
-      "tags": [
-        "Next.js",
-        "PWA",
-        "TypeScript"
-      ],
-      "color": "from-muted-teal to-twilight",
-      "images_folder": "project-beta",
-      "link": null
-    },
-    {
-      "id": "project-gamma",
-      "title": "Project Gamma",
-      "description": "Data visualization dashboard with interactive charts and real-time analytics.",
-      "about": "Project Gamma is an advanced data visualization dashboard that transforms complex datasets into intuitive, interactive visualizations. Using D3.js for custom charts and Python for backend data processing, the dashboard provides real-time analytics with filtering, zooming, and drill-down capabilities. The system processes large datasets efficiently and presents insights in a visually compelling manner.",
-      "learning_outcomes": [
-        "Created custom D3.js visualizations with interactive features",
-        "Built efficient data processing pipelines in Python",
-        "Implemented real-time data streaming and updates",
-        "Designed intuitive UX for complex data exploration",
-        "Optimized rendering performance for large datasets"
+        "Led cross-platform development with Flutter for mobile and Vite for web interfaces",
+        "Architected backend services using FastAPI with Firebase and MongoDB integration",
+        "Implemented multi-language localization system for diverse congregations",
+        "Integrated PayPal payment processing for secure transaction handling",
+        "Collaborated in a 6-person agile team through full development lifecycle"
       ],
       "tags": [
         "Python",
-        "D3.js",
-        "PostgreSQL"
+        "Flutter",
+        "TypeScript",
+        "Vite",
+        "FastAPI",
+        "Firebase",
+        "MongoDB",
+        "PayPal"
+      ],
+      "color": "from-burnt-peach to-apricot",
+      "images_folder": "project-churchlink",
+      "link": null
+    },
+    {
+      "id": "cse-agent",
+      "title": "Google CSE Deep Researcher Agent",
+      "description": "An agentic research system using LangGraph and Google Custom Search Engine to compile structured GenUI reports with images, tables, and sourced web content.",
+      "about": "This project implements a sophisticated web research agent powered by LangGraph's graph-theory based orchestration. The system leverages Google Custom Search Engine (CSE) integration to perform deep web research, automatically compiling findings into structured Generative UI reports. The pipeline intelligently processes search results to extract and present images, tables, text snippets, and source citations in a visually coherent format. The architecture demonstrates advanced agentic workflows with RAG integration for contextual synthesis.",
+      "learning_outcomes": [
+        "Designed graph-based agent orchestration using LangGraph workflows",
+        "Integrated Google CSE API for programmatic web research capabilities",
+        "Built Generative UI pipeline for dynamic report generation",
+        "Implemented LangSmith tracing for debugging and observability",
+        "Deployed containerized services with Redis caching and Docker"
+      ],
+      "tags": [
+        "Google Gemini",
+        "LangGraph",
+        "LangSmith",
+        "Python",
+        "FastAPI",
+        "Firebase",
+        "Redis",
+        "Docker"
+      ],
+      "color": "from-muted-teal to-twilight",
+      "images_folder": "project-cse-agent",
+      "link": null
+    },
+    {
+      "id": "zharvis",
+      "title": "Zharvis — Videogame AI Overlay Agent",
+      "description": "A SaaS Overwolf overlay providing real-time in-game AI assistance through Wiki-powered search and MCP tools for instant query responses.",
+      "about": "Zharvis is a next-generation gaming companion built as an Overwolf overlay application. Version 2 utilizes Wiki Custom Search Engines and Model Context Protocol (MCP) tools to deliver fast, contextual in-game query assistance through a Generative UI HUD with interactive windows and popups. The first iteration pioneered a demo RAG workflow processing 15,000+ scraped wiki documents through vector stores with embedding and indexing for efficient retrieval. The system enables gamers to access game knowledge without leaving their session.",
+      "learning_outcomes": [
+        "Developed Overwolf overlay application with TypeScript integration",
+        "Implemented MCP server architecture for extensible tool capabilities",
+        "Built RAG pipeline processing 15k+ documents with vector embeddings",
+        "Created real-time Generative UI components for in-game HUD display",
+        "Integrated OpenAI and LangChain for natural language query processing"
+      ],
+      "tags": [
+        "OpenAI API",
+        "Overwolf",
+        "TypeScript",
+        "Python",
+        "FastAPI",
+        "Docker",
+        "LangChain"
       ],
       "color": "from-apricot to-muted-teal",
-      "images_folder": "project-gamma",
+      "images_folder": "project-zharvis",
       "link": null
     }
   ],
   "backend_projects": [
     {
-      "name": "AI Portfolio Assistant",
-      "description": "Real-time AI agent that analyzes employer fit using web research and skill matching",
+      "name": "Interactive Portfolio with Deep Researcher",
+      "description": "AI-powered portfolio that analyzes employer fit through comparative research against job descriptions",
       "tech": [
+        "Next.js",
+        "Shadcn UI",
         "Python",
         "FastAPI",
         "LangGraph",
-        "React",
-        "SSE Streaming"
+        "Docker"
       ]
     },
     {
-      "name": "Full-Stack Web Platform",
-      "description": "Production web application with authentication, real-time features, and cloud deployment",
+      "name": "ChurchLink Platform",
+      "description": "Full-stack church management system with cross-platform apps, localization, and payment integration",
       "tech": [
-        "Next.js",
+        "Flutter",
+        "TypeScript",
         "FastAPI",
-        "PostgreSQL",
-        "Docker",
-        "AWS"
+        "Firebase",
+        "MongoDB",
+        "PayPal"
       ]
     },
     {
-      "name": "RAG Document System",
-      "description": "Intelligent document retrieval and question-answering system",
+      "name": "Zharvis Gaming Assistant",
+      "description": "Overwolf overlay providing AI-powered in-game assistance with RAG document retrieval",
       "tech": [
+        "Overwolf SDK",
         "LangChain",
-        "Vector Databases",
-        "OpenAI",
+        "MCP",
+        "Vector Stores",
         "Python"
       ]
     }

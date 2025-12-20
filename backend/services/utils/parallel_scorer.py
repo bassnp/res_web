@@ -191,7 +191,7 @@ async def score_documents_parallel(
     llm = get_llm(
         streaming=False,
         temperature=0.1,  # Low temperature for consistent scoring
-        model_id="gemini-flash-latest",  # Fast model for parallel scoring
+        model_id="gemini-3-flash-preview",  # Fast model for parallel scoring
     )
     
     # Create semaphore for concurrency control

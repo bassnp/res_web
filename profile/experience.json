@@ -3,102 +3,101 @@
   "timeline": [
     {
       "id": 1,
-      "title": "Software Engineer",
-      "company": "Tech Innovation Corp",
+      "title": "Computer Science Degree",
+      "company": "CSU Sacramento Graduate",
       "period": "December 2025",
-      "description": "Leading full-stack development initiatives, architecting scalable solutions with React, Node.js, and cloud services. Implementing CI/CD pipelines and mentoring junior developers.",
+      "description": "Completed a Bachelor of Science in Computer Science at California State University, Sacramento, culminating years of academic study with hands-on project experience.",
       "tags": [
-        "React",
-        "Node.js",
-        "AWS",
-        "TypeScript"
+        "B.S. Computer Science",
+        "New Grad",
+        "2025"
       ],
       "color": "burnt-peach",
-      "showcase_folder": "showcase1"
+      "showcase_folder": "showcase-graduation"
     },
     {
       "id": 2,
-      "title": "Full Stack Developer",
-      "company": "Digital Solutions Inc",
-      "period": "2024",
-      "description": "Built and deployed production-ready web applications serving thousands of users. Optimized database queries resulting in 40% performance improvement.",
+      "title": "ChurchLink Platform Handoff",
+      "company": "Second Slavic Baptist Church",
+      "period": "November 2025",
+      "description": "Successfully delivered a complete Web & App Builder Platform to our client. The system enables church staff to manage content, handle multi-language localization, and process donations.",
       "tags": [
-        "Next.js",
-        "PostgreSQL",
-        "Docker"
+        "Flutter",
+        "FastAPI",
+        "Firebase"
       ],
       "color": "muted-teal",
-      "showcase_folder": "showcase2"
+      "showcase_folder": "showcase-churchlink"
     },
     {
       "id": 3,
-      "title": "Software Development Intern",
-      "company": "StartupXYZ",
-      "period": "2023",
-      "description": "Developed RESTful APIs and integrated third-party services. Contributed to agile sprints and participated in code reviews with senior engineers.",
+      "title": "GenUI Deep Researcher Agent",
+      "company": "Personal Project",
+      "period": "November 2025",
+      "description": "Built a working Deep Researcher Agent integrating Google Custom Search Engine with LangGraph. The system uses graph-theory orchestration to compile structured reports featuring images, tables, and source citations.",
       "tags": [
-        "Python",
-        "FastAPI",
-        "Git"
+        "LangGraph",
+        "Google CSE",
+        "GenUI"
       ],
       "color": "apricot",
-      "showcase_folder": "showcase3"
+      "showcase_folder": "showcase-cse-agent"
     },
     {
       "id": 4,
-      "title": "Freelance Web Developer",
-      "company": "Self-Employed",
-      "period": "2022",
-      "description": "Delivered custom websites and e-commerce solutions for small businesses. Managed client relationships and project timelines independently.",
+      "title": "Zharvis v2 Game Overlay",
+      "company": "SaaS Product",
+      "period": "October 2025",
+      "description": "Launched version two of Zharvis, an Overwolf overlay providing AI-powered in-game assistance. Upgraded from RAG-based retrieval (15k+ docs) to Wiki CSE and MCP tools for faster query responses.",
       "tags": [
-        "JavaScript",
-        "WordPress",
-        "CSS"
+        "Overwolf",
+        "MCP",
+        "LangChain"
       ],
       "color": "burnt-peach",
-      "showcase_folder": "showcase4"
+      "showcase_folder": "showcase-zharvis"
     },
     {
       "id": 5,
-      "title": "Research Assistant",
-      "company": "University CS Department",
-      "period": "2020",
-      "description": "Assisted in machine learning research projects. Processed datasets, implemented algorithms, and co-authored a conference paper on NLP techniques.",
+      "title": "First SaaS Success",
+      "company": "CS:GO Mod Team",
+      "period": "January 2023",
+      "description": "Collaborated with a team of 3 developers to build and sell videogame modifications for CS:GO. Generated $6k in revenue over a year of active development and community engagement.",
       "tags": [
-        "Python",
-        "TensorFlow",
-        "NLP"
+        "SaaS",
+        "Team of 3",
+        "$6k Revenue"
       ],
       "color": "muted-teal",
-      "showcase_folder": "showcase5"
+      "showcase_folder": "showcase-csgo"
     },
     {
       "id": 6,
-      "title": "IT Support Technician",
-      "company": "Campus Tech Services",
-      "period": "2018",
-      "description": "Provided technical support for faculty and students. Troubleshot hardware/software issues and maintained computer lab equipment.",
+      "title": "GPU Mining Operation",
+      "company": "Self-Employed",
+      "period": "April 2022",
+      "description": "Assembled a 7-GPU Ethereum mining rig using Nvidia and AMD cards, achieving ~210 MH/s. Generated $170 monthly passive income before the Ethereum Merge ended PoW mining.",
       "tags": [
-        "Troubleshooting",
-        "Windows",
-        "Linux"
+        "Ethereum",
+        "7 GPUs",
+        "210 MH/s"
       ],
       "color": "apricot",
-      "showcase_folder": "showcase6"
+      "showcase_folder": "showcase-mining"
     },
     {
       "id": 7,
-      "title": "Programming Hobbyist",
-      "company": "Self-Taught Journey",
-      "period": "2016",
-      "description": "Discovered passion for programming through game development and automation scripts. Built first website and learned fundamentals of coding logic.",
+      "title": "First GitHub Commit",
+      "company": "High School Project",
+      "period": "July 2019",
+      "description": "Pushed my first commit to GitHub at age 15, showcasing a Java drawing application from my sophomore year. This milestone marked the beginning of my journey as a software developer.",
       "tags": [
         "Java",
-        "HTML",
-        "CSS"
+        "GitHub",
+        "Age 15"
       ],
       "color": "burnt-peach",
-      "showcase_folder": "showcase7"
+      "showcase_folder": "showcase-first-commit"
     }
   ]
 }

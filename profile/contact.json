@@ -1,13 +1,13 @@
 {
   "$schema": "./schemas/contact.schema.json",
-  "email": "hello@example.com",
+  "email": "jbruha@csus.edu",
   "social": {
     "github": {
       "url": "https://github.com/bassnp",
       "display": "bassnp"
     },
     "mail": {
-      "url": "mailto:hello@example.com",
+      "url": "mailto:jbruha@csus.edu",
       "display": "Email"
     }
   },

@@ -4,18 +4,31 @@
     "primary": {
       "label": "Skills & Technologies",
       "skills": [
-        "TODO"
+        "Python",
+        "JavaScript",
+        "TypeScript",
+        "Dart",
+        "Flutter",
+        "FastAPI",
+        "LangGraph",
+        "LangChain",
+        "React",
+        "Next.js",
+        "Lua",
+        "Java"
       ]
     },
     "devops": {
-      "label": "Dev Ops",
+      "label": "DevOps & Tools",
       "skills": [
+        "Docker",
+        "Firebase",
+        "MongoDB",
+        "Git",
+        "GitHub",
         "Jira",
         "Slack",
-        "Git",
-        "Github",
         "Figma",
-        "Excel Sheets",
         "CapCut"
       ]
     }
@@ -25,37 +38,50 @@
       "Python",
       "JavaScript",
       "TypeScript",
+      "Dart",
+      "Lua",
+      "Java",
       "SQL",
       "HTML/CSS"
     ],
     "frameworks": [
+      "Flutter",
       "React",
       "Next.js",
+      "Vite",
       "FastAPI",
       "Node.js",
-      "TailwindCSS"
+      "TailwindCSS",
+      "Radix UI",
+      "Shadcn UI"
     ],
     "cloud_devops": [
       "Docker",
-      "AWS",
+      "Firebase",
+      "MongoDB",
       "PostgreSQL",
       "Redis",
+      "PayPal Integration",
       "CI/CD"
     ],
     "ai_ml": [
       "LangChain",
       "LangGraph",
+      "LangSmith",
       "OpenAI API",
       "Google Gemini",
       "RAG Systems",
-      "Prompt Engineering"
+      "MCP Servers",
+      "Prompt Engineering",
+      "Vector Stores"
     ],
     "tools": [
       "Git",
+      "GitHub",
       "VS Code",
+      "Overwolf SDK",
       "Linux",
-      "REST APIs",
-      "GraphQL"
+      "REST APIs"
     ]
   }
 }

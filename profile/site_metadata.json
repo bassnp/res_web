@@ -1,8 +1,8 @@
 {
   "$schema": "./schemas/site_metadata.schema.json",
   "site": {
-    "title": "Portfolio | Software Engineer",
-    "description": "Personal resume and portfolio showcasing projects and work experience",
+    "title": "Jaden Bruha | Software Engineer",
+    "description": "Jaden Bruha's Interactive portfolio with AI powered integrations.",
     "og_image": "/resources/og-image.png"
   },
   "theme": {
@@ -21,7 +21,7 @@
     "name": "res_web",
     "image_name": "res_web",
     "image_tag": "latest",
-    "maintainer": "res_web",
+    "maintainer": "Jaden Bruha",
     "source": "https://github.com/bassnp/res_web"
   }
 }

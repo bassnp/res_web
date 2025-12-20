@@ -32,9 +32,9 @@ export const IDENTITY = {
     tldr: 'TLDR; I am Jaden Bruha, I\'m a 22 year old new-grad, and I\'m a very nerdy engineer with big aspirations.',
     full: 'I have a passion for building anything and everything from software, computers to serve my software, AI agents, and motorcycles. My journey started at a young age as a hobbyist, and I\'ve grown into a full stack developer striving for elegant solutions. My current fixations include learning about quantum philosophy, parallelized programming, and artificial (general) intelligence.'
   },
-  experience_summary: 'Full-stack software engineer with experience building modern web applications and AI-powered systems. Proficient in developing scalable backend services, responsive frontend interfaces, and integrating cutting-edge AI/ML capabilities.\n\nKey accomplishments:\n- Built production AI agents using LangChain and LangGraph\n- Developed full-stack applications with React/Next.js and FastAPI\n- Implemented real-time streaming features using SSE and WebSockets\n- Designed and deployed containerized microservices architecture\n- Created RAG systems for intelligent document processing',
-  strengths: ['Fast learner who quickly adapts to new technologies', 'Strong problem-solving and debugging skills', 'Experience with end-to-end software development lifecycle', 'Excellent communication and collaboration abilities', 'Passionate about building AI-powered applications'],
-  career_interests: ['Full-Stack Development', 'AI/ML Engineering', 'Backend Systems', 'Cloud Architecture', 'Developer Tools']
+  experience_summary: 'Full-stack software engineer and December 2025 CSU Sacramento graduate specializing in AI-powered applications and agentic systems. Experienced in building production platforms from concept to client delivery.\n\nKey accomplishments:\n- Delivered ChurchLink platform to production—a Web & App Builder with localization and payment processing for a real church client\n- Built a Deep Researcher Agent using LangGraph and Google CSE for graph-based web research orchestration\n- Created Zharvis, an Overwolf gaming overlay SaaS with RAG pipelines processing 15k+ wiki documents\n- First profitable SaaS at age 19, generating $6k revenue with a team of 3 developers\n- Self-taught foundation starting with first GitHub commit at age 15',
+  strengths: ['Rapid learner who quickly adapts to new technologies and frameworks', 'Hands-on experience shipping production software to real clients', 'Deep expertise in AI/ML tooling including LangChain, LangGraph, and RAG systems', 'Full-stack capabilities spanning Flutter, React, FastAPI, and cloud infrastructure', 'Entrepreneurial mindset with proven ability to generate revenue from software products'],
+  career_interests: ['AI/ML Engineering & Agentic Systems', 'Full-Stack Development', 'Backend Systems & APIs', 'Developer Tools & Productivity', 'Gaming & Interactive Applications']
 };
 
 // =============================================================================
@@ -46,19 +46,19 @@ export const SKILLS = {
   display_categories: {
     primary: {
       label: 'Skills & Technologies',
-      skills: ['TODO']
+      skills: ['Python', 'JavaScript', 'TypeScript', 'Dart', 'Flutter', 'FastAPI', 'LangGraph', 'LangChain', 'React', 'Next.js', 'Lua', 'Java']
     },
     devops: {
-      label: 'Dev Ops',
-      skills: ['Jira', 'Slack', 'Git', 'Github', 'Figma', 'Excel Sheets', 'CapCut']
+      label: 'DevOps & Tools',
+      skills: ['Docker', 'Firebase', 'MongoDB', 'Redis', 'Git', 'GitHub', 'Jira', 'Slack', 'Figma', 'CapCut']
     }
   },
   backend_categories: {
-    languages: ['Python', 'JavaScript', 'TypeScript', 'SQL', 'HTML/CSS'],
-    frameworks: ['React', 'Next.js', 'FastAPI', 'Node.js', 'TailwindCSS'],
-    cloud_devops: ['Docker', 'AWS', 'PostgreSQL', 'Redis', 'CI/CD'],
-    ai_ml: ['LangChain', 'LangGraph', 'OpenAI API', 'Google Gemini', 'RAG Systems', 'Prompt Engineering'],
-    tools: ['Git', 'VS Code', 'Linux', 'REST APIs', 'GraphQL']
+    languages: ['Python', 'JavaScript', 'TypeScript', 'Dart', 'Lua', 'Java', 'SQL', 'HTML/CSS'],
+    frameworks: ['Flutter', 'React', 'Next.js', 'Vite', 'FastAPI', 'Node.js', 'TailwindCSS', 'Radix UI', 'Shadcn UI'],
+    cloud_devops: ['Docker', 'Firebase', 'MongoDB', 'PostgreSQL', 'Redis', 'PayPal Integration', 'CI/CD'],
+    ai_ml: ['LangChain', 'LangGraph', 'LangSmith', 'OpenAI API', 'Google Gemini', 'RAG Systems', 'MCP Servers', 'Prompt Engineering', 'Vector Stores'],
+    tools: ['Git', 'GitHub', 'VS Code', 'Overwolf SDK', 'Linux', 'REST APIs']
   }
 };
 
@@ -70,54 +70,54 @@ export const PROJECTS = {
   $schema: './schemas/projects.schema.json',
   featured: [
     {
-      id: 'project-alpha',
-      title: 'Project Alpha',
-      description: 'A full-stack web application built with React and Node.js, featuring real-time updates and modern UI.',
-      about: 'Project Alpha is a comprehensive full-stack application that demonstrates modern web development practices. It features a React frontend with a Node.js backend, utilizing WebSocket connections for real-time updates. The application includes user authentication, data persistence with PostgreSQL, and a responsive design that works seamlessly across all devices.',
-      learning_outcomes: ['Mastered React hooks and state management patterns', 'Implemented WebSocket connections for real-time data synchronization', 'Designed and optimized PostgreSQL database schemas', 'Built RESTful APIs with proper error handling and validation', 'Deployed containerized applications using Docker'],
-      tags: ['React', 'Node.js', 'PostgreSQL'],
+      id: 'churchlink',
+      title: 'ChurchLink — Web & App Builder Platform',
+      description: 'A deployed platform enabling churches to build and customize their own websites and mobile apps with multi-language support, admin dashboards, and payment processing.',
+      about: 'ChurchLink is a comprehensive church management solution developed as a senior graduation project with a team of 6 engineers. The platform provides an intuitive builder for churches to create and customize their digital presence across web and mobile platforms. Key features include localization for multi-language congregations, administrative dashboards for content management, and integrated PayPal payment processing for donations and events. The solution was successfully handed off to our client at Second Slavic Baptist Church.',
+      learning_outcomes: ['Led cross-platform development with Flutter for mobile and Vite for web interfaces', 'Architected backend services using FastAPI with Firebase and MongoDB integration', 'Implemented multi-language localization system for diverse congregations', 'Integrated PayPal payment processing for secure transaction handling', 'Collaborated in a 6-person agile team through full development lifecycle'],
+      tags: ['Python', 'Flutter', 'TypeScript', 'Vite', 'FastAPI', 'Firebase', 'MongoDB', 'PayPal'],
       color: 'from-burnt-peach to-apricot',
-      images_folder: 'project-alpha',
+      images_folder: 'project-churchlink',
       link: null
     },
     {
-      id: 'project-beta',
-      title: 'Project Beta',
-      description: 'Mobile-first progressive web app with offline capabilities and push notifications.',
-      about: 'Project Beta showcases the power of Progressive Web Apps (PWAs) with a mobile-first approach. The application leverages service workers for offline functionality, implements push notifications for user engagement, and provides a native app-like experience directly in the browser. Built with Next.js and TypeScript for type safety and improved developer experience.',
-      learning_outcomes: ['Implemented service workers for offline-first functionality', 'Configured push notifications with proper permission handling', 'Utilized TypeScript for enhanced code quality and maintainability', 'Optimized performance with Next.js static generation and caching', 'Designed responsive layouts following mobile-first principles'],
-      tags: ['Next.js', 'PWA', 'TypeScript'],
+      id: 'cse-agent',
+      title: 'Google CSE Deep Researcher Agent',
+      description: 'An agentic research system using LangGraph and Google Custom Search Engine to compile structured GenUI reports with images, tables, and sourced web content.',
+      about: 'This project implements a sophisticated web research agent powered by LangGraph\'s graph-theory based orchestration. The system leverages Google Custom Search Engine (CSE) integration to perform deep web research, automatically compiling findings into structured Generative UI reports. The pipeline intelligently processes search results to extract and present images, tables, text snippets, and source citations in a visually coherent format. The architecture demonstrates advanced agentic workflows with RAG integration for contextual synthesis.',
+      learning_outcomes: ['Designed graph-based agent orchestration using LangGraph workflows', 'Integrated Google CSE API for programmatic web research capabilities', 'Built Generative UI pipeline for dynamic report generation', 'Implemented LangSmith tracing for debugging and observability', 'Deployed containerized services with Redis caching and Docker'],
+      tags: ['Google Gemini', 'LangGraph', 'LangSmith', 'Python', 'FastAPI', 'Firebase', 'Redis', 'Docker'],
       color: 'from-muted-teal to-twilight',
-      images_folder: 'project-beta',
+      images_folder: 'project-cse-agent',
       link: null
     },
     {
-      id: 'project-gamma',
-      title: 'Project Gamma',
-      description: 'Data visualization dashboard with interactive charts and real-time analytics.',
-      about: 'Project Gamma is an advanced data visualization dashboard that transforms complex datasets into intuitive, interactive visualizations. Using D3.js for custom charts and Python for backend data processing, the dashboard provides real-time analytics with filtering, zooming, and drill-down capabilities. The system processes large datasets efficiently and presents insights in a visually compelling manner.',
-      learning_outcomes: ['Created custom D3.js visualizations with interactive features', 'Built efficient data processing pipelines in Python', 'Implemented real-time data streaming and updates', 'Designed intuitive UX for complex data exploration', 'Optimized rendering performance for large datasets'],
-      tags: ['Python', 'D3.js', 'PostgreSQL'],
+      id: 'zharvis',
+      title: 'Zharvis — Videogame AI Overlay Agent',
+      description: 'A SaaS Overwolf overlay providing real-time in-game AI assistance through Wiki-powered search and MCP tools for instant query responses.',
+      about: 'Zharvis is a next-generation gaming companion built as an Overwolf overlay application. Version 2 utilizes Wiki Custom Search Engines and Model Context Protocol (MCP) tools to deliver fast, contextual in-game query assistance through a Generative UI HUD with interactive windows and popups. The first iteration pioneered a demo RAG workflow processing 15,000+ scraped wiki documents through vector stores with embedding and indexing for efficient retrieval. The system enables gamers to access game knowledge without leaving their session.',
+      learning_outcomes: ['Developed Overwolf overlay application with TypeScript integration', 'Implemented MCP server architecture for extensible tool capabilities', 'Built RAG pipeline processing 15k+ documents with vector embeddings', 'Created real-time Generative UI components for in-game HUD display', 'Integrated OpenAI and LangChain for natural language query processing'],
+      tags: ['OpenAI API', 'Overwolf', 'TypeScript', 'Python', 'FastAPI', 'Docker', 'LangChain'],
       color: 'from-apricot to-muted-teal',
-      images_folder: 'project-gamma',
+      images_folder: 'project-zharvis',
       link: null
     }
   ],
   backend_projects: [
     {
-      name: 'AI Portfolio Assistant',
-      description: 'Real-time AI agent that analyzes employer fit using web research and skill matching',
-      tech: ['Python', 'FastAPI', 'LangGraph', 'React', 'SSE Streaming']
+      name: 'Interactive Portfolio with Deep Researcher',
+      description: 'AI-powered portfolio that analyzes employer fit through comparative research against job descriptions',
+      tech: ['Next.js', 'Shadcn UI', 'Python', 'FastAPI', 'LangGraph', 'Docker']
     },
     {
-      name: 'Full-Stack Web Platform',
-      description: 'Production web application with authentication, real-time features, and cloud deployment',
-      tech: ['Next.js', 'FastAPI', 'PostgreSQL', 'Docker', 'AWS']
+      name: 'ChurchLink Platform',
+      description: 'Full-stack church management system with cross-platform apps, localization, and payment integration',
+      tech: ['Flutter', 'TypeScript', 'FastAPI', 'Firebase', 'MongoDB', 'PayPal']
     },
     {
-      name: 'RAG Document System',
-      description: 'Intelligent document retrieval and question-answering system',
-      tech: ['LangChain', 'Vector Databases', 'OpenAI', 'Python']
+      name: 'Zharvis Gaming Assistant',
+      description: 'Overwolf overlay providing AI-powered in-game assistance with RAG document retrieval',
+      tech: ['Overwolf SDK', 'LangChain', 'MCP', 'Vector Stores', 'Python']
     }
   ]
 };
@@ -188,8 +188,8 @@ export const ASSETS = {
 export const SITE_METADATA = {
   $schema: './schemas/site_metadata.schema.json',
   site: {
-    title: 'Portfolio | Software Engineer',
-    description: 'Personal resume and portfolio showcasing projects and work experience',
+    title: 'Jaden Bruha | Software Engineer',
+    description: 'Interactive portfolio of Jaden Bruha — a full-stack engineer specializing in AI agents, LangGraph workflows, and production web platforms. Features a Deep Researcher that analyzes employer fit.',
     og_image: '/resources/og-image.png'
   },
   theme: {
@@ -206,7 +206,7 @@ export const SITE_METADATA = {
     name: 'res_web',
     image_name: 'res_web',
     image_tag: 'latest',
-    maintainer: 'res_web',
+    maintainer: 'Jaden Bruha',
     source: 'https://github.com/bassnp/res_web'
   }
 };
@@ -220,73 +220,73 @@ export const EXPERIENCE = {
   timeline: [
     {
       id: 1,
-      title: 'Software Engineer',
-      company: 'Tech Innovation Corp',
+      title: 'Computer Science Degree',
+      company: 'CSU Sacramento Graduate',
       period: 'December 2025',
-      description: 'Leading full-stack development initiatives, architecting scalable solutions with React, Node.js, and cloud services. Implementing CI/CD pipelines and mentoring junior developers.',
-      tags: ['React', 'Node.js', 'AWS', 'TypeScript'],
+      description: 'Completed a Bachelor of Science in Computer Science at California State University, Sacramento, culminating years of academic study with hands-on project experience.',
+      tags: ['B.S. Computer Science', 'New Grad', '2025'],
       color: 'burnt-peach',
-      showcase_folder: 'showcase1'
+      showcase_folder: 'showcase-graduation'
     },
     {
       id: 2,
-      title: 'Full Stack Developer',
-      company: 'Digital Solutions Inc',
-      period: '2024',
-      description: 'Built and deployed production-ready web applications serving thousands of users. Optimized database queries resulting in 40% performance improvement.',
-      tags: ['Next.js', 'PostgreSQL', 'Docker'],
+      title: 'ChurchLink Platform Handoff',
+      company: 'Second Slavic Baptist Church',
+      period: 'November 2025',
+      description: 'Successfully delivered a complete Web & App Builder Platform to our client. The system enables church staff to manage content, handle multi-language localization, and process donations.',
+      tags: ['Flutter', 'FastAPI', 'Firebase'],
       color: 'muted-teal',
-      showcase_folder: 'showcase2'
+      showcase_folder: 'showcase-churchlink'
     },
     {
       id: 3,
-      title: 'Software Development Intern',
-      company: 'StartupXYZ',
-      period: '2023',
-      description: 'Developed RESTful APIs and integrated third-party services. Contributed to agile sprints and participated in code reviews with senior engineers.',
-      tags: ['Python', 'FastAPI', 'Git'],
+      title: 'GenUI Deep Researcher Agent',
+      company: 'Personal Project',
+      period: 'November 2025',
+      description: 'Built a working Deep Researcher Agent integrating Google Custom Search Engine with LangGraph. The system uses graph-theory orchestration to compile structured reports featuring images, tables, and source citations.',
+      tags: ['LangGraph', 'Google CSE', 'GenUI'],
       color: 'apricot',
-      showcase_folder: 'showcase3'
+      showcase_folder: 'showcase-cse-agent'
     },
     {
       id: 4,
-      title: 'Freelance Web Developer',
-      company: 'Self-Employed',
-      period: '2022',
-      description: 'Delivered custom websites and e-commerce solutions for small businesses. Managed client relationships and project timelines independently.',
-      tags: ['JavaScript', 'WordPress', 'CSS'],
+      title: 'Zharvis v2 Game Overlay',
+      company: 'SaaS Product',
+      period: 'October 2025',
+      description: 'Launched version two of Zharvis, an Overwolf overlay providing AI-powered in-game assistance. Upgraded from RAG-based retrieval (15k+ docs) to Wiki CSE and MCP tools for faster query responses.',
+      tags: ['Overwolf', 'MCP', 'LangChain'],
       color: 'burnt-peach',
-      showcase_folder: 'showcase4'
+      showcase_folder: 'showcase-zharvis'
     },
     {
       id: 5,
-      title: 'Research Assistant',
-      company: 'University CS Department',
-      period: '2020',
-      description: 'Assisted in machine learning research projects. Processed datasets, implemented algorithms, and co-authored a conference paper on NLP techniques.',
-      tags: ['Python', 'TensorFlow', 'NLP'],
+      title: 'First SaaS Success',
+      company: 'CS:GO Mod Team',
+      period: 'January 2023',
+      description: 'Collaborated with a team of 3 developers to build and sell videogame modifications for CS:GO. Generated $6k in revenue over a year of active development and community engagement.',
+      tags: ['SaaS', 'Team of 3', '$6k Revenue'],
       color: 'muted-teal',
-      showcase_folder: 'showcase5'
+      showcase_folder: 'showcase-csgo'
     },
     {
       id: 6,
-      title: 'IT Support Technician',
-      company: 'Campus Tech Services',
-      period: '2018',
-      description: 'Provided technical support for faculty and students. Troubleshot hardware/software issues and maintained computer lab equipment.',
-      tags: ['Troubleshooting', 'Windows', 'Linux'],
+      title: 'GPU Mining Operation',
+      company: 'Self-Employed',
+      period: 'April 2022',
+      description: 'Assembled a 7-GPU Ethereum mining rig using Nvidia and AMD cards, achieving ~210 MH/s. Generated $170 monthly passive income before the Ethereum Merge ended PoW mining.',
+      tags: ['Ethereum', '7 GPUs', '210 MH/s'],
       color: 'apricot',
-      showcase_folder: 'showcase6'
+      showcase_folder: 'showcase-mining'
     },
     {
       id: 7,
-      title: 'Programming Hobbyist',
-      company: 'Self-Taught Journey',
-      period: '2016',
-      description: 'Discovered passion for programming through game development and automation scripts. Built first website and learned fundamentals of coding logic.',
-      tags: ['Java', 'HTML', 'CSS'],
+      title: 'First GitHub Commit',
+      company: 'High School Project',
+      period: 'July 2019',
+      description: 'Pushed my first commit to GitHub at age 15, showcasing a Java drawing application from my sophomore year. This milestone marked the beginning of my journey as a software developer.',
+      tags: ['Java', 'GitHub', 'Age 15'],
       color: 'burnt-peach',
-      showcase_folder: 'showcase7'
+      showcase_folder: 'showcase-first-commit'
     }
   ]
 };

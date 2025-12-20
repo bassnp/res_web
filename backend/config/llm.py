@@ -32,7 +32,7 @@ SUPPORTED_MODELS = {
         "config_type": "reasoning",
         "description": "Fast reasoning with good accuracy",
     },
-    "gemini-flash-latest": {
+    "gemini-3-flash-preview": {
         "config_type": "standard", 
         "description": "Fast responses with balanced accuracy",
     },

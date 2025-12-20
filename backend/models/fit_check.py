@@ -82,7 +82,7 @@ class FitCheckRequest(BaseModel):
     model_id: Optional[str] = Field(
         default="gemini-3-flash-preview",
         description="AI model ID to use for analysis",
-        examples=["gemini-3-flash-preview", "gemini-3-pro-preview", "gemini-flash-latest"],
+        examples=["gemini-3-flash-preview", "gemini-3-pro-preview", "gemini-3-flash-preview"],
     )
     config_type: Optional[Literal["reasoning", "standard"]] = Field(
         default="reasoning",

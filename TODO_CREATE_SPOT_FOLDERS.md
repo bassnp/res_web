@@ -391,15 +391,15 @@ resume/
 {
   "$schema": "./schemas/ai_models.schema.json",
   "models": {
-    "gemini-flash-latest": {
-      "id": "gemini-flash-latest",
+    "gemini-3-flash-preview": {
+      "id": "gemini-3-flash-preview",
       "label": "Gemini Flash",
       "description": "Fast responses with balanced accuracy",
       "config_type": "standard",
       "badge": "Active"
     }
   },
-  "default_model": "gemini-flash-latest"
+  "default_model": "gemini-3-flash-preview"
 }
 ```
 
