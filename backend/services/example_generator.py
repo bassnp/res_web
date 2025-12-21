@@ -28,22 +28,35 @@ logger = logging.getLogger(__name__)
 # Constants
 # =============================================================================
 
-GENERATION_TEMPERATURE = 0.7  # Balanced creativity with faster responses
-GENERATION_MAX_TOKENS = 50  # Small output - only need a short phrase
+GENERATION_TEMPERATURE = 0.9  # Higher for creativity/variety
 
 
 # =============================================================================
-# Prompt Templates (Ultra-Concise for Speed)
+# Prompt Templates (Concise)
 # =============================================================================
 
-GOOD_EXAMPLE_PROMPT = """Output ONE tech job query (under 10 words). Pick randomly:
-- Company: Stripe, Notion, Vercel, Datadog, Figma
-- Role: "Full Stack at fintech startup" or "AI Engineer at cloud company"
-No quotes, no labels. Just the query."""
+GOOD_EXAMPLE_PROMPT = """Generate a SHORT job query (one sentence max) for a software engineering position.
 
-BAD_EXAMPLE_PROMPT = """Output ONE non-tech job (under 10 words). Pick randomly:
-Barber, Florist, MMA Fighter, Beekeeper, Tattoo Artist, Cruise Captain, Dog Groomer
-No quotes, no labels. Just the job title."""
+The engineer has skills in: Python, JavaScript, React, FastAPI, AI/ML, cloud technologies.
+
+Generate ONE of these at random:
+- A tech company name (e.g., "Stripe", "Notion", "Datadog")
+- A brief job title (e.g., "Full Stack Developer at a fintech startup")
+- A one-line role description (e.g., "Backend engineer working on AI products")
+
+Output ONLY the query text. No quotes, no labels, no explanation. Keep it under 15 words."""
+
+BAD_EXAMPLE_PROMPT = """Generate a SHORT job query (one sentence max) for a position completely UNRELATED to software engineering.
+
+Pick something obscure and random like:
+- Trades: Barber, Plumber, Electrician, HVAC Technician
+- Creative: Florist, Tattoo Artist, Wedding Photographer
+- Physical: MMA Fighter, Personal Trainer, Yoga Instructor
+- Service: Dog Groomer, Bartender, Cruise Ship Captain
+- Other: Beekeeper, Taxidermist, Fortune Teller, Sommelier
+
+Output ONLY the query text. No quotes, no labels, no explanation. Keep it under 15 words.
+Be creative and pick something unexpected."""
 
 
 # =============================================================================
@@ -76,11 +89,8 @@ async def generate_example(
         prompt = GOOD_EXAMPLE_PROMPT if example_quality == "good" else BAD_EXAMPLE_PROMPT
         example_type = "tech_position" if example_quality == "good" else "unrelated_position"
         
-        # Get LLM optimized for fast, short responses
-        llm = get_llm(
-            temperature=GENERATION_TEMPERATURE,
-            max_output_tokens=GENERATION_MAX_TOKENS,
-        )
+        # Get LLM with higher temperature for creativity
+        llm = get_llm(temperature=GENERATION_TEMPERATURE)
         
         # Generate the example
         logger.info(f"Generating {example_quality} example")
