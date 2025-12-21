@@ -1067,14 +1067,6 @@ const ProjectsSection = () => {
                   }
                 }}
               >
-                {/* Clickable indicator overlay - appears on hover */}
-                <div className="absolute inset-0 z-20 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                  <div className="absolute top-3 left-3 flex items-center gap-1.5 px-2 py-1 rounded-full bg-muted-teal/90 dark:bg-muted-teal/80 backdrop-blur-sm shadow-lg">
-                    <span className="w-2 h-2 rounded-full bg-eggshell animate-pulse" />
-                    <span className="text-[10px] font-semibold text-eggshell uppercase tracking-wide">Click for details</span>
-                  </div>
-                </div>
-
                 {/* Project thumbnail image from manifest or gradient fallback */}
                 <div className="relative">
                   <ProjectCardThumbnail 
