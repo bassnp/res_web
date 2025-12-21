@@ -26,7 +26,13 @@ async function generateThumbnail(pdfPath, outputPath, scale = 1.5) {
         
         // Load PDF document
         const data = new Uint8Array(fs.readFileSync(pdfPath));
-        const loadingTask = pdfjsLib.getDocument({ data });
+        
+        // Set up loading task with standard font data URL to avoid errors in Node.js
+        // We use a CDN for the font data to ensure it's available during build
+        const loadingTask = pdfjsLib.getDocument({ 
+            data,
+            standardFontDataUrl: 'https://unpkg.com/pdfjs-dist@5.4.449/standard_fonts/'
+        });
         const pdfDoc = await loadingTask.promise;
         
         if (pdfDoc.numPages === 0) {

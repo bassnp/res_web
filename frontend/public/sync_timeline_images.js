@@ -76,6 +76,9 @@ function syncShowcaseImages() {
         
         // Generate manifest JSON
         const manifest = {
+            generated: new Date().toISOString(),
+            showcaseId: showcaseDir,
+            count: imagePaths.length,
             images: imagePaths
         };
         

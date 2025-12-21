@@ -4,12 +4,12 @@
     "private": true,
     "scripts": {
         "generate:profile": "node ../scripts/generate-profile-config.js",
-        "predev": "npm run generate:profile",
+        "predev": "npm run generate:profile && node scripts/sync-all.js",
         "dev": "next dev --hostname 0.0.0.0 --port 3003",
         "dev:no-reload": "next dev --hostname 0.0.0.0 --port 3003",
         "dev:webpack": "next dev --hostname 0.0.0.0 --port 3003",
         "prebuild": "npm run generate:profile",
-        "build": "node public/sync_collage_images.js && node public/sync_timeline_images.js && next build",
+        "build": "node -e \"const fs = require('fs'); if (fs.existsSync('out')) { fs.rmSync('out', { recursive: true, force: true }); console.log('Cleaned old out directory'); }\" && node scripts/sync-all.js && next build",
         "start": "next start"
     },
     "dependencies": {
