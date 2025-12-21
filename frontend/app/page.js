@@ -753,8 +753,21 @@ const HeroAboutSection = () => {
                 </div>
               </div>
 
+              {/* GitHub Link */}
+              <div className="flex justify-center mb-2 opacity-0 animate-fade-in delay-250">
+                <a
+                  href={GITHUB_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-2 px-4 py-2 rounded-sm bg-twilight/10 dark:bg-eggshell/10 hover:bg-burnt-peach/30 transition-all duration-300 hover:scale-105 hover:-translate-y-1 text-twilight dark:text-eggshell font-medium text-sm border border-twilight/10 dark:border-eggshell/10"
+                >
+                  <Github className="w-4 h-4" />
+                  <span>@{GITHUB_USERNAME}</span>
+                </a>
+              </div>
+
               {/* Skills & Technologies (moved from right container) */}
-              <div className="mt-4 opacity-0 animate-fade-in delay-300">
+              <div className="mt-2 opacity-0 animate-fade-in delay-300">
                 <h3 className="text-sm font-semibold text-twilight dark:text-eggshell mb-2">Skills &amp; Technologies</h3>
                 <div className="flex flex-wrap justify-center gap-2">
                   {skills.map((skill, index) => (

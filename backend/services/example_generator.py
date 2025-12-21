@@ -29,6 +29,7 @@ logger = logging.getLogger(__name__)
 # =============================================================================
 
 GENERATION_TEMPERATURE = 0.9  # Higher for creativity/variety
+GENERATION_MAX_TOKENS = 64  # Short outputs for fast generation
 
 
 # =============================================================================
@@ -90,7 +91,12 @@ async def generate_example(
         example_type = "tech_position" if example_quality == "good" else "unrelated_position"
         
         # Get LLM with higher temperature for creativity
-        llm = get_llm(temperature=GENERATION_TEMPERATURE)
+        # Use standard config (no reasoning) and low max tokens for fast generation
+        llm = get_llm(
+            temperature=GENERATION_TEMPERATURE,
+            max_output_tokens=GENERATION_MAX_TOKENS,
+            config_type="standard",
+        )
         
         # Generate the example
         logger.info(f"Generating {example_quality} example")
