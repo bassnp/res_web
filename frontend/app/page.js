@@ -1055,7 +1055,7 @@ const ProjectsSection = () => {
               onOpenChange={(isOpen) => setOpenProjectId(isOpen ? project.id : null)}
             >
               <div
-                className="group bg-white dark:bg-twilight/50 rounded-sm overflow-hidden shadow-lg hover:shadow-2xl transition-transform transition-shadow duration-300 hover:-translate-y-1 translate-y-0 opacity-0 animate-scale-in-no-transform glass flex flex-col cursor-pointer"
+                className="group relative bg-white dark:bg-twilight/50 rounded-sm overflow-hidden shadow-lg hover:shadow-2xl hover:shadow-muted-teal/20 dark:hover:shadow-muted-teal/10 transition-all duration-300 hover:-translate-y-1 translate-y-0 opacity-0 animate-scale-in-no-transform glass flex flex-col cursor-pointer border-2 border-transparent hover:border-muted-teal/40"
                 style={{ animationDelay: `${index * 150}ms` }}
                 role="button"
                 tabIndex={0}
@@ -1067,24 +1067,36 @@ const ProjectsSection = () => {
                   }
                 }}
               >
+                {/* Clickable indicator overlay - appears on hover */}
+                <div className="absolute inset-0 z-20 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                  <div className="absolute top-3 left-3 flex items-center gap-1.5 px-2 py-1 rounded-full bg-muted-teal/90 dark:bg-muted-teal/80 backdrop-blur-sm shadow-lg">
+                    <span className="w-2 h-2 rounded-full bg-eggshell animate-pulse" />
+                    <span className="text-[10px] font-semibold text-eggshell uppercase tracking-wide">Click for details</span>
+                  </div>
+                </div>
+
                 {/* Project thumbnail image from manifest or gradient fallback */}
-                <ProjectCardThumbnail 
-                  imagesFolder={project.images_folder}
-                  color={project.color}
-                  projectTitle={project.title}
-                />
+                <div className="relative">
+                  <ProjectCardThumbnail 
+                    imagesFolder={project.images_folder}
+                    color={project.color}
+                    projectTitle={project.title}
+                  />
+                  {/* Click to Explore Button - positioned on image */}
+                  <div className="absolute top-3 right-3 z-10">
+                    <ReadSummaryButton />
+                  </div>
+                </div>
 
                 {/* Content */}
                 <div className="relative flex-1 flex flex-col">
                   <CardGridDots />
                   <div className="p-6 relative z-10 flex-1 flex flex-col">
-                    {/* Header with title and Read Summary button */}
+                    {/* Header with title */}
                     <div className="flex items-center justify-between gap-2 mb-3">
-                      <h3 className="text-xl font-semibold text-twilight dark:text-eggshell">
+                      <h3 className="text-xl font-semibold text-twilight dark:text-eggshell group-hover:text-muted-teal transition-colors duration-300">
                         {project.title}
                       </h3>
-                      {/* Read Summary Button with Eye Icon */}
-                      <ReadSummaryButton />
                     </div>
                     <p className="text-twilight/70 dark:text-eggshell/70 text-sm mb-4 leading-relaxed flex-1">
                       {project.description}
@@ -1115,12 +1127,13 @@ const ProjectsSection = () => {
 // ============================================
 // TIMELINE SHOWCASE IMAGE CAROUSEL COMPONENT
 // Rotating carousel for timeline showcase cards
-// Uses staggered offsets for graceful cascade effect
+// Uses staggered offsets for graceful cascade/waterfall effect
 // Smooth right-to-left sliding animation
 // ============================================
 const TOTAL_SHOWCASE_CARDS = 7;
-const CAROUSEL_INTERVAL = 3500; // Base interval in ms
+const CAROUSEL_INTERVAL = 5250; // Base interval in ms (50% longer for smoother viewing)
 const SLIDE_DURATION = 500; // Slide animation duration in ms
+const STAGGER_OFFSET_MS = 750; // Offset between each card's rotation start (waterfall effect)
 
 const TimelineShowcaseCarousel = ({ showcaseId, interval = CAROUSEL_INTERVAL, color = 'burnt-peach' }) => {
   const [images, setImages] = useState([]);
@@ -1222,17 +1235,17 @@ const TimelineShowcaseCarousel = ({ showcaseId, interval = CAROUSEL_INTERVAL, co
 
   /**
    * Auto-advance carousel with slide transition.
-   * Each card has a staggered start offset to create a graceful cascade effect.
-   * Cards are evenly distributed: card 1 starts at 0ms, card 2 at interval/7, etc.
-   * This creates a beautiful wave where image changes ripple across all 7 cards.
+   * Each card has a staggered start offset to create a graceful waterfall effect.
+   * Cards are offset by STAGGER_OFFSET_MS each: card 1 at 0ms, card 2 at 750ms, etc.
+   * This creates a beautiful wave where image changes ripple across all cards.
    */
   useEffect(() => {
     if (images.length <= 1) return;
     
-    // Calculate staggered offset: evenly distribute across the interval
-    const staggerOffset = ((showcaseId - 1) / TOTAL_SHOWCASE_CARDS) * interval;
+    // Calculate staggered offset: each card starts STAGGER_OFFSET_MS after the previous
+    const staggerOffset = (showcaseId - 1) * STAGGER_OFFSET_MS;
     
-    // Initial delay before starting the interval (creates the cascade effect)
+    // Initial delay before starting the interval (creates the waterfall effect)
     const initialDelay = setTimeout(() => {
       setIsInitialized(true);
     }, staggerOffset);

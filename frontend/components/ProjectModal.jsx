@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
-import { X, ChevronLeft, ChevronRight, Eye, Code, Lightbulb, BookOpen, ExternalLink } from 'lucide-react';
+import { X, ChevronLeft, ChevronRight, MousePointerClick, Code, Lightbulb, BookOpen, ExternalLink } from 'lucide-react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogDescription } from '@/components/ui/dialog';
 import { cn } from '@/lib/utils';
 
@@ -408,26 +408,36 @@ export function ProjectModal({
 /**
  * ReadSummaryButton Component
  * 
- * Eye icon button with "Read summary" label in a rounded container.
+ * Click icon button with "Click to explore" label in a rounded container.
+ * Uses MousePointerClick icon (below text) for clear clickability indication.
+ * Features enhanced hover animations for better user affordance.
  * Used as the call-to-action on project cards.
  */
 export function ReadSummaryButton({ className }) {
   return (
     <div 
       className={cn(
-        "inline-flex items-center gap-1.5 px-2 py-1",
-        "rounded-full",
-        "bg-twilight/5 dark:bg-eggshell/15",
-        "border border-twilight/15 dark:border-eggshell/20",
-        "group-hover:bg-muted-teal/20 group-hover:border-muted-teal/40",
+        "inline-flex flex-col items-center gap-1 px-3 py-1.5",
+        "rounded-lg",
+        "bg-twilight/60 dark:bg-twilight/70",
+        "border border-muted-teal/50 dark:border-muted-teal/60",
+        "backdrop-blur-sm shadow-lg",
+        "group-hover:bg-twilight/75 group-hover:border-muted-teal/80",
+        "group-hover:shadow-[0_0_12px_rgba(91,140,142,0.4)]",
         "transition-all duration-300",
         className
       )}
     >
-      <Eye className="w-3.5 h-3.5 text-muted-teal transition-transform duration-300 group-hover:scale-110" />
-      <span className="text-xs font-medium text-twilight/60 dark:text-eggshell/80 group-hover:text-muted-teal transition-colors">
-        Read more...
+      <span className="text-[10px] font-medium text-muted-teal/80 dark:text-muted-teal group-hover:text-muted-teal dark:group-hover:text-eggshell transition-colors">
+        Click to explore
       </span>
+      <MousePointerClick 
+        className={cn(
+          "w-5 h-5 text-muted-teal",
+          "transition-all duration-300",
+          "group-hover:scale-115 group-hover:animate-pulse"
+        )} 
+      />
     </div>
   );
 }
