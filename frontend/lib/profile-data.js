@@ -261,10 +261,10 @@ export const EXPERIENCE = {
     {
       id: 5,
       title: 'First SaaS Success',
-      company: 'CS:GO Modding Team',
+      company: 'CS:GO Modding Team & Freelancer',
       period: 'January 2023',
-      description: 'With a team of 3 friends and developers, we set out to build and sell videogame mods for CS:GO. Over the course of a year we generated $6k in revenue through active development and community engagement.',
-      tags: ['SAAS', 'Team Project', 'Game Modding'],
+      description: 'With a team of 3 friends and developers, we primarily set out to build and sell videogame mods for CS:GO. Over the course of a year we generated $6k in revenue through community engagement for freelancing private and public modding projects (see some minor ones on my Github)',
+      tags: ['SAAS', 'Team Project', 'Lua'],
       color: 'muted-teal',
       showcase_folder: 'showcase-csgo'
     },
