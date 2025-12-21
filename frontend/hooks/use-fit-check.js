@@ -1,8 +1,71 @@
 'use client';
 
-import { useState, useCallback, useRef, useMemo } from 'react';
+import { useState, useCallback, useRef, useMemo, useEffect } from 'react';
 import { parseAIResponse } from '@/lib/parseAIResponse';
 import { useAISettings } from './use-ai-settings';
+
+/**
+ * Generate a unique session ID for request tracing.
+ * Uses crypto.randomUUID() if available, falls back to custom implementation.
+ * 
+ * @returns {string} UUID v4 format string
+ */
+function generateSessionId() {
+  // Modern browsers support crypto.randomUUID()
+  if (typeof crypto !== 'undefined' && crypto.randomUUID) {
+    return crypto.randomUUID();
+  }
+  
+  // Fallback for older browsers
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
+    const r = Math.random() * 16 | 0;
+    const v = c === 'x' ? r : (r & 0x3 | 0x8);
+    return v.toString(16);
+  });
+}
+
+// Retry configuration
+const MAX_RETRIES = 3;
+const INITIAL_RETRY_DELAY_MS = 1000;
+const MAX_RETRY_DELAY_MS = 10000;
+const RETRY_BACKOFF_MULTIPLIER = 2;
+
+// Retryable error codes/patterns
+const RETRYABLE_ERRORS = [
+  'ECONNRESET',
+  'ETIMEDOUT',
+  'NetworkError',
+  'Failed to fetch',
+  'network error',
+  'connection reset',
+];
+
+/**
+ * Check if an error is retryable.
+ * @param {Error} error - The error to check
+ * @returns {boolean} True if the error is transient and retryable
+ */
+function isRetryableError(error) {
+  if (error.name === 'AbortError') {
+    return false; // User-initiated cancellation
+  }
+  
+  const errorMessage = error.message?.toLowerCase() || '';
+  return RETRYABLE_ERRORS.some(pattern => 
+    errorMessage.includes(pattern.toLowerCase())
+  );
+}
+
+/**
+ * Calculate retry delay with exponential backoff and jitter.
+ * @param {number} attempt - Current attempt number (1-indexed)
+ * @returns {number} Delay in milliseconds
+ */
+function getRetryDelay(attempt) {
+  const delay = INITIAL_RETRY_DELAY_MS * Math.pow(RETRY_BACKOFF_MULTIPLIER, attempt - 1);
+  const jitter = Math.random() * 0.3 * delay; // Add 0-30% jitter
+  return Math.min(delay + jitter, MAX_RETRY_DELAY_MS);
+}
 
 /**
  * State machine states for the fit check flow:
@@ -67,6 +130,7 @@ export function useFitCheck() {
     currentPhase: null,       // Currently active phase name
     phaseHistory: [],         // Array of completed phase objects
     phaseProgress: {},        // Map of phase -> status (pending/active/complete)
+    sessionId: null,          // Track current session ID
   });
   
   // Derive UI phase from status
@@ -116,6 +180,15 @@ export function useFitCheck() {
   const abortControllerRef = useRef(null);
   const startTimeRef = useRef(null);
 
+  // Cleanup on unmount
+  useEffect(() => {
+    return () => {
+      if (abortControllerRef.current) {
+        abortControllerRef.current.abort();
+      }
+    };
+  }, []);
+
   /**
    * Reset state to idle for new query
    */
@@ -136,6 +209,7 @@ export function useFitCheck() {
       currentPhase: null,
       phaseHistory: [],
       phaseProgress: {},
+      sessionId: null,
     });
   }, []);
 
@@ -152,6 +226,7 @@ export function useFitCheck() {
     // Create new abort controller
     abortControllerRef.current = new AbortController();
     startTimeRef.current = Date.now();
+    const sessionId = generateSessionId();
     
     // Get current model configuration
     const modelConfig = getModelConfig();
@@ -167,6 +242,7 @@ export function useFitCheck() {
       currentPhase: null,
       phaseHistory: [],
       phaseProgress: {},
+      sessionId,
     });
 
     try {
@@ -175,12 +251,14 @@ export function useFitCheck() {
         headers: {
           'Content-Type': 'application/json',
           'Accept': 'text/event-stream',
+          'X-Session-ID': sessionId,
         },
         body: JSON.stringify({
           query: query,
           include_thoughts: true,
           model_id: modelConfig.model_id,
           config_type: modelConfig.config_type,
+          session_id: sessionId,
         }),
         signal: abortControllerRef.current.signal,
       });
@@ -230,12 +308,64 @@ export function useFitCheck() {
     }
   }, [getModelConfig]);
 
+  /**
+   * Submit query with automatic retry on transient failures.
+   * @param {string} query - The query to submit
+   * @param {number} attempt - Current attempt number (internal use)
+   */
+  const submitQueryWithRetry = useCallback(async (query, attempt = 1) => {
+    try {
+      await submitQuery(query);
+    } catch (error) {
+      // Don't retry user cancellations
+      if (error.name === 'AbortError') {
+        return;
+      }
+      
+      // Check if we should retry
+      if (attempt < MAX_RETRIES && isRetryableError(error)) {
+        const delay = getRetryDelay(attempt);
+        console.log(
+          `[${state.sessionId}] Retry attempt ${attempt}/${MAX_RETRIES} in ${delay}ms`,
+          error.message
+        );
+        
+        // Update state to show retry status
+        setState(prev => ({
+          ...prev,
+          status: 'connecting',
+          statusMessage: `Connection failed. Retrying (${attempt}/${MAX_RETRIES})...`,
+        }));
+        
+        // Wait before retry
+        await new Promise(resolve => setTimeout(resolve, delay));
+        
+        // Recursive retry
+        return submitQueryWithRetry(query, attempt + 1);
+      }
+      
+      // Max retries exceeded or non-retryable error
+      console.error(`[${state.sessionId}] Request failed after ${attempt} attempts:`, error);
+      setState(prev => ({
+        ...prev,
+        status: 'error',
+        error: {
+          code: 'CONNECTION_ERROR',
+          message: attempt > 1 
+            ? `Failed after ${attempt} attempts: ${error.message}`
+            : error.message || 'Failed to connect to the server',
+          retryable: isRetryableError(error),
+        },
+      }));
+    }
+  }, [submitQuery, state.sessionId]);
+
   return {
     ...state,
     uiPhase,
     parsedResponse,
     finalConfidence,
-    submitQuery,
+    submitQuery: submitQueryWithRetry,
     reset,
     isLoading: ['connecting', 'thinking', 'responding'].includes(state.status),
   };

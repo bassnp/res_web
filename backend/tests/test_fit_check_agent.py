@@ -3,6 +3,12 @@ Fit Check Agent Unit Tests
 
 Tests for the FitCheckAgent class and related functions.
 Run with: pytest tests/test_fit_check_agent.py -v
+
+Updated for Multi-Session Architecture (2025-12-20):
+- Uses FitCheckPipelineState instead of FitCheckState
+- Uses build_fit_check_pipeline instead of build_fit_check_graph
+- Uses create_initial_state from pipeline_state module
+- Agent is now stateless with isolated callback holders per request
 """
 
 import pytest
@@ -14,27 +20,24 @@ from unittest.mock import AsyncMock, MagicMock, patch
 # =============================================================================
 
 class TestFitCheckState:
-    """Tests for FitCheckState structure."""
+    """Tests for FitCheckPipelineState structure."""
     
     def test_state_structure(self):
-        """Test that state has all required fields."""
-        from services.fit_check_agent import FitCheckState
+        """Test that state has all required fields via create_initial_state."""
+        from services.pipeline_state import create_initial_state
         
-        state = FitCheckState(
-            messages=[],
+        state = create_initial_state(
             query="Test query",
-            query_type=None,
-            research_results=None,
-            skill_analysis=None,
-            experience_analysis=None,
-            step_count=0,
-            final_response=None,
-            error=None,
+            model_id="gemini-3-flash-preview",
+            config_type="reasoning"
         )
         
         assert state["query"] == "Test query"
         assert state["step_count"] == 0
-        assert state["error"] is None
+        assert state.get("error") is None
+        assert state["model_id"] == "gemini-3-flash-preview"
+        assert state["config_type"] == "reasoning"
+        assert "current_phase" in state
 
 
 # =============================================================================
@@ -45,11 +48,12 @@ class TestFitCheckAgent:
     """Tests for the FitCheckAgent class."""
     
     def test_agent_initialization(self):
-        """Test that agent initializes correctly."""
+        """Test that agent initializes correctly (now stateless)."""
         from services.fit_check_agent import FitCheckAgent
         
         agent = FitCheckAgent()
-        assert agent._graph is None  # Lazy initialization
+        # Agent is now stateless - no shared _callback_holder
+        assert agent is not None
     
     def test_agent_singleton(self):
         """Test that get_agent returns singleton instance."""
@@ -61,16 +65,14 @@ class TestFitCheckAgent:
         assert agent1 is agent2
     
     def test_create_initial_state(self):
-        """Test initial state creation."""
-        from services.fit_check_agent import FitCheckAgent
+        """Test initial state creation from pipeline_state module."""
+        from services.pipeline_state import create_initial_state
         
-        agent = FitCheckAgent()
-        state = agent._create_initial_state("Google")
+        state = create_initial_state("Google")
         
         assert state["query"] == "Google"
         assert state["step_count"] == 0
-        assert len(state["messages"]) == 1
-        assert state["messages"][0].content == "Google"
+        assert state["current_phase"] == "connecting"
 
 
 # =============================================================================
@@ -78,63 +80,38 @@ class TestFitCheckAgent:
 # =============================================================================
 
 class TestGraphStructure:
-    """Tests for the LangGraph structure."""
+    """Tests for the LangGraph pipeline structure."""
     
     def test_graph_builds(self):
-        """Test that the graph builds without errors."""
-        from services.fit_check_agent import build_fit_check_graph
+        """Test that the pipeline builds without errors."""
+        from services.fit_check_agent import build_fit_check_pipeline
         
-        graph = build_fit_check_graph()
-        assert graph is not None
+        pipeline = build_fit_check_pipeline()
+        assert pipeline is not None
     
-    def test_should_continue_with_tool_calls(self):
-        """Test continuation logic with tool calls."""
-        from services.fit_check_agent import should_continue, FitCheckState
-        from langchain_core.messages import AIMessage
+    def test_pipeline_has_entry_point(self):
+        """Test that pipeline has connecting as entry point."""
+        from services.fit_check_agent import build_fit_check_pipeline
         
-        # Create a mock message with tool calls
-        mock_message = MagicMock()
-        mock_message.tool_calls = [{"name": "web_search", "args": {"query": "test"}}]
-        
-        state = FitCheckState(
-            messages=[mock_message],
-            query="test",
-            query_type=None,
-            research_results=None,
-            skill_analysis=None,
-            experience_analysis=None,
-            step_count=0,
-            final_response=None,
-            error=None,
-        )
-        
-        result = should_continue(state)
-        assert result == "tools"
+        # Pipeline should build successfully with callback holder
+        callback_holder = {"callback": AsyncMock()}
+        pipeline = build_fit_check_pipeline(callback_holder)
+        assert pipeline is not None
     
-    def test_should_continue_without_tool_calls(self):
-        """Test continuation logic without tool calls."""
-        from services.fit_check_agent import should_continue, FitCheckState
-        from langchain_core.messages import AIMessage
+    def test_pipeline_isolation(self):
+        """Test that each pipeline build gets isolated callback holder."""
+        from services.fit_check_agent import build_fit_check_pipeline
         
-        # Create a mock message without tool calls
-        mock_message = MagicMock()
-        mock_message.tool_calls = None
+        callback_a = {"callback": AsyncMock()}
+        callback_b = {"callback": AsyncMock()}
         
-        state = FitCheckState(
-            messages=[mock_message],
-            query="test",
-            query_type=None,
-            research_results=None,
-            skill_analysis=None,
-            experience_analysis=None,
-            step_count=0,
-            final_response=None,
-            error=None,
-        )
+        pipeline_a = build_fit_check_pipeline(callback_a)
+        pipeline_b = build_fit_check_pipeline(callback_b)
         
-        from langgraph.graph import END
-        result = should_continue(state)
-        assert result == END
+        # Both should be valid but isolated
+        assert pipeline_a is not None
+        assert pipeline_b is not None
+        assert callback_a["callback"] != callback_b["callback"]
 
 
 # =============================================================================
@@ -147,7 +124,7 @@ class TestThoughtCallback:
     @pytest.mark.asyncio
     async def test_callback_interface(self):
         """Test that ThoughtCallback interface works."""
-        from services.fit_check_agent import ThoughtCallback
+        from services.callbacks import ThoughtCallback
         
         callback = ThoughtCallback()
         
@@ -186,20 +163,24 @@ class TestEngineerProfile:
 
 
 # =============================================================================
-# System Prompt Tests
+# Metrics Tests
 # =============================================================================
 
-class TestSystemPrompt:
-    """Tests for system prompt loading."""
+class TestMetrics:
+    """Tests for observability metrics."""
     
-    def test_load_system_prompt(self):
-        """Test that system prompt loads correctly."""
-        from services.fit_check_agent import load_system_prompt
+    def test_metrics_available(self):
+        """Test that metrics module loads correctly."""
+        from services.metrics import (
+            track_request_start,
+            track_request_end,
+            track_phase_complete,
+        )
         
-        prompt = load_system_prompt()
-        
-        assert isinstance(prompt, str)
-        assert len(prompt) > 100  # Should be substantial
+        # Should be callable without errors
+        assert callable(track_request_start)
+        assert callable(track_request_end)
+        assert callable(track_phase_complete)
 
 
 if __name__ == "__main__":

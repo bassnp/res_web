@@ -12,9 +12,11 @@ Model Configuration Types:
 import os
 import logging
 import asyncio
+import time
 from typing import Optional, Literal
 
 from langchain_google_genai import ChatGoogleGenerativeAI
+from services.metrics import track_llm_call
 
 logger = logging.getLogger(__name__)
 
@@ -81,34 +83,77 @@ def get_llm_semaphore() -> asyncio.Semaphore:
     return _llm_semaphore
 
 
-async def with_llm_throttle(coro):
+async def with_llm_throttle(coro, model_name: str = None):
     """
-    Execute a coroutine with LLM rate limiting.
+    Execute a coroutine with LLM rate limiting and metrics tracking.
     
     Usage:
-        result = await with_llm_throttle(llm.ainvoke(prompt))
+        result = await with_llm_throttle(llm.ainvoke(prompt), model_name=llm.model)
     
     Args:
         coro: Coroutine to execute.
+        model_name: Optional model name for metrics.
     
     Returns:
         Result of the coroutine.
     """
+    # Use provided model name or try to extract it
+    selected_model = model_name
+    if not selected_model:
+        try:
+            if hasattr(coro, "__self__") and hasattr(coro.__self__, "model"):
+                selected_model = coro.__self__.model
+            else:
+                selected_model = MODEL_NAME
+        except Exception:
+            selected_model = MODEL_NAME
+
+    start_time = time.time()
+    status = "success"
+    
     async with get_llm_semaphore():
-        return await coro
+        try:
+            return await coro
+        except Exception:
+            status = "error"
+            raise
+        finally:
+            duration = time.time() - start_time
+            track_llm_call(selected_model, status, duration)
 
 
-async def with_llm_throttle_stream(async_iterator):
+async def with_llm_throttle_stream(async_iterator, model_name: str = None):
     """
-    Execute an async iterator with LLM rate limiting.
+    Execute an async iterator with LLM rate limiting and metrics tracking.
     
     Usage:
-        async for chunk in with_llm_throttle_stream(llm.astream(prompt)):
+        async for chunk in with_llm_throttle_stream(llm.astream(prompt), model_name=llm.model):
             ...
     """
+    # Use provided model name or try to extract it
+    selected_model = model_name
+    if not selected_model:
+        try:
+            if hasattr(async_iterator, "__self__") and hasattr(async_iterator.__self__, "model"):
+                selected_model = async_iterator.__self__.model
+            else:
+                selected_model = MODEL_NAME
+        except Exception:
+            selected_model = MODEL_NAME
+
+    start_time = time.time()
+    status = "success"
+    
     async with get_llm_semaphore():
-        async for item in async_iterator:
-            yield item
+        try:
+            async for item in async_iterator:
+                yield item
+        except Exception:
+            status = "error"
+            raise
+        finally:
+            duration = time.time() - start_time
+            track_llm_call(selected_model, status, duration)
 
 
 # =============================================================================

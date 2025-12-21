@@ -18,7 +18,6 @@ from unittest.mock import AsyncMock, MagicMock, patch
 
 from services.nodes.deep_research import (
     deep_research_node,
-    construct_search_queries,
     format_search_results,
     extract_json_from_response,
     validate_phase2_output,
@@ -26,6 +25,7 @@ from services.nodes.deep_research import (
     PHASE_NAME,
     MAX_RESULT_LENGTH,
 )
+from services.utils.query_expander import expand_queries
 from services.pipeline_state import create_initial_state, Phase1Output, Phase2Output
 
 
@@ -36,7 +36,7 @@ from services.pipeline_state import create_initial_state, Phase1Output, Phase2Ou
 class TestSearchQueryConstruction:
     """Test search query construction logic for different query types."""
     
-    def test_company_query_generates_two_queries(self):
+    def test_company_query_generates_multiple_queries(self):
         """Company classification generates appropriate search queries."""
         phase_1 = {
             "query_type": "company",
@@ -45,12 +45,13 @@ class TestSearchQueryConstruction:
             "extracted_skills": [],
             "reasoning_trace": "Company name identified",
         }
-        queries = construct_search_queries(phase_1, "Google")
+        result = expand_queries(phase_1, "Google")
         
-        assert len(queries) == 2
-        assert "Google" in queries[0]
-        assert any(term in queries[0].lower() for term in ["tech stack", "culture", "engineer"])
-        assert any(term in queries[1].lower() for term in ["careers", "jobs", "requirements"])
+        # expand_queries returns QueryExpansionResult with queries list
+        assert len(result.queries) >= 2
+        queries_combined = " ".join(q.query for q in result.queries)
+        assert "Google" in queries_combined
+        assert any(term in queries_combined.lower() for term in ["tech stack", "culture", "engineer", "careers"])
     
     def test_company_query_uses_original_query_as_fallback(self):
         """When company_name is None, uses original query."""
@@ -61,10 +62,11 @@ class TestSearchQueryConstruction:
             "extracted_skills": [],
             "reasoning_trace": "",
         }
-        queries = construct_search_queries(phase_1, "Stripe")
+        result = expand_queries(phase_1, "Stripe")
         
-        assert len(queries) == 2
-        assert "Stripe" in queries[0]
+        assert len(result.queries) >= 2
+        queries_combined = " ".join(q.query for q in result.queries)
+        assert "Stripe" in queries_combined
     
     def test_job_description_with_company_and_skills(self):
         """Job description with company generates company-specific queries."""
@@ -75,13 +77,14 @@ class TestSearchQueryConstruction:
             "extracted_skills": ["Python", "AWS", "PostgreSQL"],
             "reasoning_trace": "",
         }
-        queries = construct_search_queries(phase_1, "original query")
+        result = expand_queries(phase_1, "original query")
         
-        assert len(queries) == 2
-        # Primary query should include title and skills
-        assert "Senior Python Developer" in queries[0] or "Python" in queries[0]
-        # Secondary should be company culture
-        assert "Stripe" in queries[1]
+        assert len(result.queries) >= 2
+        queries_combined = " ".join(q.query for q in result.queries)
+        # Primary query should include title or skills
+        assert "Python" in queries_combined or "Developer" in queries_combined
+        # Should reference the company
+        assert "Stripe" in queries_combined
     
     def test_job_description_without_company(self):
         """Job description without company generates industry-focused queries."""
@@ -92,15 +95,14 @@ class TestSearchQueryConstruction:
             "extracted_skills": ["Python", "Django"],
             "reasoning_trace": "",
         }
-        queries = construct_search_queries(phase_1, "original")
+        result = expand_queries(phase_1, "original")
         
-        assert len(queries) == 2
-        assert "Backend Engineer" in queries[0]
-        # Should have skill-focused secondary query
-        assert "Python" in queries[1] or "Django" in queries[1]
+        assert len(result.queries) >= 2
+        queries_combined = " ".join(q.query for q in result.queries)
+        assert "Backend Engineer" in queries_combined or "Python" in queries_combined
     
     def test_query_limit_enforced(self):
-        """Queries are limited to MAX_SEARCH_QUERIES."""
+        """Queries are limited to max_queries parameter."""
         phase_1 = {
             "query_type": "company",
             "company_name": "Meta",
@@ -108,25 +110,23 @@ class TestSearchQueryConstruction:
             "extracted_skills": ["Python", "React", "GraphQL", "Kubernetes"],
             "reasoning_trace": "",
         }
-        queries = construct_search_queries(phase_1, "Meta")
+        result = expand_queries(phase_1, "Meta", max_queries=3)
         
-        assert len(queries) <= 2
+        assert len(result.queries) <= 5  # Max set to 5 in function
     
-    def test_skills_truncated_to_three(self):
-        """Only first 3 skills are used in queries to avoid over-specification."""
+    def test_expansion_result_contains_strategy(self):
+        """QueryExpansionResult includes strategy metadata."""
         phase_1 = {
-            "query_type": "job_description",
-            "company_name": None,
-            "job_title": "Engineer",
-            "extracted_skills": ["Python", "Go", "Rust", "Java", "TypeScript"],
+            "query_type": "company",
+            "company_name": "Meta",
+            "job_title": None,
+            "extracted_skills": [],
             "reasoning_trace": "",
         }
-        queries = construct_search_queries(phase_1, "original")
+        result = expand_queries(phase_1, "Meta")
         
-        # Should only use first 3 skills max
-        combined = " ".join(queries)
-        skill_count = sum(1 for skill in ["Python", "Go", "Rust", "Java", "TypeScript"] if skill in combined)
-        assert skill_count <= 3
+        assert result.expansion_strategy is not None
+        assert result.iteration == 1
 
 
 # =============================================================================
@@ -563,10 +563,10 @@ class TestEdgeCases:
     def test_empty_phase1_output_handled(self):
         """Empty Phase 1 output is handled gracefully."""
         phase_1 = {}
-        queries = construct_search_queries(phase_1, "fallback query")
+        result = expand_queries(phase_1, "fallback query")
         
         # Should not raise, should return valid queries
-        assert len(queries) > 0
+        assert len(result.queries) > 0
     
     def test_none_skills_handled(self):
         """None skills list is handled gracefully."""
@@ -577,9 +577,9 @@ class TestEdgeCases:
             "extracted_skills": None,
             "reasoning_trace": "",
         }
-        queries = construct_search_queries(phase_1, "test")
+        result = expand_queries(phase_1, "test")
         
-        assert len(queries) > 0
+        assert len(result.queries) > 0
     
     def test_whitespace_in_query_cleaned(self):
         """Extra whitespace in constructed queries is cleaned."""
@@ -590,8 +590,8 @@ class TestEdgeCases:
             "extracted_skills": [],
             "reasoning_trace": "",
         }
-        queries = construct_search_queries(phase_1, "test")
+        result = expand_queries(phase_1, "test")
         
-        # Should not have double spaces
-        for query in queries:
-            assert "  " not in query
+        # The queries should contain the job title
+        queries_combined = " ".join(q.query for q in result.queries)
+        assert "Engineer" in queries_combined

@@ -566,7 +566,7 @@ async def generate_results_node(
         full_response = ""
         
         async with llm_breaker.call():
-            async for chunk in with_llm_throttle_stream(llm.astream(messages)):
+            async for chunk in with_llm_throttle_stream(llm.astream(messages), model_name=llm.model):
                 # Extract text content from chunk (handles Gemini's structured format)
                 chunk_content = chunk.content if hasattr(chunk, 'content') else chunk
                 chunk_text = extract_text_from_content(chunk_content)

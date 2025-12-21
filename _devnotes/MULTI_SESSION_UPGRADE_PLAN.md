@@ -154,72 +154,24 @@ async def generate_events():
 
 ---
 
-## Phase 3: Observability & Monitoring
+## Phase 3: Observability & Monitoring (COMPLETED)
 
-**Goal:** Add structured logging and metrics for production debugging.
+**Goal:** Provide visibility into concurrent session performance and system health.
 
-### 3.1 Structured Session Logging
+### 3.1 Structured Logging (JSON)
+- [x] Implement `JSONFormatter` for machine-parseable logs.
+- [x] Include `request_id` and `session_id` in all log records.
+- [x] Standardize log levels (INFO for phases, DEBUG for thoughts).
 
-**File:** `services/streaming_callback.py`
+### 3.2 Prometheus Metrics
+- [x] **Request Metrics**: `fit_check_requests_total`, `fit_check_active_sessions`.
+- [x] **Latency Metrics**: `fit_check_request_duration_seconds`, `fit_check_phase_duration_seconds`.
+- [x] **LLM Metrics**: `fit_check_llm_calls_total`, `fit_check_llm_latency_seconds`.
+- [x] **Circuit Breaker**: `fit_check_circuit_breaker_state`.
 
-```python
-class StreamingCallbackHandler(ThoughtCallback):
-    def __init__(self, session_id: str, include_thoughts: bool = True):
-        self._session_id = session_id
-        self._queue: asyncio.Queue[Optional[str]] = asyncio.Queue()
-        # ...
-    
-    async def _emit(self, event_type: str, data: dict) -> None:
-        # Add session context to all logs
-        logger.info(
-            f"[{self._session_id}] Emitting {event_type}",
-            extra={"session_id": self._session_id, "event_type": event_type}
-        )
-        # ...
-```
-
-### 3.2 Add Metrics Collection (Optional)
-
-**New File:** `services/metrics.py`
-
-```python
-from prometheus_client import Counter, Histogram, Gauge
-
-# Active sessions gauge
-active_sessions = Gauge(
-    'fit_check_active_sessions',
-    'Number of active fit check sessions'
-)
-
-# Request duration histogram
-request_duration = Histogram(
-    'fit_check_request_duration_seconds',
-    'Time spent processing fit check requests',
-    buckets=[1, 5, 10, 30, 60, 120, 300]
-)
-
-# Phase completion counter
-phase_completions = Counter(
-    'fit_check_phase_completions_total',
-    'Number of phase completions',
-    ['phase', 'status']
-)
-```
-
-### 3.3 Health Check Enhancement
-
-**File:** `routers/fit_check.py`
-
-```python
-@router.get("/health")
-async def fit_check_health():
-    return {
-        "status": "healthy",
-        "service": "fit-check",
-        "active_sessions": active_sessions._value._value,  # Current count
-        "agent_ready": True,
-    }
-```
+### 3.3 Enhanced Health Checks
+- [x] `/health` endpoint reporting circuit breaker states and system load.
+- [x] `/metrics` endpoint for Prometheus scraping.
 
 ---
 
@@ -381,8 +333,8 @@ const submitQueryWithRetry = useCallback(async (query, attempt = 1) => {
 |-------|----------|--------|-----------------|--------|
 | **Phase 1: Session Isolation** | 🔴 Critical | 2-4 hours | Concurrent requests fail | ✅ Complete (2025-12-20) |
 | **Phase 2: Concurrency Safety** | 🟠 High | 2-3 hours | Race conditions under load | ✅ Complete (2025-12-20) |
-| **Phase 3: Observability** | 🟡 Medium | 1-2 hours | Debugging blind spots | ⏳ Pending |
-| **Phase 4: Sevalla Deployment** | 🟢 Low | 30 min | Simple config changes | ⏳ Pending |
+| **Phase 3: Observability** | 🟡 Medium | 1-2 hours | Debugging blind spots | ✅ Complete (2025-12-20) |
+| **Phase 4: Sevalla Deployment** | 🟢 Low | 30 min | Simple config changes | ✅ Complete (2025-12-20) |
 | **Phase 5: Frontend Enhancements** | 🟢 Low | 1-2 hours | Nice-to-have | ⏳ Pending |
 
 > **Note:** Phase 4 is significantly simplified for Sevalla deployment. Most infrastructure concerns (SSL, nginx, load balancing, health checks) are handled by the platform automatically.

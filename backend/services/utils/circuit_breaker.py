@@ -13,6 +13,8 @@ from typing import Optional, Callable, Any
 from functools import wraps
 from contextlib import asynccontextmanager
 
+from services.metrics import update_circuit_breaker_state
+
 logger = logging.getLogger(__name__)
 
 
@@ -72,6 +74,15 @@ class AsyncCircuitBreaker:
             f"[{self._name}] Circuit breaker initialized: "
             f"max_failures={max_failures}, reset_timeout={reset_timeout}s"
         )
+        # Initialize metric
+        update_circuit_breaker_state(self._name, self._state.value)
+    
+    def _set_state(self, new_state: CircuitState):
+        """Update state and metrics."""
+        if self._state != new_state:
+            logger.info(f"[{self._name}] Circuit state transition: {self._state.value} -> {new_state.value}")
+            self._state = new_state
+            update_circuit_breaker_state(self._name, new_state.value)
     
     @property
     def state(self) -> CircuitState:
@@ -97,9 +108,8 @@ class AsyncCircuitBreaker:
                     elapsed = time.time() - self._last_failure_time
                     if elapsed >= self._reset_timeout:
                         # Transition to half-open
-                        self._state = CircuitState.HALF_OPEN
+                        self._set_state(CircuitState.HALF_OPEN)
                         self._half_open_calls = 0
-                        logger.info(f"[{self._name}] Circuit transitioned to HALF_OPEN")
                         return False
                 return True
             
@@ -117,10 +127,9 @@ class AsyncCircuitBreaker:
         async with self._lock:
             if self._state == CircuitState.HALF_OPEN:
                 # Success in half-open means service recovered
-                self._state = CircuitState.CLOSED
+                self._set_state(CircuitState.CLOSED)
                 self._failure_count = 0
                 self._last_failure_time = None
-                logger.info(f"[{self._name}] Circuit CLOSED after successful recovery")
             elif self._state == CircuitState.CLOSED:
                 # Reset failure count on success
                 self._failure_count = 0
@@ -144,11 +153,9 @@ class AsyncCircuitBreaker:
             
             if self._state == CircuitState.HALF_OPEN:
                 # Failure in half-open means service still failing
-                self._state = CircuitState.OPEN
-                logger.warning(f"[{self._name}] Circuit OPEN (failed during half-open test)")
+                self._set_state(CircuitState.OPEN)
             elif self._failure_count >= self._max_failures:
-                self._state = CircuitState.OPEN
-                logger.warning(f"[{self._name}] Circuit OPEN (threshold exceeded)")
+                self._set_state(CircuitState.OPEN)
     
     def protect(self, func: Callable) -> Callable:
         """
@@ -200,11 +207,10 @@ class AsyncCircuitBreaker:
     async def reset(self) -> None:
         """Manually reset the circuit breaker to closed state."""
         async with self._lock:
-            self._state = CircuitState.CLOSED
+            self._set_state(CircuitState.CLOSED)
             self._failure_count = 0
             self._last_failure_time = None
             self._half_open_calls = 0
-            logger.info(f"[{self._name}] Circuit manually reset to CLOSED")
 
 
 class CircuitOpenError(Exception):

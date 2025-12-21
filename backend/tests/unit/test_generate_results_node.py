@@ -350,9 +350,11 @@ class TestGenerateFallbackResponse:
     def test_generates_minimal_response(self):
         """Fallback response includes key elements."""
         phase_4 = {"overall_match_score": 0.65}
+        reranker = {"calibrated_score": 65, "tier": "MEDIUM"}
         result = generate_fallback_response(
             company_or_role="Google",
             phase_4=phase_4,
+            reranker=reranker,
             error_message="LLM timeout"
         )
         
@@ -366,6 +368,7 @@ class TestGenerateFallbackResponse:
         result = generate_fallback_response(
             company_or_role="Unknown Company",
             phase_4=None,
+            reranker=None,
             error_message="Error"
         )
         

@@ -18,10 +18,10 @@ import asyncio
 import logging
 import time
 import uuid
-from typing import AsyncGenerator
+from typing import AsyncGenerator, Optional
 
 from async_timeout import timeout as async_timeout
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Header
 from fastapi.responses import StreamingResponse
 from pydantic import ValidationError
 
@@ -35,6 +35,12 @@ from models.fit_check import (
 )
 from services.fit_check_agent import get_agent
 from services.streaming_callback import StreamingCallbackHandler, format_sse
+from services.metrics import (
+    track_request_start,
+    track_request_end,
+    ACTIVE_SESSIONS,
+    PROMETHEUS_AVAILABLE,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -86,22 +92,38 @@ REQUEST_TIMEOUT_SECONDS = 300
         },
     },
 )
-async def stream_fit_check(request: FitCheckRequest):
+async def stream_fit_check(
+    request: FitCheckRequest,
+    x_session_id: Optional[str] = Header(None, alias="X-Session-ID")
+):
     """
     Stream AI fit analysis via Server-Sent Events.
     
     Args:
         request: FitCheckRequest with query and options.
+        x_session_id: Optional session ID from header for tracing.
     
     Returns:
         StreamingResponse with SSE events.
     """
     # Generate session ID for tracing if not provided
-    session_id = request.session_id or str(uuid.uuid4())
+    # Priority: Request Body > Header > Auto-generated
+    session_id = request.session_id or x_session_id or str(uuid.uuid4())
+    
+    # Track request start
+    track_request_start()
+    start_time = time.time()
+    request_status = "success"
     
     logger.info(
         f"[{session_id}] Received fit check request: query={request.query[:50]}..., "
-        f"model={request.model_id}, config_type={request.config_type}"
+        f"model={request.model_id}, config_type={request.config_type}",
+        extra={
+            "session_id": session_id,
+            "query_length": len(request.query),
+            "model_id": request.model_id,
+            "config_type": request.config_type
+        }
     )
     
     # Create callback handler with session ID
@@ -116,6 +138,7 @@ async def stream_fit_check(request: FitCheckRequest):
         
         This runs the agent and streams events via the callback.
         """
+        nonlocal request_status
         agent = get_agent()
         
         try:
@@ -123,6 +146,7 @@ async def stream_fit_check(request: FitCheckRequest):
             async with async_timeout(REQUEST_TIMEOUT_SECONDS):
                 # Run the agent in a separate task so we can stream events concurrently
                 async def run_agent():
+                    nonlocal request_status
                     try:
                         # Collect response chunks (they're also emitted via callback)
                         async for chunk in agent.stream_analysis(
@@ -133,10 +157,12 @@ async def stream_fit_check(request: FitCheckRequest):
                         ):
                             pass  # Response chunks are handled by callback
                     except asyncio.CancelledError:
+                        request_status = "cancelled"
                         logger.warning(f"[{session_id}] Agent task cancelled")
                         if not callback.is_completed:
                             await callback.on_error("CANCELLED", "Request was cancelled")
                     except Exception as e:
+                        request_status = "error"
                         logger.error(f"[{session_id}] Agent error: {e}")
                         if not callback.is_completed:
                             # Map exception to appropriate error code
@@ -151,6 +177,7 @@ async def stream_fit_check(request: FitCheckRequest):
                     async for event in callback.events():
                         yield event
                 except asyncio.CancelledError:
+                    request_status = "cancelled"
                     agent_task.cancel()
                     raise
                 
@@ -158,6 +185,7 @@ async def stream_fit_check(request: FitCheckRequest):
                 await agent_task
                 
         except asyncio.TimeoutError:
+            request_status = "timeout"
             logger.error(f"[{session_id}] Request timed out after {REQUEST_TIMEOUT_SECONDS}s")
             if not callback.is_completed:
                 yield format_sse("error", {
@@ -165,9 +193,11 @@ async def stream_fit_check(request: FitCheckRequest):
                     "message": f"Request exceeded {REQUEST_TIMEOUT_SECONDS} second limit",
                 })
         except asyncio.CancelledError:
+            request_status = "cancelled"
             logger.info(f"[{session_id}] Stream cancelled by client")
             raise
         except Exception as e:
+            request_status = "error"
             logger.error(f"[{session_id}] Stream generation error: {e}")
             # Emit error if not already completed
             if not callback.is_completed:
@@ -176,6 +206,18 @@ async def stream_fit_check(request: FitCheckRequest):
                     "code": error_code,
                     "message": str(e),
                 })
+        finally:
+            # Track request end
+            duration = time.time() - start_time
+            track_request_end(request_status, duration)
+            logger.info(
+                f"[{session_id}] Request completed",
+                extra={
+                    "session_id": session_id,
+                    "status": request_status,
+                    "duration_ms": int(duration * 1000),
+                }
+            )
     
     return StreamingResponse(
         generate_events(),
@@ -207,10 +249,18 @@ async def fit_check_health():
     # Check if agent can be instantiated
     try:
         agent = get_agent()
+        
+        # Get active session count from metrics if available
+        active_count = 0
+        if PROMETHEUS_AVAILABLE:
+            # Accessing internal value for health check display
+            active_count = int(ACTIVE_SESSIONS._value.get())
+            
         return {
             "status": "healthy",
             "service": "fit-check",
             "agent_ready": agent is not None,
+            "active_sessions": active_count,
         }
     except Exception as e:
         logger.error(f"Fit Check health check failed: {e}")

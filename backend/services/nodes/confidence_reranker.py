@@ -541,7 +541,10 @@ async def confidence_reranker_node(
         )
         
         async with llm_breaker.call():
-            response = await with_llm_throttle(llm.ainvoke([HumanMessage(content=formatted_prompt)]))
+            response = await with_llm_throttle(
+                llm.ainvoke([HumanMessage(content=formatted_prompt)]),
+                model_name=llm.model
+            )
             
         response_text = get_response_text(response)
         

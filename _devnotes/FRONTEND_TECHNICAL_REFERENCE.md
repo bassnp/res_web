@@ -1,3 +1,4 @@
+````markdown
 # Frontend Technical Reference: Portfolio Website
 
 ## Application Overview
@@ -11,6 +12,7 @@
     - **AI Fit Check**: Real-time agentic analysis of candidate-to-employer fit using Server-Sent Events (SSE).
     - **Interactive Portfolio**: Dynamic project showcase, experience timeline, and personal collage.
     - **Generative UI**: Dynamic rendering of AI reasoning and structured insights.
+    - **Session Resilience**: Automatic retry with exponential backoff and session ID tracking.
 
 ---
 
@@ -90,6 +92,50 @@ The Fit Check feature is a sophisticated AI integration that simulates a multi-p
     - **Responsibility**: Manages the SSE connection to the backend.
     - **State Machine**: Tracks status (`idle`, `connecting`, `thinking`, `responding`, `complete`, `error`).
     - **Event Processing**: Parses SSE events (`phase`, `thought`, `response`, `complete`) to update the UI.
+    - **Session ID Generation**: Uses `generateSessionId()` for request tracing.
+    - **Retry Logic**: Automatic retry with exponential backoff for transient network errors.
+    - **Phase Tracking**: Maintains `currentPhase`, `phaseHistory`, and `phaseProgress` for UI visualization.
+
+### Session Resilience Features
+
+The frontend implements robust session handling for reliable user experience:
+
+```javascript
+// hooks/use-fit-check.js
+
+// Session ID Generation
+function generateSessionId() {
+  if (typeof crypto !== 'undefined' && crypto.randomUUID) {
+    return crypto.randomUUID();
+  }
+  // Fallback for older browsers...
+}
+
+// Retry Configuration
+const MAX_RETRIES = 3;
+const INITIAL_RETRY_DELAY_MS = 1000;
+const MAX_RETRY_DELAY_MS = 10000;
+const RETRY_BACKOFF_MULTIPLIER = 2;
+
+// Retryable Error Detection
+const RETRYABLE_ERRORS = [
+  'ECONNRESET', 'ETIMEDOUT', 'NetworkError',
+  'Failed to fetch', 'network error', 'connection reset'
+];
+
+function isRetryableError(error) {
+  if (error.name === 'AbortError') return false;
+  const msg = error.message?.toLowerCase() || '';
+  return RETRYABLE_ERRORS.some(p => msg.includes(p.toLowerCase()));
+}
+
+// Exponential Backoff with Jitter
+function getRetryDelay(attempt) {
+  const delay = INITIAL_RETRY_DELAY_MS * Math.pow(RETRY_BACKOFF_MULTIPLIER, attempt - 1);
+  const jitter = Math.random() * 0.3 * delay;
+  return Math.min(delay + jitter, MAX_RETRY_DELAY_MS);
+}
+```
 
 ### Data Processing
 - **[lib/parseAIResponse.js](frontend/lib/parseAIResponse.js)**: Parses the final markdown response from the AI into structured sections.
@@ -124,6 +170,7 @@ The Fit Check feature is a sophisticated AI integration that simulates a multi-p
 - **`use-ai-settings.js`**: Manages persistence and state for AI model selection (e.g., Gemini 2.0 Flash vs Pro).
 - **`use-header-visibility.js`**: Tracks scroll position to show/hide the header with a "pop-in" effect.
 - **`use-example-generator.js`**: Provides pre-defined example queries for the Fit Check input.
+- **`use-fit-check.js`**: SSE connection management with session tracking and retry logic.
 
 ### Utility Modules ([lib/](frontend/lib/))
 - **[lib/profile-data.js](frontend/lib/profile-data.js)**: **Single Point of Truth (SPOT)**. Auto-generated from the `profile/` directory. Contains all portfolio content (projects, experience, skills).
@@ -180,3 +227,57 @@ RootLayout (app/layout.js)
     - `morph`: Fluid shape-shifting for background blobs.
     - `typing`: Multi-phase text animation in the Hero section.
     - `pulse-glow`: Subtle glowing effect for primary CTA buttons.
+
+---
+
+## Backend Integration
+
+### API Communication
+- **Base URL**: Configured via `NEXT_PUBLIC_API_URL` environment variable.
+- **Endpoint**: `POST /api/fit-check/stream` for SSE streaming.
+- **Session ID**: Generated per-request via `generateSessionId()` and sent in request body.
+
+### SSE Event Handling
+The frontend processes the following event types from the backend:
+
+| Event Type | Handler | UI Update |
+|------------|---------|-----------|
+| `phase` | Updates `currentPhase`, adds to `phaseHistory` | Shows phase card in timeline |
+| `phase_complete` | Updates phase status to `complete` | Animates completion indicator |
+| `thought` | Appends to `thoughts` array | Renders ThoughtNode in timeline |
+| `response` | Appends to `response` string | Streams text in results section |
+| `complete` | Sets `status` to `complete`, records `durationMs` | Shows final results layout |
+| `error` | Sets `status` to `error`, stores error info | Shows error message with retry option |
+
+### Request Payload
+```javascript
+{
+  query: string,           // User input (company or job description)
+  include_thoughts: true,  // Always true for UI visibility
+  model_id: string,        // From AI settings (e.g., "gemini-3-flash-preview")
+  config_type: string,     // "reasoning" or "standard"
+  session_id: string       // UUID for request tracing
+}
+```
+
+---
+
+## Change Log
+
+### Multi-Session Upgrade (2025-12-20)
+**Session ID Tracking** ✅
+- Added `generateSessionId()` function in `use-fit-check.js`.
+- Session ID sent with each request for backend tracing.
+- Stored in component state for potential reconnection.
+
+**Retry Logic** ✅
+- Implemented exponential backoff with jitter.
+- `MAX_RETRIES`: 3 attempts.
+- `RETRY_BACKOFF_MULTIPLIER`: 2x per attempt.
+- Retryable error detection for transient network failures.
+
+**Phase Tracking** ✅
+- `currentPhase`: Active phase name.
+- `phaseHistory`: Completed phases with timestamps.
+- `phaseProgress`: Map of phase → status for UI visualization.
+````

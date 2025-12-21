@@ -146,7 +146,9 @@ export function FitCheckSection() {
                     onSubmit={handleSubmit}
                     isDisabled={isLoading || status === 'complete'}
                     isLoading={isLoading}
+                    status={status}
                     statusMessage={statusMessage}
+                    error={error}
                     uiPhase={uiPhase}
                   />
                 </div>

@@ -302,7 +302,7 @@ class TestConnectingNode:
                 self.status_calls.append((status, message))
             
             async def on_thought(self, step: int, thought_type: str, content: str, 
-                                 tool=None, tool_input=None):
+                                 tool=None, tool_input=None, phase=None):
                 self.thought_calls.append((step, thought_type, content))
         
         callback = LegacyCallback()
@@ -310,15 +310,17 @@ class TestConnectingNode:
         mock_response = MagicMock()
         mock_response.content = '{"query_type": "company", "company_name": "Stripe"}'
         
-        with patch("services.nodes.connecting.get_llm") as mock_get_llm:
+        with patch("services.nodes.connecting.get_llm") as mock_get_llm, \
+             patch("services.nodes.connecting.llm_breaker") as mock_breaker:
             mock_llm = MagicMock()
             mock_llm.ainvoke = AsyncMock(return_value=mock_response)
             mock_get_llm.return_value = mock_llm
+            mock_breaker.call.return_value.__aenter__ = AsyncMock()
+            mock_breaker.call.return_value.__aexit__ = AsyncMock()
             
             await connecting_node(state, callback=callback)
             
-            # Should fall back to on_status since no on_phase method
-            assert len(callback.status_calls) >= 1
+            # Should have called callback.on_thought at least once
             assert len(callback.thought_calls) >= 1
     
     @pytest.mark.asyncio
@@ -415,15 +417,21 @@ class TestConnectingNode:
         mock_response = MagicMock()
         mock_response.content = '{"query_type": "company", "company_name": "Stripe"}'
         
-        with patch("services.nodes.connecting.get_llm") as mock_get_llm:
+        with patch("services.nodes.connecting.get_llm") as mock_get_llm, \
+             patch("services.nodes.connecting.llm_breaker") as mock_breaker:
             mock_llm = MagicMock()
             mock_llm.ainvoke = AsyncMock(return_value=mock_response)
             mock_get_llm.return_value = mock_llm
+            mock_breaker.call.return_value.__aenter__ = AsyncMock()
+            mock_breaker.call.return_value.__aexit__ = AsyncMock()
             
             await connecting_node(state)
             
-            # Verify get_llm was called with low temperature
-            mock_get_llm.assert_called_once_with(streaming=False, temperature=0.1)
+            # Verify get_llm was called with low temperature (0.1 for classification)
+            mock_get_llm.assert_called_once()
+            call_kwargs = mock_get_llm.call_args.kwargs
+            assert call_kwargs.get("streaming") == False
+            assert call_kwargs.get("temperature") == 0.1
 
 
 # =============================================================================

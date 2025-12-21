@@ -1,7 +1,7 @@
 'use client';
 
 import { forwardRef, useState } from 'react';
-import { Send, Loader2, Zap, Brain, Sparkles, ThumbsUp, ThumbsDown } from 'lucide-react';
+import { Send, Loader2, Zap, Brain, Sparkles, ThumbsUp, ThumbsDown, RefreshCw, AlertCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { cn } from '@/lib/utils';
@@ -69,7 +69,9 @@ const ModelSelector = () => {
  * @param {Function} props.onSubmit - Form submit handler
  * @param {boolean} props.isDisabled - Whether input is disabled
  * @param {boolean} props.isLoading - Whether analysis is in progress
+ * @param {string} props.status - Current state machine status
  * @param {string} props.statusMessage - Current status message
+ * @param {Object} props.error - Error object if any
  * @param {string} props.uiPhase - Current UI phase
  */
 export const InputPanel = forwardRef(function InputPanel({
@@ -78,7 +80,9 @@ export const InputPanel = forwardRef(function InputPanel({
   onSubmit,
   isDisabled,
   isLoading,
+  status,
   statusMessage,
+  error,
   uiPhase,
 }, ref) {
   const [infoOpen, setInfoOpen] = useState(false);
@@ -201,12 +205,46 @@ export const InputPanel = forwardRef(function InputPanel({
           <div className="fit-check-input-disabled-overlay">
             <div className="flex flex-col items-center gap-3">
               <div className="relative">
-                <div className="w-10 h-10 rounded-full border-3 border-burnt-peach/30" />
-                <div className="absolute inset-0 w-10 h-10 rounded-full border-3 border-transparent border-t-burnt-peach fit-check-spinner" />
+                {statusMessage?.includes('Retrying') ? (
+                  <RefreshCw className="w-10 h-10 text-amber-500 animate-spin" />
+                ) : (
+                  <>
+                    <div className="w-10 h-10 rounded-full border-3 border-burnt-peach/30" />
+                    <div className="absolute inset-0 w-10 h-10 rounded-full border-3 border-transparent border-t-burnt-peach fit-check-spinner" />
+                  </>
+                )}
               </div>
-              <span className="text-sm font-medium text-twilight dark:text-eggshell">
+              <span className={cn(
+                "text-sm font-medium",
+                statusMessage?.includes('Retrying') ? "text-amber-600 dark:text-amber-400" : "text-twilight dark:text-eggshell"
+              )}>
                 {statusMessage || 'Analyzing...'}
               </span>
+            </div>
+          </div>
+        )}
+
+        {/* Error overlay (only in input phase) */}
+        {status === 'error' && uiPhase === 'input' && error && (
+          <div className="fit-check-input-disabled-overlay bg-red-50/90 dark:bg-red-950/90">
+            <div className="flex flex-col items-center gap-3 px-6 text-center">
+              <AlertCircle className="w-10 h-10 text-red-500" />
+              <div className="space-y-1">
+                <p className="text-sm font-semibold text-red-600 dark:text-red-400">
+                  Connection Error
+                </p>
+                <p className="text-xs text-red-500/80 dark:text-red-400/80 max-w-[200px]">
+                  {error.message || 'Failed to connect to the server'}
+                </p>
+              </div>
+              <Button 
+                size="sm" 
+                variant="outline" 
+                onClick={() => onSubmit(value)}
+                className="mt-2 border-red-200 hover:bg-red-100 dark:border-red-800 dark:hover:bg-red-900"
+              >
+                Try Again
+              </Button>
             </div>
           </div>
         )}

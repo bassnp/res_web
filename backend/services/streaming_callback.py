@@ -11,9 +11,11 @@ and queues events for async consumption by the SSE streaming endpoint.
 import asyncio
 import json
 import logging
-from typing import Optional, AsyncGenerator, Any
+import time
+from typing import Optional, AsyncGenerator, Any, Dict
 
 from services.callbacks import ThoughtCallback
+from services.metrics import track_phase_complete
 
 logger = logging.getLogger(__name__)
 
@@ -63,7 +65,14 @@ class StreamingCallbackHandler(ThoughtCallback):
         self._session_id = session_id or "unknown"
         self._completed = False
         self._error_occurred = False
-        logger.debug(f"[{self._session_id}] StreamingCallbackHandler initialized")
+        
+        # Phase timing tracking
+        self._phase_start_times: Dict[str, float] = {}
+        
+        logger.debug(
+            f"[{self._session_id}] StreamingCallbackHandler initialized",
+            extra={"session_id": self._session_id}
+        )
     
     async def _emit(self, event_type: str, data: dict) -> None:
         """
@@ -74,12 +83,18 @@ class StreamingCallbackHandler(ThoughtCallback):
             data: The event data.
         """
         if self._completed:
-            logger.warning(f"[{self._session_id}] Attempted to emit after completion: {event_type}")
+            logger.warning(
+                f"[{self._session_id}] Attempted to emit after completion: {event_type}",
+                extra={"session_id": self._session_id, "event_type": event_type}
+            )
             return
         
         sse_event = format_sse(event_type, data)
         await self._queue.put(sse_event)
-        logger.debug(f"[{self._session_id}] Emitted {event_type} event")
+        logger.debug(
+            f"[{self._session_id}] Emitted {event_type} event",
+            extra={"session_id": self._session_id, "event_type": event_type}
+        )
     
     async def on_status(self, status: str, message: str) -> None:
         """
@@ -96,17 +111,25 @@ class StreamingCallbackHandler(ThoughtCallback):
     
     async def on_phase(self, phase: str, message: str) -> None:
         """
-        Emit a phase transition event.
+        Emit a phase transition event and start timing.
         
         Args:
             phase: Phase name (connecting, deep_research, skeptical_comparison, 
                    skills_matching, generate_results).
             message: Human-readable phase start message.
         """
+        # Record phase start time
+        self._phase_start_times[phase] = time.time()
+        
         await self._emit("phase", {
             "phase": phase,
             "message": message,
         })
+        
+        logger.info(
+            f"[{self._session_id}] Starting phase: {phase}",
+            extra={"session_id": self._session_id, "phase": phase}
+        )
     
     async def on_phase_complete(self, phase: str, summary: str, data: dict = None) -> None:
         """
@@ -117,11 +140,27 @@ class StreamingCallbackHandler(ThoughtCallback):
             summary: Brief summary of phase output.
             data: Optional structured data for frontend display.
         """
+        # Calculate phase duration
+        duration = 0.0
+        if phase in self._phase_start_times:
+            duration = time.time() - self._phase_start_times[phase]
+            track_phase_complete(phase, "success", duration)
+        
         await self._emit("phase_complete", {
             "phase": phase,
             "summary": summary,
             "data": data or {},
+            "duration_ms": int(duration * 1000)
         })
+        
+        logger.info(
+            f"[{self._session_id}] Completed phase: {phase} in {int(duration * 1000)}ms",
+            extra={
+                "session_id": self._session_id,
+                "phase": phase,
+                "duration_ms": int(duration * 1000)
+            }
+        )
     
     async def on_thought(
         self,
@@ -194,6 +233,12 @@ class StreamingCallbackHandler(ThoughtCallback):
             code: Error code (INVALID_QUERY, AGENT_ERROR, etc.).
             message: Human-readable error message.
         """
+        # Track failure for any active phases
+        for phase, start_time in self._phase_start_times.items():
+            # If we haven't logged completion for this phase yet
+            duration = time.time() - start_time
+            track_phase_complete(phase, "error", duration)
+        
         await self._emit("error", {
             "code": code,
             "message": message,
@@ -202,7 +247,14 @@ class StreamingCallbackHandler(ThoughtCallback):
         self._completed = True
         # Signal end of stream
         await self._queue.put(None)
-        logger.error(f"[{self._session_id}] Stream error: {code} - {message}")
+        logger.error(
+            f"[{self._session_id}] Stream error: {code} - {message}",
+            extra={
+                "session_id": self._session_id,
+                "error_code": code,
+                "error_message": message
+            }
+        )
     
     async def events(self) -> AsyncGenerator[str, None]:
         """

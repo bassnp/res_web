@@ -956,7 +956,7 @@ async def research_reranker_node(
         messages = [HumanMessage(content=prompt)]
         
         async with llm_breaker.call():
-            response = await with_llm_throttle(llm.ainvoke(messages))
+            response = await with_llm_throttle(llm.ainvoke(messages), model_name=llm.model)
         
         # Extract and validate response
         response_text = get_response_text(response)

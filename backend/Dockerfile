@@ -97,10 +97,13 @@ USER appuser
 # Expose port (documentation only, doesn't actually publish)
 EXPOSE 8000
 
-# Health check with timeout and retries
-HEALTHCHECK --interval=30s --timeout=10s --start-period=10s --retries=3 \
-    CMD python -c "import urllib.request; urllib.request.urlopen('http://localhost:8000/health', timeout=5)" || exit 1
+# Health check - Sevalla also probes this endpoint
+HEALTHCHECK --interval=30s --timeout=10s --start-period=15s --retries=3 \
+    CMD python -c "import urllib.request; urllib.request.urlopen('http://localhost:8000/health')"
 
 # Security: Use exec form to avoid shell injection, run with limited workers
-# Using --no-access-log in production to reduce disk I/O (logs go to stdout)
-CMD ["uvicorn", "server:app", "--host", "0.0.0.0", "--port", "8000", "--workers", "1", "--no-access-log"]
+# Optimized for SSE streaming on Sevalla PaaS
+# - Single worker: async handles concurrency (no need for multiple workers)
+# - Extended keep-alive: supports long-lived SSE connections
+# - Access log: useful for Sevalla's log viewer
+CMD ["uvicorn", "server:app", "--host", "0.0.0.0", "--port", "8000", "--workers", "1", "--timeout-keep-alive", "75", "--access-log"]

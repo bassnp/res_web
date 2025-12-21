@@ -7,6 +7,7 @@ to research companies, job positions, and industry information.
 
 import os
 import logging
+import asyncio
 from typing import Optional
 
 from langchain_core.tools import tool
