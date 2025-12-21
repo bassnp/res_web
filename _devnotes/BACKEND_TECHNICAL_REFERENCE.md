@@ -82,12 +82,16 @@ The agent follows a directed acyclic graph (DAG) with conditional routing.
    - *Route*: If `irrelevant` → **END**.
 2. **DEEP_RESEARCH**: Expands queries and executes Google CSE searches.
 3. **RESEARCH_RERANKER**: Scores search results (Relevance, Quality, Usefulness).
-   - *Route*: If `SPARSE` → **DEEP_RESEARCH** (Retry).
+   - *Route*: If `SPARSE` → **DEEP_RESEARCH** (Retry up to 3 attempts).
    - *Route*: If `GARBAGE` → **GENERATE_RESULTS** (Early Exit).
-4. **SKEPTICAL_COMPARISON**: Devil's advocate analysis for gaps/risks.
-5. **SKILLS_MATCHING**: Maps requirements to `ENGINEER_PROFILE`.
-6. **CONFIDENCE_RERANKER**: LLM-as-a-Judge calibration of match scores.
-7. **GENERATE_RESULTS**: Synthesizes final personalized response.
+   - *Route*: Otherwise → **CONTENT_ENRICH** (Always visited for frontend visibility).
+4. **CONTENT_ENRICH**: Fetches full content for top-scored sources.
+   - **Graceful Skip**: Emits phase events even when no sources available (`skipped: true`).
+   - **Output**: `enriched_count`, `total_count`, `sources[]`, `success_rate`.
+5. **SKEPTICAL_COMPARISON**: Devil's advocate analysis for gaps/risks.
+6. **SKILLS_MATCHING**: Maps requirements to `ENGINEER_PROFILE`.
+7. **CONFIDENCE_RERANKER**: LLM-as-a-Judge calibration of match scores.
+8. **GENERATE_RESULTS**: Synthesizes final personalized response.
 
 ### Pipeline State (`services/pipeline_state.py`)
 Uses `FitCheckPipelineState` (TypedDict) to pass data between nodes:
@@ -111,6 +115,13 @@ Uses `FitCheckPipelineState` (TypedDict) to pass data between nodes:
 - **Logic**: Evaluates documents concurrently using LLM.
 - **Weights**: Relevance (50%), Quality (30%), Usefulness (20%).
 - **Source Classification**: `classify_source(url: str)` returns `SourceType` and `extractability_multiplier` (e.g., Video: 0.8, Wiki: 1.2).
+
+### Content Enrichment Node (`services/nodes/content_enrich.py`)
+- **Phase**: 2C - Full content extraction from top research sources.
+- **Behavior**: Fetches HTML content in parallel with semaphore-controlled concurrency.
+- **Event Emission**: Always emits `on_phase` and `on_phase_complete` events, even when skipping.
+- **Skip Handling**: When no top sources available, emits `skipped: true` with `skip_reason` for frontend transparency.
+- **Output Data**: `enriched_count`, `total_count`, `total_kb`, `sources[]`, `success_rate`.
 
 ### Error Handling (`services/utils/error_handling.py`)
 - **Base Class**: `PipelineError(message, category, phase, context)`.
@@ -169,3 +180,12 @@ Uses `FitCheckPipelineState` (TypedDict) to pass data between nodes:
 - **Anti-Sycophancy**: Phase 3 (`SKEPTICAL_COMPARISON`) is specifically designed to identify gaps and risks, preventing the LLM from being overly agreeable.
 - **Confidence Calibration**: Phase 5B (`CONFIDENCE_RERANKER`) uses LLM-as-a-Judge to calibrate match scores against evidence, ensuring high-confidence results.
 - **Security**: Pre-LLM pattern matching in `connecting.py` prevents prompt injection and harmful content before reaching the LLM.
+
+### Prompt Format (`prompts/phase_5_generate_results_concise.xml`)
+- **Output Format**: Uses `**Key Strengths**` and `**Growth Opportunities**` (bold markdown headers).
+- **Bullet Depth**: Each bullet 25-40 words with format: **[Tech]**: [evidence] → [outcome] → [employer relevance].
+- **Strength Format**: Technology + What was built → Key outcome → Employer stack alignment.
+- **Gap Format**: Missing skill → Gap context → Transferable bridge → Ramp-up timeframe estimate.
+- **Word Limit**: 250-400 words total - concise yet insightful, scannable in 60 seconds.
+- **Data Injection**: Template receives `{genuine_strengths}`, `{genuine_gaps}`, `{calibrated_score}`, `{confidence_tier}`.
+- **Alignment**: Format designed to match frontend `parseAIResponse.js` parser expectations.

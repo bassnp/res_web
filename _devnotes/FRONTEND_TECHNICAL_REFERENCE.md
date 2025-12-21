@@ -26,6 +26,7 @@
     - **Theme Extensions**: Custom color palette (`eggshell`, `burnt-peach`, `twilight`, `muted-teal`, `apricot`).
     - **Animations**: Extensive custom keyframes for `morph`, `float`, `pulse-glow`, `typing`, and `shimmer`.
     - **Safelist**: Explicitly includes dynamic classes for timeline nodes and pipeline phases to prevent purging.
+    - **Generate Results Phase**: Includes `bg-burnt-peach/10`, `ring-burnt-peach/30`, `from-burnt-peach/10`, `from-burnt-peach/5`, `border-burnt-peach/50`.
 - **[components.json](frontend/components.json)**: Shadcn UI configuration using the "New York" style and "Slate" base color.
 - **[app/globals.css](frontend/app/globals.css)**: Global CSS variables for light/dark modes and base styles.
 
@@ -75,7 +76,13 @@ The Fit Check feature is a sophisticated AI integration that simulates a multi-p
         - `results`: Final state showing the `ResultsSection` and `ConfidenceGauge`.
 - **[components/fit-check/InputPanel.jsx](frontend/components/fit-check/InputPanel.jsx)**: Handles user input and model selection.
 - **[components/fit-check/ThinkingPanel.jsx](frontend/components/fit-check/ThinkingPanel.jsx)**: Displays real-time "thoughts" from the AI agent.
+- **[components/fit-check/ChainOfThought.jsx](frontend/components/fit-check/ChainOfThought.jsx)**: Timeline visualization of pipeline phases.
+    - **Stable Sorting**: Uses secondary sort by entry type priority for entries with same timestamps.
+    - **Content Enrich Handling**: Displays skip warning (amber) when `data.skipped` is true.
+    - **Phase Insight Cards**: `EnrichedInsightCard` renders phase-specific structured data.
 - **[components/fit-check/ResultsSection.jsx](frontend/components/fit-check/ResultsSection.jsx)**: Renders structured `StrengthsCard` and `GrowthAreasCard` after analysis.
+    - **StrengthsCard**: `formatStrengthText()` returns React fragments with `<strong>` skill highlighting.
+    - **GrowthAreasCard**: `formatGrowthText()` returns React fragments with `<strong>` gap highlighting.
 - **[components/fit-check/ComparisonChain.jsx](frontend/components/fit-check/ComparisonChain.jsx)**: Visualizes the 8-phase pipeline progress.
 
 ### State Management
@@ -85,8 +92,14 @@ The Fit Check feature is a sophisticated AI integration that simulates a multi-p
     - **Event Processing**: Parses SSE events (`phase`, `thought`, `response`, `complete`) to update the UI.
 
 ### Data Processing
-- **[lib/parseAIResponse.js](frontend/lib/parseAIResponse.js)**: Parses the final markdown response from the AI into structured sections (Strengths, Growth Areas, Value Proposition).
-- **[lib/phaseInsights.js](frontend/lib/phaseInsights.js)**: Extracts specific metadata from each pipeline phase (e.g., number of technologies identified during research).
+- **[lib/parseAIResponse.js](frontend/lib/parseAIResponse.js)**: Parses the final markdown response from the AI into structured sections.
+    - **Section Detection**: Supports `###` titles, `##` H2 headers, and `**bold**` section headers.
+    - **Strength Keywords**: `alignment`, `strength`, `bring`, `value`, `skill`, `match`, `fit`.
+    - **Growth Keywords**: `growth`, `opportunity`, `develop`, `learn`, `address`, `gap`, `areas to address`.
+    - **Output**: `{ strengths[], growthAreas[], valueProposition, calibratedScore, confidenceTier }`.
+- **[lib/phaseInsights.js](frontend/lib/phaseInsights.js)**: Extracts specific metadata from each pipeline phase.
+    - **Content Enrichment**: Parses `"Enriched X/Y sources"` format, handles `skipped` state with `skipReason`.
+    - **Display Meta**: Maps insights to UI-friendly `{ metrics[], summary, color }` structure.
 
 ---
 
@@ -115,6 +128,8 @@ The Fit Check feature is a sophisticated AI integration that simulates a multi-p
 ### Utility Modules ([lib/](frontend/lib/))
 - **[lib/profile-data.js](frontend/lib/profile-data.js)**: **Single Point of Truth (SPOT)**. Auto-generated from the `profile/` directory. Contains all portfolio content (projects, experience, skills).
 - **[lib/phaseConfig.js](frontend/lib/phaseConfig.js)**: Defines UI metadata (icons, colors, descriptions) for the 8 pipeline phases.
+    - **Custom Colors**: `generate_results` uses `burnt-peach` (single-value custom color, not `-400` scale).
+    - **Safelist Required**: Opacity variants (`bg-burnt-peach/10`, `ring-burnt-peach/30`) added to `tailwind.config.js`.
 - **[lib/utils.js](frontend/lib/utils.js)**: Exports `cn` for tailwind-merge and clsx integration.
 
 ---

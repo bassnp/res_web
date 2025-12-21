@@ -105,8 +105,16 @@ export function ChainOfThought({
       });
     }
     
-    // Sort by timestamp descending (newest first)
-    entries.sort((a, b) => b.timestamp - a.timestamp);
+    // Sort by timestamp descending (newest first), with stable secondary sort
+    // Priority order for same timestamps: phase_complete > thought > phase_start
+    // This ensures phase completion appears after thoughts within the same phase
+    const typePriority = { phase_complete: 3, thought: 2, phase_start: 1 };
+    entries.sort((a, b) => {
+      const timeDiff = b.timestamp - a.timestamp;
+      if (timeDiff !== 0) return timeDiff;
+      // Same timestamp: sort by type priority (higher = more recent logically)
+      return (typePriority[b.type] || 0) - (typePriority[a.type] || 0);
+    });
     
     return entries;
   }, [thoughts, phaseHistory]);
@@ -748,7 +756,15 @@ function EnrichedInsightCard({ data, phase, compact = false }) {
     case 'content_enrich':
       return (
         <div className={cn("space-y-1", compact ? "text-[10px]" : "text-xs")}>
-          {data.sources?.length > 0 && (
+          {/* Handle skipped case - no sources to enrich */}
+          {data.skipped && (
+            <div className="flex items-center gap-1.5 text-amber-500 dark:text-amber-400">
+              <span className="text-[10px]">⚠</span>
+              <span>Skipped: {data.skip_reason || 'No sources available'}</span>
+            </div>
+          )}
+          {/* Normal enrichment case */}
+          {!data.skipped && data.sources?.length > 0 && (
             <details className="group">
               <summary className="cursor-pointer text-twilight/50 dark:text-eggshell/50 hover:text-twilight/70 flex items-center gap-1">
                 <FileText className="w-2.5 h-2.5" />

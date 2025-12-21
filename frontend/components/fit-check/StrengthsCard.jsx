@@ -101,31 +101,48 @@ export function StrengthsCard({
 }
 
 /**
- * Format strength text - handles bold markers and strips unwanted characters
+ * Format strength text - handles bold markers and strips unwanted characters.
+ * 
+ * Returns properly wrapped React elements to prevent visual rendering issues
+ * when mixing React elements with plain strings.
+ * 
+ * @param {string} text - Raw strength text that may contain markdown bold markers
+ * @returns {React.ReactNode} Formatted text with styled bold sections
  */
 function formatStrengthText(text) {
-  if (!text) return '';
+  if (!text) return null;
   
   // Clean up text: strip leading bullets, dashes, checkmarks and trailing bullets
-  let cleaned = text
+  const cleaned = text
     .replace(/^[\s•●○◦▪▸►✓✔☑→\-–—]+/, '') // Strip leading markers
     .replace(/[\s•●○◦▪]+$/, '')              // Strip trailing bullets
     .trim();
   
-  // Handle **bold** markers
+  if (!cleaned) return null;
+  
+  // Handle **bold** markers by splitting on bold patterns
   const parts = cleaned.split(/(\*\*[^*]+\*\*)/g);
   
-  return parts.map((part, i) => {
-    if (part.startsWith('**') && part.endsWith('**')) {
-      return (
-        <strong key={i} className="font-semibold text-twilight dark:text-eggshell">
-          {part.slice(2, -2)}
-        </strong>
-      );
-    }
-    // Replace arrows with styled version
-    return part.replace(/→/g, ' → ');
-  });
+  // Filter out empty parts and map to React elements
+  const elements = parts
+    .filter(part => part.length > 0)
+    .map((part, i) => {
+      if (part.startsWith('**') && part.endsWith('**')) {
+        // Render bold text with proper styling
+        return (
+          <strong key={i} className="font-semibold text-twilight dark:text-eggshell">
+            {part.slice(2, -2)}
+          </strong>
+        );
+      }
+      // For regular text, replace arrows with properly spaced version
+      // Wrap in span to ensure consistent rendering
+      const formattedText = part.replace(/→/g, ' → ');
+      return <span key={i}>{formattedText}</span>;
+    });
+  
+  // Return wrapped elements to ensure proper React rendering
+  return <>{elements}</>;
 }
 
 export default StrengthsCard;

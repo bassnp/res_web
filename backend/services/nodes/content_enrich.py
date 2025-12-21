@@ -149,19 +149,40 @@ async def content_enrich_node(
     step = state.get("step_count", 0)
     top_sources = state.get("top_sources") or []
     
+    # ALWAYS emit phase start event for frontend visibility
+    if callback and hasattr(callback, 'on_phase'):
+        source_count = len(top_sources)
+        message = (
+            f"Enriching top {source_count} sources..." 
+            if source_count > 0 
+            else "Checking for sources to enrich..."
+        )
+        await callback.on_phase(PHASE_NAME, message)
+    
+    # Handle case when no sources are available to enrich
     if not top_sources:
         logger.warning("[CONTENT_ENRICH] No top sources found to enrich")
+        
+        # Emit phase complete with skip reason for frontend transparency
+        if callback and hasattr(callback, 'on_phase_complete'):
+            await callback.on_phase_complete(
+                PHASE_NAME,
+                "Skipped: No sources available for enrichment",
+                data={
+                    "enriched_count": 0,
+                    "total_count": 0,
+                    "total_kb": 0,
+                    "sources": [],
+                    "success_rate": "N/A",
+                    "skipped": True,
+                    "skip_reason": "No top sources from research reranker",
+                }
+            )
+        
         return {
             "current_phase": "skeptical_comparison",
             "step_count": step,
         }
-
-    # Emit phase start event
-    if callback and hasattr(callback, 'on_phase'):
-        await callback.on_phase(
-            PHASE_NAME,
-            f"Enriching top {len(top_sources)} sources..."
-        )
     
     step += 1
     if callback:

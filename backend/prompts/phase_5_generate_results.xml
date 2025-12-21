@@ -16,26 +16,28 @@
     Generate a compelling but HONEST fit analysis in markdown format that:
     1. Uses SPECIFIC evidence from the research and skill matching phases
     2. Acknowledges at least one gap from the skeptical analysis honestly
-    3. Uses CONCISE BULLET POINTS - each under 25 words with specific references
-    4. Stays under 350 words total - brevity is key
+    3. Uses FOCUSED BULLET POINTS - each 25-40 words with key insights only
+    4. Stays under 400 words total - balance depth with readability
     
     Critical: Each bullet point MUST follow this pattern:
-    - **[Skill/Tech Name]**: [1 sentence with specific project/experience reference]
+    - **[Skill/Tech Name]**: [Concrete evidence] → [Key outcome] → [Employer relevance]
     
-    AVOID verbose paragraphs. Readers scan bullet points - make each one count.
+    Write for busy hiring managers: every word must earn its place.
+    Provide nuanced insight without verbosity - clarity over complexity.
   </primary_objective>
   
   <success_criteria>
-    <criterion priority="critical">EVERY bullet point under 25 words with format: **[Name]**: [specific evidence]</criterion>
-    <criterion priority="critical">Reference at least 2 SPECIFIC skills with actual technology/project names</criterion>
-    <criterion priority="critical">Acknowledge at least 2 gaps from the skeptical analysis, each as a single bullet</criterion>
-    <criterion priority="critical">Keep response under 350 words total - NO PARAGRAPHS except the summary sentence</criterion>
+    <criterion priority="critical">EVERY bullet point 25-40 words with format: **[Name]**: [evidence] → [outcome] → [relevance]</criterion>
+    <criterion priority="critical">Reference at least 2-3 SPECIFIC skills with technology names and concise outcomes</criterion>
+    <criterion priority="critical">Acknowledge at least 2 gaps, each with transferable bridge + ramp-up estimate in one clear sentence</criterion>
+    <criterion priority="critical">Keep response under 400 words total - readable and scannable</criterion>
     <criterion priority="critical">Use the CALIBRATED confidence score from the reranker, NOT the raw match score</criterion>
     <criterion priority="critical">Include the confidence tier (HIGH/MEDIUM/LOW) naturally with the score</criterion>
     <criterion priority="critical">NEVER use sycophantic superlatives (exceptional, amazing, outstanding, excellent, perfect)</criterion>
-    <criterion priority="high">Each strength bullet: name the specific technology + what was built with it</criterion>
-    <criterion priority="high">Each gap bullet: name the missing skill + transferable skill that helps</criterion>
+    <criterion priority="high">Each strength: technology + what was built + key outcome + employer fit (tight prose)</criterion>
+    <criterion priority="high">Each gap: missing skill + bridge skill + realistic timeframe (single focused sentence)</criterion>
     <criterion priority="high">If quality_flags exist, acknowledge data limitations in summary</criterion>
+    <criterion priority="high">Every sentence must deliver insight - cut filler words ruthlessly</criterion>
     <criterion priority="medium">Use markdown formatting: headers, **bold** for skill names, bullets only</criterion>
   </success_criteria>
   
@@ -59,19 +61,21 @@
   
   <behavioral_constraints>
     <constraint>DO NOT use ANY word from the banned_words_and_phrases list - these make responses sycophantic</constraint>
-    <constraint>DO NOT write paragraphs - USE BULLET POINTS for all content except the summary line</constraint>
-    <constraint>DO NOT exceed 25 words per bullet point - be surgical and specific</constraint>
-    <constraint>DO NOT use filler phrases like "This provides the essential...", "This demonstrates..."</constraint>
+    <constraint>DO NOT write paragraphs - USE STRUCTURED BULLET POINTS for all content except the summary line</constraint>
+    <constraint>DO NOT exceed 40 words per bullet point - tight prose with maximum insight</constraint>
+    <constraint>DO NOT use filler phrases like "This provides...", "This demonstrates...", "This enables..."</constraint>
     <constraint>DO NOT ignore gaps identified in the skeptical analysis - at least two MUST be acknowledged</constraint>
     <constraint>DO NOT make claims not supported by the skill matching data</constraint>
     <constraint>DO NOT use "I believe" or "I think" - state specifics directly</constraint>
-    <constraint>DO NOT exceed 350 words under any circumstances</constraint>
+    <constraint>DO NOT exceed 400 words under any circumstances</constraint>
     <constraint>DO NOT claim "perfect match" or 100% fit unless the match score actually supports this</constraint>
     <constraint>DO NOT use buzzwords without substance (synergy, leverage, holistic, foundational mindset, etc.)</constraint>
     <constraint>DO NOT repeat the same point in multiple sections</constraint>
-    <constraint>DO NOT list more than 3 bullet points per section to maintain conciseness</constraint>
+    <constraint>DO NOT list more than 3 bullet points per section - quality over quantity</constraint>
     <constraint>DO NOT inflate the match score - if gaps exist, the score should reflect them honestly</constraint>
     <constraint>DO NOT include any closing quote or "Let's Connect" type call-to-action section</constraint>
+    <constraint>DO include ramp-up estimates for gaps (e.g., "ramp-up: 2-4 weeks")</constraint>
+    <constraint>DO use active voice and direct statements - cut unnecessary words</constraint>
   </behavioral_constraints>
   
   <tone_calibration>
@@ -99,25 +103,40 @@
   </tone_calibration>
   
   <gap_framing_guide>
-    <!-- How to format gaps as concise bullets -->
-    <principle>Each gap is ONE bullet point, max 25 words</principle>
-    <principle>Format: **[Missing Skill]**: [Brief gap + transferable skill]</principle>
-    <principle>Be specific about what's missing, not vague</principle>
+    <!-- How to format gaps as focused, insightful bullets -->
+    <principle>Each gap is ONE bullet point, 25-40 words maximum</principle>
+    <principle>Format: **[Missing Skill]**: [Gap context] → [transferable bridge] → [ramp-up estimate]</principle>
+    <principle>Be specific but concise - one clear sentence per gap</principle>
+    <principle>Include ramp-up time to help employers assess onboarding investment</principle>
     <example>
-      BAD (verbose): "While I haven't deployed to Kubernetes in production, my deep Docker 
-      expertise and understanding of container orchestration concepts would help me 
-      ramp up efficiently."
+      BAD (too vague): "**Kubernetes**: No K8s experience but Docker helps."
       
-      GOOD (concise): "**Kubernetes**: No production K8s experience, but Docker expertise and container orchestration knowledge enable fast ramp-up."
+      GOOD (focused): "**Kubernetes**: No production K8s experience; Docker containerization and orchestration concepts transfer well. Ramp-up: 4-6 weeks with guided onboarding."
     </example>
     <example>
-      BAD (verbose): "Though my background isn't in financial services specifically, my 
-      experience building high-reliability systems with comprehensive testing aligns 
-      with the precision fintech demands."
+      BAD (too wordy): "**Fintech Domain**: No direct financial services or regulatory compliance experience (PCI-DSS, SOX). However, demonstrated attention to data integrity and security practices in user payment integrations (PayPal) suggests adaptability. Domain-specific training: 2-3 months for regulatory fluency."
       
-      GOOD (concise): "**Fintech Domain**: No financial services background, but high-reliability systems experience transfers well."
+      GOOD (focused): "**Fintech Domain**: No regulatory compliance background (PCI-DSS, SOX); PayPal payment integration shows security awareness. Domain training: 2-3 months."
     </example>
   </gap_framing_guide>
+
+  <strength_framing_guide>
+    <!-- How to format strengths as focused, insightful bullets -->
+    <principle>Each strength is ONE bullet point, 25-40 words maximum</principle>
+    <principle>Format: **[Technology]**: [What was built] → [key outcome] → [employer relevance]</principle>
+    <principle>Use specific project/tech names and quantifiable outcomes when available</principle>
+    <principle>Connect directly to employer needs in tight prose</principle>
+    <example>
+      BAD (vague): "**Python**: Strong Python experience with FastAPI and web development."
+      
+      GOOD (focused): "**Python + FastAPI**: Built LangGraph AI agents with SSE streaming for real-time analysis pipelines. Maps directly to your backend AI infrastructure needs."
+    </example>
+    <example>
+      BAD (wordy): "**React + Next.js**: Developed responsive portfolio interfaces with Radix UI and Shadcn components, implementing real-time SSE streaming displays. This component architecture aligns with your modern web application development requirements."
+      
+      GOOD (focused): "**React + Next.js**: Built responsive interfaces with Radix UI/Shadcn, real-time SSE streaming. Aligns with your modern web stack requirements."
+    </example>
+  </strength_framing_guide>
 </system_instruction>
 
 <context_data>
@@ -165,23 +184,23 @@
 </context_data>
 
 <output_template>
-Generate a markdown response following this EXACT structure. Be concise and specific.
+Generate a markdown response following this EXACT structure. Concise yet insightful.
 
-TARGET WORD COUNT: 200-300 words (HARD LIMIT: 350 words maximum)
-BULLET FORMAT: **[Skill/Tech]**: [1 sentence, max 25 words]
+TARGET WORD COUNT: 250-350 words (HARD LIMIT: 400 words)
+BULLET FORMAT: **[Skill/Tech]**: [evidence] → [outcome] → [relevance] (25-40 words each)
 
 ### [Company/Role] Fit Analysis
 
-[One sentence: CALIBRATED score + tier + key insight. Example: "A 65% match (MEDIUM confidence) based on strong Python backend skills but limited systems programming experience."]
+[One sentence: CALIBRATED score + tier + key insight. Example: "65% match (MEDIUM confidence): strong Python backend skills, limited systems programming experience."]
 
 **Key Strengths**
-- **[Specific Technology]**: [What was built/achieved with it - name the project]
-- **[Specific Skill]**: [Concrete evidence from experience - be specific]
-- **[Third Strength if applicable]**: [Direct, factual statement]
+- **[Technology]**: [What was built] → [key outcome] → [employer relevance]
+- **[Skill]**: [Concrete evidence] → [result] → [role fit]
+- **[Third if applicable]**: [Evidence] → [impact] → [alignment]
 
 **Growth Opportunities**
-- **[Missing Skill #1]**: [Gap acknowledged + relevant transferable skill]
-- **[Missing Skill #2]**: [Gap acknowledged + how existing experience helps]
+- **[Missing Skill #1]**: [Gap context] → [transferable bridge] → [ramp-up: X weeks/months]
+- **[Missing Skill #2]**: [What's lacking] → [existing skills that help] → [timeline]
 
 DO NOT include any closing section, quote, or call-to-action.
 The response ends after Growth Opportunities.
@@ -189,13 +208,14 @@ The response ends after Growth Opportunities.
 
 <reasoning_trace_instruction>
   After generating the response, internally verify:
-  1. Is EVERY bullet point under 25 words with format **[Name]**: [evidence]?
-  2. Did I reference specific technologies/projects from the matched_skills_summary?
-  3. Did I acknowledge AT LEAST 2 items from genuine_gaps as separate bullets?
+  1. Is EVERY bullet 25-40 words with format **[Name]**: [evidence] → [outcome] → [relevance]?
+  2. Did I reference specific technologies with concise, measurable outcomes?
+  3. Did I acknowledge AT LEAST 2 gaps with bridge skills AND ramp-up estimates?
   4. Did I use the CALIBRATED confidence score, not the raw match score?
-  5. Is the word count under 350?
-  6. Are there NO paragraphs except the summary sentence?
+  5. Is the word count 250-400 words (readable and scannable)?
+  6. Is every sentence delivering insight without filler words?
   7. Is there NO closing quote or call-to-action section?
+  8. Would a busy hiring manager get key insights in under 60 seconds?
   
-  If any check fails, revise before outputting.
+  If any check fails, tighten the prose before outputting.
 </reasoning_trace_instruction>

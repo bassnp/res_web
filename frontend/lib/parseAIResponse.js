@@ -86,6 +86,21 @@ export function parseAIResponse(rawResponse) {
       continue;
     }
 
+    // Detect ## section headers (markdown H2)
+    // Matches: ## Key Strengths, ## Growth Opportunities, ## Areas to Address, etc.
+    const h2SectionMatch = line.match(/^##\s+(.+)$/i);
+    if (h2SectionMatch) {
+      // Save previous section content
+      saveCurrentSection(result, currentSection, currentContent);
+      
+      // Start new section
+      const sectionName = h2SectionMatch[1].toLowerCase();
+      currentSection = detectSectionType(sectionName);
+      currentContent = [];
+      foundFirstSection = true;
+      continue;
+    }
+
     // Detect section headers - multiple formats:
     // 1. **Header:** or **Header** (just bold, possibly with colon)
     // 2. Plain text headers like "Key Strengths" or "Growth Opportunities"
@@ -161,11 +176,27 @@ export function parseAIResponse(rawResponse) {
 }
 
 /**
- * Detect section type from header text
+ * Detect section type from header text.
+ * 
+ * Maps various section header names to their semantic type for parsing.
+ * Supports multiple naming conventions from different prompt versions.
+ * 
+ * @param {string} sectionName - Lowercase header text
+ * @returns {'strengths'|'growthAreas'|'valueProposition'} Section type
  */
 function detectSectionType(sectionName) {
-  const strengthKeywords = ['key alignment', 'alignment', 'strength', 'bring', 'value', 'skill', 'match', 'fit'];
-  const growthKeywords = ['growth', 'area', 'develop', 'opportunity', 'learn', 'improve', 'curve'];
+  // Keywords indicating strengths section
+  const strengthKeywords = [
+    'key alignment', 'alignment', 'strength', 'bring', 'value', 
+    'skill', 'match', 'fit', 'key strengths', 'what i bring'
+  ];
+  
+  // Keywords indicating growth areas section (expanded to include 'address')
+  const growthKeywords = [
+    'growth', 'area', 'develop', 'opportunity', 'learn', 'improve', 
+    'curve', 'address', 'gap', 'learning', 'areas to address',
+    'growth opportunities', 'growth areas'
+  ];
 
   if (strengthKeywords.some(kw => sectionName.includes(kw))) {
     return 'strengths';

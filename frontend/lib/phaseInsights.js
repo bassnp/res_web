@@ -154,22 +154,42 @@ function extractRerankerInsights(summary) {
 
 /**
  * Extract content enrichment insights
- * Example: "Extracted 3 pages, 45.2 KB content"
+ * Example: "Enriched 3/5 sources with full content (45.2 KB)"
+ * Also handles: "Skipped: No sources available for enrichment"
  */
 function extractContentEnrichInsights(summary) {
   const insights = {
     type: 'enrichment',
-    pagesExtracted: 0,
+    enrichedCount: 0,
+    totalCount: 0,
     contentSize: null,
     topSources: [],
+    skipped: false,
+    skipReason: null,
   };
   
-  // Parse "Extracted X pages, Y KB content" or "Enriched X/Y sources"
-  const pagesMatch = summary.match(/(\d+)\s*page/i) || summary.match(/Enriched (\d+)/i);
-  const sizeMatch = summary.match(/(\d+(?:\.\d+)?)\s*(?:KB|MB)/i);
+  // Handle skipped case
+  if (summary.toLowerCase().includes('skipped')) {
+    insights.skipped = true;
+    const reasonMatch = summary.match(/Skipped:\s*(.+)/i);
+    if (reasonMatch) {
+      insights.skipReason = reasonMatch[1].trim();
+    }
+    return insights;
+  }
   
-  if (pagesMatch) insights.pagesExtracted = parseInt(pagesMatch[1], 10);
-  if (sizeMatch) insights.contentSize = sizeMatch[0];
+  // Parse "Enriched X/Y sources" format from backend
+  const enrichedMatch = summary.match(/Enriched\s+(\d+)\s*\/\s*(\d+)/i);
+  if (enrichedMatch) {
+    insights.enrichedCount = parseInt(enrichedMatch[1], 10);
+    insights.totalCount = parseInt(enrichedMatch[2], 10);
+  }
+  
+  // Parse content size (e.g., "45.2 KB" or "1.5 MB")
+  const sizeMatch = summary.match(/\((\d+(?:\.\d+)?)\s*(?:KB|MB)\)/i);
+  if (sizeMatch) {
+    insights.contentSize = sizeMatch[0].replace(/[()]/g, '');
+  }
   
   return insights;
 }
@@ -451,10 +471,20 @@ export function getPhaseDisplayMeta(phase, insights) {
       break;
       
     case 'enrichment':
-      meta.metrics = [
-        { label: 'Enriched', value: `${insights.enrichedCount}/${insights.totalCount}`, icon: 'database' },
-      ];
-      meta.summary = `Extracted full content for ${insights.enrichedCount} sources`;
+      // Handle skipped enrichment case
+      if (insights.skipped) {
+        meta.metrics = [
+          { label: 'Status', value: 'Skipped', icon: 'skip' },
+        ];
+        meta.summary = insights.skipReason || 'No sources to enrich';
+      } else {
+        meta.metrics = [
+          { label: 'Enriched', value: `${insights.enrichedCount}/${insights.totalCount}`, icon: 'database' },
+        ];
+        meta.summary = insights.enrichedCount > 0
+          ? `Extracted full content for ${insights.enrichedCount} sources`
+          : 'No sources enriched';
+      }
       break;
       
     case 'gap_analysis':

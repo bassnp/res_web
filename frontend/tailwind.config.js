@@ -47,6 +47,9 @@ module.exports = {
       // Chain of Thought - thought type icons (reasoning, observation, tool_call)
       'bg-purple-500', 'text-purple-500', 'text-purple-400', 'dark:text-purple-400',
       'dark:bg-slate-600', 'dark:text-eggshell',
+      // Generate Results phase (burnt-peach is a custom single-value color, not a scale)
+      'bg-burnt-peach/10', 'ring-burnt-peach/30', 'from-burnt-peach/10', 'from-burnt-peach/5',
+      'border-burnt-peach/50',
     ],
     prefix: "",
     theme: {

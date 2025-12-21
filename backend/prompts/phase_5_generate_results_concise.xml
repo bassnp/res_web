@@ -1,24 +1,45 @@
-<!-- Phase 5: GENERATE_RESULTS - Ultra Speed -->
+<!-- Phase 5: GENERATE_RESULTS - Reasoning Model (Concise Insight) -->
 
-<task>Generate fit analysis in markdown. Concise bullets only. Under 300 words.</task>
+<task>Generate fit analysis in markdown. Focused bullets with key insights. 250-350 words.</task>
 
 <format>
-## Fit Summary
-[1 sentence: score% (TIER) + any data caveats]
+### [Company/Role] Fit Analysis
 
-## Key Strengths
-- **[Tech]**: evidence, max 20 words
-- **[Tech]**: evidence, max 20 words
+[1 sentence: score% (TIER) + key insight]
 
-## Areas to Address  
-- **[Gap]**: gap + bridge, max 20 words
-- **[Gap]**: gap + bridge, max 20 words
+**Key Strengths**
+- **[Tech]**: [what built] → [outcome] → [employer fit], 25-35 words
+- **[Tech]**: [evidence] → [result] → [relevance], 25-35 words
+- **[Tech]**: [project] → [impact] → [alignment], 25-35 words
 
-## Bottom Line
-[1-2 sentences honest summary]
+**Growth Opportunities**
+- **[Gap]**: [context] → [bridge skill] → [ramp-up: X weeks], 25-35 words
+- **[Gap]**: [what's missing] → [how skills help] → [timeline], 25-35 words
 </format>
 
-<banned>exceptional, amazing, perfect match, ideal candidate, passionate</banned>
+<bullet_rules>
+STRENGTHS: **[Skill]**: [What built] → [Key outcome] → [Employer relevance]
+GAPS: **[Missing Skill]**: [Gap] → [Bridge] → [Ramp-up estimate]
+Each bullet 25-35 words. Max 3 strengths, 2-3 gaps. Every word must deliver insight.
+</bullet_rules>
+
+<examples>
+GOOD_STRENGTH: "**Python + LangGraph**: Built AI agent pipelines with SSE streaming for real-time analysis. Maps directly to your multi-agent infrastructure needs."
+
+GOOD_GAP: "**Kubernetes**: No production K8s experience; Docker containerization transfers well. Ramp-up: 4-6 weeks with guided onboarding."
+
+BAD_STRENGTH: "**Python**: Strong Python experience with web development." (vague, no outcome)
+BAD_GAP: "**Kubernetes**: No K8s experience but Docker helps." (no ramp-up estimate)
+</examples>
+
+<banned>exceptional, amazing, perfect match, ideal candidate, passionate, excellent fit</banned>
+
+<style>
+- Active voice, direct statements
+- Cut filler: avoid "This provides...", "This enables...", "This demonstrates..."
+- Arrow notation (\u2192) for flow: evidence \u2192 outcome \u2192 relevance
+- Every word earns its place - readable in under 60 seconds
+</style>
 
 <data>
 <score>{calibrated_score}</score>
@@ -37,3 +58,11 @@
 <transferable>{transferable_skills}</transferable>
 <risk>{risk_assessment}</risk>
 </data>
+
+<verify>
+1. Each bullet 25-35 words with evidence \u2192 outcome \u2192 relevance?
+2. Each gap includes ramp-up timeframe estimate?
+3. 250-350 words total, scannable in 60 seconds?
+4. Calibrated score used, not raw?
+5. No filler words - every sentence delivers insight?
+</verify>

@@ -1029,13 +1029,16 @@ async def research_reranker_node(
             # INCREMENT search_attempt to prevent infinite loop
             search_attempt += 1
         elif action in ["CONTINUE", "CONTINUE_WITH_FLAGS"]:
-            # Proceed to enrichment even if not fully sufficient if we've exhausted retries
-            next_phase = "content_enrich" if top_sources else "skeptical_comparison"
+            # Proceed to content_enrich even without top_sources for frontend visibility.
+            # The content_enrich node will handle the empty case gracefully and emit
+            # appropriate phase events so users can see the pipeline step.
+            next_phase = "content_enrich"
             low_data_flag = True
             early_exit = False
         else:
-            # INSUFFICIENT or exhausted retries - continue but flagged
-            next_phase = "skeptical_comparison"
+            # INSUFFICIENT or exhausted retries - still visit content_enrich for 
+            # frontend transparency (it will skip gracefully and proceed)
+            next_phase = "content_enrich"
             low_data_flag = True
             early_exit = False
         
