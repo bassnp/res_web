@@ -17,10 +17,10 @@ const CAROUSEL_SLIDE_DURATION = 400; // ms for slide animation
  * Features smooth slide transitions and navigation controls.
  * 
  * @param {Object} props
- * @param {string} props.projectId - Unique project identifier for manifest lookup
+ * @param {string} props.imagesFolder - Folder name in /resources/project_images/ containing project images
  * @param {string[]} props.fallbackImages - Fallback images if manifest fails to load
  */
-const ProjectImageCarousel = ({ projectId, fallbackImages = [] }) => {
+const ProjectImageCarousel = ({ imagesFolder, fallbackImages = [] }) => {
   const [images, setImages] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [previousIndex, setPreviousIndex] = useState(null);
@@ -34,8 +34,20 @@ const ProjectImageCarousel = ({ projectId, fallbackImages = [] }) => {
    */
   useEffect(() => {
     const loadImages = async () => {
+      // Skip fetch if no folder specified
+      if (!imagesFolder) {
+        if (fallbackImages.length > 0) {
+          setImages(fallbackImages);
+        }
+        setIsLoading(false);
+        return;
+      }
+
       try {
-        const response = await fetch(`/resources/project_images/${projectId}/manifest.json`);
+        const response = await fetch(`/resources/project_images/${imagesFolder}/manifest.json`);
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status}`);
+        }
         const data = await response.json();
         if (data.images && data.images.length > 0) {
           setImages(data.images);
@@ -43,7 +55,7 @@ const ProjectImageCarousel = ({ projectId, fallbackImages = [] }) => {
           setImages(fallbackImages);
         }
       } catch (error) {
-        console.warn(`Failed to load manifest for ${projectId}, using fallback`);
+        console.warn(`Failed to load manifest for ${imagesFolder}:`, error.message);
         if (fallbackImages.length > 0) {
           setImages(fallbackImages);
         }
@@ -53,7 +65,7 @@ const ProjectImageCarousel = ({ projectId, fallbackImages = [] }) => {
     };
 
     loadImages();
-  }, [projectId, fallbackImages]);
+  }, [imagesFolder, fallbackImages]);
 
   /**
    * Navigate to a specific slide with direction-aware animation.
@@ -126,14 +138,14 @@ const ProjectImageCarousel = ({ projectId, fallbackImages = [] }) => {
   }
 
   return (
-    <div className="relative w-full aspect-[16/9] bg-twilight/5 dark:bg-eggshell/5 rounded-sm overflow-hidden group">
+    <div className="relative w-full aspect-[16/9] bg-twilight/10 dark:bg-eggshell/10 rounded-sm overflow-hidden group">
       {/* Previous image - slides out */}
       {previousIndex !== null && (
         <img
           src={images[previousIndex]}
           alt={`Project image ${previousIndex + 1}`}
           className={cn(
-            "absolute inset-0 w-full h-full object-cover",
+            "absolute inset-0 w-full h-full object-contain",
             slideDirection === 'right' ? 'animate-carousel-slide-out-left' : 'animate-carousel-slide-out-right'
           )}
           style={{ animationDuration: `${CAROUSEL_SLIDE_DURATION}ms` }}
@@ -145,7 +157,7 @@ const ProjectImageCarousel = ({ projectId, fallbackImages = [] }) => {
         src={images[currentIndex]}
         alt={`Project image ${currentIndex + 1}`}
         className={cn(
-          "absolute inset-0 w-full h-full object-cover",
+          "absolute inset-0 w-full h-full object-contain",
           isSliding && previousIndex !== null && (
             slideDirection === 'right' ? 'animate-carousel-slide-in-right' : 'animate-carousel-slide-in-left'
           )
@@ -162,11 +174,11 @@ const ProjectImageCarousel = ({ projectId, fallbackImages = [] }) => {
             className={cn(
               "absolute left-2 top-1/2 -translate-y-1/2 z-10",
               "w-10 h-10 rounded-full",
-              "bg-twilight/60 dark:bg-eggshell/20 backdrop-blur-sm",
+              "bg-muted-teal/90 dark:bg-muted-teal/80 backdrop-blur-sm",
               "flex items-center justify-center",
               "opacity-0 group-hover:opacity-100 transition-opacity duration-300",
-              "hover:bg-burnt-peach/80 hover:scale-110 transition-all",
-              "focus:outline-none focus:ring-2 focus:ring-burnt-peach"
+              "hover:bg-muted-teal hover:scale-110 transition-all",
+              "focus:outline-none focus:ring-2 focus:ring-muted-teal"
             )}
             aria-label="Previous image"
           >
@@ -179,11 +191,11 @@ const ProjectImageCarousel = ({ projectId, fallbackImages = [] }) => {
             className={cn(
               "absolute right-2 top-1/2 -translate-y-1/2 z-10",
               "w-10 h-10 rounded-full",
-              "bg-twilight/60 dark:bg-eggshell/20 backdrop-blur-sm",
+              "bg-muted-teal/90 dark:bg-muted-teal/80 backdrop-blur-sm",
               "flex items-center justify-center",
               "opacity-0 group-hover:opacity-100 transition-opacity duration-300",
-              "hover:bg-burnt-peach/80 hover:scale-110 transition-all",
-              "focus:outline-none focus:ring-2 focus:ring-burnt-peach"
+              "hover:bg-muted-teal hover:scale-110 transition-all",
+              "focus:outline-none focus:ring-2 focus:ring-muted-teal"
             )}
             aria-label="Next image"
           >
@@ -327,7 +339,7 @@ export function ProjectModal({
         {/* Image Carousel Section */}
         <div className="px-6 pt-6">
           <ProjectImageCarousel 
-            projectId={project.id} 
+            imagesFolder={project.images_folder || project.imagesFolder} 
             fallbackImages={project.images || []}
           />
         </div>

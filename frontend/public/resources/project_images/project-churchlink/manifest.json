@@ -1,6 +1,12 @@
 {
-  "generated": "2025-12-17T23:13:58.833Z",
-  "projectId": "project-alpha",
-  "count": 0,
-  "images": []
+  "generated": "2025-12-21T00:11:53.786Z",
+  "projectId": "project-churchlink",
+  "count": 5,
+  "images": [
+    "/resources/project_images/project-churchlink/1.png",
+    "/resources/project_images/project-churchlink/2.png",
+    "/resources/project_images/project-churchlink/3.png",
+    "/resources/project_images/project-churchlink/5.jpg",
+    "/resources/project_images/project-churchlink/6.jpg"
+  ]
 }

@@ -1,8 +1,8 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { useTheme } from 'next-themes';
-import { Briefcase, Mail, Github, ChevronDown, ExternalLink, Sun, Moon, Code, FileText, Camera, Eye, Clock, Menu, X, Brain } from 'lucide-react';
+import { Briefcase, Mail, Github, ChevronDown, ChevronLeft, ChevronRight, ExternalLink, Sun, Moon, Code, FileText, Camera, Eye, Clock, Menu, X, Brain } from 'lucide-react';
 import { useHeaderVisibility } from '@/hooks/use-header-visibility';
 import { InfoDialog, InfoButton } from '@/components/fit-check/InfoDialog';
 import { ProjectModal, ReadSummaryButton } from '@/components/ProjectModal';
@@ -50,6 +50,8 @@ const ImageCarousel = ({ interval = 4000 }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [previousIndex, setPreviousIndex] = useState(null);
   const [isSliding, setIsSliding] = useState(false);
+  const [slideDirection, setSlideDirection] = useState('right'); // 'left' or 'right'
+  const timerRef = useRef(null);
 
   /**
    * Fetch image list from manifest on mount.
@@ -70,29 +72,17 @@ const ImageCarousel = ({ interval = 4000 }) => {
   }, []);
 
   /**
-   * Trigger slide transition to a specific index.
-   * New image slides in from right, current slides out to left.
+   * Start or restart the auto-advance timer.
+   * Called on mount and after any user interaction to reset the countdown.
+   * Auto-advance always goes forward (right direction).
    */
-  const slideToIndex = (newIndex) => {
-    if (isSliding || newIndex === currentIndex) return;
+  const startTimer = useCallback(() => {
+    if (timerRef.current) {
+      clearInterval(timerRef.current);
+    }
     
-    setPreviousIndex(currentIndex);
-    setCurrentIndex(newIndex);
-    setIsSliding(true);
-    
-    setTimeout(() => {
-      setIsSliding(false);
-      setPreviousIndex(null);
-    }, HERO_SLIDE_DURATION);
-  };
-
-  /**
-   * Auto-advance to next image with slide transition.
-   */
-  useEffect(() => {
-    if (images.length <= 1) return;
-    
-    const timer = setInterval(() => {
+    timerRef.current = setInterval(() => {
+      setSlideDirection('right');
       setCurrentIndex(prev => {
         const next = (prev + 1) % images.length;
         setPreviousIndex(prev);
@@ -104,41 +94,122 @@ const ImageCarousel = ({ interval = 4000 }) => {
         return next;
       });
     }, interval);
-
-    return () => clearInterval(timer);
   }, [images.length, interval]);
 
+  /**
+   * Trigger slide transition to a specific index with direction awareness.
+   * Resets the auto-advance timer to prevent immediate jump after interaction.
+   * 
+   * @param {number} newIndex - Target image index
+   * @param {string} direction - Animation direction: 'left' or 'right'
+   */
+  const slideToIndex = useCallback((newIndex, direction = 'right') => {
+    if (isSliding || newIndex === currentIndex) return;
+    
+    setSlideDirection(direction);
+    setPreviousIndex(currentIndex);
+    setCurrentIndex(newIndex);
+    setIsSliding(true);
+    
+    setTimeout(() => {
+      setIsSliding(false);
+      setPreviousIndex(null);
+    }, HERO_SLIDE_DURATION);
+    
+    // Reset timer after user interaction
+    startTimer();
+  }, [isSliding, currentIndex, startTimer]);
+
+  /**
+   * Navigate to previous image (slides from left).
+   * Timer is reset via slideToIndex.
+   */
+  const goToPrevious = useCallback(() => {
+    const prevIndex = currentIndex === 0 ? images.length - 1 : currentIndex - 1;
+    slideToIndex(prevIndex, 'left');
+  }, [currentIndex, images.length, slideToIndex]);
+
+  /**
+   * Navigate to next image (slides from right).
+   * Timer is reset via slideToIndex.
+   */
+  const goToNext = useCallback(() => {
+    const nextIndex = (currentIndex + 1) % images.length;
+    slideToIndex(nextIndex, 'right');
+  }, [currentIndex, images.length, slideToIndex]);
+
+  /**
+   * Initialize auto-advance timer on mount and when images change.
+   * Cleanup on unmount.
+   */
+  useEffect(() => {
+    if (images.length <= 1) return;
+    
+    startTimer();
+    
+    return () => {
+      if (timerRef.current) {
+        clearInterval(timerRef.current);
+      }
+    };
+  }, [images.length, startTimer]);
+
   return (
-    <div className="relative w-full h-full overflow-hidden rounded-[5px]">
-      {/* Previous image - slides out to the left */}
+    <div className="relative w-full h-full overflow-hidden rounded-[5px] group">
+      {/* Previous image - slides out based on direction */}
       {previousIndex !== null && (
         <img
           src={images[previousIndex]}
           alt={`Personal photo ${previousIndex + 1}`}
-          className="absolute inset-0 w-full h-full object-cover animate-slide-out-left"
+          className={`absolute inset-0 w-full h-full object-cover ${
+            slideDirection === 'right' ? 'animate-slide-out-left' : 'animate-slide-out-right'
+          }`}
           style={{
             animationDuration: `${HERO_SLIDE_DURATION}ms`,
           }}
         />
       )}
-      {/* Current image - slides in from the right (or static if not sliding) */}
+      {/* Current image - slides in based on direction */}
       <img
         src={images[currentIndex]}
         alt={`Personal photo ${currentIndex + 1}`}
         className={`absolute inset-0 w-full h-full object-cover ${
-          isSliding && previousIndex !== null ? 'animate-slide-in-right' : ''
+          isSliding && previousIndex !== null 
+            ? (slideDirection === 'right' ? 'animate-slide-in-right' : 'animate-slide-in-left')
+            : ''
         }`}
         style={{
           animationDuration: `${HERO_SLIDE_DURATION}ms`,
         }}
       />
+      {/* Navigation arrows - only show if more than 1 image */}
+      {images.length > 1 && (
+        <>
+          {/* Left arrow */}
+          <button
+            onClick={goToPrevious}
+            className="absolute left-2 top-1/2 -translate-y-1/2 z-10 w-8 h-8 rounded-full bg-muted-teal/90 dark:bg-muted-teal/80 backdrop-blur-sm flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 hover:bg-muted-teal hover:scale-110"
+            aria-label="Previous image"
+          >
+            <ChevronLeft className="w-5 h-5 text-eggshell" />
+          </button>
+          {/* Right arrow */}
+          <button
+            onClick={goToNext}
+            className="absolute right-2 top-1/2 -translate-y-1/2 z-10 w-8 h-8 rounded-full bg-muted-teal/90 dark:bg-muted-teal/80 backdrop-blur-sm flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 hover:bg-muted-teal hover:scale-110"
+            aria-label="Next image"
+          >
+            <ChevronRight className="w-5 h-5 text-eggshell" />
+          </button>
+        </>
+      )}
       {/* Image indicator dots - only show if more than 1 image */}
       {images.length > 1 && (
         <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-1.5 z-10">
           {images.map((_, idx) => (
             <button
               key={idx}
-              onClick={() => slideToIndex(idx)}
+              onClick={() => slideToIndex(idx, idx > currentIndex ? 'right' : 'left')}
               className={`w-2.5 h-2.5 rounded-full transition-all duration-300 ${
                 idx === currentIndex
                   ? 'bg-burnt-peach scale-125'
@@ -766,13 +837,13 @@ const HeroAboutSection = () => {
               </div>
 
               {/* Showcase Containers - Personal Collage and Transcript (compact layout, 3:2 ratio) */}
-              <div className="grid grid-cols-1 md:grid-cols-5 gap-3 mb-4 opacity-0 animate-fade-in delay-250 max-w-lg mx-auto">
+              <div className="grid grid-cols-1 md:grid-cols-5 gap-4 mb-4 opacity-0 animate-fade-in delay-250 w-full max-w-2xl mx-auto">
                 {/* Get to Know Me - Personal Collage Container (3 columns, landscape aspect) */}
                 <div className="col-span-1 md:col-span-3 relative bg-twilight/5 dark:bg-eggshell/5 rounded-[5px] border border-twilight/10 dark:border-eggshell/10 overflow-hidden group hover:border-muted-teal/50 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg">
-                  <div className="p-2">
-                    <div className="flex items-center gap-1.5 mb-2">
-                      <Camera className="w-3.5 h-3.5 text-muted-teal" />
-                      <h4 className="text-xs font-semibold text-twilight dark:text-eggshell">Get to know me!</h4>
+                  <div className="p-3">
+                    <div className="flex items-center gap-2 mb-3">
+                      <Camera className="w-4 h-4 text-muted-teal" />
+                      <h4 className="text-sm font-semibold text-twilight dark:text-eggshell">Get to know me!</h4>
                     </div>
                     {/* Image Carousel - wider landscape aspect ratio */}
                     <div className="relative aspect-[11/9] rounded-[3px] overflow-hidden border border-twilight/10 dark:border-eggshell/10">
@@ -788,10 +859,10 @@ const HeroAboutSection = () => {
                   rel="noopener noreferrer"
                   className="col-span-1 md:col-span-2 relative bg-twilight/5 dark:bg-eggshell/5 rounded-[5px] border border-twilight/10 dark:border-eggshell/10 overflow-hidden group hover:border-burnt-peach/50 transition-all duration-300 hover:shadow-lg hover:-translate-y-1"
                 >
-                  <div className="p-2">
-                    <div className="flex items-center gap-1.5 mb-2">
-                      <FileText className="w-3.5 h-3.5 text-burnt-peach" />
-                      <h4 className="text-xs font-semibold text-twilight dark:text-eggshell">PDF Resume</h4>
+                  <div className="p-3">
+                    <div className="flex items-center gap-2 mb-3">
+                      <FileText className="w-4 h-4 text-burnt-peach" />
+                      <h4 className="text-sm font-semibold text-twilight dark:text-eggshell">PDF Resume</h4>
                     </div>
                     {/* PDF Thumbnail Preview */}
                     <div className="relative aspect-[4/5] bg-white dark:bg-twilight/30 rounded-[3px] border border-twilight/10 dark:border-eggshell/10 overflow-hidden">
@@ -802,7 +873,7 @@ const HeroAboutSection = () => {
                       />
                       {/* Hover overlay */}
                       <div className="absolute inset-0 bg-burnt-peach/0 group-hover:bg-burnt-peach/20 transition-colors duration-300 flex items-center justify-center">
-                        <ExternalLink className="w-4 h-4 text-burnt-peach opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                        <ExternalLink className="w-5 h-5 text-burnt-peach opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                       </div>
                     </div>
                   </div>
@@ -865,6 +936,89 @@ const PROJECTS_DATA = FEATURED_PROJECTS.map(project => ({
   learningOutcomes: project.learning_outcomes, // Map to camelCase for consistency
 }));
 
+/**
+ * ProjectCardThumbnail Component
+ * 
+ * Displays the first project image from the manifest as a thumbnail on project cards.
+ * Falls back to a gradient placeholder with Code icon if no images are available.
+ * 
+ * @param {Object} props
+ * @param {string} props.imagesFolder - Folder name in /resources/project_images/ (e.g., "project-churchlink")
+ * @param {string} props.color - Gradient color classes for fallback display
+ * @param {string} props.projectTitle - Project title for accessibility
+ */
+const ProjectCardThumbnail = ({ imagesFolder, color, projectTitle }) => {
+  const [thumbnailSrc, setThumbnailSrc] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [hasError, setHasError] = useState(false);
+
+  /**
+   * Fetch the first image from the project manifest on mount.
+   */
+  useEffect(() => {
+    if (!imagesFolder) {
+      setIsLoading(false);
+      return;
+    }
+
+    const loadThumbnail = async () => {
+      try {
+        const response = await fetch(`/resources/project_images/${imagesFolder}/manifest.json`);
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        
+        const data = await response.json();
+        if (data.images && data.images.length > 0) {
+          setThumbnailSrc(data.images[0]); // Use first image as thumbnail
+        }
+      } catch (error) {
+        console.warn(`Failed to load thumbnail for ${imagesFolder}:`, error.message);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    loadThumbnail();
+  }, [imagesFolder]);
+
+  // Loading state - show gradient placeholder
+  if (isLoading) {
+    return (
+      <div className={`h-48 bg-gradient-to-br ${color} flex items-center justify-center relative overflow-hidden`}>
+        <div className="animate-pulse">
+          <Code className="w-16 h-16 text-eggshell/60" />
+        </div>
+      </div>
+    );
+  }
+
+  // Show thumbnail image if available
+  if (thumbnailSrc && !hasError) {
+    return (
+      <div className={`h-48 relative overflow-hidden bg-gradient-to-br ${color}`}>
+        {/* Background pattern for letterboxing areas */}
+        <div className="absolute inset-0 bg-twilight/10 dark:bg-eggshell/5" />
+        <img
+          src={thumbnailSrc}
+          alt={`${projectTitle} thumbnail`}
+          className="absolute inset-0 w-full h-full object-contain group-hover:scale-105 transition-transform duration-500"
+          onError={() => setHasError(true)}
+        />
+        {/* Shimmer overlay on hover */}
+        <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 shimmer" />
+      </div>
+    );
+  }
+
+  // Fallback to gradient placeholder with Code icon
+  return (
+    <div className={`h-48 bg-gradient-to-br ${color} flex items-center justify-center relative overflow-hidden`}>
+      <Code className="w-16 h-16 text-eggshell/80 group-hover:scale-125 group-hover:rotate-12 transition-all duration-500" />
+      {/* Shimmer overlay on hover */}
+      <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 shimmer" />
+    </div>
+  );
+};
+
 const ProjectsSection = () => {
   // Track which project modal is open (null = none open)
   const [openProjectId, setOpenProjectId] = useState(null);
@@ -900,12 +1054,12 @@ const ProjectsSection = () => {
                   }
                 }}
               >
-                {/* Project image placeholder with gradient */}
-                <div className={`h-48 bg-gradient-to-br ${project.color} flex items-center justify-center relative overflow-hidden`}>
-                  <Code className="w-16 h-16 text-eggshell/80 group-hover:scale-125 group-hover:rotate-12 transition-all duration-500" />
-                  {/* Shimmer overlay on hover */}
-                  <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 shimmer" />
-                </div>
+                {/* Project thumbnail image from manifest or gradient fallback */}
+                <ProjectCardThumbnail 
+                  imagesFolder={project.images_folder}
+                  color={project.color}
+                  projectTitle={project.title}
+                />
 
                 {/* Content */}
                 <div className="relative flex-1 flex flex-col">
@@ -960,8 +1114,10 @@ const TimelineShowcaseCarousel = ({ showcaseId, interval = CAROUSEL_INTERVAL, co
   const [currentIndex, setCurrentIndex] = useState(0);
   const [previousIndex, setPreviousIndex] = useState(null);
   const [isSliding, setIsSliding] = useState(false);
+  const [slideDirection, setSlideDirection] = useState('right'); // 'left' or 'right'
   const [hasImages, setHasImages] = useState(true);
   const [isInitialized, setIsInitialized] = useState(false);
+  const timerRef = useRef(null);
 
   /**
    * Fetch showcase images from manifest on mount.
@@ -983,12 +1139,41 @@ const TimelineShowcaseCarousel = ({ showcaseId, interval = CAROUSEL_INTERVAL, co
   }, [showcaseId]);
 
   /**
-   * Trigger slide transition to next image.
-   * New image slides in from right, current slides out to left.
+   * Start or restart the auto-advance timer.
+   * Called after initialization and after any user interaction.
+   * Auto-advance always goes forward (right direction).
    */
-  const slideToIndex = (newIndex) => {
+  const startTimer = useCallback(() => {
+    if (timerRef.current) {
+      clearInterval(timerRef.current);
+    }
+    
+    timerRef.current = setInterval(() => {
+      setSlideDirection('right');
+      setCurrentIndex(prev => {
+        const next = (prev + 1) % images.length;
+        setPreviousIndex(prev);
+        setIsSliding(true);
+        setTimeout(() => {
+          setIsSliding(false);
+          setPreviousIndex(null);
+        }, SLIDE_DURATION);
+        return next;
+      });
+    }, interval);
+  }, [images.length, interval]);
+
+  /**
+   * Trigger slide transition to next image with direction awareness.
+   * Resets the auto-advance timer to prevent immediate jump after interaction.
+   * 
+   * @param {number} newIndex - Target image index
+   * @param {string} direction - Animation direction: 'left' or 'right'
+   */
+  const slideToIndex = useCallback((newIndex, direction = 'right') => {
     if (isSliding || newIndex === currentIndex) return;
     
+    setSlideDirection(direction);
     setPreviousIndex(currentIndex);
     setCurrentIndex(newIndex);
     setIsSliding(true);
@@ -997,7 +1182,30 @@ const TimelineShowcaseCarousel = ({ showcaseId, interval = CAROUSEL_INTERVAL, co
       setIsSliding(false);
       setPreviousIndex(null);
     }, SLIDE_DURATION);
-  };
+    
+    // Reset timer after user interaction
+    if (isInitialized) {
+      startTimer();
+    }
+  }, [isSliding, currentIndex, isInitialized, startTimer]);
+
+  /**
+   * Navigate to previous image (slides from left).
+   * Timer is reset via slideToIndex.
+   */
+  const goToPrevious = useCallback(() => {
+    const prevIndex = currentIndex === 0 ? images.length - 1 : currentIndex - 1;
+    slideToIndex(prevIndex, 'left');
+  }, [currentIndex, images.length, slideToIndex]);
+
+  /**
+   * Navigate to next image (slides from right).
+   * Timer is reset via slideToIndex.
+   */
+  const goToNext = useCallback(() => {
+    const nextIndex = (currentIndex + 1) % images.length;
+    slideToIndex(nextIndex, 'right');
+  }, [currentIndex, images.length, slideToIndex]);
 
   /**
    * Auto-advance carousel with slide transition.
@@ -1025,23 +1233,23 @@ const TimelineShowcaseCarousel = ({ showcaseId, interval = CAROUSEL_INTERVAL, co
     
     // Trigger first transition immediately when initialized
     const nextIndex = (currentIndex + 1) % images.length;
-    slideToIndex(nextIndex);
+    setPreviousIndex(currentIndex);
+    setCurrentIndex(nextIndex);
+    setIsSliding(true);
+    setTimeout(() => {
+      setIsSliding(false);
+      setPreviousIndex(null);
+    }, SLIDE_DURATION);
     
-    const timer = setInterval(() => {
-      setCurrentIndex(prev => {
-        const next = (prev + 1) % images.length;
-        setPreviousIndex(prev);
-        setIsSliding(true);
-        setTimeout(() => {
-          setIsSliding(false);
-          setPreviousIndex(null);
-        }, SLIDE_DURATION);
-        return next;
-      });
-    }, interval);
+    // Start the auto-advance timer
+    startTimer();
 
-    return () => clearInterval(timer);
-  }, [images.length, interval, isInitialized]);
+    return () => {
+      if (timerRef.current) {
+        clearInterval(timerRef.current);
+      }
+    };
+  }, [images.length, isInitialized, startTimer]);
 
   // Placeholder when no images are available
   if (!hasImages || images.length === 0) {
@@ -1056,36 +1264,61 @@ const TimelineShowcaseCarousel = ({ showcaseId, interval = CAROUSEL_INTERVAL, co
   }
 
   return (
-    <div className="relative w-full h-full overflow-hidden rounded-[5px]">
+    <div className="relative w-full h-full overflow-hidden rounded-[5px] group">
       {/* Previous image - slides out to the left */}
       {previousIndex !== null && (
         <img
           src={images[previousIndex]}
           alt={`Showcase ${showcaseId} - ${previousIndex + 1}`}
-          className="absolute inset-0 w-full h-full object-cover animate-slide-out-left"
+          className={`absolute inset-0 w-full h-full object-cover ${
+            slideDirection === 'right' ? 'animate-slide-out-left' : 'animate-slide-out-right'
+          }`}
           style={{
             animationDuration: `${SLIDE_DURATION}ms`,
           }}
         />
       )}
-      {/* Current image - slides in from the right (or static if not sliding) */}
+      {/* Current image - slides in based on direction */}
       <img
         src={images[currentIndex]}
         alt={`Showcase ${showcaseId} - ${currentIndex + 1}`}
         className={`absolute inset-0 w-full h-full object-cover ${
-          isSliding && previousIndex !== null ? 'animate-slide-in-right' : ''
+          isSliding && previousIndex !== null 
+            ? (slideDirection === 'right' ? 'animate-slide-in-right' : 'animate-slide-in-left')
+            : ''
         }`}
         style={{
           animationDuration: `${SLIDE_DURATION}ms`,
         }}
       />
+      {/* Navigation arrows - only show if more than 1 image */}
+      {images.length > 1 && (
+        <>
+          {/* Left arrow */}
+          <button
+            onClick={goToPrevious}
+            className="absolute left-1 top-1/2 -translate-y-1/2 z-10 w-6 h-6 rounded-full bg-muted-teal/90 dark:bg-muted-teal/80 backdrop-blur-sm flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 hover:bg-muted-teal hover:scale-110"
+            aria-label="Previous image"
+          >
+            <ChevronLeft className="w-4 h-4 text-eggshell" />
+          </button>
+          {/* Right arrow */}
+          <button
+            onClick={goToNext}
+            className="absolute right-1 top-1/2 -translate-y-1/2 z-10 w-6 h-6 rounded-full bg-muted-teal/90 dark:bg-muted-teal/80 backdrop-blur-sm flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 hover:bg-muted-teal hover:scale-110"
+            aria-label="Next image"
+          >
+            <ChevronRight className="w-4 h-4 text-eggshell" />
+          </button>
+        </>
+      )}
       {/* Image indicator dots */}
       {images.length > 1 && (
         <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-1.5 z-10">
           {images.map((_, idx) => (
             <button
               key={idx}
-              onClick={() => slideToIndex(idx)}
+              onClick={() => slideToIndex(idx, idx > currentIndex ? 'right' : 'left')}
               className={`w-2.5 h-2.5 rounded-full transition-all duration-200 ${
                 idx === currentIndex
                   ? `bg-${color} scale-125`

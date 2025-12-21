@@ -1,94 +1,92 @@
-## BACKEND
-[3/5] Building Docker image...
-[+] Building 2.2s (18/27)
- => [internal] load local bake defini  0.0s 
- => => reading from stdin 565B         0.0s 
- => [internal] load build definition   0.0s 
- => => transferring dockerfile 4.87kB  0.0s 
- => [internal] load metadata for dock  1.0s 
- => [auth] library/python:pull token   0.0s 
- => [internal] load .dockerignore      0.1s 
- => => transferring context: 2.74kB    0.0s 
- => [internal] load build context      0.0s 
- => => transferring context: 13.33kB   0.0s 
- => [builder 1/6] FROM docker.io/libr  0.0s 
- => => resolve docker.io/library/pyth  0.0s 
- => CACHED [builder 2/6] WORKDIR /bui  0.0s 
- => CACHED [production  2/16] WORKDIR  0.0s 
- => CANCELED [builder 3/6] RUN apt-ge  0.6s 
- => CANCELED [production  3/16] RUN a  0.6s 
- => CACHED [builder 4/6] COPY require  0.0s 
- => CACHED [builder 5/6] RUN python -  0.0s 
- => CACHED [builder 6/6] RUN pip inst  0.0s 
- => CACHED [production  4/16] COPY --  0.0s 
- => CACHED [production  5/16] RUN gro  0.0s 
- => ERROR [production  6/16] COPY --c  0.0s 
- => ERROR [production  7/16] COPY --c  0.0s 
-------
- > [production  6/16] COPY --chown=appuser:appgroup ../profile/ ../profile/:
-------
-------
- > [production  7/16] COPY --chown=appuser:appgroup ../scripts/generate-profile-config.py ../scripts/generate-profile-config.py:    
-------
-Dockerfile:84
-
---------------------
-
-  82 |     # First copy the profile SPOT directory and generation script
-
-  83 |     COPY --chown=appuser:appgroup ../profile/ ../profile/
-
-  84 | >>> COPY --chown=appuser:appgroup ../scripts/generate-profile-config.py ../scripts/generate-profile-config.py
-
-  85 |
-
-  86 |     # Generate the engineer_profile.py from SPOT before copying other code       
-
---------------------
-
-failed to solve: failed to compute cache key: failed to calculate checksum of ref f30m87hnf27ojg1ucqii688zo::6qch24l5d4s0tp98lqrrnm7rr: "/scripts/generate-profile-config.py": not found
-
-
-
-View build details: docker-desktop://dashboard/build/default/default/7rqclpxgjzzpmv6ozgjztst4m
-
-
-ERROR: Docker build failed!
-Press any key to continue . . .
-
-## FRONTEND:
-==================================================
-Timeline sync complete!
-==================================================
-   ▲ Next.js 15.5.7
-   - Environments: .env.local
-
-   Creating an optimized production build ...
-Failed to compile.
-
-./components/fit-check/InfoDialog.jsx
-Module parse failed: Identifier 'GITHUB_USERNAME' has already been declared (7:9)       
-File was processed with these loaders:      
- * ./node_modules/next/dist/build/webpack/loaders/next-flight-client-module-loader.js   
- * ./node_modules/next/dist/build/webpack/loaders/next-swc-loader.js
-You may need an additional loader to handle 
-the result of these loaders.
-| import { cn } from '@/lib/utils';
-| import { GITHUB_USERNAME, REPO_URL } from 
-'@/lib/profile-data';
-> import { GITHUB_USERNAME, REPO_URL } from 
-'@/lib/profile-data';
-| /**
-|  * InfoDialog Component
-
-Import trace for requested module:
-./components/fit-check/InfoDialog.jsx       
-./app/page.js
-
-
-> Build failed because of webpack errors    
-
-================================================================================        
-ERROR: Build failed!
-================================================================================        
-Press any key to continue . . .
+2025-12-20 16:34:34.421 | 2025-12-21 00:34:34,421 - server - INFO - CORS configured for origins: ['http://localhost:3003']
+2025-12-20 16:34:34.422 | 2025-12-21 00:34:34,422 - server - INFO - Registered fit_check router at /api/fit-check
+2025-12-20 16:34:34.424 | 2025-12-21 00:34:34,424 - server - INFO - Registered prompts router at /api/prompts
+2025-12-20 16:34:34.424 | 2025-12-21 00:34:34,424 - server - INFO - Registered examples router at /api/examples
+2025-12-20 16:34:34.425 | INFO:     Started server process [1]
+2025-12-20 16:34:34.425 | INFO:     Waiting for application startup.
+2025-12-20 16:34:34.425 | 2025-12-21 00:34:34,425 - server - INFO - Portfolio Backend API starting up...
+2025-12-20 16:34:34.425 | 2025-12-21 00:34:34,425 - server - INFO - Log level: INFO
+2025-12-20 16:34:34.425 | INFO:     Application startup complete.
+2025-12-20 16:34:34.426 | INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+2025-12-20 16:42:33.185 | 2025-12-21 00:42:33,184 - routers.examples - INFO - Generating good example
+2025-12-20 16:42:33.185 | 2025-12-21 00:42:33,185 - config.llm - INFO - Creating LLM instance: model=gemini-3-flash-preview, config_type=standard, streaming=False
+2025-12-20 16:42:33.257 | 2025-12-21 00:42:33,257 - services.example_generator - INFO - Generating good example
+2025-12-20 16:42:33.258 | 2025-12-21 00:42:33,258 - google_genai.models - INFO - AFC is enabled with max remote calls: 10.
+2025-12-20 16:42:37.217 | 2025-12-21 00:42:37,217 - services.example_generator - INFO - Generated example: Full Stack Engineer building AI-driven products with FastAPI and React.
+2025-12-20 16:42:37.931 | 2025-12-21 00:42:37,931 - routers.fit_check - INFO - Received fit check request: query=Full Stack Engineer building AI-driven products wi..., model=gemini-3-flash-preview, config_type=reasoning
+2025-12-20 16:42:37.932 | 2025-12-21 00:42:37,931 - services.fit_check_agent - INFO - Starting streaming analysis for query: Full Stack Engineer building AI-driven products wi... model=gemini-3-flash-preview
+2025-12-20 16:42:37.939 | 2025-12-21 00:42:37,938 - services.nodes.connecting - INFO - [CONNECTING] Starting phase 1 for query: Full Stack Engineer building AI-driven products wi...
+2025-12-20 16:42:37.941 | 2025-12-21 00:42:37,941 - services.prompt_loader - INFO - Loaded prompt from phase_1_connecting_concise.xml (1231 chars)
+2025-12-20 16:42:37.941 | 2025-12-21 00:42:37,941 - config.llm - INFO - Creating LLM instance: model=gemini-3-flash-preview, config_type=reasoning, streaming=False
+2025-12-20 16:42:37.990 | 2025-12-21 00:42:37,990 - google_genai.models - INFO - AFC is enabled with max remote calls: 10.
+2025-12-20 16:42:39.470 | 2025-12-21 00:42:39,469 - services.nodes.connecting - INFO - [CONNECTING] Phase 1 complete: job_description
+2025-12-20 16:42:39.476 | 2025-12-21 00:42:39,475 - services.nodes.deep_research - INFO - [DEEP_RESEARCH] Starting phase 2
+2025-12-20 16:42:39.477 | 2025-12-21 00:42:39,476 - services.tools.web_search - INFO - Structured web search called with query: Full Stack Engineer Full Stack AI-driven products FastAPI requirements tech stack -site:pinterest.com -site:facebook.com -site:instagram.com
+2025-12-20 16:42:40.038 | 2025-12-21 00:42:40,038 - googleapiclient.discovery_cache - INFO - file_cache is only supported with oauth2client<4.0.0
+2025-12-20 16:42:40.505 | 2025-12-21 00:42:40,504 - services.tools.web_search - INFO - Web search tool called with query: Full Stack Engineer Full Stack AI-driven products FastAPI requirements tech stack -site:pinterest.com -site:facebook.com -site:instagram.com
+2025-12-20 16:42:40.505 | 2025-12-21 00:42:40,505 - googleapiclient.discovery_cache - INFO - file_cache is only supported with oauth2client<4.0.0
+2025-12-20 16:42:40.796 | 2025-12-21 00:42:40,796 - services.tools.web_search - INFO - Web search successful, returned 775 characters
+2025-12-20 16:42:40.796 | 2025-12-21 00:42:40,796 - services.tools.web_search - INFO - Structured web search called with query: intitle:"Full Stack Engineer" Full Stack AI-driven products FastAPI requirements
+2025-12-20 16:42:40.797 | 2025-12-21 00:42:40,797 - googleapiclient.discovery_cache - INFO - file_cache is only supported with oauth2client<4.0.0
+2025-12-20 16:42:41.076 | 2025-12-21 00:42:41,075 - services.tools.web_search - INFO - Web search tool called with query: intitle:"Full Stack Engineer" Full Stack AI-driven products FastAPI requirements
+2025-12-20 16:42:41.076 | 2025-12-21 00:42:41,076 - googleapiclient.discovery_cache - INFO - file_cache is only supported with oauth2client<4.0.0
+2025-12-20 16:42:41.317 | 2025-12-21 00:42:41,317 - services.tools.web_search - INFO - Web search successful, returned 801 characters
+2025-12-20 16:42:41.317 | 2025-12-21 00:42:41,317 - services.tools.web_search - INFO - Structured web search called with query: Full Stack engineer career requirements industry 2024
+2025-12-20 16:42:41.318 | 2025-12-21 00:42:41,318 - googleapiclient.discovery_cache - INFO - file_cache is only supported with oauth2client<4.0.0
+2025-12-20 16:42:41.761 | 2025-12-21 00:42:41,761 - services.tools.web_search - INFO - Web search tool called with query: Full Stack engineer career requirements industry 2024
+2025-12-20 16:42:41.762 | 2025-12-21 00:42:41,762 - googleapiclient.discovery_cache - INFO - file_cache is only supported with oauth2client<4.0.0
+2025-12-20 16:42:42.043 | 2025-12-21 00:42:42,042 - services.tools.web_search - INFO - Web search successful, returned 776 characters
+2025-12-20 16:42:42.043 | 2025-12-21 00:42:42,043 - services.prompt_loader - INFO - Loaded prompt from phase_2_deep_research_concise.xml (681 chars)
+2025-12-20 16:42:42.043 | 2025-12-21 00:42:42,043 - config.llm - INFO - Creating LLM instance: model=gemini-3-flash-preview, config_type=reasoning, streaming=False
+2025-12-20 16:42:42.104 | 2025-12-21 00:42:42,103 - google_genai.models - INFO - AFC is enabled with max remote calls: 10.
+2025-12-20 16:42:44.631 | 2025-12-21 00:42:44,631 - services.nodes.deep_research - INFO - [DEEP_RESEARCH] Phase 2 complete: 3 searches, Identified 12 technologies, 5 requirements, 4 culture signals
+2025-12-20 16:42:44.632 | 2025-12-21 00:42:44,632 - services.nodes.research_reranker - INFO - [RESEARCH_RERANKER] Starting phase 2B
+2025-12-20 16:42:44.632 | 2025-12-21 00:42:44,632 - config.llm - INFO - Creating LLM instance: model=gemini-3-flash-preview, config_type=standard, streaming=False
+2025-12-20 16:42:44.691 | 2025-12-21 00:42:44,691 - google_genai.models - INFO - AFC is enabled with max remote calls: 10.
+2025-12-20 16:42:44.693 | 2025-12-21 00:42:44,693 - google_genai.models - INFO - AFC is enabled with max remote calls: 10.
+2025-12-20 16:42:44.694 | 2025-12-21 00:42:44,694 - google_genai.models - INFO - AFC is enabled with max remote calls: 10.
+2025-12-20 16:42:44.695 | 2025-12-21 00:42:44,695 - google_genai.models - INFO - AFC is enabled with max remote calls: 10.
+2025-12-20 16:42:44.696 | 2025-12-21 00:42:44,696 - google_genai.models - INFO - AFC is enabled with max remote calls: 10.
+2025-12-20 16:42:49.276 | 2025-12-21 00:42:49,276 - google_genai.models - INFO - AFC is enabled with max remote calls: 10.
+2025-12-20 16:42:49.953 | 2025-12-21 00:42:49,953 - google_genai.models - INFO - AFC is enabled with max remote calls: 10.
+2025-12-20 16:42:50.266 | 2025-12-21 00:42:50,266 - google_genai.models - INFO - AFC is enabled with max remote calls: 10.
+2025-12-20 16:42:51.069 | 2025-12-21 00:42:51,069 - google_genai.models - INFO - AFC is enabled with max remote calls: 10.
+2025-12-20 16:42:51.755 | 2025-12-21 00:42:51,755 - google_genai.models - INFO - AFC is enabled with max remote calls: 10.
+2025-12-20 16:42:53.053 | 2025-12-21 00:42:53,052 - google_genai.models - INFO - AFC is enabled with max remote calls: 10.
+2025-12-20 16:42:53.310 | 2025-12-21 00:42:53,310 - google_genai.models - INFO - AFC is enabled with max remote calls: 10.
+2025-12-20 16:42:54.581 | 2025-12-21 00:42:54,580 - google_genai.models - INFO - AFC is enabled with max remote calls: 10.
+2025-12-20 16:42:55.165 | 2025-12-21 00:42:55,164 - google_genai.models - INFO - AFC is enabled with max remote calls: 10.
+2025-12-20 16:42:55.239 | 2025-12-21 00:42:55,239 - google_genai.models - INFO - AFC is enabled with max remote calls: 10.
+2025-12-20 16:42:59.497 | 2025-12-21 00:42:59,497 - services.prompt_loader - INFO - Loaded prompt from phase_2b_research_reranker_concise.xml (1052 chars)
+2025-12-20 16:42:59.497 | 2025-12-21 00:42:59,497 - config.llm - INFO - Creating LLM instance: model=gemini-3-flash-preview, config_type=reasoning, streaming=False
+2025-12-20 16:42:59.552 | 2025-12-21 00:42:59,551 - google_genai.models - INFO - AFC is enabled with max remote calls: 10.
+2025-12-20 16:43:01.061 | 2025-12-21 00:43:01,061 - services.nodes.research_reranker - INFO - [RESEARCH_RERANKER] Phase 2B complete: Data: PARTIAL | Quality: HIGH | Confidence: 92% | Action: CONTINUE
+2025-12-20 16:43:01.065 | 2025-12-21 00:43:01,064 - services.fit_check_agent - INFO - [ROUTING] Job description with 4 extracted skills - proceeding to skills matching regardless of web research quality
+2025-12-20 16:43:01.065 | 2025-12-21 00:43:01,065 - services.nodes.content_enrich - INFO - [CONTENT_ENRICH] Starting phase 2C
+2025-12-20 16:43:01.066 | 2025-12-21 00:43:01,065 - services.nodes.content_enrich - WARNING - [CONTENT_ENRICH] No top sources found to enrich
+2025-12-20 16:43:01.066 | 2025-12-21 00:43:01,066 - services.nodes.skeptical_comparison - INFO - [SKEPTICAL_COMPARISON] Starting Phase 3 - CRITICAL GAP ANALYSIS
+2025-12-20 16:43:01.066 | 2025-12-21 00:43:01,066 - services.prompt_loader - INFO - Loaded prompt from phase_3_skeptical_comparison_concise.xml (1153 chars)
+2025-12-20 16:43:01.067 | 2025-12-21 00:43:01,066 - config.llm - INFO - Creating LLM instance: model=gemini-3-flash-preview, config_type=reasoning, streaming=False
+2025-12-20 16:43:01.127 | 2025-12-21 00:43:01,127 - google_genai.models - INFO - AFC is enabled with max remote calls: 10.
+2025-12-20 16:43:05.413 | 2025-12-21 00:43:05,413 - services.nodes.skeptical_comparison - INFO - [SKEPTICAL_COMPARISON] Phase 3 complete: gaps=4, strengths=4, risk=medium
+2025-12-20 16:43:05.417 | 2025-12-21 00:43:05,417 - services.nodes.skills_matching - INFO - [SKILLS_MATCHING] Starting phase 4
+2025-12-20 16:43:05.417 | 2025-12-21 00:43:05,417 - services.nodes.skills_matching - INFO - [SKILLS_MATCHING] Job description mode: 4 primary skills from query, 5 secondary from research
+2025-12-20 16:43:05.418 | 2025-12-21 00:43:05,417 - services.tools.skill_matcher - INFO - Skill matcher called with requirements: Full Stack, AI-driven products, FastAPI, React, Experience building AI-driven user experiences and o...
+2025-12-20 16:43:05.418 | 2025-12-21 00:43:05,417 - services.tools.skill_matcher - INFO - Skill profile returned for AI synthesis
+2025-12-20 16:43:05.418 | 2025-12-21 00:43:05,418 - services.tools.experience_matcher - INFO - Experience matcher called with context: The search results describe various opportunities for Full Stack Engineers to work on AI-driven plat...
+2025-12-20 16:43:05.418 | 2025-12-21 00:43:05,418 - services.tools.experience_matcher - INFO - Experience profile returned for AI synthesis
+2025-12-20 16:43:05.418 | 2025-12-21 00:43:05,418 - services.prompt_loader - INFO - Loaded prompt from phase_4_skills_matching_concise.xml (2172 chars)
+2025-12-20 16:43:05.418 | 2025-12-21 00:43:05,418 - config.llm - INFO - Creating LLM instance: model=gemini-3-flash-preview, config_type=reasoning, streaming=False
+2025-12-20 16:43:05.469 | 2025-12-21 00:43:05,468 - google_genai.models - INFO - AFC is enabled with max remote calls: 10.
+2025-12-20 16:43:10.951 | 2025-12-21 00:43:10,951 - services.nodes.skills_matching - INFO - [SKILLS_MATCHING] Phase 4 complete: score=0.64, matched=5, unmatched=2
+2025-12-20 16:43:10.955 | 2025-12-21 00:43:10,955 - services.nodes.confidence_reranker - INFO - [RERANKER] Starting confidence re-ranking phase
+2025-12-20 16:43:10.956 | 2025-12-21 00:43:10,956 - services.prompt_loader - INFO - Loaded prompt from phase_5b_confidence_reranker_concise.xml (2018 chars)
+2025-12-20 16:43:10.956 | 2025-12-21 00:43:10,956 - config.llm - INFO - Creating LLM instance: model=gemini-3-flash-preview, config_type=reasoning, streaming=False
+2025-12-20 16:43:11.008 | 2025-12-21 00:43:11,007 - google_genai.models - INFO - AFC is enabled with max remote calls: 10.
+2025-12-20 16:43:13.120 | 2025-12-21 00:43:13,119 - services.nodes.confidence_reranker - INFO - [RERANKER] Calibrated score: 78% (HIGH), flags: ['strong_query_skill_match']
+2025-12-20 16:43:13.125 | 2025-12-21 00:43:13,125 - services.nodes.generate_results - INFO - [GENERATE_RESULTS] Starting phase 5 - FINAL SYNTHESIS
+2025-12-20 16:43:13.126 | 2025-12-21 00:43:13,125 - services.prompt_loader - INFO - Loaded prompt from phase_5_generate_results_concise.xml (1128 chars)
+2025-12-20 16:43:13.126 | 2025-12-21 00:43:13,125 - config.llm - INFO - Creating LLM instance: model=gemini-3-flash-preview, config_type=reasoning, streaming=True
+2025-12-20 16:43:13.197 | 2025-12-21 00:43:13,197 - google_genai.models - INFO - AFC is enabled with max remote calls: 10.
+2025-12-20 16:43:15.192 | 2025-12-21 00:43:15,192 - services.nodes.generate_results - INFO - [GENERATE_RESULTS] Phase 5 complete: 1080 chars, 143 words, 0 quality warnings
+2025-12-20 16:43:15.197 | 2025-12-21 00:43:15,196 - services.streaming_callback - INFO - Stream completed in 37264ms

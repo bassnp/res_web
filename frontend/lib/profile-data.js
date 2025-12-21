@@ -273,7 +273,7 @@ export const EXPERIENCE = {
       title: 'GPU Mining Rig',
       company: 'Personal Project',
       period: 'April 2022',
-      description: 'To help fund my early college years, I assembled a 7-GPU Ethereum mining rig using affordable Nvidia and AMD cards, achieving ~210 MH/s. It generated ~$170 as monthly passive income before the Ethereum Merge ended Proof of Work mining.',
+      description: 'To help fund my early college years, I assembled a 7-GPU Ethereum mining rig using affordable Nvidia and AMD cards, achieving ~190 MH/s. It generated ~$125 as monthly passive income before the Ethereum Merge ended Proof of Work mining.',
       tags: ['Ethereum', 'GPU Parrallelism', 'Rig Building'],
       color: 'apricot',
       showcase_folder: 'showcase-mining'

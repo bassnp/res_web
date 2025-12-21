@@ -9,7 +9,7 @@
 3. November 2025 - Completed a working GenUI Deep Researcher Agent with Google Custom Search Engine (CSE) Integration using LangGraph utilizing Graph-Theory based research orchestration to compile information from the web sources into structured GenUI reports to showcase images, tables, and text snippets, and sources found online.
 4. October 2025 - Working version two of Zharvis, my SaaS Overwolf Videogame Overlay AI Agent using Wiki CSEs & MCP tools to provide fast in-game query assistance. Version 1 of Zharvis used a demo RAG workflow, using large (15k+ docs) scraped wikis chunked into vector stores and used embedding & indexing for retrieval.
 5. January 2023 - My first succesful SaaS providing videogame mods for the popular game CS:GO generating working in a team of 3 developers over a span of a year generating $6k in revenue.
-6. April 2022 - I created a GPU Ethereum mining rig with 7 GPUs using Nvidia and AMD cards generating ~210 MH/s for a profitable $170 monthly as passive income during the early stages college before the eventual Ethereum Merge and sell off.
+6. April 2022 - I created a GPU Ethereum mining rig with 7 GPUs using Nvidia and AMD cards generating ~190 MH/s for a profitable $125 monthly as passive income during the early stages college before the eventual Ethereum Merge and sell off.
 7. July 2019 - My first git commit on GitHub at age 15 to showcase my somewhat impressive Java drawing app from my sophmore year of highschool, kicking off my journey as an ambitious software developer.
 
 # My GitHub Link: https://github.com/bassnp
