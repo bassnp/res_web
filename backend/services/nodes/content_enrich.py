@@ -24,6 +24,7 @@ from services.pipeline_state import FitCheckPipelineState
 from services.callbacks import ThoughtCallback
 from models.fit_check import DocumentScore
 from services.utils.circuit_breaker import fetch_breaker, CircuitOpenError
+from services.utils.http_client import get_http_client
 
 logger = logging.getLogger(__name__)
 
@@ -196,9 +197,9 @@ async def content_enrich_node(
     enriched_results = []
     semaphore = asyncio.Semaphore(MAX_CONCURRENT_FETCHES)
     
-    async with httpx.AsyncClient(headers={"User-Agent": USER_AGENT}) as client:
-        tasks = [enrich_source(source, client, semaphore) for source in top_sources]
-        enriched_results = await asyncio.gather(*tasks)
+    client = await get_http_client()
+    tasks = [enrich_source(source, client, semaphore) for source in top_sources]
+    enriched_results = await asyncio.gather(*tasks)
 
     enriched_count = sum(1 for r in enriched_results if r.get("is_enriched"))
     total_kb = sum(len(r.get("content", "")) for r in enriched_results) / 1024

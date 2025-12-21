@@ -50,18 +50,20 @@ class StreamingCallbackHandler(ThoughtCallback):
             yield event  # SSE-formatted string
     """
     
-    def __init__(self, include_thoughts: bool = True):
+    def __init__(self, include_thoughts: bool = True, session_id: str = None):
         """
         Initialize the streaming callback handler.
         
         Args:
             include_thoughts: Whether to emit thought events.
+            session_id: Optional session identifier for tracing.
         """
         self._queue: asyncio.Queue[Optional[str]] = asyncio.Queue()
         self._include_thoughts = include_thoughts
+        self._session_id = session_id or "unknown"
         self._completed = False
         self._error_occurred = False
-        logger.debug("StreamingCallbackHandler initialized")
+        logger.debug(f"[{self._session_id}] StreamingCallbackHandler initialized")
     
     async def _emit(self, event_type: str, data: dict) -> None:
         """
@@ -72,12 +74,12 @@ class StreamingCallbackHandler(ThoughtCallback):
             data: The event data.
         """
         if self._completed:
-            logger.warning(f"Attempted to emit after completion: {event_type}")
+            logger.warning(f"[{self._session_id}] Attempted to emit after completion: {event_type}")
             return
         
         sse_event = format_sse(event_type, data)
         await self._queue.put(sse_event)
-        logger.debug(f"Emitted {event_type} event")
+        logger.debug(f"[{self._session_id}] Emitted {event_type} event")
     
     async def on_status(self, status: str, message: str) -> None:
         """
@@ -182,7 +184,7 @@ class StreamingCallbackHandler(ThoughtCallback):
         self._completed = True
         # Signal end of stream
         await self._queue.put(None)
-        logger.info(f"Stream completed in {duration_ms}ms")
+        logger.info(f"[{self._session_id}] Stream completed in {duration_ms}ms")
     
     async def on_error(self, code: str, message: str) -> None:
         """
@@ -200,7 +202,7 @@ class StreamingCallbackHandler(ThoughtCallback):
         self._completed = True
         # Signal end of stream
         await self._queue.put(None)
-        logger.error(f"Stream error: {code} - {message}")
+        logger.error(f"[{self._session_id}] Stream error: {code} - {message}")
     
     async def events(self) -> AsyncGenerator[str, None]:
         """

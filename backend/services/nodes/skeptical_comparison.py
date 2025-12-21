@@ -29,7 +29,7 @@ from typing import Dict, Any, Optional, List
 
 from langchain_core.messages import HumanMessage
 
-from config.llm import get_llm
+from config.llm import get_llm, with_llm_throttle
 from config.engineer_profile import get_formatted_profile
 from services.pipeline_state import FitCheckPipelineState, Phase3Output
 from services.callbacks import ThoughtCallback
@@ -463,7 +463,7 @@ async def skeptical_comparison_node(
         messages = [HumanMessage(content=prompt)]
         
         async with llm_breaker.call():
-            response = await llm.ainvoke(messages)
+            response = await with_llm_throttle(llm.ainvoke(messages))
         
         # Extract response text (handles Gemini's structured format)
         response_text = get_response_text(response)

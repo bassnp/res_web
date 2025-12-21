@@ -25,9 +25,9 @@ This phase ensures all shared resources are thread-safe for async concurrent acc
 
 ## Prerequisites
 
-- [ ] Phase 1 (Session Isolation) completed and verified
-- [ ] Backend Docker container running locally
-- [ ] Concurrent test script from Phase 1 passing
+- [x] Phase 1 (Session Isolation) completed and verified
+- [x] Backend Docker container running locally
+- [x] Concurrent test script from Phase 1 passing
 
 ---
 
@@ -270,9 +270,9 @@ fetch_breaker = AsyncCircuitBreaker(
 )
 ```
 
-- [ ] **TODO:** Create or update `circuit_breaker.py`
-- [ ] **TODO:** Ensure all state mutations use `async with self._lock`
-- [ ] **TODO:** Export pre-configured breakers for common services
+- [x] **DONE:** Create or update `circuit_breaker.py`
+- [x] **DONE:** Ensure all state mutations use `async with self._lock`
+- [x] **DONE:** Export pre-configured breakers for common services
 
 ---
 
@@ -372,10 +372,10 @@ async def stream_fit_check(request: FitCheckRequest):
     )
 ```
 
-- [ ] **TODO:** Add `async-timeout` to requirements.txt
-- [ ] **TODO:** Import `timeout as async_timeout` 
-- [ ] **TODO:** Wrap `generate_events` execution with timeout
-- [ ] **TODO:** Handle `asyncio.TimeoutError` gracefully
+- [x] **DONE:** Add `async-timeout` to requirements.txt
+- [x] **DONE:** Import `timeout as async_timeout` 
+- [x] **DONE:** Wrap `generate_events` execution with timeout
+- [x] **DONE:** Handle `asyncio.TimeoutError` gracefully
 
 ---
 
@@ -440,9 +440,9 @@ async def some_pipeline_node(state, callback):
     return result
 ```
 
-- [ ] **TODO:** Add `get_llm_semaphore()` function to `config/llm.py`
-- [ ] **TODO:** Add `with_llm_throttle()` helper
-- [ ] **TODO:** Apply throttling in high-throughput LLM calls (optional)
+- [x] **DONE:** Add `get_llm_semaphore()` function to `config/llm.py`
+- [x] **DONE:** Add `with_llm_throttle()` helper
+- [x] **DONE:** Apply throttling in high-throughput LLM calls
 
 ---
 

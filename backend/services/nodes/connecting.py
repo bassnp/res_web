@@ -27,7 +27,7 @@ from typing import Dict, Any, Optional, Tuple
 
 from langchain_core.messages import HumanMessage
 
-from config.llm import get_llm
+from config.llm import get_llm, with_llm_throttle
 from services.pipeline_state import FitCheckPipelineState, Phase1Output
 from services.callbacks import ThoughtCallback
 from services.utils import get_response_text
@@ -463,7 +463,7 @@ async def connecting_node(
         messages = [HumanMessage(content=prompt)]
         
         async with llm_breaker.call():
-            response = await llm.ainvoke(messages)
+            response = await with_llm_throttle(llm.ainvoke(messages))
         
         # Extract response text (handles Gemini's structured format)
         response_text = get_response_text(response)

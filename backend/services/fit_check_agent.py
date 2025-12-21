@@ -313,8 +313,8 @@ class FitCheckAgent:
     """
     
     def __init__(self):
-        """Initialize the agent."""
-        self._callback_holder = {}
+        """Initialize the agent (stateless - no shared mutable state)."""
+        pass
     
     async def analyze(
         self,
@@ -338,8 +338,9 @@ class FitCheckAgent:
         """
         logger.info(f"Starting analysis for query: {query[:50]}... model={model_id}")
         
-        # Build pipeline without callback
-        pipeline = build_fit_check_pipeline(self._callback_holder)
+        # Build pipeline without callback (empty holder for non-streaming)
+        callback_holder = {}
+        pipeline = build_fit_check_pipeline(callback_holder)
         initial_state = create_initial_state(query, model_id, config_type)
         
         # Run the pipeline
@@ -384,12 +385,12 @@ class FitCheckAgent:
         # Emit initial status
         await callback.on_status("connecting", "Initializing AI agent...")
         
-        # Set callback for pipeline nodes
-        self._callback_holder["callback"] = callback
+        # Create ISOLATED callback holder for this request (prevents cross-session contamination)
+        callback_holder = {"callback": callback}
         
         try:
-            # Build pipeline with callback
-            pipeline = build_fit_check_pipeline(self._callback_holder)
+            # Build pipeline with request-local callback holder
+            pipeline = build_fit_check_pipeline(callback_holder)
             initial_state = create_initial_state(query, model_id, config_type)
             
             # Stream through the pipeline
@@ -438,8 +439,8 @@ class FitCheckAgent:
             await callback.on_error("AGENT_ERROR", str(e))
             raise
         finally:
-            # Clear callback reference
-            self._callback_holder.pop("callback", None)
+            # Callback holder is request-local, cleaned up automatically
+            pass
 
 
 # =============================================================================

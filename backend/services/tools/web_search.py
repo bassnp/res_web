@@ -100,8 +100,9 @@ async def web_search(query: str) -> str:
     
     try:
         async with search_breaker.call():
-            # Perform the search
-            results = search_wrapper.run(query)
+            # Perform the search in a thread to avoid blocking the event loop
+            # GoogleSearchAPIWrapper.run is synchronous
+            results = await asyncio.to_thread(search_wrapper.run, query)
             
             if not results or results.strip() == "":
                 logger.info(f"No results found for query: {query}")
@@ -144,7 +145,8 @@ async def web_search_structured(query: str, num_results: int = 5) -> list:
     try:
         async with search_breaker.call():
             # GoogleSearchAPIWrapper.results returns a list of dicts
-            return search_wrapper.results(query, num_results)
+            # Run in thread to avoid blocking event loop
+            return await asyncio.to_thread(search_wrapper.results, query, num_results)
     except CircuitOpenError:
         logger.warning(f"Search circuit is OPEN for structured query: {query}")
         return []

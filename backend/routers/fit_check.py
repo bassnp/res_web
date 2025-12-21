@@ -17,8 +17,10 @@ SSE Event Types (CANONICAL):
 import asyncio
 import logging
 import time
+import uuid
 from typing import AsyncGenerator
 
+from async_timeout import timeout as async_timeout
 from fastapi import APIRouter, HTTPException
 from fastapi.responses import StreamingResponse
 from pydantic import ValidationError
@@ -51,6 +53,9 @@ router = APIRouter(
 # =============================================================================
 # SSE Streaming Endpoint
 # =============================================================================
+
+# Request timeout in seconds (5 minutes)
+REQUEST_TIMEOUT_SECONDS = 300
 
 @router.post(
     "/stream",
@@ -91,13 +96,19 @@ async def stream_fit_check(request: FitCheckRequest):
     Returns:
         StreamingResponse with SSE events.
     """
+    # Generate session ID for tracing if not provided
+    session_id = request.session_id or str(uuid.uuid4())
+    
     logger.info(
-        f"Received fit check request: query={request.query[:50]}..., "
+        f"[{session_id}] Received fit check request: query={request.query[:50]}..., "
         f"model={request.model_id}, config_type={request.config_type}"
     )
     
-    # Create callback handler
-    callback = StreamingCallbackHandler(include_thoughts=request.include_thoughts)
+    # Create callback handler with session ID
+    callback = StreamingCallbackHandler(
+        include_thoughts=request.include_thoughts,
+        session_id=session_id
+    )
     
     async def generate_events() -> AsyncGenerator[str, None]:
         """
@@ -106,50 +117,58 @@ async def stream_fit_check(request: FitCheckRequest):
         This runs the agent and streams events via the callback.
         """
         agent = get_agent()
-        start_time = time.time()
         
         try:
-            # Run the agent in a separate task so we can stream events concurrently
-            async def run_agent():
+            # Wrap entire execution with timeout
+            async with async_timeout(REQUEST_TIMEOUT_SECONDS):
+                # Run the agent in a separate task so we can stream events concurrently
+                async def run_agent():
+                    try:
+                        # Collect response chunks (they're also emitted via callback)
+                        async for chunk in agent.stream_analysis(
+                            query=request.query,
+                            callback=callback,
+                            model_id=request.model_id,
+                            config_type=request.config_type,
+                        ):
+                            pass  # Response chunks are handled by callback
+                    except asyncio.CancelledError:
+                        logger.warning(f"[{session_id}] Agent task cancelled")
+                        if not callback.is_completed:
+                            await callback.on_error("CANCELLED", "Request was cancelled")
+                    except Exception as e:
+                        logger.error(f"[{session_id}] Agent error: {e}")
+                        if not callback.is_completed:
+                            # Map exception to appropriate error code
+                            error_code = _map_exception_to_code(e)
+                            await callback.on_error(error_code, str(e))
+                
+                # Start agent task
+                agent_task = asyncio.create_task(run_agent())
+                
+                # Stream events from callback
                 try:
-                    # Collect response chunks (they're also emitted via callback)
-                    async for chunk in agent.stream_analysis(
-                        query=request.query,
-                        callback=callback,
-                        model_id=request.model_id,
-                        config_type=request.config_type,
-                    ):
-                        pass  # Response chunks are handled by callback
+                    async for event in callback.events():
+                        yield event
                 except asyncio.CancelledError:
-                    logger.warning("Agent task cancelled")
-                    if not callback.is_completed:
-                        await callback.on_error("TIMEOUT", "Request was cancelled")
-                except Exception as e:
-                    logger.error(f"Agent error: {e}")
-                    if not callback.is_completed:
-                        # Map exception to appropriate error code
-                        error_code = _map_exception_to_code(e)
-                        await callback.on_error(error_code, str(e))
-            
-            # Start agent task
-            agent_task = asyncio.create_task(run_agent())
-            
-            # Stream events from callback
-            try:
-                async for event in callback.events():
-                    yield event
-            except asyncio.CancelledError:
-                agent_task.cancel()
-                raise
-            
-            # Wait for agent to complete
-            await agent_task
-            
+                    agent_task.cancel()
+                    raise
+                
+                # Wait for agent to complete
+                await agent_task
+                
+        except asyncio.TimeoutError:
+            logger.error(f"[{session_id}] Request timed out after {REQUEST_TIMEOUT_SECONDS}s")
+            if not callback.is_completed:
+                yield format_sse("error", {
+                    "code": "TIMEOUT",
+                    "message": f"Request exceeded {REQUEST_TIMEOUT_SECONDS} second limit",
+                })
         except asyncio.CancelledError:
-            logger.info("Stream cancelled by client")
+            logger.info(f"[{session_id}] Stream cancelled by client")
             raise
         except Exception as e:
-            logger.error(f"Stream generation error: {e}")
+            logger.error(f"[{session_id}] Stream generation error: {e}")
             # Emit error if not already completed
             if not callback.is_completed:
                 error_code = _map_exception_to_code(e)

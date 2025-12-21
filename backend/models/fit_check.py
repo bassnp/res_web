@@ -88,6 +88,10 @@ class FitCheckRequest(BaseModel):
         default="reasoning",
         description="Configuration type: 'reasoning' for high reasoning models, 'standard' for temperature/topK models",
     )
+    session_id: Optional[str] = Field(
+        default=None,
+        description="Optional session ID for request tracing (auto-generated if not provided)",
+    )
 
 
 # =============================================================================

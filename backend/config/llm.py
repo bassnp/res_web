@@ -11,6 +11,7 @@ Model Configuration Types:
 
 import os
 import logging
+import asyncio
 from typing import Optional, Literal
 
 from langchain_google_genai import ChatGoogleGenerativeAI
@@ -52,6 +53,62 @@ DEFAULT_TOP_K = 40  # Higher accuracy with diverse sampling
 
 # Token limits
 MAX_OUTPUT_TOKENS = 2048
+
+
+# =============================================================================
+# LLM Concurrency Throttling
+# =============================================================================
+
+# Maximum concurrent LLM requests (adjust based on Gemini rate limits)
+MAX_CONCURRENT_LLM_REQUESTS = 10
+
+# Global semaphore for LLM rate limiting
+_llm_semaphore: Optional[asyncio.Semaphore] = None
+
+def get_llm_semaphore() -> asyncio.Semaphore:
+    """
+    Get or create the global LLM concurrency semaphore.
+    
+    This limits concurrent requests to the Gemini API to prevent
+    rate limiting errors under high load.
+    
+    Returns:
+        asyncio.Semaphore with MAX_CONCURRENT_LLM_REQUESTS permits.
+    """
+    global _llm_semaphore
+    if _llm_semaphore is None:
+        _llm_semaphore = asyncio.Semaphore(MAX_CONCURRENT_LLM_REQUESTS)
+    return _llm_semaphore
+
+
+async def with_llm_throttle(coro):
+    """
+    Execute a coroutine with LLM rate limiting.
+    
+    Usage:
+        result = await with_llm_throttle(llm.ainvoke(prompt))
+    
+    Args:
+        coro: Coroutine to execute.
+    
+    Returns:
+        Result of the coroutine.
+    """
+    async with get_llm_semaphore():
+        return await coro
+
+
+async def with_llm_throttle_stream(async_iterator):
+    """
+    Execute an async iterator with LLM rate limiting.
+    
+    Usage:
+        async for chunk in with_llm_throttle_stream(llm.astream(prompt)):
+            ...
+    """
+    async with get_llm_semaphore():
+        async for item in async_iterator:
+            yield item
 
 
 # =============================================================================

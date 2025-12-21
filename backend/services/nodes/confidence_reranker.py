@@ -31,7 +31,7 @@ from typing import Dict, Any, Optional, List, Tuple
 
 from langchain_core.messages import HumanMessage
 
-from config.llm import get_llm
+from config.llm import get_llm, with_llm_throttle
 from services.pipeline_state import FitCheckPipelineState
 from services.callbacks import ThoughtCallback
 from services.utils import get_response_text
@@ -541,7 +541,7 @@ async def confidence_reranker_node(
         )
         
         async with llm_breaker.call():
-            response = await llm.ainvoke([HumanMessage(content=formatted_prompt)])
+            response = await with_llm_throttle(llm.ainvoke([HumanMessage(content=formatted_prompt)]))
             
         response_text = get_response_text(response)
         
