@@ -383,7 +383,7 @@ p, li {
 <section>
 <h2>Professional Summary</h2>
 <p class="summary">
-Full-stack engineer (B.S. Computer Science, Dec 2025) w/ software experience; <br> Cross-platform application development, AI-powered & Agentic systems, Cloud Microservices. Delivered production-grade software to clients, developed graph-based research agents, freelanced since high school, generated $6k in SaaS revenue. Coding since age 15.
+Full-stack engineer (B.S. Computer Science, Dec 2025) w/ software experience; <br> Cross-platform application development, AI-powered & Agentic systems, Cloud Microservices. Delivered production-grade software to clients, developed graph-based research agents, freelanced since high school, generated $6k in Team freelanced revenue. Coding since a freshman in highschool at the age of 14.
 </p>
 </section>
 
@@ -393,7 +393,7 @@ Full-stack engineer (B.S. Computer Science, Dec 2025) w/ software experience; <b
 <article class="entry">
 <div class="entry-header">
 <h3>ChurchLink - Web & App Builder Platform</h3>
-<span class="period">Dec 2025</span>
+<span class="period">Jan 2025 - Dec 2025</span>
 </div>
 <div class="company">Senior Graduation Project · Team of 6 · Client Delivery</div>
 <ul> 
@@ -437,7 +437,7 @@ Full-stack engineer (B.S. Computer Science, Dec 2025) w/ software experience; <b
 <article class="entry">
 <div class="entry-header">
 <h3>Zharvis - AI Hud Overlay</h3>
-<span class="period">Oct 2025</span>
+<span class="period">Sep 2025 - Current</span>
 </div>
 <div class="company">WIP SaaS Product · Overwolf Marketplace</div>
 <ul>
@@ -481,12 +481,12 @@ Full-stack engineer (B.S. Computer Science, Dec 2025) w/ software experience; <b
 <article class="entry">
 <div class="entry-header">
 <h3>Game Modding Freelancing & SaaS</h3>
-<span class="period">Jan 2023</span>
+<span class="period">Aug 2022 - Jun 2023</span>
 </div>
 <div class="company">Team Freelancing · $6k Revenue</div>
 <ul>
 <li>Co-Led team of 3 developers to build, sell, and freelance videogame mods via community engagement</li>
-<li>Primarily developed Lua scripts for servside + clientside gameplay mods & plugins</li>
+<li>Primarily developed CS:GO Lua scripts for servside + clientside gameplay mods & plugins</li>
 </ul>
 <div class="tech-stack">
 <span class="tech-tag">Lua</span>
@@ -498,12 +498,12 @@ Full-stack engineer (B.S. Computer Science, Dec 2025) w/ software experience; <b
 <article class="entry">
 <div class="entry-header">
 <h3>Ethereum GPU Miner</h3>
-<span class="period">Apr 2022</span>
+<span class="period">Feb 2022 - Sept 2023</span>
 </div>
-<div class="company">Personal Project · Computer Rig Building</div>
+<div class="company">Personal Project · Profitable Rig Building</div>
 <ul>
 <li>Assembled 7-GPU rig (Nvidia/AMD) achieving ~190 MH/s blockchain hashrate</li>
-<li>Generated ~$125/month passive income before Ethereum Merge ended Proof of Work mining</li>
+<li>Generated ~$125/month passive income for my early college years before the Ethereum Merge ended Proof of Work mining</li>
 </ul>
 <div class="tech-stack">
 <span class="tech-tag">Blockchain</span>

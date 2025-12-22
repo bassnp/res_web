@@ -131,7 +131,7 @@ export const EDUCATION = {
   primary: {
     degree: 'Bachelor of Science Degree in Computer Science',
     institution: 'California State University, Sacramento',
-    graduation: '2025 Winter Graduate',
+    graduation: '2025 Fall Graduate',
     logo_path: '/resources/school_logo.png'
   },
   certifications: []
@@ -224,7 +224,7 @@ export const EXPERIENCE = {
       company: 'California State University Sacramento Graduate',
       period: 'December 2025',
       description: 'Completed a Bachelor of Science Degree in Computer Science at California State University, Sacramento. Starting during the Covid-19 pandemic years, I rigorously pursued my academic passion where I met many friends along the way to help me grow as both a student and individual in this field.',
-      tags: ['B.S. Computer Science', 'Winter 2025 New Grad'],
+      tags: ['B.S. Computer Science', 'Fall 2025 New Grad'],
       color: 'burnt-peach',
       showcase_folder: 'showcase-graduation'
     },
