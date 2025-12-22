@@ -4,15 +4,36 @@
  * 
  * Usage: node public/generate_pdf_thumbnail.js [input.pdf] [output.jpg]
  * 
- * Dependencies: pdfjs-dist, canvas (installed via npm)
+ * Dependencies: pdfjs-dist@4.x, canvas (installed via npm)
  */
 
 const fs = require('fs');
 const path = require('path');
 const { createCanvas } = require('canvas');
 
+// Node.js canvas factory for pdfjs-dist
+class NodeCanvasFactory {
+    create(width, height) {
+        const canvas = createCanvas(width, height);
+        const context = canvas.getContext('2d');
+        return { canvas, context };
+    }
+
+    reset(canvasAndContext, width, height) {
+        canvasAndContext.canvas.width = width;
+        canvasAndContext.canvas.height = height;
+    }
+
+    destroy(canvasAndContext) {
+        canvasAndContext.canvas.width = 0;
+        canvasAndContext.canvas.height = 0;
+        canvasAndContext.canvas = null;
+        canvasAndContext.context = null;
+    }
+}
+
 async function generateThumbnail(pdfPath, outputPath, scale = 1.5) {
-    // Dynamically import pdfjs-dist (ES module)
+    // Import pdfjs-dist v4.x
     const pdfjsLib = await import('pdfjs-dist/legacy/build/pdf.mjs');
     
     // Validate input file exists
@@ -27,11 +48,12 @@ async function generateThumbnail(pdfPath, outputPath, scale = 1.5) {
         // Load PDF document
         const data = new Uint8Array(fs.readFileSync(pdfPath));
         
-        // Set up loading task with standard font data URL to avoid errors in Node.js
-        // We use a CDN for the font data to ensure it's available during build
+        // Set up loading task with canvas factory for Node.js
+        const canvasFactory = new NodeCanvasFactory();
         const loadingTask = pdfjsLib.getDocument({ 
             data,
-            standardFontDataUrl: 'https://unpkg.com/pdfjs-dist@5.4.449/standard_fonts/'
+            standardFontDataUrl: 'https://unpkg.com/pdfjs-dist@4.4.168/standard_fonts/',
+            canvasFactory: canvasFactory
         });
         const pdfDoc = await loadingTask.promise;
         
@@ -51,7 +73,8 @@ async function generateThumbnail(pdfPath, outputPath, scale = 1.5) {
         // Render page to canvas
         await page.render({
             canvasContext: context,
-            viewport: viewport
+            viewport: viewport,
+            canvasFactory: canvasFactory
         }).promise;
 
         // Ensure output directory exists
@@ -78,8 +101,8 @@ async function main() {
     const publicDir = __dirname;
     
     // Default paths
-    let pdfPath = path.join(publicDir, 'resources', 'SSR_TSRPT.pdf');
-    let outputPath = path.join(publicDir, 'resources', 'SSR_TSRPT_thumb.jpg');
+    let pdfPath = path.join(publicDir, 'resources', 'resume.pdf');
+    let outputPath = path.join(publicDir, 'resources', 'resume_thumb.jpg');
     
     // Allow command line overrides
     if (process.argv[2]) pdfPath = process.argv[2];

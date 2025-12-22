@@ -867,7 +867,7 @@ const HeroAboutSection = () => {
 
                 {/* Official Transcript Container (2 columns) */}
                 <a
-                  href="/resources/SSR_TSRPT.pdf"
+                  href="/resources/resume.pdf"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="col-span-1 md:col-span-2 relative bg-twilight/5 dark:bg-eggshell/5 rounded-[5px] border border-twilight/10 dark:border-eggshell/10 overflow-hidden group hover:border-burnt-peach/50 transition-all duration-300 hover:shadow-lg hover:-translate-y-1"
@@ -880,7 +880,7 @@ const HeroAboutSection = () => {
                     {/* PDF Thumbnail Preview */}
                     <div className="relative aspect-[4/5] bg-white dark:bg-twilight/30 rounded-[3px] border border-twilight/10 dark:border-eggshell/10 overflow-hidden">
                       <img
-                        src="/resources/SSR_TSRPT_thumb.jpg"
+                        src="/resources/resume_thumb.jpg"
                         alt="Transcript Preview"
                         className="w-full h-full object-cover object-top"
                       />

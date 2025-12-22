@@ -169,8 +169,8 @@ export const ASSETS = {
   portrait: '/resources/portrait.jpg',
   school_logo: '/resources/school_logo.png',
   resume_pdf: {
-    path: '/resources/SSR_TSRPT.pdf',
-    thumbnail: '/resources/SSR_TSRPT_thumb.jpg',
+    path: '/resources/resume.pdf',
+    thumbnail: '/resources/resume_thumb.jpg',
     label: 'PDF Resume'
   },
   personal_collage: {
