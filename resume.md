@@ -89,6 +89,10 @@ body {
     text-decoration: none;
 }
 
+.sidebar a.github-link {
+    color: #e07a5f;
+}
+
 .sidebar a:hover {
     text-decoration: underline;
 }
@@ -280,14 +284,14 @@ p, li {
 <header>
 <img src="https://i.gyazo.com/7543c8991396edc6b9171ec9ac01cd9b.jpg" alt="Jaden Bruha" class="portrait">
 <h1>Jaden Bruha</h1>
-<div class="title">Software Engineer</div>
+<div class="title">New Grad - Software Engineer</div>
 </header>
 
 <section>
 <h2>Contact</h2>
-<div class="contact-item">jbruha@csus.edu</div>
-<div class="contact-item"><a href="https://github.com/bassnp">github.com/bassnp</a></div>
-<div class="contact-item"><a href="https://jadenbruha.com">jadenbruha.com</a></div>
+<div class="contact-item">Email - jbruha@csus.edu</div>
+<div class="contact-item"><a href="https://jadenbruha.com"> Portfolio - jadenbruha.com</a></div>
+<div class="contact-item"><a href="https://github.com/bassnp" class="github-link">Github - github.com/bassnp</a></div>
 </section>
 
 <section>
@@ -303,15 +307,24 @@ p, li {
 <h2>Technical Skills</h2>
 
 <div class="skill-category">
-<h3>Languages</h3>
+<h3>Primary Languages</h3>
 <div class="skill-tags">
 <span class="skill-tag">Python</span>
-<span class="skill-tag">JavaScript</span>
-<span class="skill-tag">TypeScript</span>
-<span class="skill-tag">Dart</span>
 <span class="skill-tag">Lua</span>
+<span class="skill-tag">TypeScript</span>
+<span class="skill-tag">JavaScript</span>
 <span class="skill-tag">Java</span>
-<span class="skill-tag">SQL</span>
+<span class="skill-tag">Dart</span>
+</div>
+</div>
+
+<div class="skill-category">
+<h3>Secondary Languages</h3>
+<div class="skill-tags">
+<span class="skill-tag">C/C++</span>
+<span class="skill-tag">C#</span>
+<span class="skill-tag">Assembly</span>
+<span class="skill-tag">Cuda</span>
 </div>
 </div>
 
@@ -322,45 +335,44 @@ p, li {
 <span class="skill-tag">Next.js</span>
 <span class="skill-tag">React</span>
 <span class="skill-tag">Flutter</span>
-<span class="skill-tag">LangGraph</span>
 <span class="skill-tag">LangChain</span>
-<span class="skill-tag">Tailwind</span>
 </div>
 </div>
 
 <div class="skill-category">
 <h3>AI & ML</h3>
 <div class="skill-tags">
+<span class="skill-tag">LangGraph</span>
 <span class="skill-tag">Google Gemini</span>
 <span class="skill-tag">OpenAI API</span>
 <span class="skill-tag">RAG Systems</span>
 <span class="skill-tag">MCP Servers</span>
-<span class="skill-tag">Prompt Eng.</span>
+<span class="skill-tag">Agent Harnesses</span>
 </div>
 </div>
 
 <div class="skill-category">
 <h3>DevOps & Cloud</h3>
 <div class="skill-tags">
+<span class="skill-tag">CI/CD</span>
+<span class="skill-tag">Jira</span>
+<span class="skill-tag">Git</span>
 <span class="skill-tag">Docker</span>
 <span class="skill-tag">Firebase</span>
 <span class="skill-tag">MongoDB</span>
-<span class="skill-tag">Redis</span>
-<span class="skill-tag">Git</span>
-<span class="skill-tag">CI/CD</span>
+<span class="skill-tag">Excel Sheets</span>
 </div>
 </div>
 
 </section>
 
 <section>
-<h2>Attributes</h2>
+<h2>Learned Attributes</h2>
 <ul>
-<li>Agile/Scrum (Jira)</li>
-<li>Comprehensive Testing</li>
-<li>Technical Documentation</li>
+<li>Agile & Scrum</li>
 <li>Team Collaboration</li>
-<li>Self-Taught Foundation</li>
+<li>Comprehensive Unit Testing</li>
+<li>Technical Documentation</li>
 </ul>
 </section>
 
@@ -371,21 +383,21 @@ p, li {
 <section>
 <h2>Professional Summary</h2>
 <p class="summary">
-Full-stack engineer (B.S. Computer Science, Dec 2025) building AI-powered applications and agentic systems. Shipped production software to clients, developed LangGraph research agents, and generated $6k SaaS revenue. Programming since age 15.
+Full-stack engineer (B.S. Computer Science, Dec 2025) w/ software experience; <br> Cross-platform application development, AI-powered & Agentic systems, Cloud Microservices. Delivered production-grade software to clients, developed graph-based research agents, freelanced since high school, generated $6k in SaaS revenue. Coding since age 15.
 </p>
 </section>
 
 <section>
-<h2>Featured Projects</h2>
+<h2>Featured Projects - See Portfolio Website</h2>
 
 <article class="entry">
 <div class="entry-header">
-<h3>ChurchLink — Web & App Builder Platform</h3>
-<span class="period">Nov 2025</span>
+<h3>ChurchLink - Web & App Builder Platform</h3>
+<span class="period">Dec 2025</span>
 </div>
 <div class="company">Senior Graduation Project · Team of 6 · Client Delivery</div>
-<ul>
-<li>Built FastAPI backend with Firebase/MongoDB sync across web and mobile clients</li>
+<ul> 
+<li>Developed Vite+FastAPI servers with Firebase/MongoDB sync across web and mobile clients</li>
 <li>Implemented multi-language localization with per-feature translation management</li>
 <li>Integrated PayPal payment processing for donations and event registration</li>
 </ul>
@@ -405,93 +417,96 @@ Full-stack engineer (B.S. Computer Science, Dec 2025) building AI-powered applic
 <h3>GenUI Deep Researcher Agent</h3>
 <span class="period">Nov 2025</span>
 </div>
-<div class="company">Personal Project · AI Web Research System</div>
+<div class="company">Microservice Project · AI Web Crawler</div>
 <ul>
-<li>Designed LangGraph 7-phase pipeline for web analysis and structured report generation</li>
-<li>Integrated Google CSE API with weighted parallel scoring for result ranking</li>
-<li>Implemented circuit breaker pattern (5-failure threshold, 60s reset) for fault tolerance</li>
+<li>Designed LangGraph pipeline for web analysis and dynamic UI report generation</li>
+<li>Integrated Google CSE API with parallel search+scoring for result ranking</li>
+<li>Implemented agentic workflow with assessment & circuit breaking for accuracy tolerance</li>
 </ul>
 <div class="tech-stack">
 <span class="tech-tag">Google Gemini</span>
 <span class="tech-tag">LangGraph</span>
+<span class="tech-tag">Firebase</span>
 <span class="tech-tag">FastAPI</span>
 <span class="tech-tag">Redis</span>
 <span class="tech-tag">Docker</span>
-<span class="tech-tag">SSE Streaming</span>
+<span class="tech-tag">SSE Sockets</span>
 </div>
 </article>
 
 <article class="entry">
 <div class="entry-header">
-<h3>Zharvis — Videogame AI Overlay</h3>
+<h3>Zharvis - AI Hud Overlay</h3>
 <span class="period">Oct 2025</span>
 </div>
-<div class="company">SaaS Product · Overwolf Marketplace</div>
+<div class="company">WIP SaaS Product · Overwolf Marketplace</div>
 <ul>
-<li>Built RAG pipeline processing 15k+ wiki documents with sub-second vector retrieval</li>
-<li>Architected MCP server enabling Gemini to build Generative UI HUD components</li>
-<li>Designed horizontally-scalable Docker pods for real-time in-game AI assistance</li>
+<li>Built RAG pipeline for CSE wiki crawling for accurate information retrieval</li>
+<li>Built custom MCP server enabling Gemini AI tool calling for Generative UI HUD components</li>
+<li>Designed horizontally-scalable Docker instances enabling a scalable product</li>
 </ul>
 <div class="tech-stack">
-<span class="tech-tag">Gemini</span>
+<span class="tech-tag">MCP</span>
+<span class="tech-tag">Google Gemini</span>
 <span class="tech-tag">Overwolf SDK</span>
 <span class="tech-tag">LangChain</span>
-<span class="tech-tag">MCP</span>
 <span class="tech-tag">TypeScript</span>
+<span class="tech-tag">Docker</span>
+<span class="tech-tag">Litestar</span>
+</div>
+</article>
+
+<article class="entry">
+<div class="entry-header">
+<h3>Interactive Web Portfolio</h3>
+<span class="period">Dec 2025</span>
+</div>
+<div class="company">Full-Stack SSG Application · Assessment Agent</div>
+<ul>
+<li>Developed Next.js + React Static Site with modern UI practices and custom components</li>
+<li>Built SSE streaming backend for a real-time multi-phase agentic pipeline with chain-of-thought insight</li>
+<li>Implemented SPOT architecture for simple profile configuration</li>
+</ul>
+<div class="tech-stack">
+<span class="tech-tag">Next.js</span>
+<span class="tech-tag">React</span>
+<span class="tech-tag">Tailwind</span>
+<span class="tech-tag">Radix UI</span>
+<span class="tech-tag">LangGraph</span>
+<span class="tech-tag">FastAPI</span>
 <span class="tech-tag">Docker</span>
 </div>
 </article>
 
 <article class="entry">
 <div class="entry-header">
-<h3>Interactive AI Portfolio</h3>
-<span class="period">Dec 2025</span>
-</div>
-<div class="company">Full-Stack SSG Application</div>
-<ul>
-<li>Developed Next.js 15 + React 19 SSG with Radix UI and custom animations</li>
-<li>Built SSE streaming backend for real-time 8-phase agentic pipeline visualization</li>
-<li>Implemented SPOT data architecture with auto-generated configs from JSON schemas</li>
-</ul>
-<div class="tech-stack">
-<span class="tech-tag">Next.js 15</span>
-<span class="tech-tag">React 19</span>
-<span class="tech-tag">FastAPI</span>
-<span class="tech-tag">LangGraph</span>
-<span class="tech-tag">Tailwind</span>
-<span class="tech-tag">Radix UI</span>
-</div>
-</article>
-
-<article class="entry">
-<div class="entry-header">
-<h3>CS:GO Modding SaaS</h3>
+<h3>Game Modding Freelancing & SaaS</h3>
 <span class="period">Jan 2023</span>
 </div>
-<div class="company">Team Lead · $6k Revenue</div>
+<div class="company">Team Freelancing · $6k Revenue</div>
 <ul>
-<li>Led 3-developer team building and selling videogame mods via freelance contracts</li>
-<li>Developed performance-optimized Lua scripts for real-time gameplay modifications</li>
+<li>Co-Led team of 3 developers to build, sell, and freelance videogame mods via community engagement</li>
+<li>Primarily developed Lua scripts for servside + clientside gameplay mods & plugins</li>
 </ul>
 <div class="tech-stack">
 <span class="tech-tag">Lua</span>
-<span class="tech-tag">Team Leadership</span>
-<span class="tech-tag">Freelancing</span>
+<span class="tech-tag">Team Freelancing</span>
+<span class="tech-tag">SaaS</span>
 </div>
 </article>
 
 <article class="entry">
 <div class="entry-header">
-<h3>Ethereum GPU Mining Rig</h3>
+<h3>Ethereum GPU Miner</h3>
 <span class="period">Apr 2022</span>
 </div>
-<div class="company">Personal Project · Passive Income</div>
+<div class="company">Personal Project · Computer Rig Building</div>
 <ul>
-<li>Assembled 7-GPU rig (Nvidia/AMD) achieving ~190 MH/s hashrate</li>
-<li>Generated ~$125/month passive income before Ethereum Merge ended PoW mining</li>
+<li>Assembled 7-GPU rig (Nvidia/AMD) achieving ~190 MH/s blockchain hashrate</li>
+<li>Generated ~$125/month passive income before Ethereum Merge ended Proof of Work mining</li>
 </ul>
 <div class="tech-stack">
-<span class="tech-tag">Ethereum</span>
+<span class="tech-tag">Blockchain</span>
 <span class="tech-tag">GPU Parallelism</span>
 <span class="tech-tag">Hardware</span>
 </div>
