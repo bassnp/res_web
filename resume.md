@@ -486,7 +486,7 @@ Full-stack engineer (B.S. Computer Science, Dec 2025) w/ software experience; <b
 <div class="company">Team Freelancing · $6k Revenue</div>
 <ul>
 <li>Co-Led team of 3 developers to build, sell, and freelance videogame mods via community engagement</li>
-<li>Primarily developed CS:GO Lua scripts for servside + clientside gameplay mods & plugins</li>
+<li>Primarily developed CS:GO Lua scripts for serverside + clientside gameplay mods & plugins</li>
 </ul>
 <div class="tech-stack">
 <span class="tech-tag">Lua</span>

@@ -263,21 +263,23 @@ function generatePhaseConfigModule(profileData) {
     
     // For custom colors like 'burnt-peach', use direct class names
     const isCustom = phase.custom_color || false;
+    const colorStr = isCustom ? color : `${color}-${intensity}`;
+    const colorNextStr = isCustom ? color : `${color}-${intensity + 100}`;
     
     return `  ${key}: {
     label: '${phase.label}',
     icon: ${phase.icon},
     description: '${phase.description}',
     color: '${color}',
-    borderColor: 'border-l-${color}-${intensity}',
-    bgColor: 'bg-${color}-${intensity}',
-    bgColorMuted: 'bg-${color}-${intensity}/10',
-    textColor: 'text-${color}-${intensity}',
-    ringColor: 'ring-${color}-${intensity}/30',
-    gradient: 'from-${color}-${intensity} to-${color}-${intensity + 100}',
-    gradientFrom: 'from-${color}-${intensity}/10',
-    gradientFromLight: 'from-${color}-${intensity + 100}/5',
-    previewBorder: 'border-${color}-${intensity}/50',
+    borderColor: 'border-l-${colorStr}',
+    bgColor: 'bg-${colorStr}',
+    bgColorMuted: 'bg-${colorStr}/10',
+    textColor: 'text-${colorStr}',
+    ringColor: 'ring-${colorStr}/30',
+    gradient: 'from-${colorStr} to-${colorNextStr}',
+    gradientFrom: 'from-${colorStr}/10',
+    gradientFromLight: 'from-${colorNextStr}/5',
+    previewBorder: 'border-${colorStr}/50',
     glowRGB: '${phase.glow_rgb}',
   }`;
   }).join(',\n');
