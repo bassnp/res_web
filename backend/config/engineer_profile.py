@@ -51,6 +51,9 @@ ENGINEER_PROFILE: Dict[str, Any] = {
             "Redis",
             "PayPal Integration",
             "CI/CD",
+            "Agile",
+            "Excel Sheets",
+            "SSE",
         ],
         "ai_ml": [
             "LangChain",

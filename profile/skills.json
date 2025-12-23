@@ -29,7 +29,10 @@
         "Jira",
         "Slack",
         "Figma",
-        "CapCut"
+        "CapCut",
+        "Agile",
+        "Excel Sheets",
+        "SSE"
       ]
     }
   },
@@ -62,7 +65,10 @@
       "PostgreSQL",
       "Redis",
       "PayPal Integration",
-      "CI/CD"
+      "CI/CD",
+      "Agile",
+      "Excel Sheets",
+      "SSE"
     ],
     "ai_ml": [
       "LangChain",

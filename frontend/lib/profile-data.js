@@ -50,13 +50,13 @@ export const SKILLS = {
     },
     devops: {
       label: 'DevOps & Tools',
-      skills: ['Docker', 'Firebase', 'MongoDB', 'Git', 'GitHub', 'Jira', 'Slack', 'Figma', 'CapCut']
+      skills: ['Docker', 'Firebase', 'MongoDB', 'Git', 'GitHub', 'Jira', 'Slack', 'Figma', 'CapCut', 'Agile', 'Excel Sheets', 'SSE']
     }
   },
   backend_categories: {
     languages: ['Python', 'JavaScript', 'TypeScript', 'Dart', 'Lua', 'Java', 'SQL', 'HTML/CSS'],
     frameworks: ['Flutter', 'React', 'Next.js', 'Vite', 'FastAPI', 'Node.js', 'TailwindCSS', 'Radix UI', 'Shadcn UI'],
-    cloud_devops: ['Docker', 'Firebase', 'MongoDB', 'PostgreSQL', 'Redis', 'PayPal Integration', 'CI/CD'],
+    cloud_devops: ['Docker', 'Firebase', 'MongoDB', 'PostgreSQL', 'Redis', 'PayPal Integration', 'CI/CD', 'Agile', 'Excel Sheets', 'SSE'],
     ai_ml: ['LangChain', 'LangGraph', 'LangSmith', 'OpenAI API', 'Google Gemini', 'RAG Systems', 'MCP Servers', 'Prompt Engineering', 'Vector Stores'],
     tools: ['Git', 'GitHub', 'VS Code', 'Overwolf SDK', 'Linux', 'REST APIs']
   }
