@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { useTheme } from 'next-themes';
-import { Briefcase, Mail, Github, ChevronDown, ChevronLeft, ChevronRight, ExternalLink, Sun, Moon, Code, FileText, Camera, Eye, Clock, Menu, X, Brain } from 'lucide-react';
+import { Briefcase, Mail, Github, Linkedin, ChevronDown, ChevronLeft, ChevronRight, ExternalLink, Sun, Moon, Code, FileText, Camera, Eye, Clock, Menu, X, Brain } from 'lucide-react';
 import { useHeaderVisibility } from '@/hooks/use-header-visibility';
 import { InfoDialog, InfoButton } from '@/components/fit-check/InfoDialog';
 import { ProjectModal, ReadSummaryButton } from '@/components/ProjectModal';
@@ -375,6 +375,7 @@ const Footer = () => {
 
   const socialLinks = [
     { icon: Github, href: GITHUB_URL, label: 'GitHub' },
+    { icon: Linkedin, href: 'https://www.linkedin.com/in/jaden-b-519500233/', label: 'LinkedIn' },
     { icon: Mail, href: `mailto:${EMAIL}`, label: 'Email' },
   ];
 
