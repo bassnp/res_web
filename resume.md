@@ -282,7 +282,7 @@ p, li {
 <aside class="sidebar">
 
 <header>
-<img src="https://i.gyazo.com/7543c8991396edc6b9171ec9ac01cd9b.jpg" alt="Jaden Bruha" class="portrait">
+<img src="https://i.gyazo.com/c945e6f83c008edd03b20096fc0e3964.jpg" alt="Jaden Bruha" class="portrait">
 <h1>Jaden Bruha</h1>
 <div class="title">New Grad - Software Engineer - 22 Yo</div>
 </header>
