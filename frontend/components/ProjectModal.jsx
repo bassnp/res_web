@@ -22,8 +22,8 @@ const CAROUSEL_SLIDE_DURATION = 400; // ms for slide animation
  */
 const ProjectImageCarousel = ({ imagesFolder, fallbackImages = [] }) => {
   const [images, setImages] = useState([]);
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [previousIndex, setPreviousIndex] = useState(null);
+  const [displayedIndex, setDisplayedIndex] = useState(0); // The currently visible static image
+  const [incomingIndex, setIncomingIndex] = useState(null); // The image animating into view
   const [slideDirection, setSlideDirection] = useState('right'); // 'left' or 'right'
   const [isSliding, setIsSliding] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
@@ -69,36 +69,39 @@ const ProjectImageCarousel = ({ imagesFolder, fallbackImages = [] }) => {
 
   /**
    * Navigate to a specific slide with direction-aware animation.
+   * The displayed image stays static while the new image slides in,
+   * then updates after animation completes.
    */
   const slideToIndex = useCallback((newIndex, direction = 'right') => {
-    if (isSliding || newIndex === currentIndex || images.length === 0) return;
+    if (isSliding || newIndex === displayedIndex || images.length === 0) return;
     
     setSlideDirection(direction);
-    setPreviousIndex(currentIndex);
-    setCurrentIndex(newIndex);
+    setIncomingIndex(newIndex);
     setIsSliding(true);
     
+    // After animation completes, finalize the transition
     setTimeout(() => {
+      setDisplayedIndex(newIndex);
       setIsSliding(false);
-      setPreviousIndex(null);
+      setIncomingIndex(null);
     }, CAROUSEL_SLIDE_DURATION);
-  }, [isSliding, currentIndex, images.length]);
+  }, [isSliding, displayedIndex, images.length]);
 
   /**
    * Navigate to previous slide.
    */
   const goToPrevious = useCallback(() => {
-    const prevIndex = currentIndex === 0 ? images.length - 1 : currentIndex - 1;
+    const prevIndex = displayedIndex === 0 ? images.length - 1 : displayedIndex - 1;
     slideToIndex(prevIndex, 'left');
-  }, [currentIndex, images.length, slideToIndex]);
+  }, [displayedIndex, images.length, slideToIndex]);
 
   /**
    * Navigate to next slide.
    */
   const goToNext = useCallback(() => {
-    const nextIndex = (currentIndex + 1) % images.length;
+    const nextIndex = (displayedIndex + 1) % images.length;
     slideToIndex(nextIndex, 'right');
-  }, [currentIndex, images.length, slideToIndex]);
+  }, [displayedIndex, images.length, slideToIndex]);
 
   /**
    * Keyboard navigation support.
@@ -139,31 +142,31 @@ const ProjectImageCarousel = ({ imagesFolder, fallbackImages = [] }) => {
 
   return (
     <div className="relative w-full aspect-[16/9] bg-twilight/10 dark:bg-eggshell/10 rounded-sm overflow-hidden group">
-      {/* Previous image - slides out */}
-      {previousIndex !== null && (
-        <img
-          src={images[previousIndex]}
-          alt={`Project image ${previousIndex + 1}`}
-          className={cn(
-            "absolute inset-0 w-full h-full object-contain",
-            slideDirection === 'right' ? 'animate-carousel-slide-out-left' : 'animate-carousel-slide-out-right'
-          )}
-          style={{ animationDuration: `${CAROUSEL_SLIDE_DURATION}ms` }}
-        />
-      )}
-      
-      {/* Current image - slides in or static */}
+      {/* Displayed image - slides OUT during transition, static otherwise */}
       <img
-        src={images[currentIndex]}
-        alt={`Project image ${currentIndex + 1}`}
+        src={images[displayedIndex]}
+        alt={`Project image ${displayedIndex + 1}`}
         className={cn(
           "absolute inset-0 w-full h-full object-contain",
-          isSliding && previousIndex !== null && (
-            slideDirection === 'right' ? 'animate-carousel-slide-in-right' : 'animate-carousel-slide-in-left'
+          incomingIndex !== null && (
+            slideDirection === 'right' ? 'animate-carousel-slide-out-left' : 'animate-carousel-slide-out-right'
           )
         )}
         style={{ animationDuration: `${CAROUSEL_SLIDE_DURATION}ms` }}
       />
+      
+      {/* Incoming image - slides IN from opposite edge during transition */}
+      {incomingIndex !== null && (
+        <img
+          src={images[incomingIndex]}
+          alt={`Project image ${incomingIndex + 1}`}
+          className={cn(
+            "absolute inset-0 w-full h-full object-contain",
+            slideDirection === 'right' ? 'animate-carousel-slide-in-right' : 'animate-carousel-slide-in-left'
+          )}
+          style={{ animationDuration: `${CAROUSEL_SLIDE_DURATION}ms` }}
+        />
+      )}
 
       {/* Navigation arrows - only show if multiple images */}
       {images.length > 1 && (
@@ -210,10 +213,10 @@ const ProjectImageCarousel = ({ imagesFolder, fallbackImages = [] }) => {
           {images.map((_, idx) => (
             <button
               key={idx}
-              onClick={() => slideToIndex(idx, idx > currentIndex ? 'right' : 'left')}
+              onClick={() => slideToIndex(idx, idx > displayedIndex ? 'right' : 'left')}
               className={cn(
                 "w-2.5 h-2.5 rounded-full transition-all duration-300",
-                idx === currentIndex
+                idx === displayedIndex
                   ? "bg-burnt-peach scale-125 shadow-[0_0_8px_rgba(224,122,95,0.5)]"
                   : "bg-eggshell/60 hover:bg-eggshell/80"
               )}
@@ -226,7 +229,7 @@ const ProjectImageCarousel = ({ imagesFolder, fallbackImages = [] }) => {
       {/* Image counter badge */}
       <div className="absolute top-3 right-3 px-2.5 py-1 rounded-full bg-twilight/60 dark:bg-eggshell/20 backdrop-blur-sm">
         <span className="text-xs font-medium text-eggshell">
-          {currentIndex + 1} / {images.length}
+          {displayedIndex + 1} / {images.length}
         </span>
       </div>
     </div>

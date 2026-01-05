@@ -47,8 +47,8 @@ const HERO_SLIDE_DURATION = 500; // Slide animation duration in ms
 
 const ImageCarousel = ({ interval = 4000 }) => {
   const [images, setImages] = useState(FALLBACK_COLLAGE_IMAGES);
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [previousIndex, setPreviousIndex] = useState(null);
+  const [displayedIndex, setDisplayedIndex] = useState(0); // The currently visible static image
+  const [incomingIndex, setIncomingIndex] = useState(null); // The image animating into view
   const [isSliding, setIsSliding] = useState(false);
   const [slideDirection, setSlideDirection] = useState('right'); // 'left' or 'right'
   const timerRef = useRef(null);
@@ -82,16 +82,20 @@ const ImageCarousel = ({ interval = 4000 }) => {
     }
     
     timerRef.current = setInterval(() => {
-      setSlideDirection('right');
-      setCurrentIndex(prev => {
+      setDisplayedIndex(prev => {
         const next = (prev + 1) % images.length;
-        setPreviousIndex(prev);
+        setSlideDirection('right');
+        setIncomingIndex(next);
         setIsSliding(true);
+        
+        // After animation completes, finalize the transition
         setTimeout(() => {
+          setDisplayedIndex(next);
           setIsSliding(false);
-          setPreviousIndex(null);
+          setIncomingIndex(null);
         }, HERO_SLIDE_DURATION);
-        return next;
+        
+        return prev; // Keep displayed index stable during animation
       });
     }, interval);
   }, [images.length, interval]);
@@ -104,39 +108,40 @@ const ImageCarousel = ({ interval = 4000 }) => {
    * @param {string} direction - Animation direction: 'left' or 'right'
    */
   const slideToIndex = useCallback((newIndex, direction = 'right') => {
-    if (isSliding || newIndex === currentIndex) return;
+    if (isSliding || newIndex === displayedIndex) return;
     
     setSlideDirection(direction);
-    setPreviousIndex(currentIndex);
-    setCurrentIndex(newIndex);
+    setIncomingIndex(newIndex);
     setIsSliding(true);
     
+    // After animation completes, finalize the transition
     setTimeout(() => {
+      setDisplayedIndex(newIndex);
       setIsSliding(false);
-      setPreviousIndex(null);
+      setIncomingIndex(null);
     }, HERO_SLIDE_DURATION);
     
     // Reset timer after user interaction
     startTimer();
-  }, [isSliding, currentIndex, startTimer]);
+  }, [isSliding, displayedIndex, startTimer]);
 
   /**
    * Navigate to previous image (slides from left).
    * Timer is reset via slideToIndex.
    */
   const goToPrevious = useCallback(() => {
-    const prevIndex = currentIndex === 0 ? images.length - 1 : currentIndex - 1;
+    const prevIndex = displayedIndex === 0 ? images.length - 1 : displayedIndex - 1;
     slideToIndex(prevIndex, 'left');
-  }, [currentIndex, images.length, slideToIndex]);
+  }, [displayedIndex, images.length, slideToIndex]);
 
   /**
    * Navigate to next image (slides from right).
    * Timer is reset via slideToIndex.
    */
   const goToNext = useCallback(() => {
-    const nextIndex = (currentIndex + 1) % images.length;
+    const nextIndex = (displayedIndex + 1) % images.length;
     slideToIndex(nextIndex, 'right');
-  }, [currentIndex, images.length, slideToIndex]);
+  }, [displayedIndex, images.length, slideToIndex]);
 
   /**
    * Initialize auto-advance timer on mount and when images change.
@@ -156,32 +161,33 @@ const ImageCarousel = ({ interval = 4000 }) => {
 
   return (
     <div className="relative w-full h-full overflow-hidden rounded-[5px] group">
-      {/* Previous image - slides out based on direction */}
-      {previousIndex !== null && (
-        <img
-          src={images[previousIndex]}
-          alt={`Personal photo ${previousIndex + 1}`}
-          className={`absolute inset-0 w-full h-full object-cover ${
-            slideDirection === 'right' ? 'animate-slide-out-left' : 'animate-slide-out-right'
-          }`}
-          style={{
-            animationDuration: `${HERO_SLIDE_DURATION}ms`,
-          }}
-        />
-      )}
-      {/* Current image - slides in based on direction */}
+      {/* Displayed image - slides OUT during transition, static otherwise */}
       <img
-        src={images[currentIndex]}
-        alt={`Personal photo ${currentIndex + 1}`}
+        src={images[displayedIndex]}
+        alt={`Personal photo ${displayedIndex + 1}`}
         className={`absolute inset-0 w-full h-full object-cover ${
-          isSliding && previousIndex !== null 
-            ? (slideDirection === 'right' ? 'animate-slide-in-right' : 'animate-slide-in-left')
+          incomingIndex !== null
+            ? (slideDirection === 'right' ? 'animate-slide-out-left' : 'animate-slide-out-right')
             : ''
         }`}
         style={{
           animationDuration: `${HERO_SLIDE_DURATION}ms`,
         }}
       />
+      
+      {/* Incoming image - slides IN from opposite edge during transition */}
+      {incomingIndex !== null && (
+        <img
+          src={images[incomingIndex]}
+          alt={`Personal photo ${incomingIndex + 1}`}
+          className={`absolute inset-0 w-full h-full object-cover ${
+            slideDirection === 'right' ? 'animate-slide-in-right' : 'animate-slide-in-left'
+          }`}
+          style={{
+            animationDuration: `${HERO_SLIDE_DURATION}ms`,
+          }}
+        />
+      )}
       {/* Navigation arrows - only show if more than 1 image */}
       {images.length > 1 && (
         <>
@@ -209,9 +215,9 @@ const ImageCarousel = ({ interval = 4000 }) => {
           {images.map((_, idx) => (
             <button
               key={idx}
-              onClick={() => slideToIndex(idx, idx > currentIndex ? 'right' : 'left')}
+              onClick={() => slideToIndex(idx, idx > displayedIndex ? 'right' : 'left')}
               className={`w-2.5 h-2.5 rounded-full transition-all duration-300 ${
-                idx === currentIndex
+                idx === displayedIndex
                   ? 'bg-burnt-peach scale-125'
                   : 'bg-eggshell/60 hover:bg-eggshell/80'
               }`}
